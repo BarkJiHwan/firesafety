@@ -68,9 +68,9 @@
 ---
 # 깃 전략 설명
 * 간략화된 깃 플로우 전략
-* 근데 이제 QA 브랜치 추가 핧 거임..
-https://dduckchul.github.io/2025-03-12-NetworkGameProject/
-
+  * [간략화 Git-Flow 예제](https://dduckchul.github.io/2025-03-12-NetworkGameProject/)
+* 근데 이제 QA 브랜치 추가 할 거임..
+  * Master(Main) - QA - Dev - Feature 브랜치
 ---
 # 대락적인 설계
 ![러프버전](/러프버전.png)
