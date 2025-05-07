@@ -25,7 +25,7 @@
 > - 띵패밀리 캐릭터 수정
 > - 애니메이션 추가
 
-> fix : 소화기 버그 수정
+> fix(오브젝트): 소화기 버그 수정
 > - 분사되는 시간 수정
 
 등등등 깃 커밋 메시지는 맨 윗줄만 체크함.
@@ -48,7 +48,8 @@
 * 추가적으로 궁금하다면 링크 참고
   * [마소 공식문서](https://learn.microsoft.com/ko-kr/visualstudio/ide/create-portable-custom-editor-options?view=vs-2022)
   * [위 문서 실제 파일로 만든거](https://github.com/pankaxz/UnityEditorConfig)
-
+* [Visual Studio 설정 방법](https://rito15.github.io/posts/unity-editorconfig-encoding/)
+* Rider 설정 방법 - https://www.jetbrains.com/help/rider/Using_EditorConfig.html#in_solution
 ---
 ## 4. 캐릭터 패키지 풀기 (기업 제공)
 * 01_Characters의 유니티 패키지 풀기
