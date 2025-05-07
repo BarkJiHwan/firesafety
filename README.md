@@ -73,7 +73,7 @@ https://dduckchul.github.io/2025-03-12-NetworkGameProject/
 
 ---
 # 대락적인 설계
-![러프버전](러프버전.png)
+![러프버전](/러프버전.png)
 
 ---
 
