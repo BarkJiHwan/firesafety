@@ -44,11 +44,7 @@
 			
 			float4 CalculateColor(float4 bottomColor, float4 topColor, float2 uv)
 			{
-<<<<<<< Updated upstream
 				return lerp(bottomColor, topColor, uv.y);
-=======
-				return lerp(bottomColor, topColor, uv.y);
->>>>>>> Stashed changes
 			}
 
 			fixed4 frag (v2f i) : SV_Target
