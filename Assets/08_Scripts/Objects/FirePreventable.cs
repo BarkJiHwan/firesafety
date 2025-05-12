@@ -18,7 +18,9 @@ public class FirePreventable : MonoBehaviour
     }
     private void Start()
     {
-        _shieldPrefab.SetActive(false);
+        IsFirePreventable = false;
+        SmokeInstantiateAsChildWithTransform();
+        ShieldInstantiateAsChildWithTransform();
     }
     private void Update()
     {
@@ -33,8 +35,23 @@ public class FirePreventable : MonoBehaviour
             _shieldPrefab.SetActive(false);
         }
     }
-    public void CheckPreventFire()
-    {
 
+    private void SmokeInstantiateAsChildWithTransform()
+    {
+        GameObject smoke = Instantiate(_smokePrefab);
+        smoke.transform.parent = transform;
+        smoke.transform.position = transform.position;
+        smoke.transform.localScale = new Vector3(1, 1, 1);
+        _smokePrefab = smoke;
+        _smokePrefab.SetActive(true);
+    }
+    private void ShieldInstantiateAsChildWithTransform()
+    {
+        GameObject shield = Instantiate(_shieldPrefab);
+        shield.transform.parent = transform;
+        shield.transform.position = transform.position;
+        shield.transform.localScale = new Vector3(2, 2, 2);
+        _shieldPrefab = shield;
+        _shieldPrefab.SetActive(false);
     }
 }

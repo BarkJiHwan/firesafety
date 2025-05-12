@@ -13,11 +13,11 @@ public class FireObjMgr : MonoBehaviour
     {
         foreach (var fireObj in fireObjects)
         {
-
+            fireObj.IsBurning = false;
         }
         foreach (var firePreventable in firePreventables)
         {
-
+            firePreventable.IsFirePreventable = false;
         }
     }
 
