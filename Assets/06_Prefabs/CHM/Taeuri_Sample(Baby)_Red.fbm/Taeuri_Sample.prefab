@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1934440500783924086}
   - component: {fileID: 5492332943628507404}
+  - component: {fileID: 6435073222954814071}
   m_Layer: 0
   m_Name: Taeuri_Sample
   m_TagString: Untagged
@@ -55,9 +56,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1266448066377587148}
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0.2625, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6622317593543062380}
@@ -87,6 +88,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6435073222954814071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1266448066377587148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af6142d7466e61b4a8822c581a0b1f60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _health: 100
+  _feverTimeHealth: 30
+  _animator: {fileID: 0}
 --- !u!1 &1362686932049987822
 GameObject:
   m_ObjectHideFlags: 0
