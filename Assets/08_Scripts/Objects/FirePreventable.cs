@@ -24,10 +24,12 @@ public class FirePreventable : MonoBehaviour
     {
         if (_isFirePreventable)
         {
+            _smokePrefab.SetActive(false);
             _shieldPrefab.SetActive(true);
         }
         else
         {
+            _smokePrefab.SetActive(true);
             _shieldPrefab.SetActive(false);
         }
     }
