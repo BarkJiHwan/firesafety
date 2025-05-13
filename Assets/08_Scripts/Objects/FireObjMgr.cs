@@ -4,10 +4,38 @@ using UnityEngine;
 
 public class FireObjMgr : MonoBehaviour
 {
+    private static FireObjMgr _instance;
+    public static FireObjMgr Instance
+    {
+        get
+        {
+            if(_instance == null)
+            {
+                Debug.Log("인스턴스 없음");
+            }
+            return _instance;
+        }
+        set
+        {
+            _instance = value;
+        }
+    }
+
     //화재 오브젝트 리스트
     public List<FireObjScript> fireObjects = new List<FireObjScript>();
     //예방 가능한 오브젝트 리스트
     public List<FirePreventable> firePreventables = new List<FirePreventable>();
+
+    private void Awake()
+    {
+        if (_instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
     void Start()
     {

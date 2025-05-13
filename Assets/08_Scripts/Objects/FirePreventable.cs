@@ -36,6 +36,7 @@ public class FirePreventable : MonoBehaviour
         }
     }
 
+    //게임 시작 스모크(파이클)생성 및 셋팅하는 메서드
     private void SmokeInstantiateAsChildWithTransform()
     {
         GameObject smoke = Instantiate(_smokePrefab);
@@ -45,6 +46,7 @@ public class FirePreventable : MonoBehaviour
         _smokePrefab = smoke;
         _smokePrefab.SetActive(true);
     }
+    //게임 시작 쉴드(오브젝트)생성 및 셋팅하는 메서드
     private void ShieldInstantiateAsChildWithTransform()
     {
         GameObject shield = Instantiate(_shieldPrefab);
