@@ -653,6 +653,7 @@ MonoBehaviour:
   _smokePrefab: {fileID: 1984553849942408, guid: 3eaa47905d0d3cf46b8faec46bde5067,
     type: 3}
   _shieldPrefab: {fileID: 525520872}
+  _preventTime: 0
 --- !u!65 &1956241761
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -803,6 +804,17 @@ PrefabInstance:
         type: 3}
       propertyPath: _isFirePreventable
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5287786161300351661, guid: 489d67e0b706f45b9902bf6d7b071954,
+        type: 3}
+      propertyPath: _smokePrefab
+      value: 
+      objectReference: {fileID: 1671709401335994, guid: dc98f2fefa19f514e9e44365d187f423,
+        type: 3}
+    - target: {fileID: 6004409451202519846, guid: 489d67e0b706f45b9902bf6d7b071954,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 6913269289795018531, guid: 489d67e0b706f45b9902bf6d7b071954,
         type: 3}
