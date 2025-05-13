@@ -9,8 +9,7 @@ using UnityEngine.Pool;
 public class TaeuriPoolManager : MonoBehaviour
 {
     [SerializeField] private GameObject _taeuriPrefab; // 기본 태우리 프리팹
-    [SerializeField] private GameObject _smallTaeuriPrefab; // 작은 태우리 프리팹
-    [SerializeField] private GameObject _fireEffectPrefab; // 불 이펙트 프리팹
+    [SerializeField] private GameObject _smallTaeuriPrefab; // 작은 태우리 프리팹   
     [SerializeField] private GameObject _deathEffectPrefab; // 태우리 죽을 때 효과 프리팹
 
     [SerializeField] private int _defaultPoolSize = 20; // 기본 풀 사이즈
@@ -93,11 +92,7 @@ public class TaeuriPoolManager : MonoBehaviour
             }
         }
 
-        // 불 이펙트가 없으면 추가
-        if (taeuriObj.transform.childCount == 0)
-        {
-            AddFireEffectToTaeuri(taeuriObj);
-        }
+        
     }
 
     /// <summary>
@@ -106,23 +101,6 @@ public class TaeuriPoolManager : MonoBehaviour
     private void OnTaeuriRelease(GameObject taeuriObj)
     {
         taeuriObj.SetActive(false);
-    }
-
-    /// <summary>
-    /// 태우리에 불 이펙트 추가하는 함수
-    /// </summary>
-    /// <param name="taeuriObj">불 이펙트를 추가할 태우리 오브젝트</param>
-    private void AddFireEffectToTaeuri(GameObject taeuriObj)
-    {
-        if (taeuriObj == null || _fireEffectPrefab == null)
-            return;
-
-        // 불 이펙트 생성 및 태우리의 자식으로 설정
-        GameObject fireEffect = Instantiate(_fireEffectPrefab, taeuriObj.transform.position, Quaternion.identity);
-        fireEffect.transform.SetParent(taeuriObj.transform);
-
-        // 로컬 위치 조정 (필요에 따라 수정)
-        fireEffect.transform.localPosition = Vector3.zero;
     }
 
     /// <summary>
