@@ -15045,6 +15045,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6042871915995716481}
     m_Modifications:
+    - target: {fileID: 1101637052082035975, guid: d4fd0c998157ff3419053a349d6ec8bd,
+        type: 3}
+      propertyPath: _preventTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1548045189235741836, guid: d4fd0c998157ff3419053a349d6ec8bd,
         type: 3}
       propertyPath: m_Name
