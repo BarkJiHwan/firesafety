@@ -116,6 +116,7 @@ MonoBehaviour:
     type: 3}
   _shieldPrefab: {fileID: 6931219769576118933, guid: 17be3b380da08c94c89caa7d3d4dd821,
     type: 3}
+  _preventTime: 1
 --- !u!114 &6044953731347181924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,6 +131,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isBurning: 0
   _fireElementalSummonTime: 0
-  _minDis: 0.1
-  _maxDis: 0.1
-  _taeuriObj: {fileID: 0}

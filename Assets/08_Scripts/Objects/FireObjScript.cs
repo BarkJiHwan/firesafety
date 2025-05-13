@@ -17,4 +17,8 @@ public class FireObjScript : MonoBehaviour
         get => _fireElementalSummonTime;
         set => _fireElementalSummonTime = value;
     }
+    private void Start()
+    {
+        _isBurning = false;
+    }
 }

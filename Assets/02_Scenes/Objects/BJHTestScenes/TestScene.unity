@@ -311,7 +311,7 @@ GameObject:
   - component: {fileID: 620296190}
   - component: {fileID: 620296194}
   m_Layer: 0
-  m_Name: Cube (2)
+  m_Name: TestObj2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -410,10 +410,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isBurning: 0
   _fireElementalSummonTime: 10
-  _minDis: 0.15
-  _maxDis: 0.35
-  _taeuriObj: {fileID: 2105682044638487978, guid: b5158f3fc04707a4e9d3767f2efe5643,
-    type: 3}
 --- !u!4 &725993760 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1934440500783924086, guid: fc5e374728e7fc540b5741a85367ceca,
@@ -635,7 +631,7 @@ GameObject:
   - component: {fileID: 1956241761}
   - component: {fileID: 1956241760}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: TestObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

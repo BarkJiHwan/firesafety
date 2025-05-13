@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class FirePreventable : MonoBehaviour
@@ -10,6 +11,9 @@ public class FirePreventable : MonoBehaviour
 
     [SerializeField] private GameObject _smokePrefab;
     [SerializeField] private GameObject _shieldPrefab;
+
+    [Header("임시 변수 추후 다른 스크립트에서 관리할 예정")]
+    [SerializeField] private bool _preventTime;
 
     public bool IsFirePreventable
     {
@@ -24,15 +28,22 @@ public class FirePreventable : MonoBehaviour
     }
     private void Update()
     {
-        if (_isFirePreventable)
+        if(_preventTime)
         {
-            _smokePrefab.SetActive(false);
-            _shieldPrefab.SetActive(true);
+            if (_isFirePreventable)
+            {
+                _smokePrefab.SetActive(false);
+                _shieldPrefab.SetActive(true);
+            }
+            else
+            {
+                _smokePrefab.SetActive(true);
+                _shieldPrefab.SetActive(false);
+            }
         }
         else
         {
-            _smokePrefab.SetActive(true);
-            _shieldPrefab.SetActive(false);
+            _smokePrefab.SetActive(false);
         }
     }
 
@@ -44,7 +55,7 @@ public class FirePreventable : MonoBehaviour
         smoke.transform.position = transform.position;
         smoke.transform.localScale = new Vector3(1, 1, 1);
         _smokePrefab = smoke;
-        _smokePrefab.SetActive(true);
+        _smokePrefab.SetActive(false);
     }
     //게임 시작 쉴드(오브젝트)생성 및 셋팅하는 메서드
     private void ShieldInstantiateAsChildWithTransform()
