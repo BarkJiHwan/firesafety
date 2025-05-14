@@ -15,6 +15,21 @@ public class FirePreventable : MonoBehaviour
     [Header("임시 변수 추후 다른 스크립트에서 관리할 예정")]
     [SerializeField] private bool _preventTime;
 
+    [Serializable]
+    public struct SmokeScaledAxis
+    {
+        [Range(0.1f, 2f)] public float x;
+        [Range(0.1f, 2f)] public float y;
+        [Range(0.1f, 2f)] public float z;
+    }
+    [Header("연기 오브젝트(파티클) 스캐일")]
+    [SerializeField] private SmokeScaledAxis _smokeScale;
+
+    [Header("쉴드 반지름")]
+    [SerializeField, Range(0.1f, 2f)]
+    private float _shieldRadius = 1f;
+
+
     public bool IsFirePreventable
     {
         get => _isFirePreventable;
@@ -22,12 +37,17 @@ public class FirePreventable : MonoBehaviour
     }
     private void Start()
     {
-        IsFirePreventable = false;
-        SmokeInstantiateAsChildWithTransform();
-        ShieldInstantiateAsChildWithTransform();
+        _isFirePreventable = false;
+    }
+
+    void OnMouseDown()
+    {//마우스클릭 테스트 코드
+        _isFirePreventable = !_isFirePreventable; // 상태 토글
     }
     private void Update()
     {
+        ApplySmokeSettings();
+        ApplyShieldSettings();
         if(_preventTime)
         {
             if (_isFirePreventable)
@@ -47,24 +67,17 @@ public class FirePreventable : MonoBehaviour
         }
     }
 
-    //게임 시작 스모크(파이클)생성 및 셋팅하는 메서드
-    private void SmokeInstantiateAsChildWithTransform()
+    //스모크 사이즈 셋팅
+    private void ApplySmokeSettings() => _smokePrefab.transform.localScale =
+            new Vector3(_smokeScale.x, _smokeScale.y, _smokeScale.z);
+    //쉴드 사이즈 셋팅
+    private void ApplyShieldSettings()
     {
-        GameObject smoke = Instantiate(_smokePrefab);
-        smoke.transform.parent = transform;
-        smoke.transform.position = transform.position;
-        smoke.transform.localScale = new Vector3(1, 1, 1);
-        _smokePrefab = smoke;
-        _smokePrefab.SetActive(false);
-    }
-    //게임 시작 쉴드(오브젝트)생성 및 셋팅하는 메서드
-    private void ShieldInstantiateAsChildWithTransform()
-    {
-        GameObject shield = Instantiate(_shieldPrefab);
-        shield.transform.parent = transform;
-        shield.transform.position = transform.position;
-        shield.transform.localScale = new Vector3(2, 2, 2);
-        _shieldPrefab = shield;
-        _shieldPrefab.SetActive(false);
+        float diameter = _shieldRadius;
+
+        _shieldPrefab.transform.localScale =
+                new Vector3(diameter / transform.localScale.x
+                , diameter / transform.localScale.y
+                , diameter / transform.localScale.z);
     }
 }

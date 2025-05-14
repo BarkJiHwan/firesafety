@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class FireObjMgr : MonoBehaviour
@@ -9,7 +10,7 @@ public class FireObjMgr : MonoBehaviour
     {
         get
         {
-            if(_instance == null)
+            if (_instance == null)
             {
                 Debug.Log("인스턴스 없음");
             }
@@ -20,11 +21,12 @@ public class FireObjMgr : MonoBehaviour
             _instance = value;
         }
     }
+    [SerializeField] private bool _isBurningTime = false;
 
-    //화재 오브젝트 리스트
-    public List<FireObjScript> fireObjects = new List<FireObjScript>();
-    //예방 가능한 오브젝트 리스트
-    public List<FirePreventable> firePreventables = new List<FirePreventable>();
+    private Dictionary<int, MapIndex> _zoneDict = new Dictionary<int, MapIndex>();
+
+    public bool isPreventPhase = true;
+    public bool isFirePhase = false;
 
     private void Awake()
     {
@@ -35,23 +37,85 @@ public class FireObjMgr : MonoBehaviour
         }
         _instance = this;
         DontDestroyOnLoad(gameObject);
+        var zones = FindObjectsByType<MapIndex>(FindObjectsSortMode.None);
+        foreach (var zone in zones)
+        {
+            if (_zoneDict.ContainsKey(zone.MapIndexValue))
+            {
+                continue;
+            }
+            _zoneDict.Add(zone.MapIndexValue, zone);
+        }
     }
 
     void Start()
     {
-        //예방 페이즈라면 1회 시작 > 버닝 페이즈에서 IsBurning을 true로 바꿔주면 됨
-        foreach (var fireObj in fireObjects)
+        // 모든 구역 초기화
+        foreach (var zone in _zoneDict.Values)
+        {
+            InitializeZone(zone);
+        }
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            RefreshAllFireObjects();
+        }
+        if (Input.GetKeyUp(KeyCode.S))
+        {
+            StartCoroutine(TeawooriSpawnAll());
+        }
+    }
+
+    // 모든 구역 초기화
+    private void InitializeZone(MapIndex zone)
+    {
+        foreach (var fireObj in zone.FireObjects)
         {
             fireObj.IsBurning = false;
         }
-        //firePreventables(예방 가능한 오브젝트)리스트는 최초 시작에서 한 번만
-        foreach (var firePreventable in firePreventables)
+        foreach (var preventable in zone.FirePreventables)
         {
-            firePreventable.IsFirePreventable = false;
+            preventable.IsFirePreventable = false;
         }
     }
-    void Update()
-    {
 
+    // 모든 구역의 화재 오브젝트 갱신
+    public void RefreshAllFireObjects()
+    {
+        foreach (var zone in _zoneDict.Values)
+        {
+            zone.FireObjects.Clear();
+            foreach (var preventable in zone.FirePreventables)
+            {
+                if (!preventable.IsFirePreventable)
+                {
+                    var fireObj = preventable.GetComponent<FireObjScript>();
+                    if (fireObj != null)
+                    {
+                        zone.FireObjects.Add(fireObj);
+                    }
+                }
+            }
+        }
+    }
+    // 모든 구역 화재 스폰 코루틴
+    IEnumerator TeawooriSpawnAll()
+    {
+        _isBurningTime = true;
+        foreach (var zone in _zoneDict.Values)
+        {
+            foreach (var fireObj in zone.FireObjects)
+            {
+                if (!fireObj.IsBurning)
+                {
+                    yield return new WaitForSeconds(1f);
+                    fireObj.IsBurning = true;
+                }
+            }
+        }
+        _isBurningTime = false;
     }
 }
