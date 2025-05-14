@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class FireSuppressant : MonoBehaviour
@@ -23,7 +24,7 @@ public class FireSuppressant : MonoBehaviour
     [SerializeField, Tooltip("소화기 분사 길이")] private float _range;
     private float _triggerValue;//눌렀는지 검사용
     [SerializeField, Tooltip("소화기 모델 프리팹")] private GameObject _modelPrefab;
-    private GameObject _originalController; //원래 있던 걸 담아 놓을 곳
+    //private GameObject _originalController; //원래 있던 걸 담아 놓을 곳으로 설계했지만 팔이 잡는다네요
     [SerializeField] private Dictionary<Collider, IDamageable> _cacheds = new();
     [SerializeField, Tooltip("스프레이 발사 시작 지점")] private Transform _sprayOrigin;
     [SerializeField, Tooltip("스프레이 길이")] private float _sprayLength;
@@ -61,17 +62,20 @@ public class FireSuppressant : MonoBehaviour
                 if (Physics.OverlapSphere(transform.position, 4, _supplyMask) != null)
                 {
                     _enabled = true;
-                    //컨트롤러 모델 변경
+                    
                     
                 }
             }
         }
+
+        //테스트용 코드
+        
         
     }
     public void NowOnRunningPhase()
     {
         _runningPhase = true;
-        //컨트롤러 소화기에서 변경해주기
+        
     }
     public void FeverTimeOn()
     {
@@ -150,5 +154,16 @@ public class FireSuppressant : MonoBehaviour
         _cacheds.Clear();
         yield return null;
     }
+    void OnDrawGizmos()
+    {
+        if (_sprayOrigin == null)
+            return;
 
+        Vector3 start = _sprayOrigin.position;
+        Vector3 end = start + _sprayOrigin.forward * _sprayLength;
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(start, _sprayRadius);
+        Gizmos.DrawWireSphere(end, _sprayRadius);
+        Gizmos.DrawLine(start, end);
+    }
 }
