@@ -28,14 +28,14 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6042871915995716481}
-  - {fileID: 6042871916467452228}
-  - {fileID: 6042871915319715152}
-  - {fileID: 6042871915994602353}
-  - {fileID: 6042871915450142798}
-  - {fileID: 6042871916524522236}
   - {fileID: 6042871916680500230}
   - {fileID: 6042871915784256610}
+  - {fileID: 6042871915450142798}
+  - {fileID: 6042871915319715152}
+  - {fileID: 6042871916467452228}
+  - {fileID: 6042871915995716481}
+  - {fileID: 6042871915994602353}
+  - {fileID: 6042871916524522236}
   - {fileID: 6042871915063645532}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -1151,6 +1151,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6042871915319715152}
+  - component: {fileID: 2728423985547504181}
   m_Layer: 0
   m_Name: KitchenBalcony
   m_TagString: Untagged
@@ -1175,8 +1176,21 @@ Transform:
   - {fileID: 6042871916769822834}
   - {fileID: 6042871916455721835}
   m_Father: {fileID: 376416749210061873}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2728423985547504181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6042871915319715167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f7fbc94f3e85c4fa77a766db249453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mapIndex: 3
 --- !u!1 &6042871915324100667
 GameObject:
   m_ObjectHideFlags: 0
@@ -2156,6 +2170,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6042871915450142798}
+  - component: {fileID: 9124871790787421752}
   m_Layer: 0
   m_Name: Vestibule
   m_TagString: Untagged
@@ -2187,8 +2202,21 @@ Transform:
   - {fileID: 6042871916955500504}
   - {fileID: 3795791181570748303}
   m_Father: {fileID: 376416749210061873}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9124871790787421752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6042871915450142797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f7fbc94f3e85c4fa77a766db249453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mapIndex: 2
 --- !u!1 &6042871915499573917
 GameObject:
   m_ObjectHideFlags: 0
@@ -4048,6 +4076,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6042871915784256610}
+  - component: {fileID: 5888258054750615790}
   m_Layer: 0
   m_Name: BathRoom
   m_TagString: Untagged
@@ -4083,8 +4112,21 @@ Transform:
   - {fileID: 1222868967198234298}
   - {fileID: 5681602946865784694}
   m_Father: {fileID: 376416749210061873}
-  m_RootOrder: 7
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5888258054750615790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6042871915784256609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f7fbc94f3e85c4fa77a766db249453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mapIndex: 1
 --- !u!1 &6042871915808436363
 GameObject:
   m_ObjectHideFlags: 0
@@ -5258,6 +5300,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6042871915994602353}
+  - component: {fileID: 2075024351983598277}
   m_Layer: 0
   m_Name: LivingBalcony
   m_TagString: Untagged
@@ -5285,8 +5328,21 @@ Transform:
   - {fileID: 70129958149412838}
   - {fileID: 2970628295616882512}
   m_Father: {fileID: 376416749210061873}
-  m_RootOrder: 3
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2075024351983598277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6042871915994602352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f7fbc94f3e85c4fa77a766db249453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mapIndex: 6
 --- !u!1 &6042871915995716480
 GameObject:
   m_ObjectHideFlags: 0
@@ -5296,6 +5352,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6042871915995716481}
+  - component: {fileID: 4010509489060905635}
   m_Layer: 0
   m_Name: LivingRoom
   m_TagString: Untagged
@@ -5336,8 +5393,21 @@ Transform:
   - {fileID: 387079632022088460}
   - {fileID: 7988622900214285138}
   m_Father: {fileID: 376416749210061873}
-  m_RootOrder: 0
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4010509489060905635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6042871915995716480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f7fbc94f3e85c4fa77a766db249453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mapIndex: 5
 --- !u!1 &6042871916065975403
 GameObject:
   m_ObjectHideFlags: 0
@@ -8063,6 +8133,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6042871916467452228}
+  - component: {fileID: 6417141500458796302}
   m_Layer: 0
   m_Name: Kitchen
   m_TagString: Untagged
@@ -8102,8 +8173,21 @@ Transform:
   - {fileID: 1452782236820056678}
   - {fileID: 7091343310558802763}
   m_Father: {fileID: 376416749210061873}
-  m_RootOrder: 1
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6417141500458796302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6042871916467452227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f7fbc94f3e85c4fa77a766db249453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mapIndex: 4
 --- !u!1 &6042871916498341369
 GameObject:
   m_ObjectHideFlags: 0
@@ -8466,7 +8550,7 @@ Transform:
   - {fileID: 6042871916404469961}
   - {fileID: 6042871915817290893}
   m_Father: {fileID: 376416749210061873}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6042871916529558863
 GameObject:
@@ -9650,6 +9734,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6042871916680500230}
+  - component: {fileID: 8889221308635543640}
   m_Layer: 0
   m_Name: Room
   m_TagString: Untagged
@@ -9687,8 +9772,21 @@ Transform:
   - {fileID: 7899198202841903294}
   - {fileID: 7051338439829087894}
   m_Father: {fileID: 376416749210061873}
-  m_RootOrder: 6
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8889221308635543640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6042871916680500229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f7fbc94f3e85c4fa77a766db249453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mapIndex: 0
 --- !u!1 &6042871916696611588
 GameObject:
   m_ObjectHideFlags: 0

@@ -122,10 +122,7 @@ MonoBehaviour:
     x: 1
     y: 1
     z: 1
-  _shieldScale:
-    x: 1
-    y: 1
-    z: 1
+  _shieldRadius: 1
 --- !u!114 &-8554112643987632912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,6 +137,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isBurning: 0
   _fireElementalSummonTime: 0
+  _taewooriPrefab: {fileID: 1266448066377587148, guid: fc5e374728e7fc540b5741a85367ceca,
+    type: 3}
+  _spawnOffset: 0.1
 --- !u!1001 &3256319646386425213
 PrefabInstance:
   m_ObjectHideFlags: 0

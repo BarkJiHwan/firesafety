@@ -37,7 +37,12 @@ public class FirePreventable : MonoBehaviour
     }
     private void Start()
     {
-        IsFirePreventable = false;
+        _isFirePreventable = false;
+    }
+
+    void OnMouseDown()
+    {//마우스클릭 테스트 코드
+        _isFirePreventable = !_isFirePreventable; // 상태 토글
     }
     private void Update()
     {
