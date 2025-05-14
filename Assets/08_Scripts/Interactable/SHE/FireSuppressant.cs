@@ -16,6 +16,7 @@ public class FireSuppressant : MonoBehaviour
     [SerializeField, Tooltip("틱당 감소량")] private int _decreaseAmount= 1;
     private readonly WaitForSeconds _checkTime = new(0.05f);
     private readonly WaitForSeconds _fireDelay = new(0.3f);
+    [SerializeField, Tooltip("지금 쏘고 있나요")] private bool _fireEnabled;
     [SerializeField, Tooltip("소화기를 들고 있느뇨")] private bool _enabled;
     [SerializeField, Tooltip("피버 타임")] private bool _feverTime;
     [SerializeField, Tooltip("대피 페이즈")] private bool _runningPhase = false;
@@ -35,6 +36,9 @@ public class FireSuppressant : MonoBehaviour
     [SerializeField, Tooltip("처음 쏠 때 허접한 FX")] private ParticleSystem _initialFireFX;
     [SerializeField, Tooltip("잔여량 UI Text")] private TextMeshPro _suppressorAmountUI;
     [SerializeField, Tooltip("무한 표시 이미지가 있는 오브젝트")] private GameObject _infinityImage;
+    private Collider[] _checkingCols = new Collider[20];
+    private Collider[] _checkingSupplyCols = new Collider[20];
+    private int _colHitCounts;
     private Vector3 _startPos;//스프레이 시작점
     private Vector3 _endPos;//스프레이 끝나는 점
     public bool Enabled
@@ -48,22 +52,20 @@ public class FireSuppressant : MonoBehaviour
         if (!_runningPhase)
         {
             _triggerValue = _actionProperty.action.ReadValue<float>();
-            if (_actionProperty.action.WasPressedThisFrame() && _enabled)
+            if (_triggerValue < 0.1f)
             {
-                StartCoroutine(SuppressingFire());
+                if (_enabled && !_fireEnabled)
+                {
+                    StartCoroutine(SuppressingFire());
+                }
+                //여기에 또 추가해야함 리필해주는 거 함수도 만들어주셈
             }
-            else if(_triggerValue < 0.1f)
+            else if(!_enabled && _triggerValue > 0.1f)
             {
-                StopAllCoroutines();
-            }
-
-            if(!_enabled && _triggerValue > 0.1f)
-            {
+                //여기 OverlapNonAlloc로 변경
                 if (Physics.OverlapSphere(transform.position, 4, _supplyMask) != null)
                 {
                     _enabled = true;
-                    
-                    
                 }
             }
         }
@@ -74,8 +76,7 @@ public class FireSuppressant : MonoBehaviour
     }
     public void NowOnRunningPhase()
     {
-        _runningPhase = true;
-        
+        _runningPhase = true; 
     }
     public void FeverTimeOn()
     {
@@ -89,26 +90,26 @@ public class FireSuppressant : MonoBehaviour
     private void Spray()
     {
         _startPos = _sprayOrigin.transform.position;
-        _endPos = _startPos + _sprayOrigin.forward * _sprayLength;
+        _endPos = _startPos + (_sprayOrigin.forward * _sprayLength);
 
-        Collider[] hits = Physics.OverlapCapsule(_startPos, _endPos, _sprayRadius, _fireMask);
-        _normalFireFX.Play();
-        foreach (var hit in hits)
+        _colHitCounts = Physics.OverlapCapsuleNonAlloc(_startPos, _endPos, _sprayRadius, _checkingCols, _fireMask);
+        if (!_normalFireFX.isPlaying)
         {
-            if(!_cacheds.TryGetValue(hit, out IDamageable hittable))
+            _normalFireFX.Play();
+        }
+        for (int i = 0; i < _colHitCounts; i++)
+        {
+            var hit = _checkingCols[i];
+            if (!_cacheds.TryGetValue(hit, out IDamageable cached))
             {
-                hittable = hit.GetComponent<IDamageable>();
-                if(hittable != null)
+                cached = GetComponent<IDamageable>();
+                if (cached != null)
                 {
-                    _cacheds[hit] = hittable;
+                    _cacheds[hit] = cached;
                 }
             }
-
-            hittable?.TakeDamage(_damage);
+            cached?.TakeDamage(_damage);
         }
-       
-
-        
     }
 
     private void UpdateAmountUI()
@@ -123,21 +124,21 @@ public class FireSuppressant : MonoBehaviour
 
     private IEnumerator SuppressingFire()
     {
-       while (_triggerValue > 0.1f && _amount > 0)
-       {
-           _initialFireFX.Play();
-           yield return _fireDelay;
+        while (_triggerValue > 0.1f && _amount > 0)
+        {
+            _initialFireFX.Play();
+            yield return _fireDelay;
             _initialFireFX.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            if(_amount > 0 && !_feverTime)
+            if (_amount > 0 && !_feverTime)
             {
                 _amount -= _decreaseAmount;
                 UpdateAmountUI();
             }
-           Spray();
-           
-           yield return _checkTime;
-       }
-       while(_triggerValue > 0.1f && _amount <= 0)
+            Spray();
+            yield return _checkTime;
+        }
+        //여기 수정 바람 0.3초 지나기 전에 때면 멈춰야댐
+        while (_triggerValue > 0.1f && _amount <= 0)
         {
             if (_normalFireFX.isPlaying)
             {
@@ -145,7 +146,7 @@ public class FireSuppressant : MonoBehaviour
             }
             _zeroAmountFireFX.Play();
         }
-       if(_normalFireFX.isPlaying || _zeroAmountFireFX.isPlaying)
+        if (_normalFireFX.isPlaying || _zeroAmountFireFX.isPlaying)
         {
             _normalFireFX.Stop();
             _zeroAmountFireFX.Stop();
@@ -154,7 +155,7 @@ public class FireSuppressant : MonoBehaviour
         _cacheds.Clear();
         yield return null;
     }
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         if (_sprayOrigin == null)
             return;
@@ -165,5 +166,6 @@ public class FireSuppressant : MonoBehaviour
         Gizmos.DrawWireSphere(start, _sprayRadius);
         Gizmos.DrawWireSphere(end, _sprayRadius);
         Gizmos.DrawLine(start, end);
+        //여기에 트리거 인식 범위도 표시해주셈
     }
 }
