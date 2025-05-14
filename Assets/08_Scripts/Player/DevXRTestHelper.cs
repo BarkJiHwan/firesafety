@@ -11,14 +11,10 @@ public class DevXRTestHelper : MonoBehaviour
     {
         if (!XRSettings.enabled)
         {
-            xrOrigin.RequestedTrackingOriginMode = XROrigin.TrackingOriginMode.Device;
-
             if (deviceSimulator != null)
             {
                 deviceSimulator.SetActive(true);
             }
-
-            Debug.Log("XR 환경 설정 안됨, 가상 환경 설정");
         }
     }
 }
