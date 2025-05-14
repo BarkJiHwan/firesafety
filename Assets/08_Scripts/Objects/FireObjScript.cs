@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FireObjScript : MonoBehaviour
+public partial class FireObjScript : MonoBehaviour
 {
     [Header("true일 때 태우리 생성 가능 상태"),Tooltip("체크가 되어 있으면 트루입니다.")]
     [SerializeField] private bool _isBurning;
