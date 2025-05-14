@@ -21,10 +21,10 @@ public class FireObjMgr : MonoBehaviour
             _instance = value;
         }
     }
+
+    public Dictionary<int, MapIndex> _zoneDict = new Dictionary<int, MapIndex>();
+
     [SerializeField] private bool _isBurningTime = false;
-
-    private Dictionary<int, MapIndex> _zoneDict = new Dictionary<int, MapIndex>();
-
     public bool isPreventPhase = true;
     public bool isFirePhase = false;
 
@@ -63,10 +63,6 @@ public class FireObjMgr : MonoBehaviour
         {
             RefreshAllFireObjects();
         }
-        if (Input.GetKeyUp(KeyCode.S))
-        {
-            StartCoroutine(TeawooriSpawnAll());
-        }
     }
 
     // 모든 구역 초기화
@@ -87,35 +83,17 @@ public class FireObjMgr : MonoBehaviour
     {
         foreach (var zone in _zoneDict.Values)
         {
-            zone.FireObjects.Clear();
             foreach (var preventable in zone.FirePreventables)
             {
-                if (!preventable.IsFirePreventable)
+                if (preventable.IsFirePreventable)
                 {
                     var fireObj = preventable.GetComponent<FireObjScript>();
                     if (fireObj != null)
                     {
-                        zone.FireObjects.Add(fireObj);
+                        zone.FireObjects.Remove(fireObj);
                     }
                 }
             }
         }
-    }
-    // 모든 구역 화재 스폰 코루틴
-    IEnumerator TeawooriSpawnAll()
-    {
-        _isBurningTime = true;
-        foreach (var zone in _zoneDict.Values)
-        {
-            foreach (var fireObj in zone.FireObjects)
-            {
-                if (!fireObj.IsBurning)
-                {
-                    yield return new WaitForSeconds(1f);
-                    fireObj.IsBurning = true;
-                }
-            }
-        }
-        _isBurningTime = false;
     }
 }
