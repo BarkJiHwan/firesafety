@@ -15,7 +15,7 @@ public class Taewoori : MonoBehaviour, IDamageable
 
     private float _coolTime;
     private Vector3 randomDirection;
-    private bool isDead = false;
+    private bool isDead = false;    
 
     private TaewooriPoolManager manager;
     private FireObjScript sourceFireObj; // 이 태우리를 생성한 화재 오브젝트
@@ -33,7 +33,7 @@ public class Taewoori : MonoBehaviour, IDamageable
     private void OnEnable()
     {
         ResetState();
-    }
+    }    
 
     private void ResetState()
     {
@@ -51,7 +51,7 @@ public class Taewoori : MonoBehaviour, IDamageable
 
     public void Update()
     {
-
+        // 소스 파이어 오브젝트가 없으면 업데이트 중지
         if (sourceFireObj == null)
         {
             return;
@@ -76,7 +76,23 @@ public class Taewoori : MonoBehaviour, IDamageable
 
         if (manager != null)
         {
-            GameObject projectile = manager.PoolSpawnFireParticle(spawnPosition, Quaternion.identity, this);
+            // 각도를 라디안으로 변환
+            float radianAngle = launchAngle * Mathf.Deg2Rad;
+
+            // 수평 방향 계산
+            Vector3 horizontalDir = randomDirection.normalized;
+
+            // 포물선 발사 방향 계산
+            Vector3 direction = new Vector3(
+                horizontalDir.x,
+                Mathf.Sin(radianAngle),
+                horizontalDir.z).normalized;
+
+            // 방향을 기반으로 회전 계산
+            Quaternion fixedRotation = Quaternion.Euler(-90f, 0, 0); // 기본 회전 (위쪽)
+
+            // 회전값을 적용하여 파티클 생성
+            GameObject projectile = manager.PoolSpawnFireParticle(spawnPosition, fixedRotation, this);
 
             if (projectile != null)
             {
@@ -84,18 +100,6 @@ public class Taewoori : MonoBehaviour, IDamageable
 
                 if (rb != null)
                 {
-                    // 각도를 라디안으로 변환
-                    float radianAngle = launchAngle * Mathf.Deg2Rad;
-
-                    // 수평 방향 계산
-                    Vector3 horizontalDir = randomDirection.normalized;
-
-                    // 포물선 발사 방향 계산
-                    Vector3 direction = new Vector3(
-                        horizontalDir.x,
-                        Mathf.Sin(radianAngle),
-                        horizontalDir.z).normalized;
-
                     // 힘 적용
                     rb.velocity = Vector3.zero;
                     rb.AddForce(direction * launchForce, ForceMode.Impulse);
@@ -103,7 +107,7 @@ public class Taewoori : MonoBehaviour, IDamageable
                     // 쿨타임 리셋
                     _coolTime = 0f;
 
-                    Debug.Log($"[최현민] {gameObject.name}이(가) 발사체 발사");
+                    Debug.Log($"[TAG] <color=magenta>{gameObject.name}이(가) {sourceFireObj.name}에서 불 파티클 발사</color>");
                 }
             }
         }
@@ -115,7 +119,7 @@ public class Taewoori : MonoBehaviour, IDamageable
             return;
 
         currentHealth -= damage;
-        Debug.Log($"{gameObject.name}이(가) {damage}의 데미지를 받음. 남은 체력: {currentHealth}");
+        Debug.Log($"[TAG] {gameObject.name}이(가) {damage}의 데미지를 받음. 남은 체력: {currentHealth}");
 
         if (currentHealth <= 0)
         {
@@ -129,6 +133,12 @@ public class Taewoori : MonoBehaviour, IDamageable
             return;
 
         isDead = true;
+
+        // 죽을 때도 화재 오브젝트 정보 표시
+        if (sourceFireObj != null)
+        {
+            Debug.Log($"[TAG] <color=red>태우리 사망: {gameObject.name}이(가) {sourceFireObj.name} 화재 오브젝트에서 파괴되었습니다.</color>");
+        }
 
         if (manager != null)
         {
