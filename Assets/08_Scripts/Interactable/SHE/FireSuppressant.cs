@@ -12,12 +12,12 @@ public class FireSuppressant : MonoBehaviour
 {
     [Header("스프레이 설정")]
     [SerializeField, Tooltip("소화기 HP")] private int _amount = 600;
-    [SerializeField, Tooltip("틱당 데미지")] private float _damage= 0.5f;
-    [SerializeField, Tooltip("틱당 감소량")] private int _decreaseAmount= 1;
+    [SerializeField, Tooltip("틱당 데미지")] private float _damage = 0.5f;
+    [SerializeField, Tooltip("틱당 감소량")] private int _decreaseAmount = 1;
     private readonly WaitForSeconds _checkTime = new(0.05f);
     private readonly WaitForSeconds _fireDelay = new(0.3f);
     [SerializeField, Tooltip("지금 쏘고 있나요")] private bool _fireEnabled;
-    [SerializeField, Tooltip("소화기를 들고 있느뇨")] private bool _enabled;
+    [Tooltip("소화기를 들고 있느뇨")] public bool Enabled { get; set; }
     [SerializeField, Tooltip("피버 타임")] private bool _feverTime;
     [SerializeField, Tooltip("대피 페이즈")] private bool _runningPhase = false;
     [SerializeField, Tooltip("상호작용 키 할당")] private InputActionProperty _actionProperty;
@@ -36,47 +36,46 @@ public class FireSuppressant : MonoBehaviour
     [SerializeField, Tooltip("처음 쏠 때 허접한 FX")] private ParticleSystem _initialFireFX;
     [SerializeField, Tooltip("잔여량 UI Text")] private TextMeshPro _suppressorAmountUI;
     [SerializeField, Tooltip("무한 표시 이미지가 있는 오브젝트")] private GameObject _infinityImage;
-    private Collider[] _checkingCols = new Collider[20];
-    private Collider[] _checkingSupplyCols = new Collider[20];
+    private readonly Collider[] _checkingCols = new Collider[20];
+    private readonly Collider[] _checkingSupplyCols = new Collider[20];
     private int _colHitCounts;
     private Vector3 _startPos;//스프레이 시작점
     private Vector3 _endPos;//스프레이 끝나는 점
-    public bool Enabled
-    {
-        get { return _enabled; }
-        set { _enabled = value; }
-    }
-
+    private bool _isPressed;//눌림?
+    private bool _wasPressedLateFrame;//전프레임 트리거 값
+    [SerializeField] private float _detactingRange; //소화기 리필 지점 인식 범위
+    private int _supplyColHitCount;
+    private float _supplyCooldown;//시간초 재야지
+    [SerializeField] private float _refillCooldown;//일정 시간 후에 가져갈 수 있도록
+    [SerializeField] private bool _inSupplySpot;
     private void Update()
     {
         if (!_runningPhase)
         {
             _triggerValue = _actionProperty.action.ReadValue<float>();
-            if (_triggerValue < 0.1f)
+            _isPressed = _triggerValue > 0.1f;
+            if (_supplyCooldown > 0)
             {
-                if (_enabled && !_fireEnabled)
-                {
-                    StartCoroutine(SuppressingFire());
-                }
-                //여기에 또 추가해야함 리필해주는 거 함수도 만들어주셈
+                _supplyCooldown -= Time.deltaTime;
             }
-            else if(!_enabled && _triggerValue > 0.1f)
+            if (_isPressed && _wasPressedLateFrame && !_feverTime)
             {
-                //여기 OverlapNonAlloc로 변경
-                if (Physics.OverlapSphere(transform.position, 4, _supplyMask) != null)
+                _supplyColHitCount = Physics.OverlapSphereNonAlloc(transform.position, _detactingRange, _checkingSupplyCols, _supplyMask);
+                if (_supplyColHitCount > 0 && 0 > _supplyCooldown)
                 {
-                    _enabled = true;
+                    SupplySuppressor();
+                    //UI도 해주세요~
                 }
+
             }
         }
-
-        //테스트용 코드
-        
-        
+        _wasPressedLateFrame = _isPressed;
+        //밑은 테스트용 코드
     }
     public void NowOnRunningPhase()
     {
-        _runningPhase = true; 
+        _runningPhase = true;
+        //이후 뭔가 있으면 추가
     }
     public void FeverTimeOn()
     {
@@ -85,6 +84,23 @@ public class FireSuppressant : MonoBehaviour
         //내구도 UI 변경, 이미지로 무한이 뜨거나 할 것
         _infinityImage.SetActive(true);
         _suppressorAmountUI.text = "";
+    }
+
+    private void SupplySuppressor()
+    {
+        if (!_feverTime)
+        {
+            if (!Enabled)
+            {
+                Enabled = true;
+            }
+            _amount = 600;
+            UpdateAmountUI();
+        }
+        else
+        {
+            return;
+        }
     }
 
     private void Spray()
@@ -100,7 +116,7 @@ public class FireSuppressant : MonoBehaviour
         for (int i = 0; i < _colHitCounts; i++)
         {
             var hit = _checkingCols[i];
-            if (!_cacheds.TryGetValue(hit, out IDamageable cached))
+            if (!_cacheds.TryGetValue(hit, out var cached))
             {
                 cached = GetComponent<IDamageable>();
                 if (cached != null)
@@ -118,8 +134,6 @@ public class FireSuppressant : MonoBehaviour
         {
             _suppressorAmountUI.text = (_amount / 6).ToString();
         }
-
-
     }
 
     private IEnumerator SuppressingFire()
@@ -137,31 +151,42 @@ public class FireSuppressant : MonoBehaviour
             Spray();
             yield return _checkTime;
         }
-        //여기 수정 바람 0.3초 지나기 전에 때면 멈춰야댐
         while (_triggerValue > 0.1f && _amount <= 0)
         {
             if (_normalFireFX.isPlaying)
             {
                 _normalFireFX.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             }
-            _zeroAmountFireFX.Play();
+            if (!_zeroAmountFireFX.isPlaying)
+            {
+                _zeroAmountFireFX.Play();
+            }
         }
-        if (_normalFireFX.isPlaying || _zeroAmountFireFX.isPlaying)
+        //이펙트 끄기
+        if (_normalFireFX.isPlaying)
         {
             _normalFireFX.Stop();
+        }
+        if (_zeroAmountFireFX.isPlaying)
+        {
             _zeroAmountFireFX.Stop();
         }
-
+        if (_initialFireFX.isPlaying)
+        {
+            _initialFireFX.Stop();
+        }
         _cacheds.Clear();
         yield return null;
     }
     private void OnDrawGizmos()
     {
         if (_sprayOrigin == null)
+        {
             return;
+        }
 
         Vector3 start = _sprayOrigin.position;
-        Vector3 end = start + _sprayOrigin.forward * _sprayLength;
+        Vector3 end = start + (_sprayOrigin.forward * _sprayLength);
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(start, _sprayRadius);
         Gizmos.DrawWireSphere(end, _sprayRadius);
