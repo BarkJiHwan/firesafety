@@ -199,6 +199,14 @@ public class TaewooriPoolManager : MonoBehaviour
             return CreatePooledObject(prefab, pool);
         }
 
+        // 태우리 컴포넌트가 있으면 재설정 처리
+        Taewoori taewooriComponent = obj.GetComponent<Taewoori>();
+        if (taewooriComponent != null)
+        {
+            // 이 시점에서는 sourceFireObj를 null로 설정하지 않음
+            // 나중에 Initialize에서 새 값으로 설정될 것임
+        }
+
         return obj;
     }
 
@@ -246,22 +254,29 @@ public class TaewooriPoolManager : MonoBehaviour
         ReturnToPool(smallTaewooriObj, smallTaewooriPool);
     }
     // 특정 위치에 태우리 생성
+    // TaewooriPoolManager.cs
     public GameObject SpawnTaewooriAtPosition(Vector3 position, FireObjScript fireObj)
     {
         if (fireObj == null)
+        {
+            Debug.LogError("[TaewooriPoolManager] SpawnTaewooriAtPosition: fireObj이 null입니다!");
             return null;
+        }
 
         GameObject taewooriObj = GetFromPool(taewooriPool, taewooriPrefab);
 
         if (taewooriObj != null)
         {
+            // 위치 설정
             taewooriObj.transform.position = position;
-            taewooriObj.SetActive(true);
 
             Taewoori taewooriComponent = taewooriObj.GetComponent<Taewoori>();
             if (taewooriComponent != null)
             {
-                // 사용 중인 태우리 등록
+                // 중요: 활성화 전에 초기화 수행
+                taewooriComponent.Initialize(this, fireObj);
+
+                // 관리 딕셔너리에 추가
                 if (!activeTaewooriesByFireObj.ContainsKey(fireObj))
                 {
                     activeTaewooriesByFireObj[fireObj] = new List<Taewoori>();
@@ -270,8 +285,10 @@ public class TaewooriPoolManager : MonoBehaviour
                 activeTaewooriesByFireObj[fireObj].Add(taewooriComponent);
                 projectileCountByTaewoori[taewooriComponent] = 0;
 
-                // 태우리 초기화
-                taewooriComponent.Initialize(this, fireObj);
+                // 이제 모든 설정이 완료되었으므로 활성화
+                taewooriObj.SetActive(true);
+
+                Debug.Log($"[TaewooriPoolManager] 태우리가 위치 {position}에 생성되고 {fireObj.name}에 연결되었습니다.");
             }
         }
 

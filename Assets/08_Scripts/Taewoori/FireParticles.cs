@@ -6,6 +6,16 @@ public class FireParticles : MonoBehaviour
 
     private Taewoori originTaewoori;
 
+    
+    private void Start()
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            // 회전을 고정 (리지드바디가 회전하지 않도록 함)
+            rb.freezeRotation = true;
+        }
+    }
     public void SetOriginTaewoori(Taewoori taewoori)
     {
         originTaewoori = taewoori;
@@ -14,17 +24,17 @@ public class FireParticles : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         // 특정 태그 충돌 무시
-        //foreach (string tag in ignoreCollisionTags)
-        //{
-        //    if (collision.gameObject.CompareTag(tag))
-        //    {
-        //        return;
-        //    }
-        //}
-        if (collision.gameObject.CompareTag("Taewoori"))
+        foreach (string tag in ignoreCollisionTags)
         {
-            return;
+            if (collision.gameObject.CompareTag(tag))
+            {
+                return;
+            }
         }
+        //if (collision.gameObject.CompareTag("Taewoori"))
+        //{
+        //    return;
+        //}
 
             // 충돌 위치 가져오기
             if (collision.contacts.Length > 0)

@@ -535,9 +535,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isBurning: 0
-  _fireElementalSummonTime: 10
-  _spawnOffset: 0.1
-  _enableTaewooriSystem: 1
+  _spawnOffset: {x: 0, y: 0.1, z: 0}
+  _useColliderCenter: 1
 --- !u!1 &694046856
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,6 +546,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 694046857}
+  - component: {fileID: 694046858}
   m_Layer: 0
   m_Name: TaewooriSpawnManager
   m_TagString: Untagged
@@ -569,6 +569,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &694046858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 694046856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d911b0e2f37eff240b858bff512e42de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  globalTaewooriEnabled: 0
+  saveTaewooriOffsetsBetweenSessions: 1
+  taewooriPoolManager: {fileID: 0}
+  autoRegisterAllOnStart: 1
+  managedFireObjectsList: []
 --- !u!4 &725993760 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1934440500783924086, guid: fc5e374728e7fc540b5741a85367ceca,
@@ -757,7 +774,7 @@ MonoBehaviour:
     type: 3}
   fireParticlePrefab: {fileID: 1053203839010120, guid: eb5380e45ca7633458e6b2e8f95e3283,
     type: 3}
-  initialPoolSize: 10
+  initialPoolSize: 30
 --- !u!114 &1389041556 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4060798351119989042, guid: 489d67e0b706f45b9902bf6d7b071954,
@@ -826,7 +843,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b2f6647f8e8e5e48bc039e71c99309a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isBurningTime: 1
   isPreventPhase: 1
   isFirePhase: 0
 --- !u!114 &1615317226 stripped
@@ -1379,6 +1395,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1528860152810398775, guid: 489d67e0b706f45b9902bf6d7b071954,
         type: 3}
+      propertyPath: _isBurning
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528860152810398775, guid: 489d67e0b706f45b9902bf6d7b071954,
+        type: 3}
       propertyPath: _spawnOffset
       value: 0.5
       objectReference: {fileID: 0}
@@ -1924,6 +1945,11 @@ PrefabInstance:
       objectReference: {fileID: 539166577}
     - target: {fileID: 6627822291150393784, guid: 489d67e0b706f45b9902bf6d7b071954,
         type: 3}
+      propertyPath: _isBurning
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6627822291150393784, guid: 489d67e0b706f45b9902bf6d7b071954,
+        type: 3}
       propertyPath: _spawnOffset
       value: 0.5
       objectReference: {fileID: 0}
@@ -1996,6 +2022,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _shieldRadius
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8631704564695943611, guid: 489d67e0b706f45b9902bf6d7b071954,
+        type: 3}
+      propertyPath: _useColliderCenter
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8889221308635543640, guid: 489d67e0b706f45b9902bf6d7b071954,
         type: 3}
