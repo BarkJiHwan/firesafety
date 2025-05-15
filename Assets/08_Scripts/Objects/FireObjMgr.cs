@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FireObjMgr : MonoBehaviour
 {
@@ -24,44 +24,58 @@ public class FireObjMgr : MonoBehaviour
 
     public Dictionary<int, MapIndex> _zoneDict = new Dictionary<int, MapIndex>();
 
-    [SerializeField] private bool _isBurningTime = false;
-    public bool isPreventPhase = true;
-    public bool isFirePhase = false;
+    [SerializeField] private bool isPreventPhase = false;
+    [SerializeField] private bool isFirePhase = false;
 
     private void Awake()
     {
-        if (_instance != null)
+        if (_instance != null && _instance != this)
         {
             Destroy(gameObject);
             return;
         }
         _instance = this;
+        //씬 변환이 있다면 사용
+        //SceneManager.sceneLoaded += OnSceneLoaded;
         DontDestroyOnLoad(gameObject);
+        RefreshZoneDict();
+    }
+    void Update()
+    {
+        if (isPreventPhase)
+        {
+            Debug.Log("모든 구역 초기화 완료");
+            // 모든 구역 초기화
+            foreach (var zone in _zoneDict.Values)
+            {
+                InitializeZone(zone);
+            }
+            isPreventPhase = false;
+        }
+        if (isFirePhase)
+        {
+            Debug.Log("화재 페이즈 진입 완료");
+            RefreshAllFireObjects();
+            isFirePhase = false;
+        }
+    }
+    ////씬 변환이 있다면 사용
+    //void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    //{
+    //    RefreshZoneDict();
+    //}
+    public void RefreshZoneDict()
+    {
+        _zoneDict.Clear();
         var zones = FindObjectsByType<MapIndex>(FindObjectsSortMode.None);
         foreach (var zone in zones)
         {
             if (_zoneDict.ContainsKey(zone.MapIndexValue))
             {
+                Debug.Log($"딕셔너리 값 중복 있음. {zone.MapIndexValue}, {zone.name} 확인");
                 continue;
             }
             _zoneDict.Add(zone.MapIndexValue, zone);
-        }
-    }
-
-    void Start()
-    {
-        // 모든 구역 초기화
-        foreach (var zone in _zoneDict.Values)
-        {
-            InitializeZone(zone);
-        }
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.A))
-        {
-            RefreshAllFireObjects();
         }
     }
 
