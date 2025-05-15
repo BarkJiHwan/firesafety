@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class FirePreventable : MonoBehaviour
@@ -13,7 +12,7 @@ public class FirePreventable : MonoBehaviour
     [SerializeField] private GameObject _shieldPrefab;
 
     [Header("임시 변수 추후 다른 스크립트에서 관리할 예정")]
-    [SerializeField] private bool _preventTime;
+    [SerializeField] private bool _isClickable = false;  // 예방 페이즈일 때만 true
 
     [Serializable]
     public struct SmokeScaledAxis
@@ -37,19 +36,26 @@ public class FirePreventable : MonoBehaviour
     }
     private void Start()
     {
-        _isFirePreventable = false;
+        _smokePrefab.SetActive(false);
+        _shieldPrefab.SetActive(false);
     }
 
     void OnMouseDown()
     {//마우스클릭 테스트 코드
         _isFirePreventable = !_isFirePreventable; // 상태 토글
     }
-    private void Update()
+    void Update()
     {
         ApplySmokeSettings();
         ApplyShieldSettings();
-        if(_preventTime)
+
+        // 페이즈 확인
+        var currentPhase = GameManager.Instance.CurrentPhase;
+        _isClickable = currentPhase == GameManager.GamePhase.Prevention;
+
+        if (_isClickable)
         {
+            // 예방 페이즈
             if (_isFirePreventable)
             {
                 _smokePrefab.SetActive(false);
@@ -66,7 +72,6 @@ public class FirePreventable : MonoBehaviour
             _smokePrefab.SetActive(false);
         }
     }
-
     //스모크 사이즈 셋팅
     private void ApplySmokeSettings() => _smokePrefab.transform.localScale =
             new Vector3(_smokeScale.x, _smokeScale.y, _smokeScale.z);
