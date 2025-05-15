@@ -41,10 +41,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1934440500783924086}
   - component: {fileID: 5492332943628507404}
-  - component: {fileID: 6435073222954814071}
+  - component: {fileID: 8082938141372897813}
   m_Layer: 0
-  m_Name: Taeuri_Sample
-  m_TagString: Untagged
+  m_Name: Taewoori_Sample
+  m_TagString: Taewoori
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -56,17 +56,18 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1266448066377587148}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0.2625, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6622317593543062380}
   - {fileID: 5556196688998441390}
   - {fileID: 1810605020962334499}
+  - {fileID: 2305699675573566560}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &5492332943628507404
 Animator:
   serializedVersion: 5
@@ -88,7 +89,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6435073222954814071
+--- !u!114 &8082938141372897813
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,12 +98,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1266448066377587148}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af6142d7466e61b4a8822c581a0b1f60, type: 3}
+  m_Script: {fileID: 11500000, guid: 62625a5e96bc2ac48b276d4609089295, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 100
-  _feverTimeHealth: 30
-  _animator: {fileID: 0}
+  maxHealth: 100
+  currentHealth: 0
+  launchForce: 1
+  launchAngle: 90
+  randomRadius: 0.5
+  maxProjectiles: 10
+  projectileCooldown: 2
 --- !u!1 &1362686932049987822
 GameObject:
   m_ObjectHideFlags: 0
@@ -787,7 +792,7 @@ GameObject:
   - component: {fileID: 6622317593543062380}
   m_Layer: 0
   m_Name: Armature.001
-  m_TagString: Untagged
+  m_TagString: Taewoori
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -981,7 +986,7 @@ GameObject:
   - component: {fileID: 5854899482048867274}
   m_Layer: 0
   m_Name: Taeuri_Sample.001
-  m_TagString: Untagged
+  m_TagString: Taewoori
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1188,7 +1193,7 @@ GameObject:
   - component: {fileID: 5556196688998441390}
   m_Layer: 0
   m_Name: Taeuri_Sample
-  m_TagString: Untagged
+  m_TagString: Taewoori
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1208,3 +1213,84 @@ Transform:
   m_Father: {fileID: 1934440500783924086}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2301496206900709452
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1934440500783924086}
+    m_Modifications:
+    - target: {fileID: 1053203839010120, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
+      propertyPath: m_Name
+      value: Fire01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053203839010120, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
+      propertyPath: m_TagString
+      value: Taewoori
+      objectReference: {fileID: 0}
+    - target: {fileID: 1623226520601082, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
+      propertyPath: m_TagString
+      value: Taewoori
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489549471446060, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489549471446060, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489549471446060, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489549471446060, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489549471446060, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489549471446060, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489549471446060, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489549471446060, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489549471446060, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 270
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489549471446060, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489549471446060, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 199792694481075188, guid: e2cd92d970ec51c48a9a7fc8fc75acbb,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 199822696827757320, guid: e2cd92d970ec51c48a9a7fc8fc75acbb,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
+--- !u!4 &2305699675573566560 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4489549471446060, guid: e2cd92d970ec51c48a9a7fc8fc75acbb,
+    type: 3}
+  m_PrefabInstance: {fileID: 2301496206900709452}
+  m_PrefabAsset: {fileID: 0}
