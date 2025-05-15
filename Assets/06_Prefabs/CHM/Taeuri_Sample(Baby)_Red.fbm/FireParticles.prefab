@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4093393076825219522}
   - component: {fileID: 1372370664080928527}
   m_Layer: 0
-  m_Name: FirePrefeb
+  m_Name: FireParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4833,12 +4833,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d48d0aa9ce0aee64abad6a57b3c656eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPrefab: {fileID: 2105682044638487978, guid: b5158f3fc04707a4e9d3767f2efe5643,
-    type: 3}
   ignoreCollisionTags:
   - Player
-  - Taeuri
-  effectDuration: 1
+  - Taewoori
 --- !u!1 &1623226520601082
 GameObject:
   m_ObjectHideFlags: 0

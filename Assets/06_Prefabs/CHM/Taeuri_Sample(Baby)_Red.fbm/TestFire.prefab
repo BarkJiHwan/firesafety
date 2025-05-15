@@ -131,9 +131,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d48d0aa9ce0aee64abad6a57b3c656eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPrefab: {fileID: 2105682044638487978, guid: b5158f3fc04707a4e9d3767f2efe5643,
-    type: 3}
   ignoreCollisionTags:
   - Player
-  - Ground
-  effectDuration: 5
+  - Taewoori

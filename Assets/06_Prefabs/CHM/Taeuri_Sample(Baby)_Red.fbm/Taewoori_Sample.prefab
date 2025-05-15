@@ -43,8 +43,8 @@ GameObject:
   - component: {fileID: 5492332943628507404}
   - component: {fileID: 8082938141372897813}
   m_Layer: 0
-  m_Name: Taeuri_Sample
-  m_TagString: Taeuri
+  m_Name: Taewoori_Sample
+  m_TagString: Taewoori
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -101,16 +101,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62625a5e96bc2ac48b276d4609089295, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 20
+  maxHealth: 100
   currentHealth: 0
-  projectilePrefab: {fileID: 1053203839010120, guid: 63590008825003b4fb4e802e207f51f3,
-    type: 3}
   launchForce: 1
   launchAngle: 90
   randomRadius: 0.5
   maxProjectiles: 10
-  _coolTime: 0
-  _taeuriTime: 1
+  projectileCooldown: 2
 --- !u!1 &1362686932049987822
 GameObject:
   m_ObjectHideFlags: 0
@@ -795,7 +792,7 @@ GameObject:
   - component: {fileID: 6622317593543062380}
   m_Layer: 0
   m_Name: Armature.001
-  m_TagString: Taeuri
+  m_TagString: Taewoori
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -989,7 +986,7 @@ GameObject:
   - component: {fileID: 5854899482048867274}
   m_Layer: 0
   m_Name: Taeuri_Sample.001
-  m_TagString: Taeuri
+  m_TagString: Taewoori
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1196,7 +1193,7 @@ GameObject:
   - component: {fileID: 5556196688998441390}
   m_Layer: 0
   m_Name: Taeuri_Sample
-  m_TagString: Taeuri
+  m_TagString: Taewoori
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1229,11 +1226,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1053203839010120, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
       propertyPath: m_TagString
-      value: Taeuri
+      value: Taewoori
       objectReference: {fileID: 0}
     - target: {fileID: 1623226520601082, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
       propertyPath: m_TagString
-      value: Taeuri
+      value: Taewoori
       objectReference: {fileID: 0}
     - target: {fileID: 4489549471446060, guid: e2cd92d970ec51c48a9a7fc8fc75acbb, type: 3}
       propertyPath: m_RootOrder
