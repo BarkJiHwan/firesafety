@@ -1000,6 +1000,12 @@ MonoBehaviour:
   m_UseLocalSpace: 1
   m_AngleStabilization: 20
   m_PositionStabilization: 0.25
+--- !u!1 &838520877 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1856236414, guid: 925c5e98afbc34b099abe1f8d560ed55,
+    type: 3}
+  m_PrefabInstance: {fileID: 953101904}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &935958245
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1465,6 +1471,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1166021724}
     m_Modifications:
+    - target: {fileID: 193954394, guid: 925c5e98afbc34b099abe1f8d560ed55, type: 3}
+      propertyPath: m_Name
+      value: AnimationRigs
+      objectReference: {fileID: 0}
     - target: {fileID: 953101958, guid: 925c5e98afbc34b099abe1f8d560ed55, type: 3}
       propertyPath: m_LocomotionProvider
       value: 
@@ -1528,11 +1538,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Jennie_Toon_3Shading
-      objectReference: {fileID: 0}
-    - target: {fileID: 8355433770183455744, guid: 925c5e98afbc34b099abe1f8d560ed55,
-        type: 3}
-      propertyPath: m_WarningMessage
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 925c5e98afbc34b099abe1f8d560ed55, type: 3}
@@ -2183,6 +2188,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6598815579406187026, guid: 18ddb545287c546e19cc77dc9fbb2189,
+        type: 3}
+      propertyPath: m_CameraTransform
+      value: 
+      objectReference: {fileID: 1856236415}
     - target: {fileID: 6598815579406187027, guid: 18ddb545287c546e19cc77dc9fbb2189,
         type: 3}
       propertyPath: m_RootOrder
@@ -2826,6 +2836,78 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 953101904}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1856236423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 838520877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2fadf230d1919748a9aa21d40f74619, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TrackingType: 0
+  m_UpdateType: 0
+  m_IgnoreTrackingState: 0
+  m_PositionInput:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Position
+      m_Type: 0
+      m_ExpectedControlType: Vector3
+      m_Id: 5607d92d-268e-4c26-a650-1112c1ef45a0
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 7862207684358717888, guid: c348712bda248c246b8c49b3db54643f,
+      type: 3}
+  m_RotationInput:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Rotation
+      m_Type: 0
+      m_ExpectedControlType: Quaternion
+      m_Id: e4f3ad62-47fe-41b1-b9a4-a92ebf2928af
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: -530380113134220495, guid: c348712bda248c246b8c49b3db54643f,
+      type: 3}
+  m_TrackingStateInput:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Tracking State
+      m_Type: 0
+      m_ExpectedControlType: Integer
+      m_Id: 647b4362-db07-45d8-a41a-ce987c7d0743
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 1031966339891076899, guid: c348712bda248c246b8c49b3db54643f,
+      type: 3}
+  m_PositionAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: d3559677-5332-46e9-b50d-bd9af7164de9
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  m_RotationAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 4ad9113c-e45f-40f8-be66-89a7d676575b
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!4 &1961695303 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1668357137270028231, guid: 06d05bd25fa3d4cbfbe7aae923f3ac26,
