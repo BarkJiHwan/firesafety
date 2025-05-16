@@ -3,17 +3,33 @@
 public class SmallTaewoori : MonoBehaviour, IDamageable
 {
     [Header("체력 설정")]
-    [SerializeField] private float maxHealth = 20f;
-    [SerializeField] private float currentHealth;
+    [SerializeField] public float maxHealth = 100f;
+    [SerializeField] public float currentHealth;
+    [SerializeField] private float feverTimeExtraHealth = 50f;
 
     private bool isDead = false;
     private TaewooriPoolManager manager;
     private Taewoori originTaewoori;
-
+    private bool isFeverMode = false;
     public void Initialize(TaewooriPoolManager taewooriManager, Taewoori taewoori)
     {
         manager = taewooriManager;
         originTaewoori = taewoori;
+
+        var spawnManager = FindAnyObjectByType<TaewooriSpawnManager>();
+        if (spawnManager != null)
+        {
+            isFeverMode = spawnManager.IsFeverTime;
+            if (isFeverMode)
+            {
+                maxHealth = 100f + feverTimeExtraHealth;
+            }
+            else
+            {
+                maxHealth = 100f;
+            }
+        }
+
         ResetState();
     }
 
