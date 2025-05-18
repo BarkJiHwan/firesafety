@@ -536,7 +536,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isBurning: 0
   _spawnOffset: {x: 0, y: 0.1, z: 0}
-  _useColliderCenter: 1
 --- !u!1 &694046856
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,10 +580,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d911b0e2f37eff240b858bff512e42de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  globalTaewooriEnabled: 0
-  saveTaewooriOffsetsBetweenSessions: 1
-  taewooriPoolManager: {fileID: 0}
-  autoRegisterAllOnStart: 1
+  _isAllfire: 0
+  taewooriSpawnCoolTime: 1
+  taewooriRespawnCoolTime: 5
+  _isPeverTime: 0
   managedFireObjectsList: []
 --- !u!4 &725993760 stripped
 Transform:
@@ -640,6 +639,67 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe66b56a6f578bb40b95178d80bb876e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &904969348
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 904969350}
+  - component: {fileID: 904969349}
+  - component: {fileID: 904969351}
+  m_Layer: 0
+  m_Name: TestAttack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &904969349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904969348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3da5d8be1e94b624e8c4c6f63f65f72a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackDamage: 50
+  attackRange: 5
+  taewooriTag: Taewoori
+--- !u!4 &904969350
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904969348}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &904969351
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904969348}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1071323721 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6536286919582119632, guid: 489d67e0b706f45b9902bf6d7b071954,
@@ -1148,6 +1208,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 101099435276991503, guid: 489d67e0b706f45b9902bf6d7b071954,
+        type: 3}
+      propertyPath: _isBurning
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 101099435276991503, guid: 489d67e0b706f45b9902bf6d7b071954,
+        type: 3}
+      propertyPath: _spawnOffset.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 101099435276991503, guid: 489d67e0b706f45b9902bf6d7b071954,
+        type: 3}
+      propertyPath: _spawnOffset.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 101099435276991503, guid: 489d67e0b706f45b9902bf6d7b071954,
+        type: 3}
+      propertyPath: _spawnOffset.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 101099435276991503, guid: 489d67e0b706f45b9902bf6d7b071954,
+        type: 3}
+      propertyPath: _useColliderCenter
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 376416749210061873, guid: 489d67e0b706f45b9902bf6d7b071954,
         type: 3}
       propertyPath: m_RootOrder

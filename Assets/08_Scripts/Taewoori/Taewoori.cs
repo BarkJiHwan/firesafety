@@ -3,8 +3,11 @@
 public class Taewoori : MonoBehaviour, IDamageable
 {
     [Header("체력 설정")]
-    [SerializeField] private float maxHealth = 100f;
-    [SerializeField] private float currentHealth;
+    [SerializeField] public float maxHealth = 100f;
+    [SerializeField] public float currentHealth;
+
+    [Tooltip("피버타임 시 추가 체력")]
+    [SerializeField] private float feverTimeExtraHealth = 50f;
 
     [Header("발사체 설정")]
     [SerializeField] private float launchForce = 10f;
@@ -15,7 +18,8 @@ public class Taewoori : MonoBehaviour, IDamageable
 
     private float _coolTime;
     private Vector3 randomDirection;
-    private bool isDead = false;    
+    private bool isDead = false;
+    private bool isFeverMode = false; // 생성 시점의 피버타임 상태 저장
 
     private TaewooriPoolManager manager;
     private FireObjScript sourceFireObj; // 이 태우리를 생성한 화재 오브젝트
@@ -27,6 +31,24 @@ public class Taewoori : MonoBehaviour, IDamageable
     {
         manager = taewooriManager;
         sourceFireObj = fireObj;
+
+        // TaewooriSpawnManager의 피버타임 상태 확인
+        var spawnManager = FindObjectOfType<TaewooriSpawnManager>();
+        if (spawnManager != null)
+        {
+            isFeverMode = spawnManager.IsFeverTime;
+
+            // 피버타임 상태에 따라 체력 설정
+            if (isFeverMode)
+            {
+                maxHealth = 100f + feverTimeExtraHealth;
+            }
+            else
+            {
+                maxHealth = 100f;
+            }
+        }
+
         ResetState();
     }
 
@@ -102,7 +124,7 @@ public class Taewoori : MonoBehaviour, IDamageable
                 {
                     // 힘 적용
                     rb.velocity = Vector3.zero;
-                    rb.AddForce(direction * launchForce, ForceMode.Impulse);
+                    rb.AddForce(direction * launchForce, ForceMode.Impulse) ;
 
                     // 쿨타임 리셋
                     _coolTime = 0f;
@@ -133,7 +155,11 @@ public class Taewoori : MonoBehaviour, IDamageable
             return;
 
         isDead = true;
-
+        var spawnManager = FindObjectOfType<TaewooriSpawnManager>();
+        if (spawnManager != null && sourceFireObj != null)
+        {
+            spawnManager.NotifyTaewooriDestroyed(sourceFireObj);
+        }
         // 죽을 때도 화재 오브젝트 정보 표시
         if (sourceFireObj != null)
         {

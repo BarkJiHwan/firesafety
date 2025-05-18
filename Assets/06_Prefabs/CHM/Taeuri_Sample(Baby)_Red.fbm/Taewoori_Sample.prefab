@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 1934440500783924086}
   - component: {fileID: 5492332943628507404}
   - component: {fileID: 8082938141372897813}
+  - component: {fileID: 2008482606144363321}
   m_Layer: 0
   m_Name: Taewoori_Sample
   m_TagString: Taewoori
@@ -103,11 +104,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 0
+  feverTimeExtraHealth: 50
   launchForce: 1
   launchAngle: 90
   randomRadius: 0.5
   maxProjectiles: 4
   projectileCooldown: 10
+--- !u!136 &2008482606144363321
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1266448066377587148}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.25
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &1362686932049987822
 GameObject:
   m_ObjectHideFlags: 0

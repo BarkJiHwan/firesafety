@@ -2,17 +2,16 @@
 
 public class FireParticles : MonoBehaviour
 {
-    [SerializeField] private string[] ignoreCollisionTags = { "Player", "Taewoori" };
+    [SerializeField] private string[] ignoreCollisionTags = { "Player", "Taewoori", "Shield" };
 
     private Taewoori originTaewoori;
 
-    
+
     private void Start()
     {
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
-            // 회전을 고정 (리지드바디가 회전하지 않도록 함)
             rb.freezeRotation = true;
         }
     }
@@ -31,13 +30,10 @@ public class FireParticles : MonoBehaviour
                 return;
             }
         }
-        //if (collision.gameObject.CompareTag("Taewoori"))
-        //{
-        //    return;
-        //}
 
-            // 충돌 위치 가져오기
-            if (collision.contacts.Length > 0)
+
+        // 충돌 위치 가져오기
+        if (collision.contacts.Length > 0)
         {
             ContactPoint contact = collision.contacts[0];
             Vector3 collisionPoint = contact.point;
