@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//public interface IPhaseProvider
+//{
+//    GameManager.GamePhase CurrentPhase { get; }
+//    float GameTimer { get; }
+//}
+
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
