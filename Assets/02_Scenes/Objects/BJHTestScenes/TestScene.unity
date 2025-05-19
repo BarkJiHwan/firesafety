@@ -170,6 +170,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe66b56a6f578bb40b95178d80bb876e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &301273285
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 301273287}
+  - component: {fileID: 301273286}
+  m_Layer: 0
+  m_Name: TaewooriSpawnManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &301273286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301273285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d911b0e2f37eff240b858bff512e42de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultSpawnInterval: 5
+  defaultAdditionalOffset: {x: 0, y: 0, z: 0}
+  taewooriPoolManager: {fileID: 0}
+  autoRegisterAllOnStart: 1
+  managedFireObjectsList: []
+--- !u!4 &301273287
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301273285}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &355643535 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5492933831696892063, guid: 489d67e0b706f45b9902bf6d7b071954,
@@ -206,12 +255,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe66b56a6f578bb40b95178d80bb876e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &439907409 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2281536535074622958, guid: 489d67e0b706f45b9902bf6d7b071954,
-    type: 3}
-  m_PrefabInstance: {fileID: 1972173116}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &485316377 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8063103255498386661, guid: 489d67e0b706f45b9902bf6d7b071954,
@@ -342,6 +385,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c292c7e863b40249b6c9438a45907cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &596996009
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 596996011}
+  - component: {fileID: 596996010}
+  m_Layer: 0
+  m_Name: TaewooriPoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &596996010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 596996009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6af11ef0d75a6b347b00977e6510d33f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  taewooriPrefab: {fileID: 1266448066377587148, guid: fc5e374728e7fc540b5741a85367ceca,
+    type: 3}
+  smallTaewooriPrefab: {fileID: 2105682044638487978, guid: b5158f3fc04707a4e9d3767f2efe5643,
+    type: 3}
+  fireParticlePrefab: {fileID: 1053203839010120, guid: eb5380e45ca7633458e6b2e8f95e3283,
+    type: 3}
+  initialPoolSize: 30
+--- !u!4 &596996011
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 596996009}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &600907927 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5287786161300351661, guid: 489d67e0b706f45b9902bf6d7b071954,
@@ -535,8 +629,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isBurning: 0
-  _fireElementalSummonTime: 10
+  _fireElementalSummonTime: 0
   _spawnOffset: 0.1
+--- !u!1 &621325952
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 621325954}
+  - component: {fileID: 621325953}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &621325953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621325952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c31fedf35e42a3d4684e39360824bad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameTimer: 0
+  _currentPhase: 0
+--- !u!4 &621325954
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621325952}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &725993760 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1934440500783924086, guid: fc5e374728e7fc540b5741a85367ceca,
@@ -639,6 +779,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe66b56a6f578bb40b95178d80bb876e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1179992934 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7842973023416094184, guid: 489d67e0b706f45b9902bf6d7b071954,
+    type: 3}
+  m_PrefabInstance: {fileID: 1972173116}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1183617758 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 528686786108378099, guid: 489d67e0b706f45b9902bf6d7b071954,
@@ -743,8 +889,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b2f6647f8e8e5e48bc039e71c99309a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPreventPhase: 0
-  isFirePhase: 0
+  playerCount: 1
+  firePerPlayer: 3
+  minFiresPerZone: 1
 --- !u!114 &1615317226 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8896798572927068190, guid: 489d67e0b706f45b9902bf6d7b071954,
@@ -956,7 +1103,7 @@ MonoBehaviour:
   _smokePrefab: {fileID: 1984553849942408, guid: 3eaa47905d0d3cf46b8faec46bde5067,
     type: 3}
   _shieldPrefab: {fileID: 525520872}
-  _preventTime: 0
+  _isClickable: 0
   _smokeScale:
     x: 0
     y: 0
@@ -1562,7 +1709,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _smokePrefab
       value: 
-      objectReference: {fileID: 439907409}
+      objectReference: {fileID: 1179992934}
     - target: {fileID: 5287786161300351661, guid: 489d67e0b706f45b9902bf6d7b071954,
         type: 3}
       propertyPath: _shieldRadius
@@ -1827,6 +1974,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _isFirePreventable
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6931607738516267045, guid: 489d67e0b706f45b9902bf6d7b071954,
+        type: 3}
+      propertyPath: _isBurning
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7376393545255138888, guid: 489d67e0b706f45b9902bf6d7b071954,
         type: 3}
