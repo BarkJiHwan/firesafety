@@ -36,6 +36,7 @@ public class FireSuppressant : MonoBehaviour
     [SerializeField, Tooltip("처음 쏠 때 허접한 FX")] private ParticleSystem _initialFireFX;
     [SerializeField, Tooltip("잔여량 UI Text")] private TextMeshPro _suppressorAmountUI;
     [SerializeField, Tooltip("무한 표시 이미지가 있는 오브젝트")] private GameObject _infinityImage;
+    private Transform _grabSpot;//소화기를 실제로 들고 있는 놈, 얘 끄면 소화기도 따운
     private readonly Collider[] _checkingCols = new Collider[20];
     private readonly Collider[] _checkingSupplyCols = new Collider[20];
     private int _colHitCounts;
@@ -50,6 +51,10 @@ public class FireSuppressant : MonoBehaviour
     [SerializeField] private bool _inSupplySpot;
     private void Update()
     {
+        //게임 매니저에서 대피 페이즈인지 검사 후 조치를 취하자
+        //대피 페이즈에서는 소화기 비활성화 및 문 상호작용이 가능하게 해야한다.
+
+
         if (!_runningPhase)
         {
             _triggerValue = _actionProperty.action.ReadValue<float>();
@@ -63,7 +68,7 @@ public class FireSuppressant : MonoBehaviour
                 _supplyColHitCount = Physics.OverlapSphereNonAlloc(transform.position, _detactingRange, _checkingSupplyCols, _supplyMask);
                 if (_supplyColHitCount > 0 && 0 > _supplyCooldown)
                 {
-                    SupplySuppressor();
+                    SupplySuppressor(gameObject.transform);
                     //UI도 해주세요~
                 }
 
@@ -72,12 +77,10 @@ public class FireSuppressant : MonoBehaviour
         _wasPressedLateFrame = _isPressed;
         //밑은 테스트용 코드
     }
-    public void NowOnRunningPhase()
-    {
-        _runningPhase = true;
-        //이후 뭔가 있으면 추가
-    }
-    public void FeverTimeOn()
+
+    
+
+    private void FeverTimeOn()
     {
         _damage *= 2;
         _amount = 10000000;
@@ -86,12 +89,14 @@ public class FireSuppressant : MonoBehaviour
         _suppressorAmountUI.text = "";
     }
 
-    private void SupplySuppressor()
+    private void SupplySuppressor(Transform player)
     {
         if (!_feverTime)
         {
             if (!Enabled)
             {
+                _grabSpot = player.transform.Find("GrabSpot");
+                Instantiate(_modelPrefab, _grabSpot.position, _grabSpot.rotation, _grabSpot);
                 Enabled = true;
             }
             _amount = 600;
@@ -180,6 +185,7 @@ public class FireSuppressant : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
+        //스프레이 범위
         if (_sprayOrigin == null)
         {
             return;
@@ -191,6 +197,8 @@ public class FireSuppressant : MonoBehaviour
         Gizmos.DrawWireSphere(start, _sprayRadius);
         Gizmos.DrawWireSphere(end, _sprayRadius);
         Gizmos.DrawLine(start, end);
-        //여기에 트리거 인식 범위도 표시해주셈
+        //트리거 인식 범위
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, _detactingRange);
     }
 }
