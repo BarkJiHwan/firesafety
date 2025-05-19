@@ -55,7 +55,6 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         _gameTimer += Time.deltaTime;
-
         UpdateGamePhase();
     }
 
