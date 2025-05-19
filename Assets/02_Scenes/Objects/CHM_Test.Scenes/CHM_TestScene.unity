@@ -122,6 +122,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &10788051
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 10788053}
+  - component: {fileID: 10788052}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &10788052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10788051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c31fedf35e42a3d4684e39360824bad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameTimer: 0
+  _currentPhase: 0
+--- !u!4 &10788053
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10788051}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &172387335 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3501017246060388914, guid: 489d67e0b706f45b9902bf6d7b071954,
@@ -206,12 +252,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe66b56a6f578bb40b95178d80bb876e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &439907409 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2281536535074622958, guid: 489d67e0b706f45b9902bf6d7b071954,
-    type: 3}
-  m_PrefabInstance: {fileID: 1972173116}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &485316377 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8063103255498386661, guid: 489d67e0b706f45b9902bf6d7b071954,
@@ -903,8 +943,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b2f6647f8e8e5e48bc039e71c99309a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPreventPhase: 1
-  isFirePhase: 0
+  playerCount: 1
+  firePerPlayer: 3
+  minFiresPerZone: 1
 --- !u!114 &1615317226 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8896798572927068190, guid: 489d67e0b706f45b9902bf6d7b071954,
@@ -1116,7 +1157,7 @@ MonoBehaviour:
   _smokePrefab: {fileID: 1984553849942408, guid: 3eaa47905d0d3cf46b8faec46bde5067,
     type: 3}
   _shieldPrefab: {fileID: 525520872}
-  _preventTime: 0
+  _isClickable: 0
   _smokeScale:
     x: 0
     y: 0
@@ -1767,7 +1808,8 @@ PrefabInstance:
         type: 3}
       propertyPath: _smokePrefab
       value: 
-      objectReference: {fileID: 439907409}
+      objectReference: {fileID: 1785776904012352, guid: de127f677395c3945ae23db776889676,
+        type: 3}
     - target: {fileID: 5287786161300351661, guid: 489d67e0b706f45b9902bf6d7b071954,
         type: 3}
       propertyPath: _shieldRadius
