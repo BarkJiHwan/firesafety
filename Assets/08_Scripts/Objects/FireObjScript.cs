@@ -4,16 +4,14 @@ using UnityEngine;
 
 public class FireObjScript : MonoBehaviour, ITaewooriPos
 {
-    [Header("true일 때 태우리 생성 가능 상태"), Tooltip("체크가 되어 있으면 트루입니다.")]
-    [SerializeField] private bool _isBurning;
+    [Header("true일 때 태우리 생성 가능 상태")]
+    [Tooltip("체크가 되어 있으면 트루입니다.")]
+    private bool _isBurning;
 
     [Header("태우리 스폰 위치 설정")]
     [Tooltip("태우리 생성 위치에 추가할 오프셋 (x, y, z)")]
     [SerializeField] private Vector3 _spawnOffset = new Vector3(0f, 0.1f, 0f);
 
-    private bool FireTime = false;
-
-    
     public bool IsBurning
     {
         get => _isBurning;

@@ -628,7 +628,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe66b56a6f578bb40b95178d80bb876e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isBurning: 0
   _spawnOffset: {x: 0, y: 0.1, z: 0}
 --- !u!1 &621325952
 GameObject:
@@ -659,8 +658,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c31fedf35e42a3d4684e39360824bad9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameTimer: 65
+  _gameTimer: 0
   _currentPhase: 0
+  _isGameStart: 0
 --- !u!4 &621325954
 Transform:
   m_ObjectHideFlags: 0
@@ -889,12 +889,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fireObjList: []
-  playerCount: 1
-  firePerPlayer: 3
-  minFiresPerZone: 1
-  _activationQueue: []
-  _isProcessing: 0
-  _lastActivationTime: 0
+  _isBuringCoolTime: 30
+  _playerCount: 6
 --- !u!114 &1615317226 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8896798572927068190, guid: 489d67e0b706f45b9902bf6d7b071954,
