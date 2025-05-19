@@ -11,6 +11,9 @@ public class FireObjScript : MonoBehaviour, ITaewooriPos
     [Tooltip("태우리 생성 위치에 추가할 오프셋 (x, y, z)")]
     [SerializeField] private Vector3 _spawnOffset = new Vector3(0f, 0.1f, 0f);
 
+    private bool FireTime = false;
+
+    
     public bool IsBurning
     {
         get => _isBurning;
