@@ -25,20 +25,19 @@ public class FireObjMgr : MonoBehaviour
     public Dictionary<int, MapIndex> _zoneDict = new Dictionary<int, MapIndex>();
     public List<FireObjScript> _fireObjList = new List<FireObjScript>();
 
-    private bool hasInitializedZones = false;
-    private bool hasRefreshedFireObjs = false;
-    private bool hasEnteredBurningPhase = false;
+    private bool _hasAreaReset = false;
+    private bool _hasRefreshedFireObjs = false;
+    private bool _isInBurningPhase = false;
+    private bool _hasLeaveDangerArea = false;
 
-    private float _isBuringCoolTime = 30;
-    [SerializeField] private int playerCount = 1; // 추후 외부에서 주입 가능하도록
-    [SerializeField] private int firePerPlayer = 3;
-    [SerializeField] private int minFiresPerZone = 1;
+    [Header("태우리 생성 쿨타임")]
+    [SerializeField] private float _isBuringCoolTime = 30;
 
-    [SerializeField] private List<FireObjScript> _activationQueue = new(); // 활성화 대기열
-    [SerializeField] private bool _isProcessing = false; // 동시 실행 방지 플래그
-    [SerializeField] private float _lastActivationTime = 0f;
+    [Header("플레이어 수")]
+    [Tooltip("추후 외부에서 주입 가능하도록 변경")]
+    [SerializeField] private int _playerCount = 1;
 
-    WaitForSeconds _forSeconds;
+    private WaitForSeconds _forSeconds;
 
     private void Awake()
     {
@@ -51,44 +50,51 @@ public class FireObjMgr : MonoBehaviour
         //씬 변환이 있다면 사용
         //SceneManager.sceneLoaded += OnSceneLoaded;
         DontDestroyOnLoad(gameObject);
-        RefreshZoneDict();
+        RefreshZoneDictionary();
     }
     private void Start()
     {
-        _isBuringCoolTime = _isBuringCoolTime / playerCount;
+        _isBuringCoolTime = _isBuringCoolTime / _playerCount;
         _forSeconds = new WaitForSeconds(_isBuringCoolTime);
     }
     void Update()
     {
         var currentPhase = GameManager.Instance.CurrentPhase;
 
-        if (currentPhase == GameManager.GamePhase.Prevention && !hasInitializedZones)
+        if (currentPhase == GameManager.GamePhase.Prevention && !_hasAreaReset)
         {
             Debug.Log("예방 페이즈 - 모든 구역 초기화");
             foreach (var zone in _zoneDict.Values)
             {
-                InitializeZone(zone);
+                ResetZone(zone);
             }
-            hasInitializedZones = true;
+            _hasAreaReset = true;
         }
 
-        if (currentPhase == GameManager.GamePhase.Fire && !hasRefreshedFireObjs)
+        if (currentPhase == GameManager.GamePhase.Fire && !_hasRefreshedFireObjs)
         {
             Debug.Log("화재 페이즈 - 오브젝트 갱신");
             RefreshAllFireObjects();
-            RefreshZoneDict();
-            ListUpdateDic();
+            RefreshZoneDictionary();
+            ListUpdateDictionary();
             ActivateRandomFireObjectsPerZone();
-            StartCoroutine(태우리생성());
-            hasRefreshedFireObjs = true;
+            StartCoroutine(ActivateTeawooriBurning());
+            _hasRefreshedFireObjs = true;
         }
 
-        if (currentPhase == GameManager.GamePhase.Burning && !hasEnteredBurningPhase)
+        if (currentPhase == GameManager.GamePhase.Burning && !_isInBurningPhase)
         {
-            Debug.Log("버닝 페이즈 - TODO: 추가 로직");
-            _isBuringCoolTime = _isBuringCoolTime / playerCount / 2;
+            Debug.Log("버닝 페이즈 - 태우리 쿨타임 감소");
+            _isBuringCoolTime = _isBuringCoolTime / 2;
             _forSeconds = new WaitForSeconds(_isBuringCoolTime);
-            hasEnteredBurningPhase = true;
+            _isInBurningPhase = true;
+        }
+        if(currentPhase == GameManager.GamePhase.leaveDangerArea && !_hasLeaveDangerArea)
+        {
+            Debug.Log("대피페이즈 돌입. 일단 게임 종료");
+            StopCoroutine(ActivateTeawooriBurning());
+            Debug.Log("코루틴 멈춤");
+            _hasLeaveDangerArea = true;
         }
     }
 
@@ -97,7 +103,21 @@ public class FireObjMgr : MonoBehaviour
     //{
     //    RefreshZoneDict();
     //}
-    public void RefreshZoneDict()
+
+    // 모든 구역 초기화
+    private void ResetZone(MapIndex zone)
+    {
+        //foreach (var fireObj in zone.FireObjects)
+        //{
+        //    fireObj.IsBurning = false;
+        //}
+        foreach (var preventable in zone.FirePreventables)
+        {
+            preventable.IsFirePreventable = false;
+        }
+    }
+    //딕셔너리 초기화
+    public void RefreshZoneDictionary()
     {
         _zoneDict.Clear();
         var zones = FindObjectsByType<MapIndex>(FindObjectsSortMode.None);
@@ -109,19 +129,6 @@ public class FireObjMgr : MonoBehaviour
                 continue;
             }
             _zoneDict.Add(zone.MapIndexValue, zone);
-        }
-    }
-
-    // 모든 구역 초기화
-    private void InitializeZone(MapIndex zone)
-    {
-        //foreach (var fireObj in zone.FireObjects)
-        //{
-        //    fireObj.IsBurning = false;
-        //}
-        foreach (var preventable in zone.FirePreventables)
-        {
-            preventable.IsFirePreventable = false;
         }
     }
 
@@ -143,7 +150,8 @@ public class FireObjMgr : MonoBehaviour
             }
         }
     }
-    public void ListUpdateDic()
+    //딕셔너리 값으로 리스트 업데이트
+    public void ListUpdateDictionary()
     {
         foreach (var zone in _zoneDict.Values)
         {
@@ -154,9 +162,8 @@ public class FireObjMgr : MonoBehaviour
             }
         }
     }
-    private int _lastActivatedIndex = -1; // 마지막으로 활성화한 인덱스
-
-    private IEnumerator 태우리생성()
+    //딕셔너리에서 화재가 날 수 있는 오브젝트를 체크한 뒤 태우리 생성 가능상태로 변경시켜주는 코루틴
+    private IEnumerator ActivateTeawooriBurning()
     {
         while (true)
         {
@@ -177,13 +184,13 @@ public class FireObjMgr : MonoBehaviour
                 Debug.Log("비활성화된 오브젝트 없음");
             }
 
-            // 3. 다음 활성화까지 대기 (인원수 / 30초)
+            // 3. 다음 활성화까지 대기 (30초 / 인원수)
             yield return _forSeconds;
         }
     }
     private void ActivateRandomFireObjectsPerZone()
     {
-        int totalTargetCount = playerCount * 3;
+        int totalTargetCount = _playerCount * 3;
         int currentBurningCount = 0;
 
         // 1. 각 구역에서 1개씩 불 붙이기 (단, 목표 초과하지 않도록)

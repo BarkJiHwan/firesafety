@@ -32,11 +32,14 @@ public class GameManager : MonoBehaviour
         Waiting,      // 0~10초
         Prevention,   // 10~70초
         Fire,         // 70~190초
-        Burning       // 190초~
+        Burning,       // 190초~
+        leaveDangerArea
     }
 
     [SerializeField] private float _gameTimer = 0f;
     [SerializeField] private GamePhase _currentPhase = GamePhase.Waiting;
+
+    [SerializeField] private bool _isGameStart = true;
 
     public float GameTimer => _gameTimer;
     public GamePhase CurrentPhase => _currentPhase;
@@ -52,16 +55,18 @@ public class GameManager : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(gameObject);
     }
-
     private void Start()
     {
-        Debug.Log("10초 후 게임이 시작됩니다...");
+        //GameStartBtn();
     }
 
     private void Update()
     {
-        _gameTimer += Time.deltaTime;
-        UpdateGamePhase();
+        if (_isGameStart)
+        {
+            _gameTimer += Time.deltaTime;
+            UpdateGamePhase();
+        }
     }
 
     private void UpdateGamePhase()
@@ -74,20 +79,37 @@ public class GameManager : MonoBehaviour
         else if (_gameTimer < 70f)
         {
             if (_currentPhase != GamePhase.Prevention)
-                Debug.Log(">> 예방 페이즈 진입");
-            _currentPhase = GamePhase.Prevention;
+            {
+                _currentPhase = GamePhase.Prevention;
+            }
         }
         else if (_gameTimer < 190f)
         {
             if (_currentPhase != GamePhase.Fire)
-                Debug.Log(">> 화재 페이즈 진입");
-            _currentPhase = GamePhase.Fire;
+            {
+                _currentPhase = GamePhase.Fire;
+            }
+        }
+        else if(_gameTimer < 250f)
+        {
+            if (_currentPhase != GamePhase.Burning)
+            {
+                _currentPhase = GamePhase.Burning;
+            }
         }
         else
         {
-            if (_currentPhase != GamePhase.Burning)
-                Debug.Log(">> 버닝 페이즈 진입");
-            _currentPhase = GamePhase.Burning;
+            if(_currentPhase != GamePhase.leaveDangerArea)
+            {
+                _currentPhase = GamePhase.leaveDangerArea;
+                _isGameStart = false;
+                Debug.Log("일단 게임종료 임");
+            }
         }
+    }
+
+    public void GameStartBtn()
+    {
+        _isGameStart = true;
     }
 }
