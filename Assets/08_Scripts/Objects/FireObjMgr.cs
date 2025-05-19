@@ -96,10 +96,10 @@ public class FireObjMgr : MonoBehaviour
     // 모든 구역 초기화
     private void InitializeZone(MapIndex zone)
     {
-        foreach (var fireObj in zone.FireObjects)
-        {
-            fireObj.IsBurning = false;
-        }
+        //foreach (var fireObj in zone.FireObjects)
+        //{
+        //    fireObj.IsBurning = false;
+        //}
         foreach (var preventable in zone.FirePreventables)
         {
             preventable.IsFirePreventable = false;
@@ -147,7 +147,6 @@ public class FireObjMgr : MonoBehaviour
             {
                 shuffled[i].IsBurning = true;
             }
-
             Debug.Log($"구역 {zone.name}에 불 붙인 오브젝트 수: {totalTargetCount}");
         }
     }
