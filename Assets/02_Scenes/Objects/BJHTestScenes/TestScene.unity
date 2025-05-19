@@ -1085,7 +1085,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1956241760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1103,6 +1103,8 @@ MonoBehaviour:
     type: 3}
   _shieldPrefab: {fileID: 525520872}
   _isClickable: 0
+  _data: {fileID: 0}
+  _myType: 0
   _smokeScale:
     x: 0
     y: 0
@@ -1963,6 +1965,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _spawnOffset
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6913269289795018531, guid: 489d67e0b706f45b9902bf6d7b071954,
+        type: 3}
+      propertyPath: _myType
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6913269289795018531, guid: 489d67e0b706f45b9902bf6d7b071954,
         type: 3}

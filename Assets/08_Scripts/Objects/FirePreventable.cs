@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class FirePreventable : MonoBehaviour
@@ -13,6 +14,9 @@ public class FirePreventable : MonoBehaviour
 
     [Header("임시 변수 추후 다른 스크립트에서 관리할 예정")]
     [SerializeField] private bool _isClickable = false;  // 예방 페이즈일 때만 true
+
+    [SerializeField] private PreventableObjData _data;
+    [SerializeField] private PreventTpye _myType;
 
     [Serializable]
     public struct SmokeScaledAxis
@@ -36,6 +40,7 @@ public class FirePreventable : MonoBehaviour
     }
     private void Start()
     {
+        ShowText(_myType);
         _smokePrefab.SetActive(false);
         _shieldPrefab.SetActive(false);
     }
@@ -66,6 +71,7 @@ public class FirePreventable : MonoBehaviour
                 _smokePrefab.SetActive(true);
                 _shieldPrefab.SetActive(false);
             }
+            //해당 오브젝트에 마우스를 올렸을 때 나타나야 하는 텍스트는?
         }
         else
         {
@@ -84,5 +90,12 @@ public class FirePreventable : MonoBehaviour
                 new Vector3(diameter / transform.localScale.x
                 , diameter / transform.localScale.y
                 , diameter / transform.localScale.z);
+    }
+
+    public void ShowText(PreventTpye type)
+    {
+        string text = _data.GetText(type);
+        Debug.Log(text + "테스트 텍스트");
+        // 예: TextMeshProUGUI 등에 text를 할당
     }
 }

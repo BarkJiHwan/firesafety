@@ -116,7 +116,9 @@ MonoBehaviour:
   _isFirePreventable: 0
   _smokePrefab: {fileID: 6544802542018264854}
   _shieldPrefab: {fileID: 4095121171315771833}
-  _preventTime: 1
+  _isClickable: 0
+  _data: {fileID: 11400000, guid: fae6ddd91d441ca41990de2287257988, type: 2}
+  _myType: 1
   _smokeScale:
     x: 1
     y: 1
@@ -134,11 +136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe66b56a6f578bb40b95178d80bb876e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isBurning: 0
-  _fireElementalSummonTime: 0
-  _taewooriPrefab: {fileID: 1266448066377587148, guid: fc5e374728e7fc540b5741a85367ceca,
-    type: 3}
-  _spawnOffset: 0.1
+  _spawnOffset: {x: 0, y: 0.1, z: 0}
 --- !u!1001 &6405359651156300588
 PrefabInstance:
   m_ObjectHideFlags: 0
