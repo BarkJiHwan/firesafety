@@ -621,10 +621,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAllfire: 0
-  taewooriSpawnCoolTime: 1
-  taewooriRespawnCoolTime: 5
+  _spawnCoolTime: 10
+  _respawnCoolTime: 10
   _isPeverTime: 0
-  managedFireObjectsList: []
+  _managedFireObjectsList: []
 --- !u!4 &725993760 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1934440500783924086, guid: fc5e374728e7fc540b5741a85367ceca,
@@ -1900,6 +1900,11 @@ PrefabInstance:
       propertyPath: firePreventables.Array.data[0]
       value: 
       objectReference: {fileID: 1891384185}
+    - target: {fileID: 5912905484249862134, guid: 489d67e0b706f45b9902bf6d7b071954,
+        type: 3}
+      propertyPath: _isBurning
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6004409451202519846, guid: 489d67e0b706f45b9902bf6d7b071954,
         type: 3}
       propertyPath: m_StaticEditorFlags
