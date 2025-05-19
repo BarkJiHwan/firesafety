@@ -383,6 +383,7 @@ public class TaewooriSpawnManager : MonoBehaviour
             _hasTaewoori[fireObj] = false;
             _isRespawning[fireObj] = true; // 리스폰 타이머 시작
             _spawnTimers[fireObj] = 0f; // 타이머 리셋
+            fireObj.IsBurning = false;
             Debug.Log($"<color=red>[TaewooriSpawnManager] {fireObj.name}의 태우리가 파괴됨, 리스폰 타이머 시작</color>");
         }
     }
