@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 using System.Collections.Generic;
-using Photon.Pun.Demo.PunBasics;
 
 public class FireSuppressantManager : MonoBehaviour
 {
@@ -13,7 +12,6 @@ public class FireSuppressantManager : MonoBehaviour
         //public string handName; // 디버그용
         public InputActionProperty triggerAction;
         public Transform grabSpot;
-        public Transform sprayOrigin;
         public ParticleSystem normalFireFX;
         public ParticleSystem zeroAmountFireFX;
         public ParticleSystem initialFireFX;
@@ -62,6 +60,8 @@ public class FireSuppressantManager : MonoBehaviour
         {
             _supplyCooldown -= Time.deltaTime;
         }
+        Debug.Log($"Trigger Value: {_triggerValue}");
+
         //향후 게임 매니저와 연계
     }
 
@@ -73,7 +73,8 @@ public class FireSuppressantManager : MonoBehaviour
         {
             _colHitCounts = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
         }
-        if (_isPressed && _checkingCols.Length > 0)
+        //if (_isPressed && _colHitCounts > 0)
+        if (_colHitCounts > 0)//테스트용
         {
             Supply(hand);
             _supplyCooldown = _refillCooldown;
@@ -87,6 +88,7 @@ public class FireSuppressantManager : MonoBehaviour
     }
     private void Spray(HandData hand)
     {
+        Debug.Log("발사");
         _sprayStartPos = _sprayOrigin.transform.position;
         _sprayEndPos = _sprayStartPos + (_sprayOrigin.forward * _sprayLength);
 
@@ -95,7 +97,7 @@ public class FireSuppressantManager : MonoBehaviour
         {
             hand.normalFireFX.Play();
         }
-        for (int i = 0; i < _fireHits.Length; i++)
+        for (int i = 0; i < _fireHitCounts; i++)
         {
             var hit = _fireHits[i];
             if (!_cacheds.TryGetValue(hit, out var cached))
@@ -111,8 +113,10 @@ public class FireSuppressantManager : MonoBehaviour
     }
     private IEnumerator SuppressingFire(HandData hand)
     {
+        Debug.Log("발사 코루틴 시작");
         while (_triggerValue > 0.1f && hand.amount > 0)
         {
+            Debug.Log("이펙트 ON");
             hand.initialFireFX.Play();
             yield return _fireDelay;
             hand.initialFireFX.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
@@ -149,16 +153,35 @@ public class FireSuppressantManager : MonoBehaviour
         }
         _cacheds.Clear();
         hand.isSpraying = false;
+        Debug.Log("발사 코루틴 종료");
         yield return null;
     }
     private void Supply(HandData hand)
     {
-        if (!_rightHand.enabled || !_leftHand.enabled)
+        Debug.Log("보급");
+        #region Instantiate ver
+        //if (!_rightHand.enabled && !_leftHand.enabled)
+        //{
+        //    Quaternion sprayRot = Quaternion.EulerAngles(-90f, 0f, -90f);
+        //    Vector3 sprayPos = new(0f, 0.008f, 0f);
+        //    Quaternion finalRot = hand.grabSpot.rotation * sprayRot;
+        //    Vector3 finalPos = hand.grabSpot.position + hand.grabSpot.rotation * sprayPos;
+        //    var spray = Instantiate(hand.modelPrefab, finalPos, finalRot, hand.grabSpot);
+        //    hand.enabled = true;
+        //    _sprayOrigin = spray.transform.Find("SprayOrigin");
+        //    hand.normalFireFX = spray.transform.Find("Normal FX").GetComponent<ParticleSystem>();
+        //    hand.zeroAmountFireFX = spray.transform.Find("Zero Amount FX").GetComponent<ParticleSystem>();
+        //    hand.initialFireFX = spray.transform.Find("Initialize FX").GetComponent<ParticleSystem>();
+        //    Debug.Log("보급: 생성 및 할당");
+        //}
+        #endregion
+        if (!_rightHand.enabled && !_leftHand.enabled)
         {
-            Instantiate(hand.modelPrefab, hand.grabSpot.position, hand.grabSpot.rotation, hand.grabSpot);
+            hand.modelPrefab.SetActive(true);
             hand.enabled = true;
+            _sprayOrigin = hand.modelPrefab.transform.Find("SprayOrigin");
         }
-        if (hand.enabled)
+        if (hand.enabled && hand.amount < 600)
         {
             hand.amount = 600;
         }
@@ -176,18 +199,19 @@ public class FireSuppressantManager : MonoBehaviour
 
     private void DrawSprayRange(HandData hand)
     {
-        if (hand.sprayOrigin == null)
+        //보급 인지 범위
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(hand.grabSpot.position, _supplyDetectRange);
+        //소화기 범위
+        if (_sprayOrigin == null)
         {
             return;
         }
         Gizmos.color = Color.cyan;
-        Vector3 start = hand.sprayOrigin.position;
-        Vector3 end = start + (hand.sprayOrigin.forward * _sprayLength);
+        Vector3 start = _sprayOrigin.position;
+        Vector3 end = start + (_sprayOrigin.forward * _sprayLength);
         Gizmos.DrawWireSphere(start, _sprayRadius);
         Gizmos.DrawWireSphere(end, _sprayRadius);
         Gizmos.DrawLine(start, end);
-        //여기는 보급 인지 범위
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(hand.grabSpot.position, _supplyDetectRange);
     }
 }
