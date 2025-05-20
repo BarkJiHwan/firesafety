@@ -3932,6 +3932,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 468162806}
     m_Modifications:
+    - target: {fileID: 16927434, guid: 4ab117ceceedc456bb94c4bffc46ce07, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1671609643, guid: 4ab117ceceedc456bb94c4bffc46ce07, type: 3}
       propertyPath: m_Data.m_Target
       value: 
@@ -3940,6 +3944,31 @@ PrefabInstance:
       propertyPath: m_Data.m_Target
       value: 
       objectReference: {fileID: 1764365120}
+    - target: {fileID: 1768019730135715554, guid: 4ab117ceceedc456bb94c4bffc46ce07,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355623880724711558, guid: 4ab117ceceedc456bb94c4bffc46ce07,
+        type: 3}
+      propertyPath: m_BackGroundColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355623880724711558, guid: 4ab117ceceedc456bb94c4bffc46ce07,
+        type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355623880724711558, guid: 4ab117ceceedc456bb94c4bffc46ce07,
+        type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355623880724711558, guid: 4ab117ceceedc456bb94c4bffc46ce07,
+        type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4981747460995190306, guid: 4ab117ceceedc456bb94c4bffc46ce07,
         type: 3}
       propertyPath: m_Name
