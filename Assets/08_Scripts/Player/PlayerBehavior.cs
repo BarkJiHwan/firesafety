@@ -1,5 +1,7 @@
 using System;
+using Unity.XR.CoreUtils;
 using UnityEngine;
+
 
 public class PlayerBehavior : MonoBehaviour
 {
@@ -8,6 +10,7 @@ public class PlayerBehavior : MonoBehaviour
     private bool isGrabbing;
     private bool isMoving;
 
+    public XROrigin playerOrigin;
     public Camera playerCam;
 
     public bool IsSitting => isSitting;
@@ -16,6 +19,12 @@ public class PlayerBehavior : MonoBehaviour
 
     private void FixedUpdate()
     {
-        throw new NotImplementedException();
+        Vector3 playerCamRot = playerCam.transform.rotation.eulerAngles;
+        Vector3 currentRot = gameObject.transform.rotation.eulerAngles;
+        Vector3 updatedRot = new Vector3(currentRot.x, playerCamRot.y, currentRot.z);
+
+        gameObject.transform.rotation = Quaternion.Euler(updatedRot);
+        gameObject.transform.position = playerOrigin.transform.position;
+
     }
 }
