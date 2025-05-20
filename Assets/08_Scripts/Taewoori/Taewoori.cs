@@ -1,0 +1,178 @@
+﻿using UnityEngine;
+
+public class Taewoori : MonoBehaviour, IDamageable
+{
+    [Header("체력 설정")]
+    [SerializeField] public float maxHealth = 100f;
+    [SerializeField] public float currentHealth;
+
+    [Tooltip("피버타임 시 추가 체력")]
+    [SerializeField] private float feverTimeExtraHealth = 50f;
+
+    [Header("발사체 설정")]
+    [SerializeField] private float launchForce = 10f;
+    [SerializeField] private float launchAngle = 45f;
+    [SerializeField] private float randomRadius = 5f;
+    [SerializeField] private int maxProjectiles = 4;
+    [SerializeField] private float projectileCooldown = 2.0f; // 발사체 발사 쿨타임
+
+    private float _coolTime;
+    private Vector3 randomDirection;
+    private bool isDead = false;
+    private bool isFeverMode = false; // 생성 시점의 피버타임 상태 저장
+
+    private TaewooriPoolManager manager;
+    private FireObjScript sourceFireObj; // 이 태우리를 생성한 화재 오브젝트
+
+    public int MaxProjectiles => maxProjectiles;
+    public FireObjScript SourceFireObj => sourceFireObj;
+
+    public void Initialize(TaewooriPoolManager taewooriManager, FireObjScript fireObj)
+    {
+        manager = taewooriManager;
+        sourceFireObj = fireObj;
+
+        // TaewooriSpawnManager의 피버타임 상태 확인
+        var spawnManager = FindObjectOfType<TaewooriSpawnManager>();
+        if (spawnManager != null)
+        {
+            isFeverMode = spawnManager.IsFeverTime;
+
+            // 피버타임 상태에 따라 체력 설정
+            if (isFeverMode)
+            {
+                maxHealth = 100f + feverTimeExtraHealth;
+            }
+            else
+            {
+                maxHealth = 100f;
+            }
+        }
+
+        ResetState();
+    }
+
+    private void OnEnable()
+    {
+        ResetState();
+    }    
+
+    private void ResetState()
+    {
+        currentHealth = maxHealth;
+        _coolTime = 0f;
+        isDead = false;
+        GenerateRandomDirection();
+    }
+
+    private void GenerateRandomDirection()
+    {
+        float randomAngle = Random.Range(0f, 360f);
+        randomDirection = Quaternion.Euler(0, randomAngle, 0) * Vector3.forward;
+    }
+
+    public void Update()
+    {
+        // 소스 파이어 오브젝트가 없으면 업데이트 중지
+        if (sourceFireObj == null)
+        {
+            return;
+        }
+
+        _coolTime += Time.deltaTime;
+
+        // 발사 가능한 상태인지 확인
+        if (manager != null && projectileCooldown <= _coolTime && manager.CanLaunchProjectile(this, maxProjectiles))
+        {
+            LaunchProjectile();
+        }
+    }
+
+    private void LaunchProjectile()
+    {
+        // 새 랜덤 방향 생성
+        GenerateRandomDirection();
+
+        // 스폰 위치 계산
+        Vector3 spawnPosition = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+
+        if (manager != null)
+        {
+            // 각도를 라디안으로 변환
+            float radianAngle = launchAngle * Mathf.Deg2Rad;
+
+            // 수평 방향 계산
+            Vector3 horizontalDir = randomDirection.normalized;
+
+            // 포물선 발사 방향 계산
+            Vector3 direction = new Vector3(
+                horizontalDir.x,
+                Mathf.Sin(radianAngle),
+                horizontalDir.z).normalized;
+
+            // 방향을 기반으로 회전 계산
+            Quaternion fixedRotation = Quaternion.Euler(-90f, 0, 0); // 기본 회전 (위쪽)
+
+            // 회전값을 적용하여 파티클 생성
+            GameObject projectile = manager.PoolSpawnFireParticle(spawnPosition, fixedRotation, this);
+
+            if (projectile != null)
+            {
+                Rigidbody rb = projectile.GetComponent<Rigidbody>();
+
+                if (rb != null)
+                {
+                    // 힘 적용
+                    rb.velocity = Vector3.zero;
+                    rb.AddForce(direction * launchForce, ForceMode.Impulse) ;
+
+                    // 쿨타임 리셋
+                    _coolTime = 0f;
+
+                    Debug.Log($"[TAG] <color=magenta>{gameObject.name}이(가) {sourceFireObj.name}에서 불 파티클 발사</color>");
+                }
+            }
+        }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        if (isDead)
+            return;
+
+        currentHealth -= damage;
+        Debug.Log($"[TAG] {gameObject.name}이(가) {damage}의 데미지를 받음. 남은 체력: {currentHealth}");
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        if (isDead)
+            return;
+
+        isDead = true;
+        var spawnManager = FindObjectOfType<TaewooriSpawnManager>();
+        if (spawnManager != null && sourceFireObj != null)
+        {
+            spawnManager.NotifyTaewooriDestroyed(sourceFireObj);
+        }
+        // 죽을 때도 화재 오브젝트 정보 표시
+        if (sourceFireObj != null)
+        {
+            Debug.Log($"[TAG] <color=red>태우리 사망: {gameObject.name}이(가) {sourceFireObj.name} 화재 오브젝트에서 파괴되었습니다.</color>");
+        }
+
+        if (manager != null)
+        {
+            manager.ReturnTaewooriToPool(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+}

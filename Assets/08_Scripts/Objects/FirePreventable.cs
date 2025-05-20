@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class FirePreventable : MonoBehaviour
@@ -12,7 +13,25 @@ public class FirePreventable : MonoBehaviour
     [SerializeField] private GameObject _shieldPrefab;
 
     [Header("임시 변수 추후 다른 스크립트에서 관리할 예정")]
-    [SerializeField] private bool _preventTime;
+    [SerializeField] private bool _isClickable = false;  // 예방 페이즈일 때만 true
+
+    [SerializeField] private PreventableObjData _data;
+    [SerializeField] private PreventTpye _myType;
+
+    [Serializable]
+    public struct SmokeScaledAxis
+    {
+        [Range(0.1f, 2f)] public float x;
+        [Range(0.1f, 2f)] public float y;
+        [Range(0.1f, 2f)] public float z;
+    }
+    [Header("연기 오브젝트(파티클) 스캐일")]
+    [SerializeField] private SmokeScaledAxis _smokeScale;
+
+    [Header("쉴드 반지름")]
+    [SerializeField, Range(0.1f, 2f)]
+    private float _shieldRadius = 1f;
+
 
     public bool IsFirePreventable
     {
@@ -21,14 +40,27 @@ public class FirePreventable : MonoBehaviour
     }
     private void Start()
     {
-        IsFirePreventable = false;
-        SmokeInstantiateAsChildWithTransform();
-        ShieldInstantiateAsChildWithTransform();
+        ShowText(_myType);
+        _smokePrefab.SetActive(false);
+        _shieldPrefab.SetActive(false);
     }
-    private void Update()
+
+    void OnMouseDown()
+    {//마우스클릭 테스트 코드
+        _isFirePreventable = !_isFirePreventable; // 상태 토글
+    }
+    void Update()
     {
-        if(_preventTime)
+        ApplySmokeSettings();
+        ApplyShieldSettings();
+
+        // 페이즈 확인
+        var currentPhase = GameManager.Instance.CurrentPhase;
+        _isClickable = currentPhase == GameManager.GamePhase.Prevention;
+
+        if (_isClickable)
         {
+            // 예방 페이즈
             if (_isFirePreventable)
             {
                 _smokePrefab.SetActive(false);
@@ -39,31 +71,31 @@ public class FirePreventable : MonoBehaviour
                 _smokePrefab.SetActive(true);
                 _shieldPrefab.SetActive(false);
             }
+            //해당 오브젝트에 마우스를 올렸을 때 나타나야 하는 텍스트는?
         }
         else
         {
             _smokePrefab.SetActive(false);
         }
     }
+    //스모크 사이즈 셋팅
+    private void ApplySmokeSettings() => _smokePrefab.transform.localScale =
+            new Vector3(_smokeScale.x, _smokeScale.y, _smokeScale.z);
+    //쉴드 사이즈 셋팅
+    private void ApplyShieldSettings()
+    {
+        float diameter = _shieldRadius;
 
-    //게임 시작 스모크(파이클)생성 및 셋팅하는 메서드
-    private void SmokeInstantiateAsChildWithTransform()
-    {
-        GameObject smoke = Instantiate(_smokePrefab);
-        smoke.transform.parent = transform;
-        smoke.transform.position = transform.position;
-        smoke.transform.localScale = new Vector3(1, 1, 1);
-        _smokePrefab = smoke;
-        _smokePrefab.SetActive(false);
+        _shieldPrefab.transform.localScale =
+                new Vector3(diameter / transform.localScale.x
+                , diameter / transform.localScale.y
+                , diameter / transform.localScale.z);
     }
-    //게임 시작 쉴드(오브젝트)생성 및 셋팅하는 메서드
-    private void ShieldInstantiateAsChildWithTransform()
+
+    public void ShowText(PreventTpye type)
     {
-        GameObject shield = Instantiate(_shieldPrefab);
-        shield.transform.parent = transform;
-        shield.transform.position = transform.position;
-        shield.transform.localScale = new Vector3(2, 2, 2);
-        _shieldPrefab = shield;
-        _shieldPrefab.SetActive(false);
+        string text = _data.GetText(type);
+        Debug.Log(text + "테스트 텍스트");
+        // 예: TextMeshProUGUI 등에 text를 할당
     }
 }
