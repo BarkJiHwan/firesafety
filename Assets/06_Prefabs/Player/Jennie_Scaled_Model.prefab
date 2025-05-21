@@ -1169,6 +1169,7 @@ GameObject:
   - component: {fileID: 5866666021955946618}
   - component: {fileID: 5866666021955946619}
   - component: {fileID: 5866666021955946620}
+  - component: {fileID: 891625631411848100}
   m_Layer: 0
   m_Name: Jennie_Scaled_Model
   m_TagString: Untagged
@@ -1313,6 +1314,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerOrigin: {fileID: 0}
   playerCam: {fileID: 0}
+--- !u!114 &891625631411848100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4981747460995190306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd75eaf9d1a2843cb8f5ad29e6dbb345, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5079816538120435796
 GameObject:
   m_ObjectHideFlags: 0
