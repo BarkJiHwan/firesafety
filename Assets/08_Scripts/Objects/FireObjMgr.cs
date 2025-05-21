@@ -163,28 +163,68 @@ public class FireObjMgr : MonoBehaviour
         }
     }
     //딕셔너리에서 화재가 날 수 있는 오브젝트를 체크한 뒤 태우리 생성 가능상태로 변경시켜주는 코루틴
+    //private IEnumerator ActivateTeawooriBurning()
+    //{
+    //    while (true)
+    //    {
+    //        // 1. 현재 비활성화된 오브젝트 수집
+    //        List<FireObjScript> inactiveFires = _fireObjList
+    //            .Where(fire => !fire.IsBurning)
+    //            .ToList();
+
+    //        // 2. 랜덤 선택 및 활성화
+    //        if (inactiveFires.Count > 0)
+    //        {
+    //            int randomIndex = Random.Range(0, inactiveFires.Count);
+    //            inactiveFires[randomIndex].IsBurning = true;
+    //            Debug.Log($"활성화: {inactiveFires[randomIndex].name}");
+
+    //            // TaewooriSpawnManager에 화재 오브젝트 등록
+    //            TaewooriSpawnManager spawnManager = FindObjectOfType<TaewooriSpawnManager>();
+    //            if (spawnManager != null)
+    //            {
+    //                spawnManager.RegisterFireObject(fireObj);
+    //            }
+
+    //            Debug.Log($"활성화: {fireObj.name}");
+    //        }
+
+    //        else
+    //        {
+    //            Debug.Log("비활성화된 오브젝트 없음");
+    //        }
+
+    //        // 3. 다음 활성화까지 대기 (30초 / 인원수)
+    //        yield return _forSeconds;
+    //    }
+    //}
+    // CHM 변경 스폰 매니저 제거 
     private IEnumerator ActivateTeawooriBurning()
     {
         while (true)
         {
-            // 1. 현재 비활성화된 오브젝트 수집
+            // 현재 비활성화된 오브젝트 수집
             List<FireObjScript> inactiveFires = _fireObjList
                 .Where(fire => !fire.IsBurning)
                 .ToList();
 
-            // 2. 랜덤 선택 및 활성화
+            // 랜덤 선택 및 활성화
             if (inactiveFires.Count > 0)
             {
                 int randomIndex = Random.Range(0, inactiveFires.Count);
-                inactiveFires[randomIndex].IsBurning = true;
-                Debug.Log($"활성화: {inactiveFires[randomIndex].name}");
+                FireObjScript fireObj = inactiveFires[randomIndex];
+                fireObj.IsBurning = true;
+
+                Debug.Log($"활성화: {fireObj.name}");
+
+                // 태우리 생성은 IsBurning setter에서 자동으로 처리됨
             }
             else
             {
                 Debug.Log("비활성화된 오브젝트 없음");
             }
 
-            // 3. 다음 활성화까지 대기 (30초 / 인원수)
+            // 다음 활성화까지 대기
             yield return _forSeconds;
         }
     }
@@ -249,6 +289,7 @@ public class FireObjMgr : MonoBehaviour
         }
 
         Debug.Log($"총 불 붙인 오브젝트 수: {currentBurningCount} / 목표: {totalTargetCount}");
+       
     }
     // 리스트 셔플 함수
     private void ShuffleList<T>(List<T> list)

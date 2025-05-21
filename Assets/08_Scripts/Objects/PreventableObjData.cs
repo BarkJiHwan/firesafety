@@ -19,7 +19,7 @@ public class PreventableObjData : ScriptableObject
     public void LoadCSV()
     {
         items.Clear();
-        TextAsset csvData = Resources.Load<TextAsset>("safety_items");
+        var csvData = Resources.Load<TextAsset>("safety_items");
         if (csvData == null)
         {
             Debug.LogError("CSV 파일 없음: Resources/safety_items");
@@ -59,10 +59,7 @@ public class PreventableObjData : ScriptableObject
         }
     }
 
-    public void SetDictionary()
-    {
-        _itemDict = items.ToDictionary(item => item.Type);
-    }
+    public void SetDictionary() => _itemDict = items.ToDictionary(item => item.Type);
 
     public SafetyItem GetItem(PreventType type)
     {

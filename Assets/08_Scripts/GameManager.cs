@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour
             if(_currentPhase != GamePhase.leaveDangerArea)
             {
                 _currentPhase = GamePhase.leaveDangerArea;
-                _isGameStart = false;
+                _isGameStart = false; //스타트 멈춤
                 Debug.Log("일단 게임종료 임");
             }
         }
