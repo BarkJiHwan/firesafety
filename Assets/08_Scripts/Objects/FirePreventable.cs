@@ -2,6 +2,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class FirePreventable : MonoBehaviour
 {
@@ -45,7 +46,7 @@ public class FirePreventable : MonoBehaviour
 
     void OnMouseDown()
     {//마우스클릭 테스트 코드
-        Debug.Log( ShowText(_myType));
+        //Debug.Log( ShowText(_myType));
         _isFirePreventable = !_isFirePreventable; // 상태 토글
     }
     void Update()
@@ -98,9 +99,9 @@ public class FirePreventable : MonoBehaviour
                 , diameter / transform.localScale.z);
     }
 
-    public string ShowText(PreventType type)
+    public string ShowText()
     {
         // 예: TextMeshProUGUI 등에 text를 할당
-        return _data.GetItem(type).Description;
+        return _data.GetItem(_myType).Description;
     }
 }

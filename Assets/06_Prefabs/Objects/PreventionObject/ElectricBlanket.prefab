@@ -138,6 +138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe66b56a6f578bb40b95178d80bb876e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isBurning: 0
   _spawnOffset: {x: 0, y: 0.1, z: 0}
 --- !u!114 &-6679557221755501604
 MonoBehaviour:
@@ -178,13 +179,14 @@ MonoBehaviour:
   m_HoverEntered:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 4680096319811303418, guid: 0a4d7400cf65f52439abbd8a9ea77cd9,
+          type: 3}
+        m_TargetAssemblyTypeName: ObjectUICtrl, Assembly-CSharp
+        m_MethodName: SelectedObject
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -193,13 +195,14 @@ MonoBehaviour:
   m_HoverExited:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 4680096319811303418, guid: 0a4d7400cf65f52439abbd8a9ea77cd9,
+          type: 3}
+        m_TargetAssemblyTypeName: ObjectUICtrl, Assembly-CSharp
+        m_MethodName: DisSelectedObject
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
