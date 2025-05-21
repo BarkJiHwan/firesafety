@@ -341,5 +341,5 @@ public class TaewooriPoolManager : MonoBehaviour
 
     // 피버타임 확인
     private bool IsFeverTime => GameManager.Instance != null &&
-                              GameManager.Instance.CurrentPhase == GameManager.GamePhase.Burning;
+                              GameManager.Instance.CurrentPhase == GameManager.GamePhase.Fever;
 }
