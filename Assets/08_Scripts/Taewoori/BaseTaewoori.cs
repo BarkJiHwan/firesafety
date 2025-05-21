@@ -13,7 +13,7 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
 
     // 피버타임 체크 속성 (GameManager 활용)
     protected bool IsFeverTime => GameManager.Instance != null &&
-                                GameManager.Instance.CurrentPhase == GameManager.GamePhase.Burning;
+                                GameManager.Instance.CurrentPhase == GameManager.GamePhase.Fever;
 
     // 체력 초기화
     protected void InitializeHealth()

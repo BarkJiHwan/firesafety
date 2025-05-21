@@ -82,7 +82,7 @@ public class FireObjMgr : MonoBehaviour
             _hasRefreshedFireObjs = true;
         }
 
-        if (currentPhase == GameManager.GamePhase.Burning && !_isInBurningPhase)
+        if (currentPhase == GameManager.GamePhase.Fever && !_isInBurningPhase)
         {
             Debug.Log("버닝 페이즈 - 태우리 쿨타임 감소");
             _isBuringCoolTime = _isBuringCoolTime / 2;
