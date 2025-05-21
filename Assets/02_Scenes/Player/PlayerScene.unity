@@ -363,6 +363,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1096290761239427663, guid: 489d67e0b706f45b9902bf6d7b071954,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5287786161300351661, guid: 489d67e0b706f45b9902bf6d7b071954,
         type: 3}
       propertyPath: _smokePrefab
@@ -371,7 +376,7 @@ PrefabInstance:
     - target: {fileID: 5888258054750615790, guid: 489d67e0b706f45b9902bf6d7b071954,
         type: 3}
       propertyPath: _mapIndex
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5888258054750615790, guid: 489d67e0b706f45b9902bf6d7b071954,
         type: 3}
@@ -633,3 +638,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e954d8e794a74313a4846a6181fdc67, type: 3}
+--- !u!1 &8646238192549996210 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8880238657535995400, guid: 7e954d8e794a74313a4846a6181fdc67,
+    type: 3}
+  m_PrefabInstance: {fileID: 8646238192549996209}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &8646238192549996211
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8646238192549996210}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2
+  m_Center: {x: 0, y: 0.5, z: 0}
