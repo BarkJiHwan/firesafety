@@ -167,7 +167,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &172387335 stripped
 MonoBehaviour:
@@ -577,51 +577,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isBurning: 0
   _spawnOffset: {x: 0, y: 0.1, z: 0}
---- !u!1 &694046856
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 694046857}
-  - component: {fileID: 694046858}
-  m_Layer: 0
-  m_Name: TaewooriSpawnManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &694046857
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 694046856}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &694046858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 694046856}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d911b0e2f37eff240b858bff512e42de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _respawnCoolTime: 10
 --- !u!4 &725993760 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1934440500783924086, guid: fc5e374728e7fc540b5741a85367ceca,
@@ -722,7 +677,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &904969351
 SphereCollider:
@@ -809,18 +764,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe66b56a6f578bb40b95178d80bb876e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1312154956 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9169452521101079206, guid: 489d67e0b706f45b9902bf6d7b071954,
-    type: 3}
-  m_PrefabInstance: {fileID: 1972173116}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c292c7e863b40249b6c9438a45907cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1335905679
 GameObject:
   m_ObjectHideFlags: 0
@@ -872,6 +815,8 @@ MonoBehaviour:
   fireParticlePrefab: {fileID: 1053203839010120, guid: eb5380e45ca7633458e6b2e8f95e3283,
     type: 3}
   initialPoolSize: 30
+  baseRespawnTime: 10
+  feverTimecCoolTime: 0.5
 --- !u!114 &1389041556 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4060798351119989042, guid: 489d67e0b706f45b9902bf6d7b071954,
@@ -1155,6 +1100,8 @@ MonoBehaviour:
     type: 3}
   _shieldPrefab: {fileID: 525520872}
   _isClickable: 0
+  _data: {fileID: 0}
+  _myType: 0
   _smokeScale:
     x: 0
     y: 0
@@ -2191,12 +2138,12 @@ PrefabInstance:
         type: 3}
       propertyPath: firePreventables.Array.data[0]
       value: 
-      objectReference: {fileID: 2121172828}
+      objectReference: {fileID: 0}
     - target: {fileID: 8889221308635543640, guid: 489d67e0b706f45b9902bf6d7b071954,
         type: 3}
       propertyPath: firePreventables.Array.data[1]
       value: 
-      objectReference: {fileID: 1312154956}
+      objectReference: {fileID: 0}
     - target: {fileID: 9124871790787421752, guid: 489d67e0b706f45b9902bf6d7b071954,
         type: 3}
       propertyPath: fireObjects.Array.size
@@ -2389,15 +2336,3 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
---- !u!114 &2121172828 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5173246752923430877, guid: 489d67e0b706f45b9902bf6d7b071954,
-    type: 3}
-  m_PrefabInstance: {fileID: 1972173116}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c292c7e863b40249b6c9438a45907cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
