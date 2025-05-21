@@ -1,77 +1,33 @@
 ﻿using UnityEngine;
 
-public class SmallTaewoori : MonoBehaviour, IDamageable
+public class SmallTaewoori : BaseTaewoori
 {
-    [Header("체력 설정")]
-    [SerializeField] public float maxHealth = 100f;
-    [SerializeField] public float currentHealth;
-    [SerializeField] private float feverTimeExtraHealth = 50f;
-
-    private bool isDead = false;
-    private TaewooriPoolManager manager;
     private Taewoori originTaewoori;
-    private bool isFeverMode = false;
+
+    // 공개 프로퍼티 추가 - 원본 태우리 접근용
+    public Taewoori OriginTaewoori => originTaewoori;
+
     public void Initialize(TaewooriPoolManager taewooriManager, Taewoori taewoori)
     {
         manager = taewooriManager;
         originTaewoori = taewoori;
 
-        var spawnManager = FindAnyObjectByType<TaewooriSpawnManager>();
-        if (spawnManager != null)
-        {
-            isFeverMode = spawnManager.IsFeverTime;
-            if (isFeverMode)
-            {
-                maxHealth = 100f + feverTimeExtraHealth;
-            }
-            else
-            {
-                maxHealth = 100f;
-            }
-        }
+        // 체력 초기화 (부모 클래스 메서드 사용)
+        InitializeHealth();
 
         ResetState();
+
     }
 
-    private void OnEnable()
-    {
-        ResetState();
-    }
-
-    private void ResetState()
-    {
-        currentHealth = maxHealth;
-        isDead = false;
-    }
-
-    public void TakeDamage(float damage)
-    {
-        if (isDead)
-            return;
-
-        currentHealth -= damage;
-        Debug.Log($"{gameObject.name}이(가) {damage}의 데미지를 받음. 남은 체력: {currentHealth}");
-
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-    }
-
-    public void Die()
+    public override void Die()
     {
         if (isDead)
             return;
 
         isDead = true;
 
-        // 원본 태우리에 알림
-        if (manager != null && originTaewoori != null)
-        {
-            manager.NotifySmallTaewooriDestroyed(originTaewoori);
-        }
 
-        // 풀로 반환
+        // 풀로 반환 (TaewooriPoolManager에서 발사체 카운트 자동 처리)
         if (manager != null)
         {
             manager.ReturnSmallTaewooriToPool(gameObject);
