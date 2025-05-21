@@ -45,9 +45,9 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
         _instance = this;
         DontDestroyOnLoad(gameObject);
+        _currentPhase = GamePhase.Waiting;
     }
     private void Start()
     {
