@@ -778,8 +778,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Weight: 1
   m_Data:
-    m_Root: {fileID: 0}
-    m_Tip: {fileID: 0}
+    m_Root: {fileID: 1490324878}
+    m_Tip: {fileID: 1416990120}
     m_Target: {fileID: 675832261}
     m_ChainRotationWeight: 1
     m_TipRotationWeight: 1
@@ -888,6 +888,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5888765399538998960, guid: ad818c36731146e994540a1896ad8f24,
     type: 3}
   m_PrefabInstance: {fileID: 342970050}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &462504485 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2879647446597389191, guid: 4ab117ceceedc456bb94c4bffc46ce07,
+    type: 3}
+  m_PrefabInstance: {fileID: 5324329232528492187}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &468162805
 GameObject:
@@ -1483,8 +1489,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Weight: 1
   m_Data:
-    m_Root: {fileID: 0}
-    m_Tip: {fileID: 0}
+    m_Root: {fileID: 462504485}
+    m_Tip: {fileID: 1560969195}
     m_Target: {fileID: 1764365120}
     m_ChainRotationWeight: 1
     m_TipRotationWeight: 1
@@ -2503,6 +2509,12 @@ MonoBehaviour:
   m_UseLocalSpace: 1
   m_AngleStabilization: 20
   m_PositionStabilization: 0.25
+--- !u!4 &1416990120 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7998863380007778831, guid: 4ab117ceceedc456bb94c4bffc46ce07,
+    type: 3}
+  m_PrefabInstance: {fileID: 5324329232528492187}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1419883327
 GameObject:
   m_ObjectHideFlags: 0
@@ -2634,6 +2646,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xrOrigin: {fileID: 1419883329}
   deviceSimulator: {fileID: 866014824}
+--- !u!4 &1490324878 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2777264668938792887, guid: 4ab117ceceedc456bb94c4bffc46ce07,
+    type: 3}
+  m_PrefabInstance: {fileID: 5324329232528492187}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1550222662
 GameObject:
   m_ObjectHideFlags: 0
@@ -2730,6 +2748,12 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
+--- !u!4 &1560969195 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5150038591038160661, guid: 4ab117ceceedc456bb94c4bffc46ce07,
+    type: 3}
+  m_PrefabInstance: {fileID: 5324329232528492187}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1563967664
 GameObject:
   m_ObjectHideFlags: 0
