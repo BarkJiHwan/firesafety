@@ -1,5 +1,6 @@
 using System;
 using Unity.XR.CoreUtils;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -17,7 +18,7 @@ public class PlayerBehavior : MonoBehaviour
     public bool IsGrabbing => isGrabbing;
     public bool IsMoving => isMoving;
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         Vector3 playerCamRot = playerCam.transform.rotation.eulerAngles;
         Vector3 currentRot = gameObject.transform.rotation.eulerAngles;
@@ -25,6 +26,5 @@ public class PlayerBehavior : MonoBehaviour
 
         gameObject.transform.rotation = Quaternion.Euler(updatedRot);
         gameObject.transform.position = playerOrigin.transform.position;
-
     }
 }
