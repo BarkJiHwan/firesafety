@@ -1,5 +1,6 @@
 using System;
 using Unity.XR.CoreUtils;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -25,6 +26,5 @@ public class PlayerBehavior : MonoBehaviour
 
         gameObject.transform.rotation = Quaternion.Euler(updatedRot);
         gameObject.transform.position = playerOrigin.transform.position;
-
     }
 }
