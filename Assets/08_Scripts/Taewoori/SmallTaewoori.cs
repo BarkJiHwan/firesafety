@@ -11,26 +11,32 @@ public class SmallTaewoori : MonoBehaviour, IDamageable
     private TaewooriPoolManager manager;
     private Taewoori originTaewoori;
     private bool isFeverMode = false;
+
+    // 공개 프로퍼티 추가 - 원본 태우리 접근용
+    public Taewoori OriginTaewoori => originTaewoori;
+
     public void Initialize(TaewooriPoolManager taewooriManager, Taewoori taewoori)
     {
         manager = taewooriManager;
         originTaewoori = taewoori;
 
-        var spawnManager = FindAnyObjectByType<TaewooriSpawnManager>();
-        if (spawnManager != null)
+        // 피버타임 체크 - GameManager 직접 참조
+        isFeverMode = GameManager.Instance != null &&
+                      GameManager.Instance.CurrentPhase == GameManager.GamePhase.Burning;
+
+        // 피버타임에 따른 체력 설정
+        if (isFeverMode)
         {
-            isFeverMode = spawnManager.IsFeverTime;
-            if (isFeverMode)
-            {
-                maxHealth = 100f + feverTimeExtraHealth;
-            }
-            else
-            {
-                maxHealth = 100f;
-            }
+            maxHealth = 100f + feverTimeExtraHealth;
+        }
+        else
+        {
+            maxHealth = 100f;
         }
 
         ResetState();
+
+        Debug.Log($"작은 태우리 초기화: {gameObject.name}, 원본: {originTaewoori?.name}, 피버모드: {isFeverMode}");
     }
 
     private void OnEnable()
@@ -65,13 +71,9 @@ public class SmallTaewoori : MonoBehaviour, IDamageable
 
         isDead = true;
 
-        // 원본 태우리에 알림
-        if (manager != null && originTaewoori != null)
-        {
-            manager.NotifySmallTaewooriDestroyed(originTaewoori);
-        }
+        Debug.Log($"작은 태우리 사망: {gameObject.name}, 원본: {originTaewoori?.name}");
 
-        // 풀로 반환
+        // 풀로 반환 (TaewooriPoolManager에서 발사체 카운트 자동 처리)
         if (manager != null)
         {
             manager.ReturnSmallTaewooriToPool(gameObject);

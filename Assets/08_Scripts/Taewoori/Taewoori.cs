@@ -1,7 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Taewoori : MonoBehaviour, IDamageable
 {
+    // 태우리 생성 및 파괴 이벤트 추가
+    public static event Action<Taewoori, FireObjScript> OnTaewooriSpawned;
+    public static event Action<Taewoori, FireObjScript> OnTaewooriDestroyed;
+
     [Header("체력 설정")]
     [SerializeField] public float maxHealth = 100f;
     [SerializeField] public float currentHealth;
@@ -15,10 +20,13 @@ public class Taewoori : MonoBehaviour, IDamageable
     [SerializeField] private float randomRadius = 5f;
     [SerializeField] private int maxProjectiles = 4;
     [SerializeField] private float projectileCooldown = 2.0f; // 발사체 발사 쿨타임
+    [SerializeField] private float horizontalSpreadAngle = 180f; // 수평 방향 랜덤 각도 범위 (기본 180도)
+    [SerializeField] private float verticalSpreadAngle = 30f; // 수직 방향 랜덤 각도 범위 (기본 30도)
+    [SerializeField] private bool _isDead = false;
+    public bool IsDead => _isDead;
 
     private float _coolTime;
-    private Vector3 randomDirection;
-    private bool isDead = false;
+    private Vector3 randomDirection;   
     private bool isFeverMode = false; // 생성 시점의 피버타임 상태 저장
 
     private TaewooriPoolManager manager;
@@ -32,43 +40,69 @@ public class Taewoori : MonoBehaviour, IDamageable
         manager = taewooriManager;
         sourceFireObj = fireObj;
 
-        // TaewooriSpawnManager의 피버타임 상태 확인
-        var spawnManager = FindObjectOfType<TaewooriSpawnManager>();
-        if (spawnManager != null)
-        {
-            isFeverMode = spawnManager.IsFeverTime;
+        // 소스 화재 오브젝트에 자신을 활성 태우리로 등록
+        sourceFireObj.SetActiveTaewoori(this);
 
-            // 피버타임 상태에 따라 체력 설정
-            if (isFeverMode)
-            {
-                maxHealth = 100f + feverTimeExtraHealth;
-            }
-            else
-            {
-                maxHealth = 100f;
-            }
+        // 피버타임 상태 확인
+        bool isFeverMode = GameManager.Instance != null &&
+                          GameManager.Instance.CurrentPhase == GameManager.GamePhase.Burning;
+
+        // 피버타임 상태에 따라 체력 설정
+        if (isFeverMode)
+        {
+            maxHealth = 100f + feverTimeExtraHealth;
+        }
+        else
+        {
+            maxHealth = 100f;
         }
 
         ResetState();
+
+        // 태우리 생성 이벤트 발생
+        OnTaewooriSpawned?.Invoke(this, sourceFireObj);
+        Debug.Log($"<color=green>태우리 생성됨: {gameObject.name}, 소스: {sourceFireObj?.name}</color>");
     }
 
     private void OnEnable()
     {
         ResetState();
-    }    
+    }
 
     private void ResetState()
     {
         currentHealth = maxHealth;
         _coolTime = 0f;
-        isDead = false;
+        _isDead = false;
         GenerateRandomDirection();
     }
 
     private void GenerateRandomDirection()
     {
-        float randomAngle = Random.Range(0f, 360f);
-        randomDirection = Quaternion.Euler(0, randomAngle, 0) * Vector3.forward;
+        // 1. 수평 방향 랜덤 각도 생성 (0-360도)
+        float randomHorizontalAngle = UnityEngine.Random.Range(0f, 360f);
+
+        // 2. 수직 방향 랜덤 각도 생성 (launchAngle 기준으로 ±수직 확산 각도)
+        float randomVerticalAngle = launchAngle + UnityEngine.Random.Range(-verticalSpreadAngle / 2, verticalSpreadAngle / 2);
+
+        // 3. 두 각도를 이용하여 3D 방향 벡터 생성
+        // 수평 회전 적용
+        Quaternion horizontalRotation = Quaternion.Euler(0, randomHorizontalAngle, 0);
+
+        // 기본 앞 방향 벡터에 회전 적용
+        Vector3 horizontalDir = horizontalRotation * Vector3.forward;
+
+        // 수직 각도를 라디안으로 변환
+        float verticalRadians = randomVerticalAngle * Mathf.Deg2Rad;
+
+        // 최종 방향 벡터 계산 (수평 방향 + 수직 각도)
+        randomDirection = new Vector3(
+            horizontalDir.x,
+            Mathf.Sin(verticalRadians),
+            horizontalDir.z
+        ).normalized;
+
+        Debug.Log($"새 발사 방향 생성: 수평각={randomHorizontalAngle:F1}°, 수직각={randomVerticalAngle:F1}°");
     }
 
     public void Update()
@@ -98,20 +132,11 @@ public class Taewoori : MonoBehaviour, IDamageable
 
         if (manager != null)
         {
-            // 각도를 라디안으로 변환
-            float radianAngle = launchAngle * Mathf.Deg2Rad;
+            // 방향을 기반으로 회전 계산 - 파티클 시스템을 방향에 맞게 회전시킴
+            Quaternion lookRotation = Quaternion.LookRotation(randomDirection);
 
-            // 수평 방향 계산
-            Vector3 horizontalDir = randomDirection.normalized;
-
-            // 포물선 발사 방향 계산
-            Vector3 direction = new Vector3(
-                horizontalDir.x,
-                Mathf.Sin(radianAngle),
-                horizontalDir.z).normalized;
-
-            // 방향을 기반으로 회전 계산
-            Quaternion fixedRotation = Quaternion.Euler(-90f, 0, 0); // 기본 회전 (위쪽)
+            // 파티클 시스템이 -Z 방향으로 발사되도록 90도 추가 회전 (파티클 프리팹 설정에 따라 조정 필요)
+            Quaternion fixedRotation = lookRotation * Quaternion.Euler(-90f, 0, 0);
 
             // 회전값을 적용하여 파티클 생성
             GameObject projectile = manager.PoolSpawnFireParticle(spawnPosition, fixedRotation, this);
@@ -122,14 +147,14 @@ public class Taewoori : MonoBehaviour, IDamageable
 
                 if (rb != null)
                 {
-                    // 힘 적용
+                    // 힘 적용 - 이미 계산된 방향 벡터 사용
                     rb.velocity = Vector3.zero;
-                    rb.AddForce(direction * launchForce, ForceMode.Impulse) ;
+                    rb.AddForce(randomDirection * launchForce, ForceMode.Impulse);
 
                     // 쿨타임 리셋
                     _coolTime = 0f;
 
-                    Debug.Log($"[TAG] <color=magenta>{gameObject.name}이(가) {sourceFireObj.name}에서 불 파티클 발사</color>");
+                    Debug.Log($"[TAG] <color=magenta>{gameObject.name}이(가) {sourceFireObj.name}에서 불 파티클 발사 - 방향: {randomDirection}</color>");
                 }
             }
         }
@@ -137,7 +162,7 @@ public class Taewoori : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage)
     {
-        if (isDead)
+        if (_isDead)
             return;
 
         currentHealth -= damage;
@@ -148,24 +173,19 @@ public class Taewoori : MonoBehaviour, IDamageable
             Die();
         }
     }
-
+    
     public void Die()
     {
-        if (isDead)
+        if (_isDead)
             return;
 
-        isDead = true;
-        var spawnManager = FindObjectOfType<TaewooriSpawnManager>();
-        if (spawnManager != null && sourceFireObj != null)
-        {
-            spawnManager.NotifyTaewooriDestroyed(sourceFireObj);
-        }
-        // 죽을 때도 화재 오브젝트 정보 표시
-        if (sourceFireObj != null)
-        {
-            Debug.Log($"[TAG] <color=red>태우리 사망: {gameObject.name}이(가) {sourceFireObj.name} 화재 오브젝트에서 파괴되었습니다.</color>");
-        }
+        _isDead = true;
 
+        // 태우리 파괴 이벤트 발생
+        OnTaewooriDestroyed?.Invoke(this, sourceFireObj);
+        Debug.Log($"<color=red>태우리 사망: {gameObject.name}, 소스: {sourceFireObj?.name}</color>");
+
+        // 풀로 반환
         if (manager != null)
         {
             manager.ReturnTaewooriToPool(gameObject);

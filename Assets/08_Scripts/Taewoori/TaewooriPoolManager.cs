@@ -3,20 +3,39 @@ using UnityEngine;
 
 public class TaewooriPoolManager : MonoBehaviour
 {
+    [Header("===== 프리팹 설정 =====")]
     [SerializeField] private GameObject taewooriPrefab;
     [SerializeField] private GameObject smallTaewooriPrefab;
     [SerializeField] private GameObject fireParticlePrefab;
 
+    [Header("===== 풀 설정 =====")]
     [SerializeField] private int initialPoolSize = 10;
+
+    [Header("===== 리스폰 설정 =====")]
+    [SerializeField] private float baseRespawnTime = 10f;
+    [SerializeField] private float feverTimeMultiplier = 0.5f;
 
     // 오브젝트 풀
     private Queue<GameObject> taewooriPool = new Queue<GameObject>();
     private Queue<GameObject> smallTaewooriPool = new Queue<GameObject>();
     private Queue<GameObject> fireParticlePool = new Queue<GameObject>();
 
-    // 활성화된 오브젝트 추적
-    private Dictionary<FireObjScript, List<Taewoori>> activeTaewooriesByFireObj = new Dictionary<FireObjScript, List<Taewoori>>();
+    // 발사체 추적
     private Dictionary<Taewoori, int> projectileCountByTaewoori = new Dictionary<Taewoori, int>();
+
+    // 리스폰 관리
+    private class RespawnEntry
+    {
+        public FireObjScript FireObj;
+        public float Timer;
+
+        public RespawnEntry(FireObjScript fireObj)
+        {
+            FireObj = fireObj;
+            Timer = 0f;
+        }
+    }
+    private List<RespawnEntry> respawnQueue = new List<RespawnEntry>();
 
     private static TaewooriPoolManager _instance;
     public static TaewooriPoolManager Instance
@@ -38,6 +57,88 @@ public class TaewooriPoolManager : MonoBehaviour
         InitializePools();
     }
 
+    private void Start()
+    {
+        // 태우리 이벤트 구독
+        Taewoori.OnTaewooriDestroyed += HandleTaewooriDestroyed;
+    }
+
+    private void OnDestroy()
+    {
+        Taewoori.OnTaewooriDestroyed -= HandleTaewooriDestroyed;
+    }
+
+    private void Update()
+    {
+        // 리스폰 큐 처리
+        ProcessRespawnQueue();
+    }
+
+    // 태우리 파괴 이벤트 핸들러
+    private void HandleTaewooriDestroyed(Taewoori taewoori, FireObjScript fireObj)
+    {
+        if (fireObj != null)
+        {
+            // 활성 태우리 참조 지우기
+            fireObj.ClearActiveTaewoori();
+
+            // 리스폰 큐에 추가
+            QueueForRespawn(fireObj);
+        }
+    }
+
+    // 리스폰 큐에 추가
+    private void QueueForRespawn(FireObjScript fireObj)
+    {
+        if (fireObj == null || !fireObj.IsBurning)
+            return;
+
+        // 이미 큐에 있는지 확인
+        foreach (var entry in respawnQueue)
+        {
+            if (entry.FireObj == fireObj)
+                return; // 이미 큐에 있으면 무시
+        }
+
+        // 새 항목 추가
+        respawnQueue.Add(new RespawnEntry(fireObj));
+        Debug.Log($"<color=orange>리스폰 큐에 추가됨: {fireObj.name}</color>");
+    }
+
+    // 리스폰 큐 처리
+    private void ProcessRespawnQueue()
+    {
+        float respawnTime = IsFeverTime ? baseRespawnTime * feverTimeMultiplier : baseRespawnTime;
+
+        // 안전하게 복사본으로 작업
+        RespawnEntry[] entries = respawnQueue.ToArray();
+        List<RespawnEntry> completedEntries = new List<RespawnEntry>();
+
+        foreach (var entry in entries)
+        {
+            if (entry.FireObj == null || !entry.FireObj.IsBurning)
+            {
+                completedEntries.Add(entry);
+                continue;
+            }
+
+            entry.Timer += Time.deltaTime;
+
+            if (entry.Timer >= respawnTime)
+            {
+                // 리스폰 시간이 되면 태우리 생성
+                SpawnTaewooriAtPosition(entry.FireObj.TaewooriPos(), entry.FireObj);
+                completedEntries.Add(entry);
+                Debug.Log($"<color=green>리스폰 완료: {entry.FireObj.name}</color>");
+            }
+
+        }
+        foreach (var entry in completedEntries)
+        {
+            respawnQueue.Remove(entry);
+        }
+    }
+
     private void InitializePools()
     {
         // 초기 풀 생성
@@ -57,41 +158,54 @@ public class TaewooriPoolManager : MonoBehaviour
         return obj;
     }
 
-    // FireObjScript에서 호출할 메서드 - 태우리 생성
-    public void PoolSpawnTaewooriAt(FireObjScript fireObj)
+    // 태우리 생성
+    // 태우리 생성 메서드 수정
+    public GameObject SpawnTaewooriAtPosition(Vector3 position, FireObjScript fireObj)
     {
-        if (fireObj == null)
-            return;
+        if (fireObj == null || !fireObj.IsBurning)
+            return null;
 
-        // 태우리 스폰 위치 계산 (ITaewooriPos 인터페이스 사용)
-        Vector3 spawnPos = fireObj.TaewooriPos();
+        // 이미 태우리가 있는지 확인
+        if (fireObj.HasActiveTaewoori())
+        {
+            Debug.Log($"{fireObj.name}에 이미 태우리가 있어 생성을 건너뜁니다.");
+            return null;
+        }
 
-        // 풀에서 태우리 가져오기
+        // 예방된 오브젝트는 태우리 생성 안함
+        FirePreventable preventable = fireObj.GetComponent<FirePreventable>();
+        if (preventable != null && preventable.IsFirePreventable)
+        {
+            Debug.Log($"{fireObj.name}은 예방 완료되어 태우리 생성 건너뜁니다.");
+            return null;
+        }
+
         GameObject taewooriObj = GetFromPool(taewooriPool, taewooriPrefab);
 
         if (taewooriObj != null)
         {
-            taewooriObj.transform.position = spawnPos;
-            taewooriObj.SetActive(true);
+            // 위치 설정
+            taewooriObj.transform.position = position;
 
+            // 태우리 초기화
             Taewoori taewooriComponent = taewooriObj.GetComponent<Taewoori>();
             if (taewooriComponent != null)
             {
-                // 사용 중인 태우리 등록
-                if (!activeTaewooriesByFireObj.ContainsKey(fireObj))
-                {
-                    activeTaewooriesByFireObj[fireObj] = new List<Taewoori>();
-                }
-
-                activeTaewooriesByFireObj[fireObj].Add(taewooriComponent);
-                projectileCountByTaewoori[taewooriComponent] = 0;
-
                 taewooriComponent.Initialize(this, fireObj);
+                projectileCountByTaewoori[taewooriComponent] = 0;
             }
+
+            // 활성화
+            taewooriObj.SetActive(true);
+
+            Debug.Log($"<color=green>태우리 생성됨: {taewooriObj.name}, 소스: {fireObj.name}</color>");
+            return taewooriObj;
         }
+
+        return null;
     }
 
-    // 태우리가 발사체를 발사할 때 호출되는 메서드
+    // 발사체 생성
     public GameObject PoolSpawnFireParticle(Vector3 position, Quaternion rotation, Taewoori taewoori)
     {
         GameObject particle = GetFromPool(fireParticlePool, fireParticlePrefab);
@@ -137,52 +251,7 @@ public class TaewooriPoolManager : MonoBehaviour
 
         return smallTaewoori;
     }
-
-    // 작은 태우리가 파괴될 때 호출되는 메서드
-    public void NotifySmallTaewooriDestroyed(Taewoori originTaewoori)
-    {
-        if (originTaewoori != null && projectileCountByTaewoori.ContainsKey(originTaewoori))
-        {
-            if (projectileCountByTaewoori[originTaewoori] > 0)
-            {
-                projectileCountByTaewoori[originTaewoori]--;
-            }
-        }
-    }
-
-    // FireObjScript가 비활성화될 때 관련 태우리 정리
-    public void DeactivateTaewoories(FireObjScript fireObj)
-    {
-        if (fireObj == null || !activeTaewooriesByFireObj.ContainsKey(fireObj))
-            return;
-
-        foreach (var taewoori in activeTaewooriesByFireObj[fireObj])
-        {
-            if (taewoori != null && taewoori.gameObject.activeInHierarchy)
-            {
-                ReturnToPool(taewoori.gameObject, taewooriPool);
-
-                // 관련 발사체 카운트 제거
-                if (projectileCountByTaewoori.ContainsKey(taewoori))
-                {
-                    projectileCountByTaewoori.Remove(taewoori);
-                }
-            }
-        }
-
-        activeTaewooriesByFireObj[fireObj].Clear();
-    }
-
-    // 태우리가 발사할 수 있는 프로젝타일 수 확인
-    public bool CanLaunchProjectile(Taewoori taewoori, int maxProjectiles)
-    {
-        if (projectileCountByTaewoori.TryGetValue(taewoori, out int count))
-        {
-            return count < maxProjectiles;
-        }
-        return false;
-    }
-
+   
     // 풀에서 오브젝트 가져오기
     private GameObject GetFromPool(Queue<GameObject> pool, GameObject prefab)
     {
@@ -199,99 +268,77 @@ public class TaewooriPoolManager : MonoBehaviour
             return CreatePooledObject(prefab, pool);
         }
 
-        // 태우리 컴포넌트가 있으면 재설정 처리
-        Taewoori taewooriComponent = obj.GetComponent<Taewoori>();
-        if (taewooriComponent != null)
-        {
-            // 이 시점에서는 sourceFireObj를 null로 설정하지 않음
-            // 나중에 Initialize에서 새 값으로 설정될 것임
-        }
-
         return obj;
     }
 
-    // 오브젝트 풀로 반환
-    public void ReturnToPool(GameObject obj, Queue<GameObject> pool)
-    {
-        if (obj != null)
-        {
-            obj.SetActive(false);
-            obj.transform.SetParent(transform);
-            pool.Enqueue(obj);
-        }
-    }
-
-    // 태우리 반환
+    // 태우리 풀로 반환
     public void ReturnTaewooriToPool(GameObject taewooriObj)
     {
-        ReturnToPool(taewooriObj, taewooriPool);
+        if (taewooriObj == null)
+            return;
 
-        // 추적 목록에서 제거
+        // 태우리 컴포넌트
         Taewoori taewoori = taewooriObj.GetComponent<Taewoori>();
-        if (taewoori != null)
+        if (taewoori != null && projectileCountByTaewoori.ContainsKey(taewoori))
         {
-            foreach (var kvp in activeTaewooriesByFireObj)
-            {
-                kvp.Value.Remove(taewoori);
-            }
-
-            if (projectileCountByTaewoori.ContainsKey(taewoori))
-            {
-                projectileCountByTaewoori.Remove(taewoori);
-            }
+            projectileCountByTaewoori.Remove(taewoori);
         }
+
+        // 풀로 반환
+        taewooriObj.SetActive(false);
+        taewooriObj.transform.SetParent(transform);
+        taewooriPool.Enqueue(taewooriObj);
     }
 
-    // 발사체 반환
+    // 발사체 풀로 반환
     public void ReturnFireParticleToPool(GameObject particleObj)
     {
-        ReturnToPool(particleObj, fireParticlePool);
+        if (particleObj != null)
+        {
+            particleObj.SetActive(false);
+            particleObj.transform.SetParent(transform);
+            fireParticlePool.Enqueue(particleObj);
+        }
     }
 
-    // 작은 태우리 반환
+    // 작은 태우리 풀로 반환
     public void ReturnSmallTaewooriToPool(GameObject smallTaewooriObj)
     {
-        ReturnToPool(smallTaewooriObj, smallTaewooriPool);
-    }
-    // 특정 위치에 태우리 생성
-    // TaewooriPoolManager.cs
-    public GameObject SpawnTaewooriAtPosition(Vector3 position, FireObjScript fireObj)
-    {
-        if (fireObj == null)
+        if (smallTaewooriObj == null)
+            return;
+
+        // 작은 태우리 컴포넌트 가져오기
+        SmallTaewoori smallTaewoori = smallTaewooriObj.GetComponent<SmallTaewoori>();
+        if (smallTaewoori != null && smallTaewoori.OriginTaewoori != null)
         {
-            Debug.LogError("[TaewooriPoolManager] SpawnTaewooriAtPosition: fireObj이 null입니다!");
-            return null;
-        }
-
-        GameObject taewooriObj = GetFromPool(taewooriPool, taewooriPrefab);
-
-        if (taewooriObj != null)
-        {
-            // 위치 설정
-            taewooriObj.transform.position = position;
-
-            Taewoori taewooriComponent = taewooriObj.GetComponent<Taewoori>();
-            if (taewooriComponent != null)
+            // 원본 태우리의 발사체 카운트 감소
+            Taewoori originTaewoori = smallTaewoori.OriginTaewoori;
+            if (projectileCountByTaewoori.ContainsKey(originTaewoori))
             {
-                // 중요: 활성화 전에 초기화 수행
-                taewooriComponent.Initialize(this, fireObj);
-
-                // 관리 딕셔너리에 추가
-                if (!activeTaewooriesByFireObj.ContainsKey(fireObj))
+                if (projectileCountByTaewoori[originTaewoori] > 0)
                 {
-                    activeTaewooriesByFireObj[fireObj] = new List<Taewoori>();
+                    projectileCountByTaewoori[originTaewoori]--;
                 }
-
-                activeTaewooriesByFireObj[fireObj].Add(taewooriComponent);
-                projectileCountByTaewoori[taewooriComponent] = 0;
-
-                // 이제 모든 설정이 완료되었으므로 활성화
-                taewooriObj.SetActive(true);
-
-                Debug.Log($"[TaewooriPoolManager] 태우리가 위치 {position}에 생성되고 {fireObj.name}에 연결되었습니다.");
             }
         }
 
-        return taewooriObj;
+        // 풀로 반환
+        smallTaewooriObj.SetActive(false);
+        smallTaewooriObj.transform.SetParent(transform);
+        smallTaewooriPool.Enqueue(smallTaewooriObj);
     }
+
+    // 태우리가 발사할 수 있는 프로젝타일 수 확인
+    public bool CanLaunchProjectile(Taewoori taewoori, int maxProjectiles)
+    {
+        if (projectileCountByTaewoori.TryGetValue(taewoori, out int count))
+        {
+            return count < maxProjectiles;
+        }
+        return false;
+    }
+
+    // 피버타임 확인
+    private bool IsFeverTime => GameManager.Instance != null &&
+                              GameManager.Instance.CurrentPhase == GameManager.GamePhase.Burning;
 }

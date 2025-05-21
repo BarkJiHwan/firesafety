@@ -153,6 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameTimer: 0
   _currentPhase: 0
+  _isGameStart: 1
 --- !u!4 &10788053
 Transform:
   m_ObjectHideFlags: 0
@@ -620,11 +621,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d911b0e2f37eff240b858bff512e42de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAllfire: 0
-  _spawnCoolTime: 10
   _respawnCoolTime: 10
-  _isPeverTime: 0
-  _managedFireObjectsList: []
 --- !u!4 &725993760 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1934440500783924086, guid: fc5e374728e7fc540b5741a85367ceca,
@@ -943,9 +940,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b2f6647f8e8e5e48bc039e71c99309a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCount: 1
-  firePerPlayer: 3
-  minFiresPerZone: 1
+  _fireObjList: []
+  _isBuringCoolTime: 30
+  _playerCount: 6
 --- !u!114 &1615317226 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8896798572927068190, guid: 489d67e0b706f45b9902bf6d7b071954,
