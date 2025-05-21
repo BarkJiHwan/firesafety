@@ -21,6 +21,8 @@ public class PlayerInteractor : MonoBehaviour
         Debug.Log("Trigger Exit : " + other);
     }
 
+    // 에디터에서만 DrawGizmo 그려주기
+    #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Vector3 playerPos = gameObject.transform.position;
@@ -30,4 +32,5 @@ public class PlayerInteractor : MonoBehaviour
         Gizmos.DrawWireSphere(playerPos, 2);
         Handles.Label(playerPos + Vector3.up, "Interaction Collider");
     }
+    #endif
 }
