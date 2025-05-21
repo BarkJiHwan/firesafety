@@ -2,10 +2,10 @@
 
 public class FireParticles : MonoBehaviour
 {
-    [SerializeField] private string[] ignoreCollisionTags = { "Player", "Taewoori", "Shield" };
+    [SerializeField] private LayerMask ignoreCollisionLayers; // 레이어 마스크
+    [SerializeField] private string shieldTag = "Shield"; // Shield 태그는 별도로 유지
 
     private Taewoori originTaewoori;
-
 
     private void Start()
     {
@@ -14,7 +14,13 @@ public class FireParticles : MonoBehaviour
         {
             rb.freezeRotation = true;
         }
+
+        // 레이어 기반 충돌 무시 설정
+        int myLayer = gameObject.layer;
+        int playerLayer = LayerMask.NameToLayer("Player");
+        int taewooriLayer = LayerMask.NameToLayer("Taewoori");
     }
+
     public void SetOriginTaewoori(Taewoori taewoori)
     {
         originTaewoori = taewoori;
@@ -22,15 +28,18 @@ public class FireParticles : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        // 특정 태그 충돌 무시
-        foreach (string tag in ignoreCollisionTags)
+        // Shield 태그 체크 - 이 태그가 있으면 충돌 무시
+        if (collision.gameObject.CompareTag(shieldTag))
         {
-            if (collision.gameObject.CompareTag(tag))
-            {
-                return;
-            }
+            return;
         }
 
+        // 레이어 마스크를 사용한 충돌 무시 (Player, Taewoori 등)
+        int collisionLayer = collision.gameObject.layer;
+        if (((1 << collisionLayer) & ignoreCollisionLayers) != 0)
+        {
+            return;
+        }
 
         // 충돌 위치 가져오기
         if (collision.contacts.Length > 0)
@@ -42,7 +51,6 @@ public class FireParticles : MonoBehaviour
             if (TaewooriPoolManager.Instance != null && originTaewoori != null)
             {
                 TaewooriPoolManager.Instance.PoolSpawnSmallTaewoori(collisionPoint, originTaewoori);
-                Debug.Log($"[최현민] 발사체가 충돌하여 작은 태우리 생성: 위치={collisionPoint}");
 
             }
 
