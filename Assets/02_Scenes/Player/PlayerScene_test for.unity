@@ -156,6 +156,12 @@ MonoBehaviour:
   _respawnCoolTime: 10
   _isPeverTime: 0
   _managedFireObjectsList: []
+  _currentSpawnCoolTime: 0
+  _currentRespawnCoolTime: 0
+  _wasFeverTime: 0
+  _lastPhase: 0
+  _poolManager: {fileID: 0}
+  _autoRegisterAllOnStart: 1
 --- !u!4 &62182618
 Transform:
   m_ObjectHideFlags: 0
@@ -203,6 +209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe66b56a6f578bb40b95178d80bb876e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isBurning: 0
   _spawnOffset: {x: 0, y: 0.1, z: 0}
 --- !u!65 &156215130
 BoxCollider:
@@ -319,6 +326,8 @@ MonoBehaviour:
   fireParticlePrefab: {fileID: 1053203839010120, guid: eb5380e45ca7633458e6b2e8f95e3283,
     type: 3}
   initialPoolSize: 30
+  baseRespawnTime: 10
+  feverTimecCoolTime: 0.5
 --- !u!4 &504966275
 Transform:
   m_ObjectHideFlags: 0
@@ -2198,6 +2207,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9042033066143828996, guid: 76fa951f665100e4bb75405fef6f10ac,
+        type: 3}
+      propertyPath: _rightHand.triggerAction.m_Action.m_SingletonActionBindings.Array.data[1].m_Id
+      value: 3884ae1a-2f45-4c21-bed1-fc5d51670312
+      objectReference: {fileID: 0}
+    - target: {fileID: 9042033066143828996, guid: 76fa951f665100e4bb75405fef6f10ac,
+        type: 3}
+      propertyPath: _rightHand.triggerAction.m_Action.m_SingletonActionBindings.Array.data[1].m_Path
+      value: <XRController>{RightHand}/triggerButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 9042033066143828996, guid: 76fa951f665100e4bb75405fef6f10ac,
+        type: 3}
+      propertyPath: _rightHand.triggerAction.m_Action.m_SingletonActionBindings.Array.data[1].m_Action
+      value: Trigger
       objectReference: {fileID: 0}
     - target: {fileID: 9042033066143828998, guid: 76fa951f665100e4bb75405fef6f10ac,
         type: 3}
