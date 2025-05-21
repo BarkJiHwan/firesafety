@@ -13,7 +13,7 @@ public class TaewooriPoolManager : MonoBehaviour
 
     [Header("===== 리스폰 설정 =====")]
     [SerializeField] private float baseRespawnTime = 10f;
-    [SerializeField] private float feverTimeMultiplier = 0.5f;
+    [SerializeField] private float feverTimecCoolTime = 0.5f;
 
     // 오브젝트 풀
     private Queue<GameObject> taewooriPool = new Queue<GameObject>();
@@ -108,7 +108,7 @@ public class TaewooriPoolManager : MonoBehaviour
     // 리스폰 큐 처리
     private void ProcessRespawnQueue()
     {
-        float respawnTime = IsFeverTime ? baseRespawnTime * feverTimeMultiplier : baseRespawnTime;
+        float respawnTime = IsFeverTime ? baseRespawnTime * feverTimecCoolTime : baseRespawnTime;
 
         // 안전하게 복사본으로 작업
         RespawnEntry[] entries = respawnQueue.ToArray();

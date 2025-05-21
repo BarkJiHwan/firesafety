@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 1617691689590734608}
   - component: {fileID: 6560323191200408705}
   - component: {fileID: 516794491031853605}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Taewoori_Sample(Baby)_Red
-  m_TagString: Taewoori
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -75,9 +75,9 @@ GameObject:
   - component: {fileID: 6532788876785739290}
   - component: {fileID: 3918730481627568792}
   - component: {fileID: 1803024900947248704}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Taeuri_Sample(Baby).001
-  m_TagString: Taewoori
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -157,6 +157,10 @@ PrefabInstance:
     - target: {fileID: 1273710762483042, guid: 3563af13041142b4181079342cc0d68d, type: 3}
       propertyPath: m_Name
       value: BabyFire
+      objectReference: {fileID: 0}
+    - target: {fileID: 1273710762483042, guid: 3563af13041142b4181079342cc0d68d, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4150377031524958, guid: 3563af13041142b4181079342cc0d68d, type: 3}
       propertyPath: m_RootOrder
