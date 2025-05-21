@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class FirePreventable : MonoBehaviour
@@ -13,6 +14,9 @@ public class FirePreventable : MonoBehaviour
 
     [Header("임시 변수 추후 다른 스크립트에서 관리할 예정")]
     [SerializeField] private bool _isClickable = false;  // 예방 페이즈일 때만 true
+
+    [SerializeField] private PreventableObjData _data;
+    [SerializeField] private PreventType _myType;
 
     [Serializable]
     public struct SmokeScaledAxis
@@ -28,7 +32,6 @@ public class FirePreventable : MonoBehaviour
     [SerializeField, Range(0.1f, 2f)]
     private float _shieldRadius = 1f;
 
-
     public bool IsFirePreventable
     {
         get => _isFirePreventable;
@@ -42,6 +45,7 @@ public class FirePreventable : MonoBehaviour
 
     void OnMouseDown()
     {//마우스클릭 테스트 코드
+        Debug.Log( ShowText(_myType));
         _isFirePreventable = !_isFirePreventable; // 상태 토글
     }
     void Update()
@@ -58,19 +62,27 @@ public class FirePreventable : MonoBehaviour
             // 예방 페이즈
             if (_isFirePreventable)
             {
-                _smokePrefab.SetActive(false);
-                _shieldPrefab.SetActive(true);
+                OnFirePreventionComplete();
             }
             else
             {
-                _smokePrefab.SetActive(true);
-                _shieldPrefab.SetActive(false);
+                SetFirePreventionPending();
             }
         }
         else
         {
             _smokePrefab.SetActive(false);
         }
+    }
+    public void OnFirePreventionComplete()
+    {
+        _smokePrefab.SetActive(false);
+        _shieldPrefab.SetActive(true);
+    }
+    public void SetFirePreventionPending()
+    {
+        _smokePrefab.SetActive(true);
+        _shieldPrefab.SetActive(false);
     }
     //스모크 사이즈 셋팅
     private void ApplySmokeSettings() => _smokePrefab.transform.localScale =
@@ -84,5 +96,11 @@ public class FirePreventable : MonoBehaviour
                 new Vector3(diameter / transform.localScale.x
                 , diameter / transform.localScale.y
                 , diameter / transform.localScale.z);
+    }
+
+    public string ShowText(PreventType type)
+    {
+        // 예: TextMeshProUGUI 등에 text를 할당
+        return _data.GetItem(type).Description;
     }
 }
