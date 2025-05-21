@@ -2,12 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//public interface IPhaseProvider
-//{
-//    GameManager.GamePhase CurrentPhase { get; }
-//    float GameTimer { get; }
-//}
-
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
@@ -32,7 +26,7 @@ public class GameManager : MonoBehaviour
         Waiting,      // 0~10초
         Prevention,   // 10~70초
         Fire,         // 70~190초
-        Burning,       // 190초~
+        Fever,       // 190초~
         leaveDangerArea
     }
 
@@ -92,9 +86,9 @@ public class GameManager : MonoBehaviour
         }
         else if(_gameTimer < 250f)
         {
-            if (_currentPhase != GamePhase.Burning)
+            if (_currentPhase != GamePhase.Fever)
             {
-                _currentPhase = GamePhase.Burning;
+                _currentPhase = GamePhase.Fever;
             }
         }
         else
@@ -102,7 +96,7 @@ public class GameManager : MonoBehaviour
             if(_currentPhase != GamePhase.leaveDangerArea)
             {
                 _currentPhase = GamePhase.leaveDangerArea;
-                _isGameStart = false;
+                _isGameStart = false; //스타트 멈춤
                 Debug.Log("일단 게임종료 임");
             }
         }

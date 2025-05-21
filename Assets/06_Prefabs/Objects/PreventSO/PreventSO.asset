@@ -12,24 +12,67 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e90cd0b49d37e434ea9998493db187e4, type: 3}
   m_Name: PreventSO
   m_EditorClassIdentifier: 
-  entries:
-  - type: 0
-    text: "\uC804\uC120 \uAD50\uCCB4"
-  - type: 1
-    text: "\uC804\uC120 \uBF51\uAE30"
-  - type: 2
-    text: "\uCDA9\uC804 \uC911\uB2E8"
-  - type: 3
-    text: "\uB0B4\uBD80 \uCCAD\uC18C"
-  - type: 4
-    text: "\uAC00\uC2A4 \uBCA8\uBE0C \uC7A0\uADF8\uAE30"
-  - type: 5
-    text: "\uAE08\uC18D \uC18C\uC81C \uC81C\uAC70"
-  - type: 6
-    text: "\uC804\uC6D0 \uB044\uAE30"
-  - type: 7
-    text: "\uC548\uC4F0\uB294 \uD3EC\uD2B8 \uBF51\uAE30"
-  - type: 8
-    text: "\uC624\uB798\uB41C \uD615\uAD11\uB4F1 \uAD50\uCCB4"
-  - type: 9
-    text: "\uC548\uC4F0\uBA74 \uC804\uC6D0 \uB044\uAE30"
+  items:
+  - ID: P001
+    Type: 9
+    Name: "\uC804\uAE30\uC7A5\uD310"
+    Location: "\uBC29"
+    EnglishName: ElectricBlanket
+    Description: "\uC0AC\uC6A9 \uD6C4 \uBC18\uB4DC\uC2DC \uC804\uC6D0\uC744 \uB044\uC138\uC694."
+  - ID: P002
+    Type: 0
+    Name: "\uB0A1\uC740 \uC804\uC120"
+    Location: "\uBC29"
+    EnglishName: OldWire
+    Description: "\uB178\uD6C4\uB41C \uC804\uC120\uC740 \uC989\uC2DC \uAD50\uCCB4\uD558\uC138\uC694."
+  - ID: P003
+    Type: 1
+    Name: "\uD5E4\uC5B4\uB4DC\uB77C\uC774\uC5B4"
+    Location: "\uC695\uC2E4"
+    EnglishName: HairDryer
+    Description: "\uBB3C \uADFC\uCC98 \uC0AC\uC6A9 \uC8FC\uC758, \uC0AC\uC6A9 \uD6C4
+      \uCF58\uC13C\uD2B8\uC5D0\uC11C \uBE7C\uC138\uC694."
+  - ID: P004
+    Type: 2
+    Name: "\uBCF4\uC870\uBC30\uD130\uB9AC"
+    Location: "\uD604\uAD00"
+    EnglishName: PowerBank
+    Description: "\uCDA9\uC804 \uC644\uB8CC \uD6C4 \uBC18\uB4DC\uC2DC \uBD84\uB9AC\uD558\uC138\uC694."
+  - ID: P005
+    Type: 3
+    Name: "\uC138\uD0C1\uAE30"
+    Location: "\uBCA0\uB780\uB2E4"
+    EnglishName: WashingMachine
+    Description: "\uB0B4\uBD80 \uBA3C\uC9C0\uB294 \uC8FC\uAE30\uC801\uC73C\uB85C
+      \uCCAD\uC18C\uD558\uC138\uC694."
+  - ID: P006
+    Type: 4
+    Name: "\uC804\uAE30\uD3EC\uD2B8"
+    Location: "\uC8FC\uBC29"
+    EnglishName: ElectricKettle
+    Description: "\uBB3C\uC774 \uB053\uC73C\uBA74 \uC804\uC6D0\uC744 \uB044\uC138\uC694."
+  - ID: P007
+    Type: 5
+    Name: "\uC804\uC790\uB808\uC778\uC9C0"
+    Location: "\uC8FC\uBC29"
+    EnglishName: Microwave
+    Description: "\uAE08\uC18D \uC6A9\uAE30\uB294 \uC808\uB300 \uB123\uC9C0 \uB9C8\uC138\uC694."
+  - ID: P008
+    Type: 6
+    Name: "\uB2E4\uB9AC\uBBF8"
+    Location: "\uAC70\uC2E4"
+    EnglishName: Iron
+    Description: "\uC0AC\uC6A9 \uD6C4 \uBC18\uB4DC\uC2DC \uC804\uC6D0\uC744 \uAEBC\uC8FC\uC138\uC694."
+  - ID: P009
+    Type: 7
+    Name: "\uBA40\uD2F0\uD0ED"
+    Location: "\uAC70\uC2E4"
+    EnglishName: PowerStrip
+    Description: "\uACFC\uBD80\uD558 \uBC29\uC9C0\uB97C \uC704\uD574 \uC0AC\uC6A9\uD558\uC9C0
+      \uC54A\uC744 \uB550 \uBF51\uC544\uB450\uC138\uC694."
+  - ID: P010
+    Type: 8
+    Name: "\uD615\uAD11\uB4F1"
+    Location: "\uAC70\uC2E4"
+    EnglishName: FluorescentLight
+    Description: "\uBE5B\uC774 \uC5B4\uB450\uC6CC\uC9C0\uBA74 \uC989\uC2DC \uAD50\uCCB4\uD558\uC138\uC694."
