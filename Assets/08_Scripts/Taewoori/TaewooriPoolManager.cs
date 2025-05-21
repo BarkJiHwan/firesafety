@@ -159,7 +159,7 @@ public class TaewooriPoolManager : MonoBehaviour
     }
 
     // 태우리 생성
-    // 태우리 생성 메서드 수정
+    
     public GameObject SpawnTaewooriAtPosition(Vector3 position, FireObjScript fireObj)
     {
         if (fireObj == null || !fireObj.IsBurning)

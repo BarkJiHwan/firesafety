@@ -1,18 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-public class Taewoori : MonoBehaviour, IDamageable
+public class Taewoori : BaseTaewoori
 {
     // 태우리 생성 및 파괴 이벤트 추가
     public static event Action<Taewoori, FireObjScript> OnTaewooriSpawned;
     public static event Action<Taewoori, FireObjScript> OnTaewooriDestroyed;
-
-    [Header("체력 설정")]
-    [SerializeField] public float maxHealth = 100f;
-    [SerializeField] public float currentHealth;
-
-    [Tooltip("피버타임 시 추가 체력")]
-    [SerializeField] private float feverTimeExtraHealth = 50f;
 
     [Header("발사체 설정")]
     [SerializeField] private float launchForce = 10f;
@@ -22,14 +15,12 @@ public class Taewoori : MonoBehaviour, IDamageable
     [SerializeField] private float projectileCooldown = 2.0f; // 발사체 발사 쿨타임
     [SerializeField] private float horizontalSpreadAngle = 180f; // 수평 방향 랜덤 각도 범위 (기본 180도)
     [SerializeField] private float verticalSpreadAngle = 30f; // 수직 방향 랜덤 각도 범위 (기본 30도)
-    [SerializeField] private bool _isDead = false;
+
+    private bool _isDead = false;
     public bool IsDead => _isDead;
 
     private float _coolTime;
-    private Vector3 randomDirection;   
-    private bool isFeverMode = false; // 생성 시점의 피버타임 상태 저장
-
-    private TaewooriPoolManager manager;
+    private Vector3 randomDirection;
     private FireObjScript sourceFireObj; // 이 태우리를 생성한 화재 오브젝트
 
     public int MaxProjectiles => maxProjectiles;
@@ -43,35 +34,22 @@ public class Taewoori : MonoBehaviour, IDamageable
         // 소스 화재 오브젝트에 자신을 활성 태우리로 등록
         sourceFireObj.SetActiveTaewoori(this);
 
-        // 피버타임 상태 확인
-        bool isFeverMode = GameManager.Instance != null &&
-                          GameManager.Instance.CurrentPhase == GameManager.GamePhase.Burning;
-
-        // 피버타임 상태에 따라 체력 설정
-        if (isFeverMode)
-        {
-            maxHealth = 100f + feverTimeExtraHealth;
-        }
-        else
-        {
-            maxHealth = 100f;
-        }
+        // 체력 초기화 (부모 클래스 메서드 사용)
+        InitializeHealth();
 
         ResetState();
 
         // 태우리 생성 이벤트 발생
         OnTaewooriSpawned?.Invoke(this, sourceFireObj);
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"<color=green>태우리 생성됨: {gameObject.name}, 소스: {sourceFireObj?.name}</color>");
+#endif
     }
 
-    private void OnEnable()
+    protected override void ResetState()
     {
-        ResetState();
-    }
-
-    private void ResetState()
-    {
-        currentHealth = maxHealth;
+        base.ResetState();
         _coolTime = 0f;
         _isDead = false;
         GenerateRandomDirection();
@@ -102,7 +80,6 @@ public class Taewoori : MonoBehaviour, IDamageable
             horizontalDir.z
         ).normalized;
 
-        Debug.Log($"새 발사 방향 생성: 수평각={randomHorizontalAngle:F1}°, 수직각={randomVerticalAngle:F1}°");
     }
 
     public void Update()
@@ -154,36 +131,22 @@ public class Taewoori : MonoBehaviour, IDamageable
                     // 쿨타임 리셋
                     _coolTime = 0f;
 
-                    Debug.Log($"[TAG] <color=magenta>{gameObject.name}이(가) {sourceFireObj.name}에서 불 파티클 발사 - 방향: {randomDirection}</color>");
                 }
             }
         }
     }
 
-    public void TakeDamage(float damage)
-    {
-        if (_isDead)
-            return;
-
-        currentHealth -= damage;
-        Debug.Log($"[TAG] {gameObject.name}이(가) {damage}의 데미지를 받음. 남은 체력: {currentHealth}");
-
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-    }
-    
-    public void Die()
+    public override void Die()
     {
         if (_isDead)
             return;
 
         _isDead = true;
+        isDead = true; // 부모 클래스 변수도 설정
 
         // 태우리 파괴 이벤트 발생
         OnTaewooriDestroyed?.Invoke(this, sourceFireObj);
-        Debug.Log($"<color=red>태우리 사망: {gameObject.name}, 소스: {sourceFireObj?.name}</color>");
+
 
         // 풀로 반환
         if (manager != null)

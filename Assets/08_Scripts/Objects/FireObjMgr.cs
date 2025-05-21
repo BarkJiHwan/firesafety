@@ -289,23 +289,7 @@ public class FireObjMgr : MonoBehaviour
         }
 
         Debug.Log($"총 불 붙인 오브젝트 수: {currentBurningCount} / 목표: {totalTargetCount}");
-
-        // 불이 붙은 오브젝트에 태우리 생성
-        if (TaewooriPoolManager.Instance != null)
-        {
-            foreach (var zone in _zoneDict.Values)
-            {
-                foreach (var fireObj in zone.FireObjects)
-                {
-                    if (fireObj.IsBurning)
-                    {
-                        // 풀 매니저에 태우리 생성 요청
-                        TaewooriPoolManager.Instance.SpawnTaewooriAtPosition(
-                            fireObj.TaewooriPos(), fireObj);
-                    }
-                }
-            }
-        }
+       
     }
     // 리스트 셔플 함수
     private void ShuffleList<T>(List<T> list)
