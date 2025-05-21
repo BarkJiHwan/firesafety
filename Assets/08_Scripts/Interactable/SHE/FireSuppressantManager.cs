@@ -60,8 +60,6 @@ public class FireSuppressantManager : MonoBehaviour
         {
             _supplyCooldown -= Time.deltaTime;
         }
-        Debug.Log($"Trigger Value: {_triggerValue}");
-
         //향후 게임 매니저와 연계
     }
 
@@ -88,7 +86,6 @@ public class FireSuppressantManager : MonoBehaviour
     }
     private void Spray(HandData hand)
     {
-        Debug.Log("발사");
         _sprayStartPos = _sprayOrigin.transform.position;
         _sprayEndPos = _sprayStartPos + (_sprayOrigin.forward * _sprayLength);
 
@@ -113,10 +110,8 @@ public class FireSuppressantManager : MonoBehaviour
     }
     private IEnumerator SuppressingFire(HandData hand)
     {
-        Debug.Log("발사 코루틴 시작");
         while (_triggerValue > 0.1f && hand.amount > 0)
         {
-            Debug.Log("이펙트 ON");
             hand.initialFireFX.Play();
             yield return _fireDelay;
             hand.initialFireFX.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
@@ -153,12 +148,10 @@ public class FireSuppressantManager : MonoBehaviour
         }
         _cacheds.Clear();
         hand.isSpraying = false;
-        Debug.Log("발사 코루틴 종료");
         yield return null;
     }
     private void Supply(HandData hand)
     {
-        Debug.Log("보급");
         #region Instantiate ver
         //if (!_rightHand.enabled && !_leftHand.enabled)
         //{
