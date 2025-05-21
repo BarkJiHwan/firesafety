@@ -28,14 +28,14 @@ public class FireSuppressantManager : MonoBehaviour
 
     [Header("공통 설정")]
     [SerializeField] private float _sprayLength = 2.5f;
-    [SerializeField] private int _sprayRadius = 1;
+    [SerializeField] private float _sprayRadius = 1;
     [SerializeField] private int _damage = 1;
     [SerializeField] private int _decreaseAmount = 1;
     [SerializeField] private LayerMask _fireMask;
     [SerializeField] private float _refillCooldown = 3f;
     [SerializeField] private LayerMask _supplyMask;
     [SerializeField] private float _supplyDetectRange = 0.8f;
-    [SerializeField] private bool _feverTime;
+    [SerializeField] private bool _isFeverTime;
     [SerializeField] private float _supplyCooldown;
     [SerializeField] private Transform _sprayOrigin; //스프레이 발사 지점
 
@@ -50,8 +50,8 @@ public class FireSuppressantManager : MonoBehaviour
     private Vector3 _sprayEndPos;
     private float _triggerValue;
     private bool _isPressed;
-    private int _colHitCounts;
-    private int _fireHitCounts;
+    private int _colHitCount;
+    private int _fireHitCount;
     private void Update()
     {
         ProcessHand(_rightHand);
@@ -69,12 +69,12 @@ public class FireSuppressantManager : MonoBehaviour
     {
         _triggerValue = hand.triggerAction.action.ReadValue<float>();
         _isPressed = _triggerValue > 0.1f;
-        if (!_feverTime)
+        if (!_isFeverTime)
         {
-            _colHitCounts = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
+            _colHitCount = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
         }
         //if (_isPressed && _colHitCounts > 0)
-        if (_colHitCounts > 0)//테스트용
+        if (_colHitCount > 0)//테스트용
         {
             Supply(hand);
             _supplyCooldown = _refillCooldown;
@@ -92,12 +92,12 @@ public class FireSuppressantManager : MonoBehaviour
         _sprayStartPos = _sprayOrigin.transform.position;
         _sprayEndPos = _sprayStartPos + (_sprayOrigin.forward * _sprayLength);
 
-        _fireHitCounts = Physics.OverlapCapsuleNonAlloc(_sprayStartPos, _sprayEndPos, _sprayRadius, _fireHits, _fireMask);
+        _fireHitCount = Physics.OverlapCapsuleNonAlloc(_sprayStartPos, _sprayEndPos, _sprayRadius, _fireHits, _fireMask);
         if (!hand.normalFireFX.isPlaying)
         {
             hand.normalFireFX.Play();
         }
-        for (int i = 0; i < _fireHitCounts; i++)
+        for (int i = 0; i < _fireHitCount; i++)
         {
             var hit = _fireHits[i];
             if (!_cacheds.TryGetValue(hit, out var cached))
@@ -120,7 +120,7 @@ public class FireSuppressantManager : MonoBehaviour
             hand.initialFireFX.Play();
             yield return _fireDelay;
             hand.initialFireFX.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            if (hand.amount > 0 && !_feverTime)
+            if (hand.amount > 0 && !_isFeverTime)
             {
                 hand.amount -= _decreaseAmount;
             }
