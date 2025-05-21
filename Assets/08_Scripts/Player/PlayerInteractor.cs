@@ -7,6 +7,12 @@ public class PlayerInteractor : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
+        if (other.transform.parent == gameObject.transform.parent)
+        {
+            Debug.Log("이건 나임 : " + other);
+            return;
+        }
+
         Debug.Log("Trigger Enter : " + other);
     }
 

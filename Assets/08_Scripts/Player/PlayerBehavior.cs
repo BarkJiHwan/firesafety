@@ -18,7 +18,7 @@ public class PlayerBehavior : MonoBehaviour
     public bool IsGrabbing => isGrabbing;
     public bool IsMoving => isMoving;
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         Vector3 playerCamRot = playerCam.transform.rotation.eulerAngles;
         Vector3 currentRot = gameObject.transform.rotation.eulerAngles;
