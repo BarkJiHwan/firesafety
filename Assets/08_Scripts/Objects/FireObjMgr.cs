@@ -36,7 +36,7 @@ public class FireObjMgr : MonoBehaviour
     [Header("플레이어 수")]
     [Tooltip("추후 외부에서 주입 가능하도록 변경")]
     [SerializeField] private int _playerCount = 1;
-
+    private GamePhase currentPhase;
     private WaitForSeconds _forSeconds;
 
     private void Awake()
@@ -47,21 +47,20 @@ public class FireObjMgr : MonoBehaviour
             return;
         }
         _instance = this;
-        //씬 변환이 있다면 사용
-        //SceneManager.sceneLoaded += OnSceneLoaded;
         DontDestroyOnLoad(gameObject);
         RefreshZoneDictionary();
     }
     private void Start()
     {
+        currentPhase = GameManager.Instance.CurrentPhase;
         _isBuringCoolTime = _isBuringCoolTime / _playerCount;
         _forSeconds = new WaitForSeconds(_isBuringCoolTime);
     }
     void Update()
     {
-        var currentPhase = GameManager.Instance.CurrentPhase;
+        currentPhase = GameManager.Instance.CurrentPhase;
 
-        if (currentPhase == GameManager.GamePhase.Prevention && !_hasAreaReset)
+        if (currentPhase == GamePhase.Prevention && !_hasAreaReset)
         {
             Debug.Log("예방 페이즈 - 모든 구역 초기화");
             foreach (var zone in _zoneDict.Values)
@@ -71,7 +70,7 @@ public class FireObjMgr : MonoBehaviour
             _hasAreaReset = true;
         }
 
-        if (currentPhase == GameManager.GamePhase.Fire && !_hasRefreshedFireObjs)
+        if (currentPhase == GamePhase.Fire && !_hasRefreshedFireObjs)
         {
             Debug.Log("화재 페이즈 - 오브젝트 갱신");
             RefreshAllFireObjects();
@@ -82,14 +81,14 @@ public class FireObjMgr : MonoBehaviour
             _hasRefreshedFireObjs = true;
         }
 
-        if (currentPhase == GameManager.GamePhase.Fever && !_isInBurningPhase)
+        if (currentPhase == GamePhase.Fever && !_isInBurningPhase)
         {
             Debug.Log("버닝 페이즈 - 태우리 쿨타임 감소");
             _isBuringCoolTime = _isBuringCoolTime / 2;
             _forSeconds = new WaitForSeconds(_isBuringCoolTime);
             _isInBurningPhase = true;
         }
-        if(currentPhase == GameManager.GamePhase.leaveDangerArea && !_hasLeaveDangerArea)
+        if (currentPhase == GamePhase.leaveDangerArea && !_hasLeaveDangerArea)
         {
             Debug.Log("대피페이즈 돌입. 일단 게임 종료");
             StopCoroutine(ActivateTeawooriBurning());
@@ -98,19 +97,9 @@ public class FireObjMgr : MonoBehaviour
         }
     }
 
-    ////씬 변환이 있다면 사용
-    //void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    //{
-    //    RefreshZoneDict();
-    //}
-
     // 모든 구역 초기화
     private void ResetZone(MapIndex zone)
     {
-        //foreach (var fireObj in zone.FireObjects)
-        //{
-        //    fireObj.IsBurning = false;
-        //}
         foreach (var preventable in zone.FirePreventables)
         {
             preventable.IsFirePreventable = false;
@@ -163,45 +152,9 @@ public class FireObjMgr : MonoBehaviour
         }
     }
     //딕셔너리에서 화재가 날 수 있는 오브젝트를 체크한 뒤 태우리 생성 가능상태로 변경시켜주는 코루틴
-    //private IEnumerator ActivateTeawooriBurning()
-    //{
-    //    while (true)
-    //    {
-    //        // 1. 현재 비활성화된 오브젝트 수집
-    //        List<FireObjScript> inactiveFires = _fireObjList
-    //            .Where(fire => !fire.IsBurning)
-    //            .ToList();
-
-    //        // 2. 랜덤 선택 및 활성화
-    //        if (inactiveFires.Count > 0)
-    //        {
-    //            int randomIndex = Random.Range(0, inactiveFires.Count);
-    //            inactiveFires[randomIndex].IsBurning = true;
-    //            Debug.Log($"활성화: {inactiveFires[randomIndex].name}");
-
-    //            // TaewooriSpawnManager에 화재 오브젝트 등록
-    //            TaewooriSpawnManager spawnManager = FindObjectOfType<TaewooriSpawnManager>();
-    //            if (spawnManager != null)
-    //            {
-    //                spawnManager.RegisterFireObject(fireObj);
-    //            }
-
-    //            Debug.Log($"활성화: {fireObj.name}");
-    //        }
-
-    //        else
-    //        {
-    //            Debug.Log("비활성화된 오브젝트 없음");
-    //        }
-
-    //        // 3. 다음 활성화까지 대기 (30초 / 인원수)
-    //        yield return _forSeconds;
-    //    }
-    //}
-    // CHM 변경 스폰 매니저 제거 
     private IEnumerator ActivateTeawooriBurning()
     {
-        while (true)
+        while (currentPhase == GamePhase.Fire || currentPhase == GamePhase.Fever)
         {
             // 현재 비활성화된 오브젝트 수집
             List<FireObjScript> inactiveFires = _fireObjList
@@ -216,12 +169,12 @@ public class FireObjMgr : MonoBehaviour
                 fireObj.IsBurning = true;
 
                 Debug.Log($"활성화: {fireObj.name}");
-
                 // 태우리 생성은 IsBurning setter에서 자동으로 처리됨
             }
             else
             {
                 Debug.Log("비활성화된 오브젝트 없음");
+                yield return null;
             }
 
             // 다음 활성화까지 대기
@@ -289,7 +242,7 @@ public class FireObjMgr : MonoBehaviour
         }
 
         Debug.Log($"총 불 붙인 오브젝트 수: {currentBurningCount} / 목표: {totalTargetCount}");
-       
+
     }
     // 리스트 셔플 함수
     private void ShuffleList<T>(List<T> list)

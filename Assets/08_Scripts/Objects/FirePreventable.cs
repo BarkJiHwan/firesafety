@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
-using TMPro;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class FirePreventable : MonoBehaviour
 {
@@ -11,9 +11,6 @@ public class FirePreventable : MonoBehaviour
 
     [SerializeField] private GameObject _smokePrefab;
     [SerializeField] private GameObject _shieldPrefab;
-
-    [Header("임시 변수 추후 다른 스크립트에서 관리할 예정")]
-    [SerializeField] private bool _isClickable = false;  // 예방 페이즈일 때만 true
 
     [SerializeField] private PreventableObjData _data;
     [SerializeField] private PreventType _myType;
@@ -32,6 +29,8 @@ public class FirePreventable : MonoBehaviour
     [SerializeField, Range(0.1f, 2f)]
     private float _shieldRadius = 1f;
 
+    Renderer _renderer;
+
     public bool IsFirePreventable
     {
         get => _isFirePreventable;
@@ -39,15 +38,19 @@ public class FirePreventable : MonoBehaviour
     }
     private void Start()
     {
+        GetComponent<XRSimpleInteractable>().activated.AddListener(EnterPrevention);
         _smokePrefab.SetActive(false);
         _shieldPrefab.SetActive(false);
+
+        // 예방 가능한 오브젝트에 새로운 Material 생성
+        _renderer = GetComponent<Renderer>();
+        Material[] arrMat = new Material[2];
+        arrMat[0] = Resources.Load<Material>("Materials/OutlineMat");
+        arrMat[1] = Resources.Load<Material>("Materials/OriginMat");
+        _renderer.materials = arrMat;
+        SetActiveOnMaterials(false);
     }
 
-    void OnMouseDown()
-    {//마우스클릭 테스트 코드
-        Debug.Log( ShowText(_myType));
-        _isFirePreventable = !_isFirePreventable; // 상태 토글
-    }
     void Update()
     {
         ApplySmokeSettings();
@@ -55,9 +58,8 @@ public class FirePreventable : MonoBehaviour
 
         // 페이즈 확인
         var currentPhase = GameManager.Instance.CurrentPhase;
-        _isClickable = currentPhase == GameManager.GamePhase.Prevention;
 
-        if (_isClickable)
+        if (currentPhase == GamePhase.Prevention)
         {
             // 예방 페이즈
             if (_isFirePreventable)
@@ -98,9 +100,43 @@ public class FirePreventable : MonoBehaviour
                 , diameter / transform.localScale.z);
     }
 
-    public string ShowText(PreventType type)
+    public string ShowText()
     {
         // 예: TextMeshProUGUI 등에 text를 할당
-        return _data.GetItem(type).Description;
+        return _data.GetItem(_myType).Description;
+    }
+
+    public void EnterPrevention(ActivateEventArgs args)
+    {
+        if(!_isFirePreventable)
+        {
+            _isFirePreventable = true;
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    public void SetActiveOnMaterials(bool isActive)
+    {
+        foreach (var mat in _renderer.materials)
+        {
+            mat.SetFloat("_isNearPlayer", isActive ? 1f : 0f);
+        }
+    }
+
+    public void SetHighlightStronger(float interValue)
+    {
+        Material highlightMat = null;
+        foreach (var mat in _renderer.materials)
+        {
+            if (mat.HasProperty("_RimPower"))
+            {
+                highlightMat = mat;
+            }
+        }
+        float rimPower = Mathf.Lerp(2, -0.2f, interValue);
+        highlightMat.SetFloat("_RimPower", rimPower);
     }
 }
