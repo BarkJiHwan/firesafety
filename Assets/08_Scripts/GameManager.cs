@@ -2,6 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum GamePhase
+{
+    Waiting,      // 0~10초
+    Prevention,   // 10~70초
+    Fire,         // 70~190초
+    Fever,       // 190초~
+    leaveDangerArea
+}
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
@@ -21,17 +29,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public enum GamePhase
-    {
-        Waiting,      // 0~10초
-        Prevention,   // 10~70초
-        Fire,         // 70~190초
-        Fever,       // 190초~
-        leaveDangerArea
-    }
-
     [SerializeField] private float _gameTimer = 0f;
-    [SerializeField] private GamePhase _currentPhase = GamePhase.Waiting;
+    private GamePhase _currentPhase = GamePhase.Waiting;
 
     [SerializeField] private bool _isGameStart = true;
 
@@ -45,9 +44,9 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
         _instance = this;
         DontDestroyOnLoad(gameObject);
+        _currentPhase = GamePhase.Waiting;
     }
     private void Start()
     {

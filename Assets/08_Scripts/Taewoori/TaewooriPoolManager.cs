@@ -20,8 +20,9 @@ public class TaewooriPoolManager : MonoBehaviour
     private Queue<GameObject> smallTaewooriPool = new Queue<GameObject>();
     private Queue<GameObject> fireParticlePool = new Queue<GameObject>();
 
-    // 발사체 추적
+    // 발사체 추적 
     private Dictionary<Taewoori, int> projectileCountByTaewoori = new Dictionary<Taewoori, int>();
+
 
     // 리스폰 관리
     private class RespawnEntry
@@ -34,6 +35,7 @@ public class TaewooriPoolManager : MonoBehaviour
             FireObj = fireObj;
             Timer = 0f;
         }
+
     }
     private List<RespawnEntry> respawnQueue = new List<RespawnEntry>();
 
@@ -102,7 +104,7 @@ public class TaewooriPoolManager : MonoBehaviour
 
         // 새 항목 추가
         respawnQueue.Add(new RespawnEntry(fireObj));
-        Debug.Log($"<color=orange>리스폰 큐에 추가됨: {fireObj.name}</color>");
+
     }
 
     // 리스폰 큐 처리
@@ -129,7 +131,7 @@ public class TaewooriPoolManager : MonoBehaviour
                 // 리스폰 시간이 되면 태우리 생성
                 SpawnTaewooriAtPosition(entry.FireObj.TaewooriPos(), entry.FireObj);
                 completedEntries.Add(entry);
-                Debug.Log($"<color=green>리스폰 완료: {entry.FireObj.name}</color>");
+
             }
 
         }
@@ -159,7 +161,7 @@ public class TaewooriPoolManager : MonoBehaviour
     }
 
     // 태우리 생성
-    
+
     public GameObject SpawnTaewooriAtPosition(Vector3 position, FireObjScript fireObj)
     {
         if (fireObj == null || !fireObj.IsBurning)
@@ -168,7 +170,7 @@ public class TaewooriPoolManager : MonoBehaviour
         // 이미 태우리가 있는지 확인
         if (fireObj.HasActiveTaewoori())
         {
-            Debug.Log($"{fireObj.name}에 이미 태우리가 있어 생성을 건너뜁니다.");
+
             return null;
         }
 
@@ -176,7 +178,7 @@ public class TaewooriPoolManager : MonoBehaviour
         FirePreventable preventable = fireObj.GetComponent<FirePreventable>();
         if (preventable != null && preventable.IsFirePreventable)
         {
-            Debug.Log($"{fireObj.name}은 예방 완료되어 태우리 생성 건너뜁니다.");
+
             return null;
         }
 
@@ -198,7 +200,6 @@ public class TaewooriPoolManager : MonoBehaviour
             // 활성화
             taewooriObj.SetActive(true);
 
-            Debug.Log($"<color=green>태우리 생성됨: {taewooriObj.name}, 소스: {fireObj.name}</color>");
             return taewooriObj;
         }
 
@@ -251,7 +252,7 @@ public class TaewooriPoolManager : MonoBehaviour
 
         return smallTaewoori;
     }
-   
+
     // 풀에서 오브젝트 가져오기
     private GameObject GetFromPool(Queue<GameObject> pool, GameObject prefab)
     {
@@ -340,5 +341,5 @@ public class TaewooriPoolManager : MonoBehaviour
 
     // 피버타임 확인
     private bool IsFeverTime => GameManager.Instance != null &&
-                              GameManager.Instance.CurrentPhase == GameManager.GamePhase.Fever;
+                              GameManager.Instance.CurrentPhase == GamePhase.Fever;
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using TMPro;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -40,15 +39,11 @@ public class FirePreventable : MonoBehaviour
     }
     private void Start()
     {
+        GetComponent<XRSimpleInteractable>().activated.AddListener(EnterPrevention);
         _smokePrefab.SetActive(false);
         _shieldPrefab.SetActive(false);
     }
 
-    void OnMouseDown()
-    {//마우스클릭 테스트 코드
-        //Debug.Log( ShowText(_myType));
-        _isFirePreventable = !_isFirePreventable; // 상태 토글
-    }
     void Update()
     {
         ApplySmokeSettings();
@@ -56,7 +51,8 @@ public class FirePreventable : MonoBehaviour
 
         // 페이즈 확인
         var currentPhase = GameManager.Instance.CurrentPhase;
-        _isClickable = currentPhase == GameManager.GamePhase.Prevention;
+        _isClickable = currentPhase == GamePhase.Prevention;
+
 
         if (_isClickable)
         {
@@ -103,5 +99,11 @@ public class FirePreventable : MonoBehaviour
     {
         // 예: TextMeshProUGUI 등에 text를 할당
         return _data.GetItem(_myType).Description;
+    }
+
+    public void EnterPrevention(ActivateEventArgs args)
+    {
+        Debug.Log(_myType + "예방 완료");
+        _isFirePreventable = !_isFirePreventable;
     }
 }
