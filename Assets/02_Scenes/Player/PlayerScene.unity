@@ -134,7 +134,31 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1311119274}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &144540243 stripped
+  m_GameObject: {fileID: 437409605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b2f6647f8e8e5e48bc039e71c99309a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _fireObjList: []
+  _isBuringCoolTime: 30
+  _playerCount: 6
+--- !u!4 &437409607
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 437409605}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &454852593
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7320765416191794315, guid: 489d67e0b706f45b9902bf6d7b071954,
     type: 3}
@@ -144,7 +168,18 @@ GameObject:
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2394749521044529862, guid: 489d67e0b706f45b9902bf6d7b071954,
     type: 3}
-  m_PrefabInstance: {fileID: 1311119274}
+  smallTaewooriPrefab: {fileID: 5681766003718697426, guid: afb23cff5ee4a5440a7d00e7336b9ae5,
+    type: 3}
+  fireParticlePrefab: {fileID: 6546500973772680124, guid: ba58bfdd1a667b849a4cc698de65d977,
+    type: 3}
+  initialPoolSize: 10
+  baseRespawnTime: 10
+  feverTimecCoolTime: 0.5
+--- !u!4 &454852595
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &510003850
 GameObject:
@@ -1085,15 +1120,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1183570083036194805, guid: 7e954d8e794a74313a4846a6181fdc67,
-        type: 3}
-      propertyPath: m_RaycastMask.m_Bits
-      value: 2147483937
+    - target: {fileID: 2019223859, guid: 7e954d8e794a74313a4846a6181fdc67, type: 3}
+      propertyPath: _damage
+      value: 20
       objectReference: {fileID: 0}
-    - target: {fileID: 1183570083071239004, guid: 7e954d8e794a74313a4846a6181fdc67,
-        type: 3}
-      propertyPath: m_RaycastMask.m_Bits
-      value: 2147483937
+    - target: {fileID: 2019223859, guid: 7e954d8e794a74313a4846a6181fdc67, type: 3}
+      propertyPath: _supplyDetectRange
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8646238192673766980, guid: 7e954d8e794a74313a4846a6181fdc67,
         type: 3}
