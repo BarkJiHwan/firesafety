@@ -1,10 +1,12 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 public class PlayerInteractor : MonoBehaviour
 {
+    List<Material> materials;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.transform.parent == gameObject.transform.parent)
@@ -14,11 +16,23 @@ public class PlayerInteractor : MonoBehaviour
         }
 
         Debug.Log("Trigger Enter : " + other);
+
+        Renderer rend = other.GetComponent<Renderer>();
+        materials = new List<Material>();
+        foreach(var mat in rend.materials)
+        {
+            materials.Add(mat);
+            mat.SetFloat("isNearPlayer", 1);
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         Debug.Log("Trigger Exit : " + other);
+        foreach (var mat in materials)
+        {
+            mat.SetFloat("isNearPlayer", 0);
+        }
     }
 
     // 에디터에서만 DrawGizmo 그려주기

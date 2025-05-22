@@ -28,7 +28,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4680096319811303423}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 6.95}
+  m_LocalPosition: {x: 0, y: 0, z: 5.2939997}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -40,7 +40,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.8119999, y: 1.2544168}
+  m_AnchoredPosition: {x: -2.104, y: 1.2860001}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4680096319811303420
@@ -117,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c982604b6344a7e478a977ac449483c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiPos: 0
+  uiPos: 0.5
   backImage: {fileID: 4680096321747830109}
   backColor: {r: 0.69803923, g: 0, b: 0, a: 1}
   ConverBackImage: {fileID: 4680096321001329026}
@@ -714,7 +714,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uAE08\uC18D \uC6A9\uAE30\uB294 \uC808\uB300 \uB123\uC9C0 \uB9C8\uC138\uC694."
+  m_text: "\uBB3C\uC774 \uB053\uC73C\uBA74 \uC804\uC6D0\uC744 \uB044\uC138\uC694."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8866faaf1c968ca4bb67ef73053631c5, type: 2}
   m_sharedMaterial: {fileID: 7128053881691465852, guid: 8866faaf1c968ca4bb67ef73053631c5,

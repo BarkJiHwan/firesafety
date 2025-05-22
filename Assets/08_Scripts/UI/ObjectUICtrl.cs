@@ -71,7 +71,7 @@ public class ObjectUICtrl : MonoBehaviour
         Vector3 originPosition = fire.TaewooriPos();
         transform.position = originPosition + basicPos;
 
-        if(IsUIBlocked(Camera.main))
+        if(IsUIBlocked())
         {
             MoveUIPosition(originPosition);
         }
@@ -106,7 +106,7 @@ public class ObjectUICtrl : MonoBehaviour
 
     // UI가 다른 오브젝트 뒤에 가려져 있으면 플레이어가 못 보기 때문에
     // 카메라 위치에서 UI 위치까지 Ray를 쏴서 중간에 장애물이 있는지 체크
-    bool IsUIBlocked(Camera cam)
+    bool IsUIBlocked()
     {
         Vector3[] worldCorners = new Vector3[4];
         rect = GetComponent<RectTransform>();
@@ -124,11 +124,11 @@ public class ObjectUICtrl : MonoBehaviour
 
         foreach(var point in rayPoints)
         {
-            Vector3 dir = point - cam.transform.position;
-            float distance = dir.magnitude;
+            float distance = 1.0f;
 
-            if(Physics.Raycast(cam.transform.position, dir.normalized, out RaycastHit hit, distance))
+            if (Physics.Raycast(point, transform.forward, out RaycastHit hit, distance))
             {
+                Debug.Log(hit.transform.gameObject.name);
                 if(!hit.transform.IsChildOf(rect))
                 {
                     blockedCount++;
@@ -143,9 +143,11 @@ public class ObjectUICtrl : MonoBehaviour
     {
         List<Vector3> candidatePos = new List<Vector3>
         {
-            originPos + new Vector3(1, 0, 0),
-            originPos + new Vector3(0, -1, 0),
-            originPos + new Vector3(1 * 2, 0, 0)
+            originPos + new Vector3(uiPos * 2, 0, 0),
+            originPos + new Vector3(0, -uiPos, 0),
+            originPos + new Vector3(-uiPos * 2, 0, 0),
+            //originPos + new Vector3(0, 0, 1),
+            //originPos + new Vector3(0, 0, -1)
         };
 
         Debug.Log("부딪혔음");
@@ -154,12 +156,12 @@ public class ObjectUICtrl : MonoBehaviour
         {
             transform.position = pos;
             Debug.Log("후보 위치 : " + pos);
-            if(!IsUIBlocked(Camera.main))
+            if(!IsUIBlocked())
             {
                 Debug.Log("최종 위치 : " + pos);
                 return;
             }
         }
-        //transform.position = originPos + basicPos;
+        transform.position = originPos + basicPos;
     }
 }
