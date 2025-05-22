@@ -38,7 +38,7 @@ public class FirePreventable : MonoBehaviour
     }
     private void Start()
     {
-        GetComponent<XRSimpleInteractable>().activated.AddListener(EnterPrevention);
+        GetComponent<XRSimpleInteractable>().selectEntered.AddListener(EnterPrevention);
         _smokePrefab.SetActive(false);
         _shieldPrefab.SetActive(false);
 
@@ -106,7 +106,7 @@ public class FirePreventable : MonoBehaviour
         return _data.GetItem(_myType).Description;
     }
 
-    public void EnterPrevention(ActivateEventArgs args)
+    public void EnterPrevention(SelectEnterEventArgs Args)
     {
         if(!_isFirePreventable)
         {
