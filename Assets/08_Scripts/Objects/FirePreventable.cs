@@ -98,7 +98,13 @@ public class FirePreventable : MonoBehaviour
 
     public void EnterPrevention(ActivateEventArgs args)
     {
-        Debug.Log(_myType + "예방 완료");
-        _isFirePreventable = !_isFirePreventable;
+        if(!_isFirePreventable)
+        {
+            _isFirePreventable = true;
+        }
+        else
+        {
+            return;
+        }
     }
 }
