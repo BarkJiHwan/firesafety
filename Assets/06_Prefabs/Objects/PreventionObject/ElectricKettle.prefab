@@ -127,6 +127,7 @@ MonoBehaviour:
     y: 1
     z: 1
   _shieldRadius: 1
+  _materials: []
 --- !u!114 &-8554112643987632912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,6 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe66b56a6f578bb40b95178d80bb876e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isBurning: 0
   _spawnOffset: {x: 0, y: 0.1, z: 0}
 --- !u!114 &422087599151779295
 MonoBehaviour:
@@ -275,6 +277,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6931219769576118933, guid: 17be3b380da08c94c89caa7d3d4dd821,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 8357722310041460698, guid: 17be3b380da08c94c89caa7d3d4dd821,
         type: 3}
       propertyPath: m_RootOrder
@@ -358,6 +365,10 @@ PrefabInstance:
     - target: {fileID: 1785776904012352, guid: 0c6dadad4eec3ef4c9d806c63041cf9e, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1785776904012352, guid: 0c6dadad4eec3ef4c9d806c63041cf9e, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 4725835114127370, guid: 0c6dadad4eec3ef4c9d806c63041cf9e, type: 3}
       propertyPath: m_RootOrder

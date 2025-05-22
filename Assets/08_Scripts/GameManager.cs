@@ -102,4 +102,5 @@ public class GameManager : MonoBehaviour
     {
         _isGameStart = true;
     }
+
 }
