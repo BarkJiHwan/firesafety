@@ -55,7 +55,7 @@ public class FirePreventable : MonoBehaviour
 
         // 페이즈 확인
         var currentPhase = GameManager.Instance.CurrentPhase;
-        _isClickable = currentPhase == GameManager.GamePhase.Prevention;
+        _isClickable = currentPhase == GamePhase.Prevention;
 
         if (_isClickable)
         {
