@@ -198,11 +198,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6af11ef0d75a6b347b00977e6510d33f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  taewooriPrefab: {fileID: 1266448066377587148, guid: fc5e374728e7fc540b5741a85367ceca,
+  taewooriPrefab: {fileID: 230267922210339850, guid: 15d52a3c2fd587f47967b4fb9c4a46b2,
     type: 3}
-  smallTaewooriPrefab: {fileID: 2105682044638487978, guid: b5158f3fc04707a4e9d3767f2efe5643,
+  smallTaewooriPrefab: {fileID: 5681766003718697426, guid: afb23cff5ee4a5440a7d00e7336b9ae5,
     type: 3}
-  fireParticlePrefab: {fileID: 1273710762483042, guid: 3563af13041142b4181079342cc0d68d,
+  fireParticlePrefab: {fileID: 6546500973772680124, guid: ba58bfdd1a667b849a4cc698de65d977,
     type: 3}
   initialPoolSize: 10
   baseRespawnTime: 10
@@ -435,9 +435,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c31fedf35e42a3d4684e39360824bad9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameTimer: 0
-  _currentPhase: 2
   _isGameStart: 1
+  <GameTimer>k__BackingField: 0
 --- !u!4 &1824487200
 Transform:
   m_ObjectHideFlags: 0
