@@ -42,9 +42,7 @@ public class Taewoori : BaseTaewoori
         // 태우리 생성 이벤트 발생
         OnTaewooriSpawned?.Invoke(this, sourceFireObj);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        Debug.Log($"<color=green>태우리 생성됨: {gameObject.name}, 소스: {sourceFireObj?.name}</color>");
-#endif
+
     }
 
     protected override void ResetState()
