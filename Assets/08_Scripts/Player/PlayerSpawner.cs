@@ -12,21 +12,21 @@ public enum PlayerEnum {
 
 public class PlayerSpawner : MonoBehaviour
 {
-    private PlayerCharacterSo[] _playerCharacterArray;
+    public PlayerCharacterSo[] playerCharacterArray;
 
     private void Awake()
     {
-        _playerCharacterArray = Resources.LoadAll<PlayerCharacterSo>("Player");
+        playerCharacterArray = Resources.LoadAll<PlayerCharacterSo>("Player");
     }
 
     public void NetworkInstantiate(PlayerEnum playerEnum)
     {
-        this.NetworkInstantiate(playerEnum, Vector3.zero, Quaternion.identity);
+        NetworkInstantiate(playerEnum, Vector3.zero, Quaternion.identity);
     }
 
     public void NetworkInstantiate(PlayerEnum playerEnum, Vector3 pos, Quaternion quaternion)
     {
-        PlayerCharacterSo selectedChar = _playerCharacterArray[(int)playerEnum];
+        PlayerCharacterSo selectedChar = playerCharacterArray[(int)playerEnum];
         PhotonNetwork.Instantiate(selectedChar.characterName, pos, quaternion);
     }
 }

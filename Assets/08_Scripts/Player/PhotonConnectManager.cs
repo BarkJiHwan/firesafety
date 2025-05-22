@@ -8,16 +8,24 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
     private string _testRoomName = "testtest123";
     private string _testLobbyName = "scTestLobby";
 
-    [SerializeField] private GameManager _gameManager;
     [SerializeField] private PlayerSpawner _playerSpawner;
-
-    private void Awake()
-    {
-        _gameManager = FindObjectOfType<GameManager>();
-    }
 
     private void Start()
     {
+        /* 네트워크 Instantiate 할 프리팹 풀 초기화 */
+        DefaultPool pool = PhotonNetwork.PrefabPool as DefaultPool;
+        if (pool != null)
+        {
+            foreach (var soCharacter in _playerSpawner.playerCharacterArray)
+            {
+                if (pool.ResourceCache.ContainsKey(soCharacter.characterName))
+                {
+                    continue;
+                }
+                pool.ResourceCache.Add(soCharacter.characterName, soCharacter.characterPrefab);
+            }
+        }
+
         TestConnectPhotonServer();
     }
 
@@ -88,8 +96,10 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
     /* 테스트용 방 곧바로 입장시, 바로 카트 생성해준다. */
     public override void OnJoinedRoom()
     {
-        Debug.Log("I'm Joined, " + PhotonNetwork.LocalPlayer + "Room : " + PhotonNetwork.CurrentRoom.Name);
-        // _gameManager.InstantiateObject();
+        _playerSpawner.NetworkInstantiate(PlayerEnum.Jennie);
+        GameManager.Instance.ResetGameTimer();
+
+        Debug.Log("나 참가 " + PhotonNetwork.LocalPlayer + "Room : " + PhotonNetwork.CurrentRoom.Name);
     }
 
     public override void OnJoinedLobby()
