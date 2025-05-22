@@ -93,12 +93,14 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         }
     }
 
-    /* 테스트용 방 곧바로 입장시, 바로 카트 생성해준다. */
+    /* 테스트용 방 곧바로 입장시, 바로 플레이어 생성이후 XR 컴포넌트 켜줌. */
     public override void OnJoinedRoom()
     {
-        _playerSpawner.NetworkInstantiate(PlayerEnum.Jennie);
-        GameManager.Instance.ResetGameTimer();
+        // 초
+        GameObject player = _playerSpawner.NetworkInstantiate(PlayerEnum.Jennie);
+        player.GetComponent<PlayerComponents>().xRComponents.SetActive(true);
 
+        GameManager.Instance.ResetGameTimer();
         Debug.Log("나 참가 " + PhotonNetwork.LocalPlayer + "Room : " + PhotonNetwork.CurrentRoom.Name);
     }
 

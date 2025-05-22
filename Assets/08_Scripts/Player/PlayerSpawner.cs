@@ -19,14 +19,14 @@ public class PlayerSpawner : MonoBehaviour
         playerCharacterArray = Resources.LoadAll<PlayerCharacterSo>("Player");
     }
 
-    public void NetworkInstantiate(PlayerEnum playerEnum)
+    public GameObject NetworkInstantiate(PlayerEnum playerEnum)
     {
-        NetworkInstantiate(playerEnum, Vector3.zero, Quaternion.identity);
+        return NetworkInstantiate(playerEnum, Vector3.zero, Quaternion.identity);
     }
 
-    public void NetworkInstantiate(PlayerEnum playerEnum, Vector3 pos, Quaternion quaternion)
+    public GameObject NetworkInstantiate(PlayerEnum playerEnum, Vector3 pos, Quaternion quaternion)
     {
         PlayerCharacterSo selectedChar = playerCharacterArray[(int)playerEnum];
-        PhotonNetwork.Instantiate(selectedChar.characterName, pos, quaternion);
+        return PhotonNetwork.Instantiate(selectedChar.characterName, pos, quaternion);
     }
 }

@@ -233,6 +233,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8646238192673766983}
+  - component: {fileID: 4723195395359193621}
   m_Layer: 9
   m_Name: Jennie_Player_With_XR
   m_TagString: Untagged
@@ -254,10 +255,23 @@ Transform:
   m_Children:
   - {fileID: 8646238193835447793}
   - {fileID: 8103984189318083762}
-  - {fileID: 3201540492098982576}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4723195395359193621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8646238192673766980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f77acc01db85341edaabcbd8f42cab77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  XRComponents: {fileID: 8646238193835447694}
+  Model: {fileID: 8880238657535995400}
 --- !u!1 &8646238192947939189
 GameObject:
   m_ObjectHideFlags: 0
@@ -1010,7 +1024,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8646238193835447793
 Transform:
   m_ObjectHideFlags: 0
@@ -1026,6 +1040,7 @@ Transform:
   - {fileID: 8646238193472561537}
   - {fileID: 8646238194053378198}
   - {fileID: 8646238193431257940}
+  - {fileID: 3201540492098982576}
   m_Father: {fileID: 8646238192673766983}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2027,6 +2042,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4476097447232102442}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8880238657535995400 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4981747460995190306, guid: 4ab117ceceedc456bb94c4bffc46ce07,
+    type: 3}
+  m_PrefabInstance: {fileID: 4476097447232102442}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8646238192475616302
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2764,7 +2785,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 8646238192673766983}
+    m_TransformParent: {fileID: 8646238193835447793}
     m_Modifications:
     - target: {fileID: 6598815579406187026, guid: 18ddb545287c546e19cc77dc9fbb2189,
         type: 3}
@@ -2779,7 +2800,7 @@ PrefabInstance:
     - target: {fileID: 6598815579406187027, guid: 18ddb545287c546e19cc77dc9fbb2189,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6598815579406187027, guid: 18ddb545287c546e19cc77dc9fbb2189,
         type: 3}
