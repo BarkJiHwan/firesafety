@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public class FireSuppressantManager : MonoBehaviour
 {
@@ -52,6 +53,7 @@ public class FireSuppressantManager : MonoBehaviour
     private bool _isPressed;
     private int _colHitCount;
     private int _fireHitCount;
+    Stopwatch stopwatch = new();
     private void Update()
     {
         ProcessHand(_rightHand);
@@ -109,28 +111,34 @@ public class FireSuppressantManager : MonoBehaviour
     }
     private IEnumerator SuppressingFire(HandData hand)
     {
-        while (_triggerValue > 0.1f && hand.amount > 0)
+        if (hand.amount > 0 && _isPressed)
         {
             hand.initialFireFX.Play();
             yield return _fireDelay;
             hand.initialFireFX.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            if (hand.amount > 0 && !_isFeverTime)
-            {
-                hand.amount -= _decreaseAmount;
-            }
-            Spray(hand);
-            yield return _checkTime;
         }
-        while (_triggerValue > 0.1f && hand.amount <= 0)
+        while (_isPressed)
         {
-            if (hand.normalFireFX.isPlaying)
+            if (hand.amount > 0)
             {
-                hand.normalFireFX.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                if (hand.amount > 0 && !_isFeverTime)
+                {
+                    hand.amount -= _decreaseAmount;
+                }
+                Spray(hand);
             }
-            if (!hand.zeroAmountFireFX.isPlaying)
+            if (hand.amount <= 0)
             {
-                hand.zeroAmountFireFX.Play();
+                if (hand.normalFireFX.isPlaying)
+                {
+                    hand.normalFireFX.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                }
+                if (!hand.zeroAmountFireFX.isPlaying)
+                {
+                    hand.zeroAmountFireFX.Play();
+                }
             }
+            yield return _checkTime;
         }
         //이펙트 끄기
         if (hand.normalFireFX.isPlaying)
