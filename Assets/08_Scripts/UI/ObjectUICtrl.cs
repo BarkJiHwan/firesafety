@@ -95,23 +95,6 @@ public class ObjectUICtrl : MonoBehaviour
             MoveUIPosition(originPosition);
         }
 
-        //// 예방이 안 됐을 때 문구 바꾸기
-        //preventWord.text = prevent.ShowText();
-        //// 예방 됐을 때 아이콘 변경
-        //if(prevent.IsFirePreventable == true)
-        //{
-        //    iconImg.sprite = completeIcon;
-        //}
-        //else
-        //{
-        //    iconImg.sprite = warningIcon;
-        //}
-
-        //// 배경 활성화 (예방이 됐으면 안 나와야 함)
-        //backImage.gameObject.SetActive(!prevent.IsFirePreventable);
-        //// 아이콘 활성화
-        //iconImg.gameObject.SetActive(true);
-
         // ray로 계속 쏘고 있으면
         isPointing = true;
         RefreshUI();
