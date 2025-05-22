@@ -82,7 +82,6 @@ public class FireSuppressantManager : MonoBehaviour
             hand.isSpraying = true;
             StartCoroutine(SuppressingFire(hand));
         }
-
     }
     private void Spray(HandData hand)
     {
@@ -99,8 +98,8 @@ public class FireSuppressantManager : MonoBehaviour
             var hit = _fireHits[i];
             if (!_cacheds.TryGetValue(hit, out var cached))
             {
-                cached = GetComponent<IDamageable>();
-                if (cached != null)
+                cached = hit.gameObject.GetComponent<IDamageable>();
+                if (!_cacheds.ContainsKey(hit) && cached != null)
                 {
                     _cacheds[hit] = cached;
                 }
