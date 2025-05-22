@@ -61,7 +61,7 @@ public class FireObjMgr : MonoBehaviour
     {
         var currentPhase = GameManager.Instance.CurrentPhase;
 
-        if (currentPhase == GameManager.GamePhase.Prevention && !_hasAreaReset)
+        if (currentPhase == GamePhase.Prevention && !_hasAreaReset)
         {
             Debug.Log("예방 페이즈 - 모든 구역 초기화");
             foreach (var zone in _zoneDict.Values)
@@ -71,7 +71,7 @@ public class FireObjMgr : MonoBehaviour
             _hasAreaReset = true;
         }
 
-        if (currentPhase == GameManager.GamePhase.Fire && !_hasRefreshedFireObjs)
+        if (currentPhase == GamePhase.Fire && !_hasRefreshedFireObjs)
         {
             Debug.Log("화재 페이즈 - 오브젝트 갱신");
             RefreshAllFireObjects();
@@ -82,14 +82,14 @@ public class FireObjMgr : MonoBehaviour
             _hasRefreshedFireObjs = true;
         }
 
-        if (currentPhase == GameManager.GamePhase.Fever && !_isInBurningPhase)
+        if (currentPhase == GamePhase.Fever && !_isInBurningPhase)
         {
             Debug.Log("버닝 페이즈 - 태우리 쿨타임 감소");
             _isBuringCoolTime = _isBuringCoolTime / 2;
             _forSeconds = new WaitForSeconds(_isBuringCoolTime);
             _isInBurningPhase = true;
         }
-        if (currentPhase == GameManager.GamePhase.leaveDangerArea && !_hasLeaveDangerArea)
+        if (currentPhase == GamePhase.leaveDangerArea && !_hasLeaveDangerArea)
         {
             Debug.Log("대피페이즈 돌입. 일단 게임 종료");
             StopCoroutine(ActivateTeawooriBurning());
