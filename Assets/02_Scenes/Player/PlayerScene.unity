@@ -149,8 +149,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b2f6647f8e8e5e48bc039e71c99309a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   _fireObjList: []
   _isBuringCoolTime: 30
   _playerCount: 1
@@ -196,11 +196,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6af11ef0d75a6b347b00977e6510d33f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  taewooriPrefab: {fileID: 1266448066377587148, guid: fc5e374728e7fc540b5741a85367ceca,
+  m_Name:
+  m_EditorClassIdentifier:
+  taewooriPrefab: {fileID: 230267922210339850, guid: 15d52a3c2fd587f47967b4fb9c4a46b2,
     type: 3}
-  smallTaewooriPrefab: {fileID: 2105682044638487978, guid: b5158f3fc04707a4e9d3767f2efe5643,
+  smallTaewooriPrefab: {fileID: 5681766003718697426, guid: afb23cff5ee4a5440a7d00e7336b9ae5,
     type: 3}
   fireParticlePrefab: {fileID: 1053203839010120, guid: eb5380e45ca7633458e6b2e8f95e3283,
     type: 3}
@@ -327,8 +327,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_Version: 1
   m_UsePipelineSettings: 1
   m_AdditionalLightsShadowResolutionTier: 2
@@ -448,11 +448,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c31fedf35e42a3d4684e39360824bad9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _gameTimer: 0
-  _currentPhase: 2
+  m_Name:
+  m_EditorClassIdentifier:
   _isGameStart: 1
+  <GameTimer>k__BackingField: 0
 --- !u!4 &1824487200
 Transform:
   m_ObjectHideFlags: 0
