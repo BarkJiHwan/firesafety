@@ -12,9 +12,6 @@ public class FirePreventable : MonoBehaviour
     [SerializeField] private GameObject _smokePrefab;
     [SerializeField] private GameObject _shieldPrefab;
 
-    [Header("임시 변수 추후 다른 스크립트에서 관리할 예정")]
-    [SerializeField] private bool _isClickable = false;  // 예방 페이즈일 때만 true
-
     [SerializeField] private PreventableObjData _data;
     [SerializeField] private PreventType _myType;
 
@@ -51,10 +48,8 @@ public class FirePreventable : MonoBehaviour
 
         // 페이즈 확인
         var currentPhase = GameManager.Instance.CurrentPhase;
-        _isClickable = currentPhase == GamePhase.Prevention;
 
-
-        if (_isClickable)
+        if (currentPhase == GamePhase.Prevention)
         {
             // 예방 페이즈
             if (_isFirePreventable)

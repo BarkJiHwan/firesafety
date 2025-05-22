@@ -6,7 +6,7 @@ public class FireObjScript : MonoBehaviour, ITaewooriPos
     [SerializeField] private bool _isBurning;
 
     [Header("태우리 스폰 위치 설정")]
-    [SerializeField] private Vector3 _spawnOffset = new Vector3(0f, 0.1f, 0f);
+    [SerializeField] private Vector3 _spawnOffset;
 
     // 상태 변경 이벤트 정의
     public delegate void BurningStateChangedHandler(FireObjScript fireObj, bool newState);
