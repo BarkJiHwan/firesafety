@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Presets;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -29,6 +30,8 @@ public class ObjectUICtrl : MonoBehaviour
     RectTransform rect;
     GameManager gameManager;
     Vector3 basicPos;
+    FirePreventable currentPrevent;
+    bool isPointing;
 
     private void Awake()
     {
@@ -54,7 +57,22 @@ public class ObjectUICtrl : MonoBehaviour
 
     void Update()
     {
-        
+        if(GameManager.Instance.CurrentPhase != GamePhase.Prevention)
+        {
+            if(backImage.gameObject.activeSelf == true)
+            {
+                backImage.gameObject.SetActive(false);
+                iconImg.gameObject.SetActive(false);
+            }
+        }
+
+        if(currentPrevent != null)
+        {
+            if(isPointing == true && currentPrevent.IsFirePreventable == true)
+            {
+                RefreshUI();
+            }
+        }
     }
 
     public void SelectedObject(HoverEnterEventArgs args)
@@ -64,7 +82,8 @@ public class ObjectUICtrl : MonoBehaviour
             return;
         }
         var target = args.interactableObject;
-        FirePreventable prevent = target.transform.GetComponent<FirePreventable>();
+        //FirePreventable prevent = target.transform.GetComponent<FirePreventable>();
+        currentPrevent = target.transform.GetComponent<FirePreventable>();
         FireObjScript fire = target.transform.GetComponent<FireObjScript>();
 
         //transform.position = target.transform.position + fire.SpawnOffset;
@@ -76,22 +95,26 @@ public class ObjectUICtrl : MonoBehaviour
             MoveUIPosition(originPosition);
         }
 
-        // 예방이 안 됐을 때 문구 바꾸기
-        preventWord.text = prevent.ShowText();
-        // 예방 됐을 때 아이콘 변경
-        if(prevent.IsFirePreventable == true)
-        {
-            iconImg.sprite = completeIcon;
-        }
-        else
-        {
-            iconImg.sprite = warningIcon;
-        }
+        //// 예방이 안 됐을 때 문구 바꾸기
+        //preventWord.text = prevent.ShowText();
+        //// 예방 됐을 때 아이콘 변경
+        //if(prevent.IsFirePreventable == true)
+        //{
+        //    iconImg.sprite = completeIcon;
+        //}
+        //else
+        //{
+        //    iconImg.sprite = warningIcon;
+        //}
 
-        // 배경 활성화 (예방이 됐으면 안 나와야 함)
-        backImage.gameObject.SetActive(!prevent.IsFirePreventable);
-        // 아이콘 활성화
-        iconImg.gameObject.SetActive(true);
+        //// 배경 활성화 (예방이 됐으면 안 나와야 함)
+        //backImage.gameObject.SetActive(!prevent.IsFirePreventable);
+        //// 아이콘 활성화
+        //iconImg.gameObject.SetActive(true);
+
+        // ray로 계속 쏘고 있으면
+        isPointing = true;
+        RefreshUI();
     }
 
     public void DisSelectedObject()
@@ -100,6 +123,7 @@ public class ObjectUICtrl : MonoBehaviour
         {
             return;
         }
+        isPointing = false;
         backImage.gameObject.SetActive(false);
         iconImg.gameObject.SetActive(false);
     }
@@ -158,5 +182,28 @@ public class ObjectUICtrl : MonoBehaviour
             }
         }
         transform.position = originPos + basicPos;
+    }
+
+    void RefreshUI()
+    {
+        if (currentPrevent == null)
+        {
+            return;
+        }
+        preventWord.text = currentPrevent.ShowText();
+        // 예방 됐을 때 아이콘 변경
+        if (currentPrevent.IsFirePreventable == true)
+        {
+            iconImg.sprite = completeIcon;
+        }
+        else
+        {
+            iconImg.sprite = warningIcon;
+        }
+
+        // 배경 활성화 (예방이 됐으면 안 나와야 함)
+        backImage.gameObject.SetActive(!currentPrevent.IsFirePreventable);
+        // 아이콘 활성화
+        iconImg.gameObject.SetActive(true);
     }
 }
