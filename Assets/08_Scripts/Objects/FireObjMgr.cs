@@ -36,7 +36,7 @@ public class FireObjMgr : MonoBehaviour
     [Header("플레이어 수")]
     [Tooltip("추후 외부에서 주입 가능하도록 변경")]
     [SerializeField] private int _playerCount = 1;
-
+    private GamePhase currentPhase;
     private WaitForSeconds _forSeconds;
 
     private void Awake()
@@ -47,19 +47,18 @@ public class FireObjMgr : MonoBehaviour
             return;
         }
         _instance = this;
-        //씬 변환이 있다면 사용
-        //SceneManager.sceneLoaded += OnSceneLoaded;
         DontDestroyOnLoad(gameObject);
         RefreshZoneDictionary();
     }
     private void Start()
     {
+        currentPhase = GameManager.Instance.CurrentPhase;
         _isBuringCoolTime = _isBuringCoolTime / _playerCount;
         _forSeconds = new WaitForSeconds(_isBuringCoolTime);
     }
     void Update()
     {
-        var currentPhase = GameManager.Instance.CurrentPhase;
+        currentPhase = GameManager.Instance.CurrentPhase;
 
         if (currentPhase == GamePhase.Prevention && !_hasAreaReset)
         {
@@ -98,19 +97,9 @@ public class FireObjMgr : MonoBehaviour
         }
     }
 
-    ////씬 변환이 있다면 사용
-    //void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    //{
-    //    RefreshZoneDict();
-    //}
-
     // 모든 구역 초기화
     private void ResetZone(MapIndex zone)
     {
-        //foreach (var fireObj in zone.FireObjects)
-        //{
-        //    fireObj.IsBurning = false;
-        //}
         foreach (var preventable in zone.FirePreventables)
         {
             preventable.IsFirePreventable = false;
@@ -165,7 +154,7 @@ public class FireObjMgr : MonoBehaviour
     //딕셔너리에서 화재가 날 수 있는 오브젝트를 체크한 뒤 태우리 생성 가능상태로 변경시켜주는 코루틴
     private IEnumerator ActivateTeawooriBurning()
     {
-        while (true)
+        while (currentPhase == GamePhase.Fire || currentPhase == GamePhase.Fever)
         {
             // 현재 비활성화된 오브젝트 수집
             List<FireObjScript> inactiveFires = _fireObjList
@@ -180,12 +169,12 @@ public class FireObjMgr : MonoBehaviour
                 fireObj.IsBurning = true;
 
                 Debug.Log($"활성화: {fireObj.name}");
-
                 // 태우리 생성은 IsBurning setter에서 자동으로 처리됨
             }
             else
             {
                 Debug.Log("비활성화된 오브젝트 없음");
+                yield return null;
             }
 
             // 다음 활성화까지 대기
