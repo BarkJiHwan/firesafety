@@ -59,7 +59,7 @@ public class ObjectUICtrl : MonoBehaviour
 
     public void SelectedObject(HoverEnterEventArgs args)
     {
-        if (GameManager.Instance.CurrentPhase != GameManager.GamePhase.Prevention)
+        if (GameManager.Instance.CurrentPhase != GamePhase.Prevention)
         {
             return;
         }
@@ -96,7 +96,7 @@ public class ObjectUICtrl : MonoBehaviour
 
     public void DisSelectedObject()
     {
-        if (GameManager.Instance.CurrentPhase != GameManager.GamePhase.Prevention)
+        if (GameManager.Instance.CurrentPhase != GamePhase.Prevention)
         {
             return;
         }
@@ -128,7 +128,6 @@ public class ObjectUICtrl : MonoBehaviour
 
             if (Physics.Raycast(point, transform.forward, out RaycastHit hit, distance))
             {
-                Debug.Log(hit.transform.gameObject.name);
                 if(!hit.transform.IsChildOf(rect))
                 {
                     blockedCount++;
@@ -150,15 +149,11 @@ public class ObjectUICtrl : MonoBehaviour
             //originPos + new Vector3(0, 0, -1)
         };
 
-        Debug.Log("부딪혔음");
-
         foreach (var pos in candidatePos)
         {
             transform.position = pos;
-            Debug.Log("후보 위치 : " + pos);
             if(!IsUIBlocked())
             {
-                Debug.Log("최종 위치 : " + pos);
                 return;
             }
         }

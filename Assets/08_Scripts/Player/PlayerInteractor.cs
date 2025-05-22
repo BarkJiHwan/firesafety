@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class PlayerInteractor : MonoBehaviour
 {
-    List<Material> materials;
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.transform.parent == gameObject.transform.parent)
@@ -15,24 +13,51 @@ public class PlayerInteractor : MonoBehaviour
             return;
         }
 
+        // 예방일 때만 작동
+        if(GameManager.Instance.CurrentPhase != GamePhase.Prevention)
+        {
+            return;
+        }
         Debug.Log("Trigger Enter : " + other);
 
-        Renderer rend = other.GetComponent<Renderer>();
-        materials = new List<Material>();
-        foreach(var mat in rend.materials)
+        var preventFire = other.GetComponent<FirePreventable>();
+        preventFire.SetActiveOnMaterials(true);
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.transform.parent == gameObject.transform.parent)
         {
-            materials.Add(mat);
-            mat.SetFloat("isNearPlayer", 1);
+            return;
         }
+
+        if (GameManager.Instance.CurrentPhase != GamePhase.Prevention)
+        {
+            return;
+        }
+
+        Debug.Log("Trigger Stay : " + other);
+
+        // 플레이어가 가까워질수록 내 Material _RimPower -시켜야 함 2->-0.2
+        float distance = Vector3.Distance(other.transform.position, transform.position);
+
+        float t = 1 - Mathf.Clamp01(distance / 2f);
+
+        var preventFire = other.GetComponent<FirePreventable>();
+        preventFire.SetHighlightStronger(t);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("Trigger Exit : " + other);
-        foreach (var mat in materials)
+        if (GameManager.Instance.CurrentPhase != GamePhase.Prevention)
         {
-            mat.SetFloat("isNearPlayer", 0);
+            return;
         }
+
+        Debug.Log("Trigger Exit : " + other);
+
+        var preventFire = other.GetComponent<FirePreventable>();
+        preventFire.SetActiveOnMaterials(false);
     }
 
     // 에디터에서만 DrawGizmo 그려주기

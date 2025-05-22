@@ -32,6 +32,8 @@ public class FirePreventable : MonoBehaviour
     [SerializeField, Range(0.1f, 2f)]
     private float _shieldRadius = 1f;
 
+    Renderer _renderer;
+
     public bool IsFirePreventable
     {
         get => _isFirePreventable;
@@ -42,6 +44,14 @@ public class FirePreventable : MonoBehaviour
         GetComponent<XRSimpleInteractable>().activated.AddListener(EnterPrevention);
         _smokePrefab.SetActive(false);
         _shieldPrefab.SetActive(false);
+
+        // 예방 가능한 오브젝트에 새로운 Material 생성
+        _renderer = GetComponent<Renderer>();
+        Material[] arrMat = new Material[2];
+        arrMat[0] = Resources.Load<Material>("Materials/OutlineMat");
+        arrMat[1] = Resources.Load<Material>("Materials/OriginMat");
+        _renderer.materials = arrMat;
+        SetActiveOnMaterials(false);
     }
 
     void Update()
@@ -105,5 +115,27 @@ public class FirePreventable : MonoBehaviour
     {
         Debug.Log(_myType + "예방 완료");
         _isFirePreventable = !_isFirePreventable;
+    }
+
+    public void SetActiveOnMaterials(bool isActive)
+    {
+        foreach (var mat in _renderer.materials)
+        {
+            mat.SetFloat("_isNearPlayer", isActive ? 1f : 0f);
+        }
+    }
+
+    public void SetHighlightStronger(float interValue)
+    {
+        Material highlightMat = null;
+        foreach (var mat in _renderer.materials)
+        {
+            if (mat.HasProperty("_RimPower"))
+            {
+                highlightMat = mat;
+            }
+        }
+        float rimPower = Mathf.Lerp(2, -0.2f, interValue);
+        highlightMat.SetFloat("_RimPower", rimPower);
     }
 }
