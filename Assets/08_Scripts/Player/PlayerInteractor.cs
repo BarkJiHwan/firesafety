@@ -21,6 +21,10 @@ public class PlayerInteractor : MonoBehaviour
         Debug.Log("Trigger Enter : " + other);
 
         var preventFire = other.GetComponent<FirePreventable>();
+        if(preventFire == null)
+        {
+            return;
+        }
         preventFire.SetActiveOnMaterials(true);
     }
 
@@ -36,14 +40,16 @@ public class PlayerInteractor : MonoBehaviour
             return;
         }
 
-        Debug.Log("Trigger Stay : " + other);
-
+        var preventFire = other.GetComponent<FirePreventable>();
+        if(preventFire == null || preventFire.IsFirePreventable == true)
+        {
+            return;
+        }
         // 플레이어가 가까워질수록 내 Material _RimPower -시켜야 함 2->-0.2
         float distance = Vector3.Distance(other.transform.position, transform.position);
 
         float t = 1 - Mathf.Clamp01(distance / 2f);
 
-        var preventFire = other.GetComponent<FirePreventable>();
         preventFire.SetHighlightStronger(t);
     }
 
@@ -57,6 +63,10 @@ public class PlayerInteractor : MonoBehaviour
         Debug.Log("Trigger Exit : " + other);
 
         var preventFire = other.GetComponent<FirePreventable>();
+        if(preventFire == null)
+        {
+            return;
+        }
         preventFire.SetActiveOnMaterials(false);
     }
 

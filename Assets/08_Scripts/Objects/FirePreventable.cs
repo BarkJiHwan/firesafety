@@ -65,6 +65,8 @@ public class FirePreventable : MonoBehaviour
             if (_isFirePreventable)
             {
                 OnFirePreventionComplete();
+                // 예방 완료하면 Material 끄기
+                SetActiveOnMaterials(false);
             }
             else
             {
@@ -74,6 +76,15 @@ public class FirePreventable : MonoBehaviour
         else
         {
             _smokePrefab.SetActive(false);
+        }
+
+        // 예방 페이즈가 아닐때 Material이 켜져 있으면 끄기
+        if(GameManager.Instance.CurrentPhase != GamePhase.Prevention)
+        {
+            if(isActiveOnMaterials())
+            {
+                SetActiveOnMaterials(false);
+            }
         }
     }
     public void OnFirePreventionComplete()
@@ -138,5 +149,22 @@ public class FirePreventable : MonoBehaviour
         }
         float rimPower = Mathf.Lerp(2, -0.2f, interValue);
         highlightMat.SetFloat("_RimPower", rimPower);
+    }
+
+    bool isActiveOnMaterials()
+    {
+        float activeNum;
+        bool isActive = false;
+        foreach (var mat in _renderer.materials)
+        {
+            activeNum = mat.GetFloat("_isNearPlayer");
+            // 체크표시가 켜져있으면
+            if(activeNum == 1)
+            {
+                isActive = true;
+                break;
+            }
+        }
+        return isActive;
     }
 }
