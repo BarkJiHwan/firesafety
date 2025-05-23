@@ -424,6 +424,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ecd853c2bad54ebca8f5d315bb6ec74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _testRoomName: MyTestRoom111
+  _testLobbyName: scTestLobby
   _playerSpawner: {fileID: 1184504947}
 --- !u!4 &1184504946
 Transform:
@@ -1041,7 +1043,7 @@ MonoBehaviour:
   fireParticlePrefab: {fileID: 6546500973772680124, guid: ba58bfdd1a667b849a4cc698de65d977,
     type: 3}
   initialPoolSize: 10
-  baseRespawnTime: 10
+  baseRespawnTime: 20
   feverTimecCoolTime: 0.5
 --- !u!4 &1701025121
 Transform:

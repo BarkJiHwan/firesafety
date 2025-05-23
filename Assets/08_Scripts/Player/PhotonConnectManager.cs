@@ -5,8 +5,9 @@ using UnityEngine;
 public class PhotonConnectManager : MonoBehaviourPunCallbacks
 {
     private string _gameVersion = "1";
-    private string _testRoomName = "testtest123";
-    private string _testLobbyName = "scTestLobby";
+
+    [SerializeField] private string _testRoomName = "testtest123";
+    [SerializeField] private string _testLobbyName = "scTestLobby";
 
     [SerializeField] private PlayerSpawner _playerSpawner;
 
