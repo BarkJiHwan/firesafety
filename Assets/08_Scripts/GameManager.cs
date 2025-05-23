@@ -29,13 +29,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    [SerializeField] private float _gameTimer = 0f;
-    private GamePhase _currentPhase = GamePhase.Waiting;
-
     [SerializeField] private bool _isGameStart = true;
 
-    public float GameTimer => _gameTimer;
-    public GamePhase CurrentPhase => _currentPhase;
+    [field: SerializeField]
+    public float GameTimer { get; private set; } = 0f;
+    public GamePhase CurrentPhase { get; private set; } = GamePhase.Waiting;
 
     private void Awake()
     {
@@ -46,7 +44,6 @@ public class GameManager : MonoBehaviour
         }
         _instance = this;
         DontDestroyOnLoad(gameObject);
-        _currentPhase = GamePhase.Waiting;
     }
     private void Start()
     {
@@ -57,7 +54,7 @@ public class GameManager : MonoBehaviour
     {
         if (_isGameStart)
         {
-            _gameTimer += Time.deltaTime;
+            GameTimer += Time.deltaTime;
             UpdateGamePhase();
         }
     }
@@ -65,36 +62,36 @@ public class GameManager : MonoBehaviour
     private void UpdateGamePhase()
     {
         // 시간에 따라 페이즈 자동 전환
-        if (_gameTimer < 10f)
+        if (GameTimer < 10f)
         {
-            _currentPhase = GamePhase.Waiting;
+            CurrentPhase = GamePhase.Waiting;
         }
-        else if (_gameTimer < 70f)
+        else if (GameTimer < 70f)
         {
-            if (_currentPhase != GamePhase.Prevention)
+            if (CurrentPhase != GamePhase.Prevention)
             {
-                _currentPhase = GamePhase.Prevention;
+                CurrentPhase = GamePhase.Prevention;
             }
         }
-        else if (_gameTimer < 190f)
+        else if (GameTimer < 190f)
         {
-            if (_currentPhase != GamePhase.Fire)
+            if (CurrentPhase != GamePhase.Fire)
             {
-                _currentPhase = GamePhase.Fire;
+                CurrentPhase = GamePhase.Fire;
             }
         }
-        else if(_gameTimer < 250f)
+        else if(GameTimer < 250f)
         {
-            if (_currentPhase != GamePhase.Fever)
+            if (CurrentPhase != GamePhase.Fever)
             {
-                _currentPhase = GamePhase.Fever;
+                CurrentPhase = GamePhase.Fever;
             }
         }
         else
         {
-            if(_currentPhase != GamePhase.leaveDangerArea)
+            if(CurrentPhase != GamePhase.leaveDangerArea)
             {
-                _currentPhase = GamePhase.leaveDangerArea;
+                CurrentPhase = GamePhase.leaveDangerArea;
                 _isGameStart = false; //스타트 멈춤
                 Debug.Log("일단 게임종료 임");
             }
@@ -106,4 +103,9 @@ public class GameManager : MonoBehaviour
         _isGameStart = true;
     }
 
+    public void ResetGameTimer()
+    {
+        _isGameStart = true;
+        GameTimer = 0f;
+    }
 }
