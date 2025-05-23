@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 using TMPro;
 using System.Collections.Generic;
 using System.Diagnostics;
+using UnityEngine.XR;
+using Unity.VisualScripting;
 
 public class FireSuppressantManager : MonoBehaviour
 {
@@ -17,7 +19,7 @@ public class FireSuppressantManager : MonoBehaviour
         public ParticleSystem zeroAmountFireFX;
         public ParticleSystem initialFireFX;
         public GameObject modelPrefab;
-
+        public bool initialFire = false;
         public int amount = 600;
         public bool enabled = false;
         public bool isSpraying = false;
@@ -50,10 +52,12 @@ public class FireSuppressantManager : MonoBehaviour
     private Vector3 _sprayStartPos;
     private Vector3 _sprayEndPos;
     private float _triggerValue;
-    private bool _isPressed;
+    [SerializeField] private bool _isPressed;
     private int _colHitCount;
     private int _fireHitCount;
     Stopwatch stopwatch = new();
+    private IEnumerator _currentCor;
+    
     private void Update()
     {
         ProcessHand(_rightHand);
@@ -68,21 +72,38 @@ public class FireSuppressantManager : MonoBehaviour
     private void ProcessHand(HandData hand)
     {
         _triggerValue = hand.triggerAction.action.ReadValue<float>();
+        UnityEngine.Debug.Log($"{_triggerValue}");
         _isPressed = _triggerValue > 0.1f;
         if (!_isFeverTime)
         {
             _colHitCount = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
         }
-        //if (_isPressed && _colHitCounts > 0)
-        if (_colHitCount > 0)//테스트용
+        //if (_isPressed && _colHitCounts > 0 && !_isFeverTime) <-- 본래 조건문
+        if (_colHitCount > 0 && !_isFeverTime)//테스트용
         {
             Supply(hand);
             _supplyCooldown = _refillCooldown;
         }
-        if (_isPressed && !hand.isSpraying && hand.enabled)
+        if (_isPressed && !hand.isSpraying && hand.enabled && hand.triggerAction.action.WasPressedThisFrame())
         {
+            if (_currentCor == null)
+            {
+                _currentCor = SuppressingFire(hand);
+                StartCoroutine(_currentCor);
+            }
             hand.isSpraying = true;
-            StartCoroutine(SuppressingFire(hand));
+        }
+        if (hand.triggerAction.action.WasReleasedThisFrame())
+        {
+            ResetSpray(hand);
+        }
+        if (GameManager.Instance.CurrentPhase == GamePhase.Fever)
+        {
+            if (!_isFeverTime)
+            {
+                _isFeverTime = true;
+                FeverTimeOn(hand);
+            }
         }
     }
     private void Spray(HandData hand)
@@ -111,21 +132,25 @@ public class FireSuppressantManager : MonoBehaviour
     }
     private IEnumerator SuppressingFire(HandData hand)
     {
-        if (hand.amount > 0 && _isPressed)
+        if (!hand.initialFire && hand.amount > 0)
         {
             hand.initialFireFX.Play();
             yield return _fireDelay;
             hand.initialFireFX.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            hand.initialFire = true;
         }
-        while (_isPressed)
+        while (hand.triggerAction.action.ReadValue<float>() > 0)
         {
             if (hand.amount > 0)
             {
+                stopwatch.Start();
                 if (hand.amount > 0 && !_isFeverTime)
                 {
                     hand.amount -= _decreaseAmount;
                 }
                 Spray(hand);
+                stopwatch.Stop();
+                UnityEngine.Debug.Log($"소화기 실행 시간: {stopwatch.ElapsedMilliseconds} ms");
             }
             if (hand.amount <= 0)
             {
@@ -140,7 +165,9 @@ public class FireSuppressantManager : MonoBehaviour
             }
             yield return _checkTime;
         }
-        //이펙트 끄기
+    }
+    private void ResetSpray(HandData hand)
+    {
         if (hand.normalFireFX.isPlaying)
         {
             hand.normalFireFX.Stop();
@@ -155,7 +182,8 @@ public class FireSuppressantManager : MonoBehaviour
         }
         _cacheds.Clear();
         hand.isSpraying = false;
-        yield return null;
+        hand.initialFire = false;
+        _currentCor = null;
     }
     private void Supply(HandData hand)
     {

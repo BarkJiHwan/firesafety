@@ -2657,6 +2657,7 @@ MonoBehaviour:
     zeroAmountFireFX: {fileID: 8350178967389940797}
     initialFireFX: {fileID: 8350178967106073388}
     modelPrefab: {fileID: 8573016543688693503}
+    initialFire: 0
     amount: 600
     enabled: 0
     isSpraying: 0
@@ -2687,6 +2688,7 @@ MonoBehaviour:
     zeroAmountFireFX: {fileID: 8350178967102168752}
     initialFireFX: {fileID: 8350178967393436065}
     modelPrefab: {fileID: 8573016544009495666}
+    initialFire: 0
     amount: 600
     enabled: 0
     isSpraying: 0
@@ -2705,6 +2707,7 @@ MonoBehaviour:
   _isFeverTime: 0
   _supplyCooldown: 0
   _sprayOrigin: {fileID: 0}
+  _isPressed: 0
 --- !u!1001 &8646238192475616302
 PrefabInstance:
   m_ObjectHideFlags: 0
