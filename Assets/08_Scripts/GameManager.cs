@@ -103,4 +103,9 @@ public class GameManager : MonoBehaviour
         _isGameStart = true;
     }
 
+    public void ResetGameTimer()
+    {
+        _isGameStart = true;
+        GameTimer = 0f;
+    }
 }
