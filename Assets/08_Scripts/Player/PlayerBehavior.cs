@@ -1,4 +1,5 @@
 using System;
+using Photon.Pun;
 using Unity.XR.CoreUtils;
 using UnityEditor;
 using UnityEngine;
@@ -13,10 +14,20 @@ public class PlayerBehavior : MonoBehaviour
 
     public XROrigin playerOrigin;
     public Camera playerCam;
+    public PhotonView photonView;
 
     public bool IsSitting => isSitting;
     public bool IsGrabbing => isGrabbing;
     public bool IsMoving => isMoving;
+
+    // 내꺼 아니면 스크립트 자동으로 꺼지게하기
+    private void Awake()
+    {
+        if (!photonView.IsMine)
+        {
+            this.enabled = false;
+        }
+    }
 
     private void LateUpdate()
     {
