@@ -1984,14 +1984,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8646238192673766983}
     m_Modifications:
-    - target: {fileID: 1671609643, guid: 4ab117ceceedc456bb94c4bffc46ce07, type: 3}
-      propertyPath: m_Data.m_Target
-      value: 
-      objectReference: {fileID: 7528149087907390682}
-    - target: {fileID: 2128516774, guid: 4ab117ceceedc456bb94c4bffc46ce07, type: 3}
-      propertyPath: m_Data.m_Target
-      value: 
-      objectReference: {fileID: 4561422932541756143}
     - target: {fileID: 4981747460995190306, guid: 4ab117ceceedc456bb94c4bffc46ce07,
         type: 3}
       propertyPath: m_Name
@@ -2070,53 +2062,9 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4476097447232102442}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7438916731337391450
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4477638814844636165}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
---- !u!4 &4561422932541756143 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 95462987954238149, guid: 4ab117ceceedc456bb94c4bffc46ce07,
-    type: 3}
-  m_PrefabInstance: {fileID: 4476097447232102442}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6682506689630628559 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7107597773617728229, guid: 4ab117ceceedc456bb94c4bffc46ce07,
-    type: 3}
-  m_PrefabInstance: {fileID: 4476097447232102442}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7695456943108822238
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6682506689630628559}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
---- !u!4 &7528149087907390682 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6225964097145128176, guid: 4ab117ceceedc456bb94c4bffc46ce07,
     type: 3}
   m_PrefabInstance: {fileID: 4476097447232102442}
   m_PrefabAsset: {fileID: 0}
