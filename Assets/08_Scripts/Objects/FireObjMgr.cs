@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Photon.Pun;
 
 public class FireObjMgr : MonoBehaviour
 {
@@ -58,10 +59,11 @@ public class FireObjMgr : MonoBehaviour
     }
     void Update()
     {
-        currentPhase = GameManager.Instance.CurrentPhase;
-
+        currentPhase = GameManager.Instance.CurrentPhase;        
         if (currentPhase == GamePhase.Prevention && !_hasAreaReset)
         {
+            _playerCount = PhotonNetwork.PlayerList.Count();
+            Debug.Log(_playerCount + " 명입니다.");
             Debug.Log("예방 페이즈 - 모든 구역 초기화");
             foreach (var zone in _zoneDict.Values)
             {
