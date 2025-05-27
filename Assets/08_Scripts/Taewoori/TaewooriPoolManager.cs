@@ -230,9 +230,8 @@ public class TaewooriPoolManager : MonoBehaviour
                 particleComponent.SetOriginTaewoori(taewoori);
             }
 
-            // 파이어 파티클 발사 시 미리 카운트 증가 (예약)
-            IncrementSmallTaewooriCount(taewoori);
-            Debug.Log($"파이어 파티클 발사 - 스몰 태우리 카운트 예약 증가: {taewoori.name}");
+            // 파이어 파티클 발사 시 미리 카운트 증가 
+            IncrementSmallTaewooriCount(taewoori);            
         }
 
         return particle;
@@ -261,8 +260,7 @@ public class TaewooriPoolManager : MonoBehaviour
                 // Initialize에서 카운트 증가하지 않도록 수정 필요
                 smallTaewooriComponent.InitializeWithoutCountIncrement(this, originTaewoori);
             }
-
-            Debug.Log($"스몰 태우리 생성됨: 위치 {position}, 원본: {originTaewoori.name}");
+           
         }
 
         return smallTaewoori;
@@ -299,7 +297,6 @@ public class TaewooriPoolManager : MonoBehaviour
         }
 
         smallTaewooriCountByTaewoori[originTaewoori]++;
-        Debug.Log($"스몰 태우리 카운트 증가: {originTaewoori.name}, 현재 {smallTaewooriCountByTaewoori[originTaewoori]}/{originTaewoori.MaxSmallTaewooriCount}");
     }
 
     // 스몰 태우리 카운트 감소
@@ -310,8 +307,7 @@ public class TaewooriPoolManager : MonoBehaviour
 
         if (smallTaewooriCountByTaewoori.ContainsKey(originTaewoori) && smallTaewooriCountByTaewoori[originTaewoori] > 0)
         {
-            smallTaewooriCountByTaewoori[originTaewoori]--;
-            Debug.Log($"스몰 태우리 카운트 감소: {originTaewoori.name}, 현재 {smallTaewooriCountByTaewoori[originTaewoori]}/{originTaewoori.MaxSmallTaewooriCount}");
+            smallTaewooriCountByTaewoori[originTaewoori]--;            
         }
     }
 

@@ -134,14 +134,7 @@ public class FireParticles : MonoBehaviour
         {
             GameObject spawnedSmallTaewoori = TaewooriPoolManager.Instance.PoolSpawnSmallTaewoori(contactPoint, originTaewoori);
 
-            if (spawnedSmallTaewoori != null)
-            {
-                Debug.Log($"스몰태우리 즉시 생성: 위치 {contactPoint}");
-            }
-            else
-            {
-                Debug.Log("스몰태우리 생성 실패: 최대 개수 도달");
-            }
+
         }
 
         // 즉시 파괴
@@ -155,7 +148,6 @@ public class FireParticles : MonoBehaviour
 
         if (!hasCollided && gameObject.activeInHierarchy)
         {
-            Debug.Log("시간 경과로 인한 자동 파괴");
 
             // 스몰 태우리 생성 없이 제거되므로 카운트 감소 필요
             if (TaewooriPoolManager.Instance != null)

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class SmallTaewoori : BaseTaewoori
+﻿public class SmallTaewoori : BaseTaewoori
 {
     private Taewoori originTaewoori;
 
@@ -16,7 +14,6 @@ public class SmallTaewoori : BaseTaewoori
         if (manager != null && originTaewoori != null)
         {
             manager.IncrementSmallTaewooriCount(originTaewoori);
-            Debug.Log($"스몰 태우리 생성: 원본 태우리 {originTaewoori.name}의 카운트 증가");
         }
 
         // 체력 초기화 (부모 클래스 메서드 사용)
@@ -30,9 +27,6 @@ public class SmallTaewoori : BaseTaewoori
     {
         manager = taewooriManager;
         originTaewoori = taewoori;
-
-        // 카운트 증가하지 않음 (이미 파이어 파티클 발사 시 증가됨)
-        Debug.Log($"스몰 태우리 생성: 원본 태우리 {originTaewoori.name} (카운트 증가 생략)");
 
         // 체력 초기화 (부모 클래스 메서드 사용)
         InitializeHealth();
@@ -51,7 +45,6 @@ public class SmallTaewoori : BaseTaewoori
         if (manager != null && originTaewoori != null)
         {
             manager.DecrementSmallTaewooriCount(originTaewoori);
-            Debug.Log($"스몰 태우리 제거: 원본 태우리 {originTaewoori.name}의 카운트 감소");
         }
 
         // 풀로 반환
