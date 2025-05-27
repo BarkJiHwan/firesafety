@@ -55,8 +55,9 @@ public class FireSuppressantManager : MonoBehaviour
     [SerializeField] private bool _isPressed;
     private int _colHitCount;
     private int _fireHitCount;
-    Stopwatch stopwatch = new();
+    //Stopwatch stopwatch = new();
     private IEnumerator _currentCor;
+    private HandData _currentHand;
     
     private void Update()
     {
@@ -72,7 +73,6 @@ public class FireSuppressantManager : MonoBehaviour
     private void ProcessHand(HandData hand)
     {
         _triggerValue = hand.triggerAction.action.ReadValue<float>();
-        UnityEngine.Debug.Log($"{_triggerValue}");
         _isPressed = _triggerValue > 0.1f;
         if (!_isFeverTime)
         {
@@ -143,14 +143,11 @@ public class FireSuppressantManager : MonoBehaviour
         {
             if (hand.amount > 0)
             {
-                stopwatch.Start();
                 if (hand.amount > 0 && !_isFeverTime)
                 {
                     hand.amount -= _decreaseAmount;
                 }
-                Spray(hand);
-                stopwatch.Stop();
-                UnityEngine.Debug.Log($"소화기 실행 시간: {stopwatch.ElapsedMilliseconds} ms");
+                Spray(hand);;
             }
             if (hand.amount <= 0)
             {
@@ -208,6 +205,16 @@ public class FireSuppressantManager : MonoBehaviour
             hand.modelPrefab.SetActive(true);
             hand.enabled = true;
             _sprayOrigin = hand.modelPrefab.transform.Find("SprayOrigin");
+        }
+        else if (_currentHand != hand)
+        {
+            _rightHand.modelPrefab.SetActive(false);
+            _leftHand.modelPrefab.SetActive(false);
+            _rightHand.enabled = false;
+            _leftHand.enabled = false;
+            hand.modelPrefab.SetActive(true);
+            hand.enabled = true;
+            _currentHand = hand;
         }
         if (hand.enabled && hand.amount < 600)
         {
