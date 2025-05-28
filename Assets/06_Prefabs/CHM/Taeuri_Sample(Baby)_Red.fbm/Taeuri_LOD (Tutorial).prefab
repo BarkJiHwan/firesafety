@@ -10,12 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 610734557237601968}
   - component: {fileID: 5630586338307559873}
-  - component: {fileID: -3955500644010570963}
   - component: {fileID: -9111959874392816861}
-  - component: {fileID: -8790896541861176742}
-  - component: {fileID: -8608110045967618192}
+  - component: {fileID: -950923092637202659}
   m_Layer: 7
-  m_Name: Taeuri_LOD
+  m_Name: Taeuri_LOD (Tutorial)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,32 +76,6 @@ LODGroup:
     renderers:
     - renderer: {fileID: 8225733904956345785}
   m_Enabled: 1
---- !u!114 &-3955500644010570963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 230267922210339850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62625a5e96bc2ac48b276d4609089295, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 200
-  currentHealth: 0
-  feverTimeExtraHealth: 50
-  targetParticleSystems:
-  - {fileID: 3363271370698591826}
-  - {fileID: 7960035006211373951}
-  maxGreenBoost: 1
-  throwForce: 1
-  upwardForce: 4
-  fireRadius: 2
-  useRandomDirection: 0
-  maxSmallTaewooriCount: 4
-  projectileCooldown: 5
-  spawnHeight: 0.5
 --- !u!136 &-9111959874392816861
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -118,7 +90,7 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-8790896541861176742
+--- !u!114 &-950923092637202659
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,35 +99,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 230267922210339850}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Script: {fileID: 11500000, guid: f11993361d201fc48b5f104b0075dc95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
---- !u!114 &-8608110045967618192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 230267922210339850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
+  maxHealth: 100
+  currentHealth: 0
+  targetParticleSystems:
+  - {fileID: 3363271370698591826}
+  - {fileID: 7960035006211373951}
+  maxGreenBoost: 1
 --- !u!1 &336173972771446306
 GameObject:
   m_ObjectHideFlags: 0
