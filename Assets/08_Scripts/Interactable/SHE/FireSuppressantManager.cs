@@ -58,7 +58,7 @@ public class FireSuppressantManager : MonoBehaviour
     //Stopwatch stopwatch = new();
     private IEnumerator _currentCor;
     private HandData _currentHand;
-    
+
     private void Update()
     {
         ProcessHand(_rightHand);
@@ -127,7 +127,26 @@ public class FireSuppressantManager : MonoBehaviour
                     _cacheds[hit] = cached;
                 }
             }
-            cached?.TakeDamage(_damage);
+
+            // CHM: 네트워크 동기화를 위한 태우리 타입별 분기 처리 추가
+            if (cached != null)
+            {
+                // 태우리 타입인지 확인하고 네트워크 데미지 요청
+                if (cached is Taewoori taewoori)
+                {
+                    taewoori.RequestDamageFromClient(_damage);
+                }
+                // 스몰태우리 타입인지 확인하고 네트워크 데미지 요청
+                else if (cached is SmallTaewoori smallTaewoori)
+                {
+                    smallTaewoori.RequestDamageFromClient(_damage);
+                }
+                else
+                {
+                    cached.TakeDamage(_damage);
+                }
+            }
+            // cached?.TakeDamage(_damage); //기존 있던거 혹시몰라 남겨둠
         }
     }
     private IEnumerator SuppressingFire(HandData hand)
@@ -147,7 +166,8 @@ public class FireSuppressantManager : MonoBehaviour
                 {
                     hand.amount -= _decreaseAmount;
                 }
-                Spray(hand);;
+                Spray(hand);
+                ;
             }
             if (hand.amount <= 0)
             {
