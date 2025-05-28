@@ -1,4 +1,4 @@
-using Photon.Pun;
+﻿using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
@@ -10,6 +10,9 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
     [SerializeField] private string _testLobbyName = "scTestLobby";
 
     [SerializeField] private PlayerSpawner _playerSpawner;
+
+    //CHM
+    [SerializeField] private GameObject sobaekPrefab; // 인스펙터에서 할당
 
     private void Start()
     {
@@ -95,11 +98,26 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
     }
 
     /* 테스트용 방 곧바로 입장시, 바로 플레이어 생성이후 XR 컴포넌트 켜줌. */
+    //public override void OnJoinedRoom()
+    //{
+    //    // 초
+    //    GameObject player = _playerSpawner.NetworkInstantiate(PlayerEnum.Jennie);
+    //    player.GetComponent<PlayerComponents>().xRComponents.SetActive(true);
+    //
+    //    GameManager.Instance.ResetGameTimer();
+    //    Debug.Log("나 참가 " + PhotonNetwork.LocalPlayer + "Room : " + PhotonNetwork.CurrentRoom.Name);
+    //}
+
+    //CHM  소백이 플레이어 찾아서 플레이어 카메라 따라다니기 
     public override void OnJoinedRoom()
     {
-        // 초
         GameObject player = _playerSpawner.NetworkInstantiate(PlayerEnum.Jennie);
-        player.GetComponent<PlayerComponents>().xRComponents.SetActive(true);
+        PlayerComponents playerComponents = player.GetComponent<PlayerComponents>();
+        playerComponents.xRComponents.SetActive(true);
+
+        // 소백이 생성 (로컬 전용)
+        GameObject mySobaek = Instantiate(sobaekPrefab);
+        mySobaek.GetComponent<Sobaek>().SetOwner(playerComponents);
 
         GameManager.Instance.ResetGameTimer();
         Debug.Log("나 참가 " + PhotonNetwork.LocalPlayer + "Room : " + PhotonNetwork.CurrentRoom.Name);

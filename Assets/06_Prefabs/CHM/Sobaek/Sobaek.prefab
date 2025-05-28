@@ -150,3 +150,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4d5d8aa8b1e59d48b86089bfaf86402, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultOffsetFromCamera: {x: 0.7, y: -0.3, z: 1.2}
+  followSmoothSpeed: 3
+  alwaysFacePlayer: 1
+  floatAmplitude: 0.1
+  floatSpeed: 2
+  rotateSpeed: 30
+  detectionRange: 1.5
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  interactableTag: Interactable
+  moveSpeed: 2
+  arrivalDistance: 0.5
+  maxDistanceFromPlayer: 5
+  playerCamera: {fileID: 0}
+  leftController: {fileID: 0}
+  rightController: {fileID: 0}
+  playerTransform: {fileID: 0}
