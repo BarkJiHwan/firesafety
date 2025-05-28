@@ -54,16 +54,15 @@ public class FireObjMgr : MonoBehaviour
     private void Start()
     {
         currentPhase = GameManager.Instance.CurrentPhase;
-        _isBuringCoolTime = _isBuringCoolTime / _playerCount;
         _forSeconds = new WaitForSeconds(_isBuringCoolTime);
     }
     void Update()
     {
-        currentPhase = GameManager.Instance.CurrentPhase;        
+        currentPhase = GameManager.Instance.CurrentPhase;
         if (currentPhase == GamePhase.Prevention && !_hasAreaReset)
         {
             _playerCount = PhotonNetwork.PlayerList.Count();
-            Debug.Log(_playerCount + " 명입니다.");
+            _isBuringCoolTime = _isBuringCoolTime / _playerCount;
             Debug.Log("예방 페이즈 - 모든 구역 초기화");
             foreach (var zone in _zoneDict.Values)
             {
