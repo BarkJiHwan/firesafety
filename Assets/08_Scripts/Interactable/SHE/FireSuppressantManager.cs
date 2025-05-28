@@ -21,7 +21,7 @@ public class HandData
     public bool enabled = false;
     public bool isSpraying = false;
 }
-public class FireSuppressantManager : MonoBehaviour
+public class FireSuppressantManager : MonoBehaviourPunCallbacks
 {
     [Header("양손 소화기 데이터")]
     [SerializeField] private HandData _leftHand;
@@ -115,22 +115,47 @@ public class FireSuppressantManager : MonoBehaviour
         {
             hand.normalFireFX.Play();
         }
-
-        if (Photon.Pun.PhotonNetwork.IsMasterClient)
+        photonView.RPC(nameof(RPC_RequestDamage), RpcTarget.MasterClient, _sprayStartPos, _sprayEndPos);
+        #region 포톤 마스터 클라이언트에게 요청 시키기 전
+        //if (Photon.Pun.PhotonNetwork.IsMasterClient)
+        //{
+        //    for (int i = 0; i < _fireHitCount; i++)
+        //    {
+        //        var hit = _fireHits[i];
+        //        if (!_cacheds.TryGetValue(hit, out var cached))
+        //        {
+        //            cached = hit.gameObject.GetComponent<IDamageable>();
+        //            if (!_cacheds.ContainsKey(hit) && cached != null)
+        //            {
+        //                _cacheds[hit] = cached;
+        //            }
+        //        }
+        //        cached?.TakeDamage(_damage);
+        //    }
+        //}
+        #endregion
+    }
+    [PunRPC]
+    private void RPC_RequestDamage(Vector3 start,  Vector3 end, PhotonMessageInfo info)
+    {
+        if (!PhotonNetwork.IsMasterClient)
         {
-            for (int i = 0; i < _fireHitCount; i++)
+            return;
+        }
+        _fireHitCount = Physics.OverlapCapsuleNonAlloc(start, end, _sprayRadius, _fireHits, _fireMask);
+        for (int i = 0; i < _fireHitCount; i++)
+        {
+            var hit = _fireHits[i];
+            if (!_cacheds.TryGetValue(hit, out var cached))
             {
-                var hit = _fireHits[i];
-                if (!_cacheds.TryGetValue(hit, out var cached))
+                cached = hit.gameObject.GetComponent<IDamageable>();
+                if (!_cacheds.ContainsKey(hit) && cached != null)
                 {
-                    cached = hit.gameObject.GetComponent<IDamageable>();
-                    if (!_cacheds.ContainsKey(hit) && cached != null)
-                    {
-                        _cacheds[hit] = cached;
-                    }
+                    _cacheds[hit] = cached;
                 }
-                cached?.TakeDamage(_damage);
             }
+            cached?.TakeDamage(_damage);
+            UnityEngine.Debug.Log("데미지 처리. 호출자: " + info.Sender);
         }
     }
     private IEnumerator SuppressingFire(HandData hand)

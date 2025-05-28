@@ -1085,6 +1085,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8608110045967618192, guid: 15d52a3c2fd587f47967b4fb9c4a46b2,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 230267922210339850, guid: 15d52a3c2fd587f47967b4fb9c4a46b2,
         type: 3}
       propertyPath: m_Name
@@ -1163,6 +1168,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RaycastMask.m_Bits
       value: 2147483937
+      objectReference: {fileID: 0}
+    - target: {fileID: 4476097446912291201, guid: 7e954d8e794a74313a4846a6181fdc67,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8646238192673766980, guid: 7e954d8e794a74313a4846a6181fdc67,
         type: 3}
