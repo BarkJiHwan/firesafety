@@ -6,25 +6,23 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine.XR;
 using Unity.VisualScripting;
-
+using Photon.Pun;
+[System.Serializable]
+public class HandData
+{
+    //public string handName; // 디버그용
+    public InputActionProperty triggerAction;
+    public Transform grabSpot;
+    public ParticleSystem normalFireFX;
+    public ParticleSystem zeroAmountFireFX;
+    public ParticleSystem initialFireFX;
+    public GameObject modelPrefab;
+    public bool initialFire = false;
+    public bool enabled = false;
+    public bool isSpraying = false;
+}
 public class FireSuppressantManager : MonoBehaviour
 {
-    [System.Serializable]
-    public class HandData
-    {
-        //public string handName; // 디버그용
-        public InputActionProperty triggerAction;
-        public Transform grabSpot;
-        public ParticleSystem normalFireFX;
-        public ParticleSystem zeroAmountFireFX;
-        public ParticleSystem initialFireFX;
-        public GameObject modelPrefab;
-        public bool initialFire = false;
-        public int amount = 600;
-        public bool enabled = false;
-        public bool isSpraying = false;
-    }
-
     [Header("양손 소화기 데이터")]
     [SerializeField] private HandData _leftHand;
     [SerializeField] private HandData _rightHand;
@@ -33,6 +31,7 @@ public class FireSuppressantManager : MonoBehaviour
     [SerializeField] private float _sprayLength = 2.5f;
     [SerializeField] private float _sprayRadius = 1;
     [SerializeField] private int _damage = 1;
+    [SerializeField] private int _maxAmount = 100;
     [SerializeField] private int _decreaseAmount = 1;
     [SerializeField] private LayerMask _fireMask;
     [SerializeField] private float _refillCooldown = 3f;
@@ -41,6 +40,7 @@ public class FireSuppressantManager : MonoBehaviour
     [SerializeField] private bool _isFeverTime;
     [SerializeField] private float _supplyCooldown;
     [SerializeField] private Transform _sprayOrigin; //스프레이 발사 지점
+    [SerializeField] private int _currentAmount = 100;
 
     private readonly WaitForSeconds _checkTime = new(0.05f);
     private readonly WaitForSeconds _fireDelay = new(0.3f);
@@ -58,7 +58,6 @@ public class FireSuppressantManager : MonoBehaviour
     //Stopwatch stopwatch = new();
     private IEnumerator _currentCor;
     private HandData _currentHand;
-    
     private void Update()
     {
         ProcessHand(_rightHand);
@@ -116,23 +115,27 @@ public class FireSuppressantManager : MonoBehaviour
         {
             hand.normalFireFX.Play();
         }
-        for (int i = 0; i < _fireHitCount; i++)
+
+        if (Photon.Pun.PhotonNetwork.IsMasterClient)
         {
-            var hit = _fireHits[i];
-            if (!_cacheds.TryGetValue(hit, out var cached))
+            for (int i = 0; i < _fireHitCount; i++)
             {
-                cached = hit.gameObject.GetComponent<IDamageable>();
-                if (!_cacheds.ContainsKey(hit) && cached != null)
+                var hit = _fireHits[i];
+                if (!_cacheds.TryGetValue(hit, out var cached))
                 {
-                    _cacheds[hit] = cached;
+                    cached = hit.gameObject.GetComponent<IDamageable>();
+                    if (!_cacheds.ContainsKey(hit) && cached != null)
+                    {
+                        _cacheds[hit] = cached;
+                    }
                 }
+                cached?.TakeDamage(_damage);
             }
-            cached?.TakeDamage(_damage);
         }
     }
     private IEnumerator SuppressingFire(HandData hand)
     {
-        if (!hand.initialFire && hand.amount > 0)
+        if (!hand.initialFire && _currentAmount > 0)
         {
             hand.initialFireFX.Play();
             yield return _fireDelay;
@@ -141,15 +144,15 @@ public class FireSuppressantManager : MonoBehaviour
         }
         while (hand.triggerAction.action.ReadValue<float>() > 0)
         {
-            if (hand.amount > 0)
+            if (_currentAmount > 0)
             {
-                if (hand.amount > 0 && !_isFeverTime)
+                if (_currentAmount > 0 && !_isFeverTime)
                 {
-                    hand.amount -= _decreaseAmount;
+                    _currentAmount -= _decreaseAmount;
                 }
-                Spray(hand);;
+                Spray(hand);
             }
-            if (hand.amount <= 0)
+            if (_currentAmount <= 0)
             {
                 if (hand.normalFireFX.isPlaying)
                 {
@@ -216,21 +219,22 @@ public class FireSuppressantManager : MonoBehaviour
             hand.enabled = true;
             _currentHand = hand;
         }
-        if (hand.enabled && hand.amount < 600)
+        if (hand.enabled && _currentAmount < 600)
         {
-            hand.amount = 600;
+            _currentAmount = _maxAmount;
         }
     }
     private void FeverTimeOn(HandData hand)
     {
         _damage *= 2;
-        hand.amount = 100;
+        _currentAmount = _maxAmount;
     }
     private void OnDrawGizmos()
     {
         DrawSprayRange(_leftHand);
         DrawSprayRange(_rightHand);
     }
+    public void SetAmountZero() => _currentAmount = 0;
 
     private void DrawSprayRange(HandData hand)
     {
