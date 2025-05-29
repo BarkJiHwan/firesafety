@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 8661630265008681427}
   - component: {fileID: 3607371967852168319}
   - component: {fileID: -9144250311463564292}
+  - component: {fileID: 7285153298666560054}
   m_Layer: 8
   m_Name: WashingMachine
   m_TagString: Untagged
@@ -118,7 +119,6 @@ MonoBehaviour:
   _isFirePreventable: 0
   _smokePrefab: {fileID: 602946344274761246}
   _shieldPrefab: {fileID: 8985698305534187235}
-  _isClickable: 0
   _data: {fileID: 11400000, guid: fae6ddd91d441ca41990de2287257988, type: 2}
   _myType: 3
   _smokeScale:
@@ -126,7 +126,6 @@ MonoBehaviour:
     y: 1
     z: 1
   _shieldRadius: 1
-  _materials: []
 --- !u!114 &8661630265008681427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,6 +140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isBurning: 0
   _spawnOffset: {x: 0, y: 0.1, z: 0}
+  _spawnRotation: {x: 0, y: 0, z: 0}
 --- !u!114 &3607371967852168319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,6 +259,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &7285153298666560054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 693843595359096352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1001 &601301636175696990
 PrefabInstance:
   m_ObjectHideFlags: 0

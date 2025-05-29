@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    [SerializeField] private bool _isGameStart = true;
+    [SerializeField] private bool _isGameStart = false;
 
     [field: SerializeField]
     public float GameTimer { get; private set; } = 0f;
@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour
 
     public void ResetGameTimer()
     {
-        _isGameStart = true;
+        //_isGameStart = true;
         GameTimer = 0f;
     }
 }

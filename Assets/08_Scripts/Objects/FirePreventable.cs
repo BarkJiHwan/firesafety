@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using Photon.Pun;
 
 public class FirePreventable : MonoBehaviour
 {
@@ -30,7 +31,7 @@ public class FirePreventable : MonoBehaviour
     private float _shieldRadius = 1f;
 
     Renderer _renderer;
-
+    PhotonView _view;
     public bool IsFirePreventable
     {
         get => _isFirePreventable;
@@ -38,6 +39,7 @@ public class FirePreventable : MonoBehaviour
     }
     private void Start()
     {
+        _view = GetComponent<PhotonView>();
         GetComponent<XRSimpleInteractable>().selectEntered.AddListener(EnterPrevention);
         _smokePrefab.SetActive(false);
         _shieldPrefab.SetActive(false);
@@ -119,13 +121,16 @@ public class FirePreventable : MonoBehaviour
 
     public void EnterPrevention(SelectEnterEventArgs Args)
     {
-        if(!_isFirePreventable)
+        if (_view.IsMine)
         {
-            _isFirePreventable = true;
-        }
-        else
-        {
-            return;
+            if (!_isFirePreventable)
+            {
+                _view.RPC("CompleteFirePrevention", RpcTarget.AllBuffered);
+            }
+            else
+            {
+                return;
+            }
         }
     }
 
@@ -166,5 +171,13 @@ public class FirePreventable : MonoBehaviour
             }
         }
         return isActive;
+    }
+
+    [PunRPC]
+    public void CompleteFirePrevention()
+    {
+        Debug.Log(_view.ViewID+"?");
+        Debug.Log(PhotonNetwork.LocalPlayer + "누가누른건지 확인됨?" + "확인되네?");
+        _isFirePreventable = true;
     }
 }
