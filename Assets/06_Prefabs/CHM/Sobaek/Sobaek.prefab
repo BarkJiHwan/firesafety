@@ -93,7 +93,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6201212515823244601}
   - component: {fileID: 67287062111588163}
-  - component: {fileID: 8444662440895049105}
   m_Layer: 0
   m_Name: Sobaek
   m_TagString: Untagged
@@ -138,15 +137,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8444662440895049105
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6720761809259302787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4d5d8aa8b1e59d48b86089bfaf86402, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

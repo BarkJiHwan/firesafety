@@ -525,6 +525,8 @@ MonoBehaviour:
   _testRoomName: MyTestRoom111
   _testLobbyName: scTestLobby
   _playerSpawner: {fileID: 1184504947}
+  sobaekPrefab: {fileID: 6720761809259302787, guid: 8ce2d666037d402438681caac128f543,
+    type: 3}
 --- !u!4 &1184504946
 Transform:
   m_ObjectHideFlags: 0
@@ -1177,8 +1179,7 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents:
-  - {fileID: 1701025120}
+  ObservedComponents: []
   sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
