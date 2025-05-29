@@ -129,32 +129,9 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     //                _cacheds[hit] = cached;
     //            }
     //        }
+    //     }
     //
     //        // CHM: 네트워크 동기화를 위한 태우리 타입별 분기 처리 추가
-    //        if (cached != null)
-    //        {
-    //            // CHM: 태우리 타입인지 확인하고 네트워크 데미지 요청
-    //            if (cached is Taewoori taewoori)
-    //            {
-    //                taewoori.RequestDamageFromClient(_damage);
-    //            }
-    //            // CHM: 스몰태우리 타입인지 확인하고 네트워크 데미지 요청
-    //            else if (cached is SmallTaewoori smallTaewoori)
-    //            {
-    //                smallTaewoori.RequestDamageFromClient(_damage);
-    //            }
-    //            // CHM: 일반 IDamageable 오브젝트는 기존 방식으로 데미지 처리
-    //            else
-    //            {
-    //                // 일반 오브젝트는 마스터만 처리
-    //                if (Photon.Pun.PhotonNetwork.IsMasterClient)
-    //                {
-    //                    cached.TakeDamage(_damage);
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
     private void Spray(HandData hand)
     {
         _sprayStartPos = _sprayOrigin.transform.position;
@@ -205,9 +182,32 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
                     _cacheds[hit] = cached;
                 }
             }
-            _cacheds[hit]?.TakeDamage(_damage);
+            //_cacheds[hit]?.TakeDamage(_damage);
             UnityEngine.Debug.Log("데미지 처리. 호출자: " + info.Sender);
+            if (cached != null)
+            {
+                // CHM: 태우리 타입인지 확인하고 네트워크 데미지 요청
+                if (cached is Taewoori taewoori)
+                {
+                    taewoori.RequestDamageFromClient(_damage);
+                }
+                // CHM: 스몰태우리 타입인지 확인하고 네트워크 데미지 요청
+                else if (cached is SmallTaewoori smallTaewoori)
+                {
+                    smallTaewoori.RequestDamageFromClient(_damage);
+                }
+                // CHM: 일반 IDamageable 오브젝트는 기존 방식으로 데미지 처리
+                else
+                {
+                    // 일반 오브젝트는 마스터만 처리
+                    if (Photon.Pun.PhotonNetwork.IsMasterClient)
+                    {
+                        cached.TakeDamage(_damage);
+                    }
+                }
+            }
         }
+       
     }
     [PunRPC]
     private IEnumerator SuppressingFire(HandData hand)
