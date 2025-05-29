@@ -93,6 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6201212515823244601}
   - component: {fileID: 67287062111588163}
+  - component: {fileID: -8431423380906028267}
   m_Layer: 0
   m_Name: Sobaek
   m_TagString: Untagged
@@ -109,8 +110,8 @@ Transform:
   m_GameObject: {fileID: 6720761809259302787}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8629489149276309412}
   m_Father: {fileID: 0}
@@ -137,3 +138,24 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-8431423380906028267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6720761809259302787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 352c22c219c69b94ab38a15e738f49ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 8646238192673766983, guid: 7e954d8e794a74313a4846a6181fdc67, type: 3}
+  offsetDistance: 0.5
+  offsetHeight: 0
+  offsetForward: 1
+  stayOnRightSide: 1
+  floatAmplitude: 0.2
+  floatSpeed: 2
+  lookAtSpeed: 3
+  showDebugInfo: 1

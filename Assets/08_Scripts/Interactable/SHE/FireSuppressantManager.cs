@@ -106,36 +106,6 @@ public class FireSuppressantManager : MonoBehaviour
         }
     }
 
-    private void Spray(HandData hand)
-    {
-        _sprayStartPos = _sprayOrigin.transform.position;
-        _sprayEndPos = _sprayStartPos + (_sprayOrigin.forward * _sprayLength);
-    
-        _fireHitCount = Physics.OverlapCapsuleNonAlloc(_sprayStartPos, _sprayEndPos, _sprayRadius, _fireHits, _fireMask);
-        if (!hand.normalFireFX.isPlaying)
-        {
-            hand.normalFireFX.Play();
-        }
-    
-        if (Photon.Pun.PhotonNetwork.IsMasterClient)
-        {
-            for (int i = 0; i < _fireHitCount; i++)
-            {
-                var hit = _fireHits[i];
-                if (!_cacheds.TryGetValue(hit, out var cached))
-                {
-                    cached = hit.gameObject.GetComponent<IDamageable>();
-                    if (!_cacheds.ContainsKey(hit) && cached != null)
-                    {
-                        _cacheds[hit] = cached;
-                    }
-                }
-                cached?.TakeDamage(_damage);
-            }
-        }
-    }
-
-    //CHM 변경 
     //private void Spray(HandData hand)
     //{
     //    _sprayStartPos = _sprayOrigin.transform.position;
@@ -147,44 +117,74 @@ public class FireSuppressantManager : MonoBehaviour
     //        hand.normalFireFX.Play();
     //    }
     //
-    //    // CHM: 마스터 클라이언트 체크 제거 - 각 클라이언트가 자신의 데미지 요청 처리
-    //    for (int i = 0; i < _fireHitCount; i++)
+    //    if (Photon.Pun.PhotonNetwork.IsMasterClient)
     //    {
-    //        var hit = _fireHits[i];
-    //        if (!_cacheds.TryGetValue(hit, out var cached))
+    //        for (int i = 0; i < _fireHitCount; i++)
     //        {
-    //            cached = hit.gameObject.GetComponent<IDamageable>();
-    //            if (!_cacheds.ContainsKey(hit) && cached != null)
+    //            var hit = _fireHits[i];
+    //            if (!_cacheds.TryGetValue(hit, out var cached))
     //            {
-    //                _cacheds[hit] = cached;
-    //            }
-    //        }
-    //
-    //        // CHM: 네트워크 동기화를 위한 태우리 타입별 분기 처리 추가
-    //        if (cached != null)
-    //        {
-    //            // CHM: 태우리 타입인지 확인하고 네트워크 데미지 요청
-    //            if (cached is Taewoori taewoori)
-    //            {
-    //                taewoori.RequestDamageFromClient(_damage);
-    //            }
-    //            // CHM: 스몰태우리 타입인지 확인하고 네트워크 데미지 요청
-    //            else if (cached is SmallTaewoori smallTaewoori)
-    //            {
-    //                smallTaewoori.RequestDamageFromClient(_damage);
-    //            }
-    //            // CHM: 일반 IDamageable 오브젝트는 기존 방식으로 데미지 처리
-    //            else
-    //            {
-    //                // 일반 오브젝트는 마스터만 처리
-    //                if (Photon.Pun.PhotonNetwork.IsMasterClient)
+    //                cached = hit.gameObject.GetComponent<IDamageable>();
+    //                if (!_cacheds.ContainsKey(hit) && cached != null)
     //                {
-    //                    cached.TakeDamage(_damage);
+    //                    _cacheds[hit] = cached;
     //                }
     //            }
+    //            cached?.TakeDamage(_damage);
     //        }
     //    }
     //}
+
+    //CHM 변경 
+    private void Spray(HandData hand)
+    {
+        _sprayStartPos = _sprayOrigin.transform.position;
+        _sprayEndPos = _sprayStartPos + (_sprayOrigin.forward * _sprayLength);
+    
+        _fireHitCount = Physics.OverlapCapsuleNonAlloc(_sprayStartPos, _sprayEndPos, _sprayRadius, _fireHits, _fireMask);
+        if (!hand.normalFireFX.isPlaying)
+        {
+            hand.normalFireFX.Play();
+        }
+    
+        // CHM: 마스터 클라이언트 체크 제거 - 각 클라이언트가 자신의 데미지 요청 처리
+        for (int i = 0; i < _fireHitCount; i++)
+        {
+            var hit = _fireHits[i];
+            if (!_cacheds.TryGetValue(hit, out var cached))
+            {
+                cached = hit.gameObject.GetComponent<IDamageable>();
+                if (!_cacheds.ContainsKey(hit) && cached != null)
+                {
+                    _cacheds[hit] = cached;
+                }
+            }
+    
+            // CHM: 네트워크 동기화를 위한 태우리 타입별 분기 처리 추가
+            if (cached != null)
+            {
+                // CHM: 태우리 타입인지 확인하고 네트워크 데미지 요청
+                if (cached is Taewoori taewoori)
+                {
+                    taewoori.RequestDamageFromClient(_damage);
+                }
+                // CHM: 스몰태우리 타입인지 확인하고 네트워크 데미지 요청
+                else if (cached is SmallTaewoori smallTaewoori)
+                {
+                    smallTaewoori.RequestDamageFromClient(_damage);
+                }
+                // CHM: 일반 IDamageable 오브젝트는 기존 방식으로 데미지 처리
+                else
+                {
+                    // 일반 오브젝트는 마스터만 처리
+                    if (Photon.Pun.PhotonNetwork.IsMasterClient)
+                    {
+                        cached.TakeDamage(_damage);
+                    }
+                }
+            }
+        }
+    }
     private IEnumerator SuppressingFire(HandData hand)
     {
         if (!hand.initialFire && _currentAmount > 0)
