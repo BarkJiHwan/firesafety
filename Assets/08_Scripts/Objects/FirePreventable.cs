@@ -81,7 +81,7 @@ public class FirePreventable : MonoBehaviour
         _xrInteractable.hoverEntered.AddListener(OnSobaekHoverEnter);
         _xrInteractable.hoverExited.AddListener(OnSobaekHoverExit);
 
-        Debug.Log($"{gameObject.name}에 소백이 상호작용 이벤트가 연결되었습니다!");
+        
     }
 
     //CHM - 호버 시작 시 소백이 이동 (페이즈 무관)
@@ -89,13 +89,8 @@ public class FirePreventable : MonoBehaviour
     {
         if (Sobaek.Instance != null && enableSobaekInteraction)
         {
-            Sobaek.Instance.MoveToInteractionTarget(transform);
-            Debug.Log($" 소백이가 {gameObject.name}으로 다가갑니다! (가이드 모드)");
-        }
-        else if (enableSobaekInteraction)
-        {
-            Debug.LogWarning($" {gameObject.name}: 소백이가 아직 생성되지 않았습니다!");
-        }
+            Sobaek.Instance.MoveToInteractionTarget(transform);            
+        }        
     }
 
     //CHM - 호버 종료 시 소백이 복귀 (페이즈 무관)
@@ -103,8 +98,7 @@ public class FirePreventable : MonoBehaviour
     {
         if (Sobaek.Instance != null && enableSobaekInteraction)
         {
-            Sobaek.Instance.StopInteraction();
-            Debug.Log(" 소백이가 플레이어에게 돌아갑니다!");
+            Sobaek.Instance.StopInteraction();            
         }
     }
 

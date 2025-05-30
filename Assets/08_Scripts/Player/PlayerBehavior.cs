@@ -50,7 +50,7 @@ public class PlayerBehavior : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(0.1f); // 추가 안전 지연
+        yield return new WaitForSeconds(0.1f); // 지연시켜 줘야함
 
         CreateSobaek();
     }
@@ -59,8 +59,7 @@ public class PlayerBehavior : MonoBehaviour
     private void CreateSobaek()
     {
         if (sobaekPrefab == null)
-        {
-            Debug.LogWarning("소백이 프리팹이 할당되지 않았습니다!");
+        {            
             return;
         }
 
@@ -70,14 +69,10 @@ public class PlayerBehavior : MonoBehaviour
         if (sobaekScript != null)
         {
             // 플레이어 카메라 설정
-            sobaekScript.Player = playerCam.transform;
-
-            
-            Debug.Log("소백이 생성 완료!");
+            sobaekScript.Player = playerCam.transform;            
         }
         else
-        {
-            Debug.LogError("소백이 프리팹에 Sobaek 스크립트가 없습니다!");
+        {            
             Destroy(sobaekInstance);
         }
     }

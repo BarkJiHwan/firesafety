@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Sobaek : MonoBehaviour
 {
-    //CHM - 싱글톤 패턴
+    #region 싱글톤
     public static Sobaek Instance { get; private set; }
+    #endregion
 
+    #region 인스펙터 설정
     [Header("기본 위치 설정")]
     [SerializeField] private Transform player; // VR 카메라 또는 플레이어 Transform
     [SerializeField] private float offsetDistance = 1.5f; // 플레이어와의 좌우 거리 (X축)
@@ -24,33 +26,31 @@ public class Sobaek : MonoBehaviour
     [SerializeField] private float interactionMoveSpeed = 4f; // 상호작용 이동 속도
     [SerializeField] private float interactionOffset = 0.5f; // 상호작용 오브젝트에서 떨어진 거리
     [SerializeField] private float returnSpeed = 3f; // 돌아오는 속도
+    #endregion
 
-    [Header("디버그")]
-    [SerializeField] private bool showDebugInfo = false;
-
-    // 내부 변수들
+    #region 변수 선언
     private Vector3 homePosition; // 기본 대기 위치
     private Vector3 basePosition; // 둥둥 효과 기준 위치
     private Vector3 interactionTarget; // 상호작용 타겟 위치
     private bool isInteracting = false; // 상호작용 중인지
+    private float floatTimer = 0f; // 둥둥 효과용 타이머
+    #endregion
 
-    // 둥둥 효과용 변수들
-    private float floatTimer = 0f;
-
-    // 공개 프로퍼티들
+    #region 프로퍼티
     public Transform Player { get => player; set => player = value; }
     public bool IsInteracting => isInteracting;
+    #endregion
 
+    #region 유니티 라이프사이클
     void Start()
     {
-        //CHM - 싱글톤 설정
+        // 싱글톤 설정
         if (Instance == null)
         {
             Instance = this;
         }
         else
-        {
-            Debug.LogWarning("소백이가 이미 존재합니다! 중복 생성을 방지합니다.");
+        {           
             Destroy(gameObject);
             return;
         }
@@ -59,7 +59,6 @@ public class Sobaek : MonoBehaviour
         SetHomePosition();
         basePosition = homePosition;
 
-        Debug.Log("소백이 싱글톤이 등록되었습니다!");
     }
 
     void Update()
@@ -71,6 +70,17 @@ public class Sobaek : MonoBehaviour
         UpdateFloatingEffect();
     }
 
+    void OnDestroy()
+    {
+        // 싱글톤 해제
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
+    #endregion
+
+    #region 초기화
     /// <summary>
     /// VR 레퍼런스들 초기화
     /// </summary>
@@ -95,7 +105,9 @@ public class Sobaek : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region 위치 및 이동 시스템
     /// <summary>
     /// 홈 포지션 설정 (플레이어 옆 고정 위치)
     /// </summary>
@@ -134,6 +146,30 @@ public class Sobaek : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 소백이를 원래 위치로 즉시 이동
+    /// </summary>
+    public void TeleportToPlayer()
+    {
+        if (player != null)
+        {
+            isInteracting = false;
+            SetHomePosition();
+            basePosition = homePosition;           
+        }
+    }
+
+    /// <summary>
+    /// 소백이 위치를 왼쪽/오른쪽으로 전환
+    /// </summary>
+    public void ToggleSide()
+    {
+        stayOnRightSide = !stayOnRightSide;
+        SetHomePosition();
+    }
+    #endregion
+
+    #region 둥둥 효과 및 회전
     /// <summary>
     /// 둥둥 떠다니는 효과
     /// </summary>
@@ -175,17 +211,16 @@ public class Sobaek : MonoBehaviour
             );
         }
     }
+    #endregion
 
-    // ========== 상호작용 이동 관련 메서드들 ==========
-
+    #region 상호작용 이동
     /// <summary>
-    /// 특정 위치로 이동 (FirePreventable에서 호출)
+    /// XRSimpleInteractable 컴포넌트 달린 오브젝트의 설정 오프셋으로 이동
     /// </summary>
     public void MoveToInteractionTarget(Transform target)
     {
         if (!enableInteractionMovement || target == null)
-        {
-            Debug.LogWarning("상호작용 이동이 비활성화되어 있거나 타겟이 null입니다!");
+        {            
             return;
         }
 
@@ -198,12 +233,12 @@ public class Sobaek : MonoBehaviour
 
         interactionTarget = target.position + directionFromTarget * interactionOffset;
         isInteracting = true;
-
-        Debug.Log($"소백이가 {target.name}으로 이동합니다!");
+                
     }
+ 
 
     /// <summary>
-    /// 상호작용 종료 - 홈으로 돌아가기
+    /// 소백이 원래 위치로 돌아가는 함수
     /// </summary>
     public void StopInteraction()
     {
@@ -211,45 +246,7 @@ public class Sobaek : MonoBehaviour
             return;
 
         isInteracting = false;
-        Debug.Log("소백이가 플레이어에게 돌아갑니다!");
-    }
-
-    /// <summary>
-    /// Vector3 위치로 직접 이동
-    /// </summary>
-    public void MoveToPosition(Vector3 position)
-    {
-        if (!enableInteractionMovement)
-            return;
-
-        interactionTarget = position;
-        isInteracting = true;
-        Debug.Log($"소백이가 위치 {position}으로 이동합니다!");
-    }
-
-    // ========== 기본 제어 메서드들 ==========
-
-    /// <summary>
-    /// 소백이를 특정 위치로 즉시 이동
-    /// </summary>
-    public void TeleportToPlayer()
-    {
-        if (player != null)
-        {
-            isInteracting = false;
-            SetHomePosition();
-            basePosition = homePosition;
-            Debug.Log("소백이가 플레이어에게 순간이동했습니다!");
-        }
-    }
-
-    /// <summary>
-    /// 소백이 위치를 왼쪽/오른쪽으로 전환
-    /// </summary>
-    public void ToggleSide()
-    {
-        stayOnRightSide = !stayOnRightSide;
-        SetHomePosition();
+        
     }
 
     /// <summary>
@@ -262,11 +259,11 @@ public class Sobaek : MonoBehaviour
         {
             StopInteraction();
         }
-        Debug.Log($"상호작용 이동이 {(enable ? "활성화" : "비활성화")}되었습니다!");
+        
     }
+    #endregion
 
-    // ========== 설정 변경 메서드들 ==========
-
+    #region 설정 변경 메서드
     public void SetFloatingEffect(float amplitude, float speed)
     {
         floatAmplitude = amplitude;
@@ -299,70 +296,6 @@ public class Sobaek : MonoBehaviour
         offsetForward = Mathf.Clamp(forward, -3f, 3f);
         offsetHeight = Mathf.Clamp(height, -1f, 3f);
     }
-
-    // ========== 유틸리티 메서드들 ==========
-
-    public float GetDistanceToPlayer()
-    {
-        if (player == null)
-            return -1f;
-        return Vector3.Distance(transform.position, player.position);
-    }
-
-    public string GetStatusInfo()
-    {
-        return $"상호작용: {isInteracting}, 플레이어 거리: {GetDistanceToPlayer():F2}m";
-    }
-
-    void OnDestroy()
-    {
-        //CHM - 싱글톤 해제
-        if (Instance == this)
-        {
-            Instance = null;
-        }
-    }
-
-    // ========== 디버그 관련 ==========
-
-    void OnDrawGizmosSelected()
-    {
-        // 홈 포지션 표시
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(homePosition, 0.2f);
-
-        // 상호작용 타겟 표시
-        if (isInteracting)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(interactionTarget, 0.15f);
-            Gizmos.DrawLine(transform.position, interactionTarget);
-        }
-
-        // 플레이어와의 연결선
-        if (player != null)
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position, player.position);
-        }
-    }
-
-    void OnGUI()
-    {
-        if (!showDebugInfo)
-            return;
-
-        GUILayout.BeginArea(new Rect(10, 10, 350, 180));
-        GUILayout.Label("=== 소백이 디버그 ===");
-        GUILayout.Label($"현재 위치: {transform.position}");
-        GUILayout.Label($"홈 위치: {homePosition}");
-        GUILayout.Label($"상호작용 중: {isInteracting}");
-        if (isInteracting)
-        {
-            GUILayout.Label($"타겟 위치: {interactionTarget}");
-        }
-        GUILayout.Label($"플레이어와 거리: {GetDistanceToPlayer():F2}m");
-        GUILayout.Label($"상호작용 이동: {(enableInteractionMovement ? "활성화" : "비활성화")}");
-        GUILayout.EndArea();
-    }
+    #endregion
+   
 }
