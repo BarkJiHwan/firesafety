@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9095083210624558340}
   - component: {fileID: 4635408136712895130}
   - component: {fileID: 3346744731695024917}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CHM_Fire(Red)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1305,17 +1305,17 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 0.45545834, b: 0, a: 1}
-        key1: {r: 1, g: 0.007843138, b: 0, a: 1}
-        key2: {r: 0.1981132, g: 0, b: 0, a: 0}
+        key0: {r: 1, g: 0, b: 0, a: 1}
+        key1: {r: 0.1981132, g: 0, b: 0, a: 1}
+        key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
-        ctime0: 0
-        ctime1: 18119
-        ctime2: 41441
+        ctime0: 18119
+        ctime1: 41441
+        ctime2: 65535
         ctime3: 65535
         ctime4: 0
         ctime5: 0
@@ -1330,7 +1330,7 @@ ParticleSystem:
         atime6: 0
         atime7: 0
         m_Mode: 0
-        m_NumColorKeys: 4
+        m_NumColorKeys: 3
         m_NumAlphaKeys: 2
       minGradient:
         serializedVersion: 2
@@ -4823,8 +4823,8 @@ GameObject:
   - component: {fileID: 6658231780542135713}
   - component: {fileID: 1989489256952752372}
   - component: {fileID: 6289047228421673822}
-  m_Layer: 0
-  m_Name: CHM_Fire
+  m_Layer: 7
+  m_Name: TaeuriFire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9638,7 +9638,7 @@ GameObject:
   - component: {fileID: 1931637067054015170}
   - component: {fileID: 40325620091457463}
   - component: {fileID: 8803212785233009558}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CHM_Fire(Orange)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10932,17 +10932,17 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 0.66404796, b: 0, a: 1}
-        key1: {r: 0.9852594, g: 0.65184116, b: 0, a: 1}
-        key2: {r: 0.1981132, g: 0, b: 0, a: 0}
+        key0: {r: 1, g: 0.6862745, b: 0, a: 1}
+        key1: {r: 0.1981132, g: 0, b: 0, a: 1}
+        key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 1, g: 1, b: 1, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
-        ctime0: 0
-        ctime1: 17540
-        ctime2: 52428
+        ctime0: 16384
+        ctime1: 52428
+        ctime2: 65535
         ctime3: 65535
         ctime4: 65535
         ctime5: 0
@@ -10957,7 +10957,7 @@ ParticleSystem:
         atime6: 0
         atime7: 0
         m_Mode: 0
-        m_NumColorKeys: 4
+        m_NumColorKeys: 3
         m_NumAlphaKeys: 2
       minGradient:
         serializedVersion: 2
@@ -14450,7 +14450,7 @@ GameObject:
   - component: {fileID: 9221334906254444159}
   - component: {fileID: 6314785254365022620}
   - component: {fileID: 8508859232050130400}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CHM_Fire(Yellow)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

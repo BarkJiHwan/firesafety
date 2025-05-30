@@ -39,7 +39,18 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
-  - CompleteFirePrevention
+  - NetworkSpawnFireParticle
+  - NetworkSpawnSmallTaewoori
+  - NetworkSpawnTaewoori
+  - NetworkTaewooriDamage
+  - NetworkTaewooriDestroy
+  - NetworkSmallTaewooriDamage
+  - NetworkSmallTaewooriDestroy
+  - RequestSmallTaewooriDamage
+  - RequestTaewooriDamage
+  - SyncFinalSurvivalScore
+  - SyncPlayerKillScores
+  - SyncFinalScores
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
