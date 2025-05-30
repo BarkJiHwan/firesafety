@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using Photon.Pun;
+using System.Linq;
 
 public class FirePreventable : MonoBehaviour
 {
@@ -34,8 +36,8 @@ public class FirePreventable : MonoBehaviour
     [SerializeField] private bool enableSobaekInteraction = true; // 소백이 상호작용 활성화
 
     Renderer _renderer;
-    XRSimpleInteractable _xrInteractable; //CHM - XR 컴포넌트 참조
-
+    PhotonView _view;
+    //[SerializeField] private int _
     public bool IsFirePreventable
     {
         get => _isFirePreventable;
@@ -53,6 +55,8 @@ public class FirePreventable : MonoBehaviour
         //CHM - 소백이 상호작용 이벤트 자동 연결
         SetupSobaekInteraction();
 
+        _view = GetComponent<PhotonView>();
+        GetComponent<XRSimpleInteractable>().selectEntered.AddListener(EnterPrevention);
         _smokePrefab.SetActive(false);
         _shieldPrefab.SetActive(false);
 
@@ -184,13 +188,18 @@ public class FirePreventable : MonoBehaviour
 
     public void EnterPrevention(SelectEnterEventArgs Args)
     {
-        if (!_isFirePreventable)
+        if (_view.IsMine)
         {
-            _isFirePreventable = true;
-        }
-        else
-        {
-            return;
+            if (!_isFirePreventable)
+            {
+                ++FireObjMgr.Instance.Count;
+                _isFirePreventable = true;
+                _view.RPC("CompleteFirePrevention", RpcTarget.AllBuffered, _isFirePreventable);
+            }
+            else
+            {
+                return;
+            }
         }
     }
 
@@ -232,4 +241,18 @@ public class FirePreventable : MonoBehaviour
         }
         return isActive;
     }
+
+    [PunRPC]
+    public void CompleteFirePrevention(bool complete)
+    {
+        Debug.Log(_view.ViewID+"?");
+        Debug.Log(PhotonNetwork.LocalPlayer + "누가누른건지 확인됨?" + "확인되네?");
+        _isFirePreventable = complete; 
+    }
+    //public int PreventionScore()
+    //{
+    //    _score = totalScore / (float)PhotonNetwork.PlayerList.Count();
+    //    int roundedScore = Mathf.RoundToInt(score);
+
+    //}
 }
