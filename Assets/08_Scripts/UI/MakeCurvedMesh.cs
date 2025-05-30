@@ -5,10 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class MakeCurvedMesh : MonoBehaviour
 {
-    [SerializeField] float radius;
-    [SerializeField] float height;
-    [SerializeField] float angle;
-    [SerializeField] int segement;
+    public float radius;
+    public float height;
+    public float angle;
+    public int segement;
+    [SerializeField] Canvas canvas;
+    [SerializeField] float offset;
 
     void Start()
     {
@@ -35,8 +37,8 @@ public class MakeCurvedMesh : MonoBehaviour
             float currentAngle = -angle * 0.5f * Mathf.Deg2Rad + i * angleStep;
 
             // XZ 평면에서 원형 좌표 계산
-            float x = Mathf.Sin(currentAngle) * radius;
-            float z = Mathf.Cos(currentAngle) * radius;
+            float x = -Mathf.Sin(currentAngle) * radius;
+            float z = -Mathf.Cos(currentAngle) * radius;
 
             // 하단 꼭지점
             vertices[i * 2] = new Vector3(x, -halfHeight, z);
@@ -44,8 +46,8 @@ public class MakeCurvedMesh : MonoBehaviour
             vertices[i * 2 + 1] = new Vector3(x, halfHeight, z);
 
             // UV 맵핑 (왼쪽에서 오른쪽으로)
-            uvs[i * 2] = new Vector2((float)i / segement, 0); // 아래쪽
-            uvs[i * 2 + 1] = new Vector2((float)i / segement, 1); // 위쪽
+            uvs[i * 2] = new Vector2(1f - (float)i / segement, 0); // 아래쪽
+            uvs[i * 2 + 1] = new Vector2(1f - (float)i / segement, 1); // 위쪽
         }
 
         int triIndex = 0;
@@ -55,14 +57,14 @@ public class MakeCurvedMesh : MonoBehaviour
             int baseIndex = i * 2;
 
             // 첫번째 삼각형
-            triangles[triIndex++] = baseIndex; // 아래
-            triangles[triIndex++] = baseIndex + 3; // 위
             triangles[triIndex++] = baseIndex + 1; // 위 + 1
+            triangles[triIndex++] = baseIndex + 3; // 위
+            triangles[triIndex++] = baseIndex; // 아래
 
             // 두번째 삼각형
-            triangles[triIndex++] = baseIndex; // 아래
-            triangles[triIndex++] = baseIndex + 2; // 아래 + 1
             triangles[triIndex++] = baseIndex + 3; // 위 + 1
+            triangles[triIndex++] = baseIndex + 2; // 아래 + 1
+            triangles[triIndex++] = baseIndex; // 아래
 
         }
 
@@ -70,10 +72,36 @@ public class MakeCurvedMesh : MonoBehaviour
         mesh.uv = uvs;
         mesh.triangles = triangles;
 
-        // 법선 벡터 재계산
-        mesh.RecalculateNormals();
+        // 법선 벡터 재계산 -> 원통형 밖에 렌더링됨
+        //mesh.RecalculateNormals();
+        Vector3[] normals = new Vector3[vertCount];
+        for(int i=0; i<=segement; i++)
+        {
+            float currentAngle = -angle * 0.5f * Mathf.Deg2Rad + i * angleStep;
+
+            Vector3 normal = new Vector3(Mathf.Sin(currentAngle), 0, Mathf.Cos(currentAngle));
+            normals[i * 2] = -normal;
+            normals[i * 2 + 1] = -normal;
+        }
+        mesh.normals = normals;
+
+        //transform.position += new Vector3(0, 0.9f, 0);
+        PositionCurvedUIInFront();
 
         // MeshFilter에 메쉬 할당
         GetComponent<MeshFilter>().mesh = mesh;
+    }
+
+    void PositionCurvedUIInFront()
+    {
+        // 기준 방향 : Canvas의 정면
+        Vector3 canForward = canvas.transform.forward;
+        // 기준 위치 : Canvas의 중심
+        Vector3 canvasPos = canvas.transform.position;
+        Debug.Log(canForward * (offset));
+        Vector3 meshPos = canvasPos - canForward * (radius / 2 + offset);
+
+        transform.position = meshPos;
+
     }
 }
