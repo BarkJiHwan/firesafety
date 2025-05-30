@@ -6,25 +6,23 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine.XR;
 using Unity.VisualScripting;
-
+using Photon.Pun;
+[System.Serializable]
+public class HandData
+{
+    //public string handName; // 디버그용
+    public InputActionProperty triggerAction;
+    public Transform grabSpot;
+    public ParticleSystem normalFireFX;
+    public ParticleSystem zeroAmountFireFX;
+    public ParticleSystem initialFireFX;
+    public GameObject modelPrefab;
+    public bool initialFire = false;
+    public bool enabled = false;
+    public bool isSpraying = false;
+}
 public class FireSuppressantManager : MonoBehaviour
 {
-    [System.Serializable]
-    public class HandData
-    {
-        //public string handName; // 디버그용
-        public InputActionProperty triggerAction;
-        public Transform grabSpot;
-        public ParticleSystem normalFireFX;
-        public ParticleSystem zeroAmountFireFX;
-        public ParticleSystem initialFireFX;
-        public GameObject modelPrefab;
-        public bool initialFire = false;
-        public int amount = 600;
-        public bool enabled = false;
-        public bool isSpraying = false;
-    }
-
     [Header("양손 소화기 데이터")]
     [SerializeField] private HandData _leftHand;
     [SerializeField] private HandData _rightHand;
@@ -33,6 +31,7 @@ public class FireSuppressantManager : MonoBehaviour
     [SerializeField] private float _sprayLength = 2.5f;
     [SerializeField] private float _sprayRadius = 1;
     [SerializeField] private int _damage = 1;
+    [SerializeField] private int _maxAmount = 100;
     [SerializeField] private int _decreaseAmount = 1;
     [SerializeField] private LayerMask _fireMask;
     [SerializeField] private float _refillCooldown = 3f;
@@ -41,6 +40,7 @@ public class FireSuppressantManager : MonoBehaviour
     [SerializeField] private bool _isFeverTime;
     [SerializeField] private float _supplyCooldown;
     [SerializeField] private Transform _sprayOrigin; //스프레이 발사 지점
+    [SerializeField] private int _currentAmount = 100;
 
     private readonly WaitForSeconds _checkTime = new(0.05f);
     private readonly WaitForSeconds _fireDelay = new(0.3f);
@@ -55,9 +55,9 @@ public class FireSuppressantManager : MonoBehaviour
     [SerializeField] private bool _isPressed;
     private int _colHitCount;
     private int _fireHitCount;
-    Stopwatch stopwatch = new();
+    //Stopwatch stopwatch = new();
     private IEnumerator _currentCor;
-    
+    private HandData _currentHand;
     private void Update()
     {
         ProcessHand(_rightHand);
@@ -72,7 +72,6 @@ public class FireSuppressantManager : MonoBehaviour
     private void ProcessHand(HandData hand)
     {
         _triggerValue = hand.triggerAction.action.ReadValue<float>();
-        UnityEngine.Debug.Log($"{_triggerValue}");
         _isPressed = _triggerValue > 0.1f;
         if (!_isFeverTime)
         {
@@ -106,16 +105,49 @@ public class FireSuppressantManager : MonoBehaviour
             }
         }
     }
+
+    //private void Spray(HandData hand)
+    //{
+    //    _sprayStartPos = _sprayOrigin.transform.position;
+    //    _sprayEndPos = _sprayStartPos + (_sprayOrigin.forward * _sprayLength);
+    //
+    //    _fireHitCount = Physics.OverlapCapsuleNonAlloc(_sprayStartPos, _sprayEndPos, _sprayRadius, _fireHits, _fireMask);
+    //    if (!hand.normalFireFX.isPlaying)
+    //    {
+    //        hand.normalFireFX.Play();
+    //    }
+    //
+    //    if (Photon.Pun.PhotonNetwork.IsMasterClient)
+    //    {
+    //        for (int i = 0; i < _fireHitCount; i++)
+    //        {
+    //            var hit = _fireHits[i];
+    //            if (!_cacheds.TryGetValue(hit, out var cached))
+    //            {
+    //                cached = hit.gameObject.GetComponent<IDamageable>();
+    //                if (!_cacheds.ContainsKey(hit) && cached != null)
+    //                {
+    //                    _cacheds[hit] = cached;
+    //                }
+    //            }
+    //            cached?.TakeDamage(_damage);
+    //        }
+    //    }
+    //}
+
+    //CHM 변경 
     private void Spray(HandData hand)
     {
         _sprayStartPos = _sprayOrigin.transform.position;
         _sprayEndPos = _sprayStartPos + (_sprayOrigin.forward * _sprayLength);
-
+    
         _fireHitCount = Physics.OverlapCapsuleNonAlloc(_sprayStartPos, _sprayEndPos, _sprayRadius, _fireHits, _fireMask);
         if (!hand.normalFireFX.isPlaying)
         {
             hand.normalFireFX.Play();
         }
+    
+        // CHM: 마스터 클라이언트 체크 제거 - 각 클라이언트가 자신의 데미지 요청 처리
         for (int i = 0; i < _fireHitCount; i++)
         {
             var hit = _fireHits[i];
@@ -127,12 +159,35 @@ public class FireSuppressantManager : MonoBehaviour
                     _cacheds[hit] = cached;
                 }
             }
-            cached?.TakeDamage(_damage);
+    
+            // CHM: 네트워크 동기화를 위한 태우리 타입별 분기 처리 추가
+            if (cached != null)
+            {
+                // CHM: 태우리 타입인지 확인하고 네트워크 데미지 요청
+                if (cached is Taewoori taewoori)
+                {
+                    taewoori.RequestDamageFromClient(_damage);
+                }
+                // CHM: 스몰태우리 타입인지 확인하고 네트워크 데미지 요청
+                else if (cached is SmallTaewoori smallTaewoori)
+                {
+                    smallTaewoori.RequestDamageFromClient(_damage);
+                }
+                // CHM: 일반 IDamageable 오브젝트는 기존 방식으로 데미지 처리
+                else
+                {
+                    // 일반 오브젝트는 마스터만 처리
+                    if (Photon.Pun.PhotonNetwork.IsMasterClient)
+                    {
+                        cached.TakeDamage(_damage);
+                    }
+                }
+            }
         }
     }
     private IEnumerator SuppressingFire(HandData hand)
     {
-        if (!hand.initialFire && hand.amount > 0)
+        if (!hand.initialFire && _currentAmount > 0)
         {
             hand.initialFireFX.Play();
             yield return _fireDelay;
@@ -141,18 +196,15 @@ public class FireSuppressantManager : MonoBehaviour
         }
         while (hand.triggerAction.action.ReadValue<float>() > 0)
         {
-            if (hand.amount > 0)
+            if (_currentAmount > 0)
             {
-                stopwatch.Start();
-                if (hand.amount > 0 && !_isFeverTime)
+                if (_currentAmount > 0 && !_isFeverTime)
                 {
-                    hand.amount -= _decreaseAmount;
+                    _currentAmount -= _decreaseAmount;
                 }
                 Spray(hand);
-                stopwatch.Stop();
-                UnityEngine.Debug.Log($"소화기 실행 시간: {stopwatch.ElapsedMilliseconds} ms");
             }
-            if (hand.amount <= 0)
+            if (_currentAmount <= 0)
             {
                 if (hand.normalFireFX.isPlaying)
                 {
@@ -209,21 +261,32 @@ public class FireSuppressantManager : MonoBehaviour
             hand.enabled = true;
             _sprayOrigin = hand.modelPrefab.transform.Find("SprayOrigin");
         }
-        if (hand.enabled && hand.amount < 600)
+        else if (_currentHand != hand)
         {
-            hand.amount = 600;
+            _rightHand.modelPrefab.SetActive(false);
+            _leftHand.modelPrefab.SetActive(false);
+            _rightHand.enabled = false;
+            _leftHand.enabled = false;
+            hand.modelPrefab.SetActive(true);
+            hand.enabled = true;
+            _currentHand = hand;
+        }
+        if (hand.enabled && _currentAmount < 600)
+        {
+            _currentAmount = _maxAmount;
         }
     }
     private void FeverTimeOn(HandData hand)
     {
         _damage *= 2;
-        hand.amount = 100;
+        _currentAmount = _maxAmount;
     }
     private void OnDrawGizmos()
     {
         DrawSprayRange(_leftHand);
         DrawSprayRange(_rightHand);
     }
+    public void SetAmountZero() => _currentAmount = 0;
 
     private void DrawSprayRange(HandData hand)
     {

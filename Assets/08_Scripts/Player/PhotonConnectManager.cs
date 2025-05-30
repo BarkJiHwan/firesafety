@@ -1,4 +1,4 @@
-using Photon.Pun;
+﻿using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
@@ -59,7 +59,7 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.JoinOrCreateRoom(
                 _testRoomName,
-                new RoomOptions{ MaxPlayers = 6 },
+                new RoomOptions { MaxPlayers = 6 },
                 new TypedLobby(_testLobbyName, LobbyType.Default)
             );
         }
@@ -104,6 +104,8 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         GameManager.Instance.ResetGameTimer();
         Debug.Log("나 참가 " + PhotonNetwork.LocalPlayer + "Room : " + PhotonNetwork.CurrentRoom.Name);
     }
+
+
 
     public override void OnJoinedLobby()
     {
