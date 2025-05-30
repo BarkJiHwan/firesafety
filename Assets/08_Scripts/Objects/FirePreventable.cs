@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using Photon.Pun;
+using System.Linq;
 
 public class FirePreventable : MonoBehaviour
 {
@@ -32,11 +33,13 @@ public class FirePreventable : MonoBehaviour
 
     Renderer _renderer;
     PhotonView _view;
+    //[SerializeField] private int _
     public bool IsFirePreventable
     {
         get => _isFirePreventable;
         set => _isFirePreventable = value;
     }
+
     private void Start()
     {
         _view = GetComponent<PhotonView>();
@@ -125,7 +128,9 @@ public class FirePreventable : MonoBehaviour
         {
             if (!_isFirePreventable)
             {
-                _view.RPC("CompleteFirePrevention", RpcTarget.AllBuffered);
+                ++FireObjMgr.Instance.Count;
+                _isFirePreventable = true;
+                _view.RPC("CompleteFirePrevention", RpcTarget.AllBuffered, _isFirePreventable);
             }
             else
             {
@@ -174,10 +179,16 @@ public class FirePreventable : MonoBehaviour
     }
 
     [PunRPC]
-    public void CompleteFirePrevention()
+    public void CompleteFirePrevention(bool complete)
     {
         Debug.Log(_view.ViewID+"?");
         Debug.Log(PhotonNetwork.LocalPlayer + "누가누른건지 확인됨?" + "확인되네?");
-        _isFirePreventable = true;
+        _isFirePreventable = complete; 
     }
+    //public int PreventionScore()
+    //{
+    //    _score = totalScore / (float)PhotonNetwork.PlayerList.Count();
+    //    int roundedScore = Mathf.RoundToInt(score);
+
+    //}
 }

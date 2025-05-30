@@ -567,6 +567,16 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 3795791181570748303, guid: 489d67e0b706f45b9902bf6d7b071954,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.986
+      objectReference: {fileID: 0}
+    - target: {fileID: 3795791181570748303, guid: 489d67e0b706f45b9902bf6d7b071954,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -8.613
+      objectReference: {fileID: 0}
     - target: {fileID: 3953001901328745349, guid: 489d67e0b706f45b9902bf6d7b071954,
         type: 3}
       propertyPath: sceneViewId
@@ -1099,8 +1109,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fireObjList: []
+  _preventObjList: []
   _isBuringCoolTime: 30
   _playerCount: 6
+  _count: 0
+  <CompletedPreventionScore>k__BackingField: 0
+  <_score>k__BackingField: 0
 --- !u!4 &1775266234
 Transform:
   m_ObjectHideFlags: 0
