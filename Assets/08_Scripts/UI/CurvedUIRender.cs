@@ -28,16 +28,16 @@ public class CurvedUIRender : MonoBehaviour
         outputTexture.filterMode = FilterMode.Bilinear;
         outputTexture.Create();
 
-        GameObject camObj = new GameObject("UI Render Camera");
-        // 카메라 Y축 위치 수정
-        camObj.transform.position = new Vector3(0, 0.9f, -10);
-        UICamera = camObj.AddComponent<Camera>();
-        UICamera.clearFlags = CameraClearFlags.SolidColor;
-        UICamera.backgroundColor = Color.gray;
-        UICamera.backgroundColor = new Color(0, 0, 0, 0);
-        UICamera.cullingMask = UILayer;
-        UICamera.orthographic = true;
-        UICamera.orthographicSize = 0.8f;
+        //GameObject camObj = new GameObject("UI Render Camera");
+        //// 카메라 Y축 위치 수정
+        //camObj.transform.position = new Vector3(0, 0.9f, -10);
+        //UICamera = camObj.AddComponent<Camera>();
+        //UICamera.clearFlags = CameraClearFlags.SolidColor;
+        //UICamera.backgroundColor = Color.gray;
+        //UICamera.backgroundColor = new Color(0, 0, 0, 0);
+        //UICamera.cullingMask = UILayer;
+        //UICamera.orthographic = true;
+        //UICamera.orthographicSize = 0.87f;
         UICamera.targetTexture = outputTexture;
 
         canvas.worldCamera = UICamera;
@@ -51,13 +51,4 @@ public class CurvedUIRender : MonoBehaviour
         }
     }
 
-    int LayerMaskToLayer(int layerMask)
-    {
-        for(int i=0; i<32; i++)
-        {
-            if ((layerMask & (1 << i)) != 0)
-                return i;
-        }
-        return 0;
-    }
 }
