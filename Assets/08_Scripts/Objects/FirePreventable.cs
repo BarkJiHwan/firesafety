@@ -37,7 +37,7 @@ public class FirePreventable : MonoBehaviour
 
     Renderer _renderer;
     PhotonView _view;
-    //[SerializeField] private int _
+    XRSimpleInteractable _xrInteractable;
     public bool IsFirePreventable
     {
         get => _isFirePreventable;

@@ -31,7 +31,7 @@ public class GameScoreInfo
 {
     [Header("생존시간 점수")]
     public float maxSurvivalTime = 0f;
-    public int survivalScore = 0;    
+    public int survivalScore = 0;
 
     [Header("처치 통계")]
     public int totalKills = 0;
@@ -63,7 +63,7 @@ public class GameScoreInfo
 /// </summary>
 public class TaewooriPoolManager : MonoBehaviourPunCallbacks
 {
-    
+
     #region 인스펙터 설정
     [Header("===== 프리팹 설정 =====")]
     [SerializeField] private GameObject taewooriPrefab;
@@ -101,7 +101,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     private Dictionary<int, float> taewooriSpawnTimes = new Dictionary<int, float>();
     //플레이어에게 잡힌 태우리 추적
     private Dictionary<int, int> playerTaewooriKills = new Dictionary<int, int>();
-    private Dictionary<int,int> playerKillScores = new Dictionary<int, int>();
+    private Dictionary<int, int> playerKillScores = new Dictionary<int, int>();
 
     [SerializeField] private int totalTaewooriKilled = 0;                    // 전체 처치수
     [SerializeField] private List<PlayerKillInfo> playerKillInfos = new List<PlayerKillInfo>();  // 플레이어 정보 리스트  
@@ -978,7 +978,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             }
         }
     }
-   
+
     #endregion
 
     #region 네트워크 동기화 헬퍼 함수들
