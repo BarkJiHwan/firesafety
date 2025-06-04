@@ -44,14 +44,13 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [SerializeField] private float _refillCooldown = 3f;
     [SerializeField] private LayerMask _supplyMask;
     [SerializeField] private float _supplyDetectRange = 0.8f;
-    [SerializeField] private bool _isFeverTime;
     [SerializeField] private float _supplyCooldown;
     [SerializeField] private Transform _sprayOrigin; //스프레이 발사 지점
     [SerializeField] private int _currentAmount = 100;
 
     private readonly WaitForSeconds _checkTime = new(0.05f);
     private readonly WaitForSeconds _fireDelay = new(0.3f);
-
+    private bool _isFeverTime = false;
     private readonly Collider[] _fireHits = new Collider[20];
     private readonly Collider[] _supplyHits = new Collider[10];
     private readonly Dictionary<Collider, IDamageable> _cacheds = new();
@@ -102,10 +101,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         var hand = GetHand(type);
         _triggerValue = hand.triggerAction.action.ReadValue<float>();
         _isPressed = _triggerValue > 0.1f;
-        if (!_isFeverTime)
-        {
-            _colHitCount = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
-        }
+        _colHitCount = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
         //if (_isPressed && _colHitCounts > 0 && !_isFeverTime) <-- 본래 조건문
         if (_colHitCount > 0 && !_isFeverTime)//테스트용
         {
@@ -125,7 +121,21 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         {
             ResetSpray(type);
         }
+        if (GameManager.Instance.CurrentPhase == GamePhase.Fever && !_isFeverTime)
+        {
+            
+        }
     }
+    private void FeverTimeOn()
+    {
+        if (!_isFeverTime)
+        {
+            _isFeverTime = true;
+            _damage *= 2;
+            _currentAmount = 100;
+        }
+    }
+
     //CHM 변경 
     //private void Spray(HandData hand)
     //{
@@ -251,7 +261,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         {
             if (_currentAmount > 0)
             {
-                if (_currentAmount > 0 && !_isFeverTime)
+                if (!_isFeverTime)
                 {
                     _currentAmount -= _decreaseAmount;
                 }
