@@ -11,6 +11,7 @@ public class CurvedUIRender : MonoBehaviour
     [SerializeField] Camera UICamera;
     [SerializeField] Canvas canvas;
     [SerializeField] GameObject meshSurface;
+    [SerializeField] Material curvedUIMaterial;
 
     Vector2 renderSize;
     void Start()
@@ -40,13 +41,15 @@ public class CurvedUIRender : MonoBehaviour
         //UICamera.orthographicSize = 0.87f;
         UICamera.targetTexture = outputTexture;
 
-        canvas.worldCamera = UICamera;
+        //canvas.worldCamera = UICamera;
         meshSurface.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         if(meshSurface != null)
         {
             var mr = meshSurface.GetComponent<MeshRenderer>();
-            var mat = new Material(Shader.Find("Unlit/Transparent"));
-            mat.mainTexture = outputTexture;
+            var mat = new Material(curvedUIMaterial);
+            //var mat = new Material(Shader.Find("Unlit/Transparent"));
+            //mat.mainTexture = outputTexture;
+            mat.SetTexture("_MainTex", outputTexture);
             mr.material = mat;
         }
     }
