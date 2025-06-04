@@ -128,7 +128,7 @@ public class MakeCurvedMesh : MonoBehaviour
         Vector3 meshNormal = transform.forward;
 
         xrRig.transform.position = meshCenter + meshNormal - new Vector3(0, height / xrRigCameraOffSet.y, 0);
-        //xrRig.transform.rotation = Quaternion.LookRotation(meshNormal, Vector3.up);
+        xrRig.transform.rotation = Quaternion.LookRotation(meshNormal, Vector3.up);
 
         xrRigCurvedMeshDist = transform.position - xrRig.transform.position;
     }
