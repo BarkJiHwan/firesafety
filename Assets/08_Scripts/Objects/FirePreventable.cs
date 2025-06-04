@@ -29,16 +29,30 @@ public class FirePreventable : MonoBehaviour
     [SerializeField, Range(0.1f, 2f)]
     private float _shieldRadius = 1f;
 
+    //CHM - 소백이 연동 설정
+    [Header("소백이 연동")]
+    [SerializeField] private bool enableSobaekInteraction = true; // 소백이 상호작용 활성화
+
     Renderer _renderer;
+    XRSimpleInteractable _xrInteractable; //CHM - XR 컴포넌트 참조
 
     public bool IsFirePreventable
     {
         get => _isFirePreventable;
         set => _isFirePreventable = value;
     }
+
     private void Start()
     {
-        GetComponent<XRSimpleInteractable>().selectEntered.AddListener(EnterPrevention);
+        //CHM - XR 컴포넌트 가져오기
+        _xrInteractable = GetComponent<XRSimpleInteractable>();
+
+        // 기존 selectEntered 이벤트
+        _xrInteractable.selectEntered.AddListener(EnterPrevention);
+
+        //CHM - 소백이 상호작용 이벤트 자동 연결
+        SetupSobaekInteraction();
+
         _smokePrefab.SetActive(false);
         _shieldPrefab.SetActive(false);
 
@@ -49,6 +63,54 @@ public class FirePreventable : MonoBehaviour
         arrMat[1] = Resources.Load<Material>("Materials/OriginMat");
         _renderer.materials = arrMat;
         SetActiveOnMaterials(false);
+    }
+
+    //CHM - 소백이 상호작용 자동 설정 (싱글톤 방식으로 수정)
+    private void SetupSobaekInteraction()
+    {
+        if (!enableSobaekInteraction)
+            return;
+
+        // XR Interactable이 없으면 추가
+        if (_xrInteractable == null)
+        {
+            _xrInteractable = gameObject.AddComponent<XRSimpleInteractable>();
+        }
+
+        // 호버 이벤트 자동 연결 (소백이 찾기는 호버 시에 진행)
+        _xrInteractable.hoverEntered.AddListener(OnSobaekHoverEnter);
+        _xrInteractable.hoverExited.AddListener(OnSobaekHoverExit);
+
+        
+    }
+
+    //CHM - 호버 시작 시 소백이 이동 (페이즈 무관)
+    private void OnSobaekHoverEnter(HoverEnterEventArgs args)
+    {
+        if (Sobaek.Instance != null && enableSobaekInteraction)
+        {
+            Sobaek.Instance.MoveToInteractionTarget(transform);            
+        }        
+    }
+
+    //CHM - 호버 종료 시 소백이 복귀 (페이즈 무관)
+    private void OnSobaekHoverExit(HoverExitEventArgs args)
+    {
+        if (Sobaek.Instance != null && enableSobaekInteraction)
+        {
+            Sobaek.Instance.StopInteraction();            
+        }
+    }
+
+    //CHM - 소백이 상호작용 활성화/비활성화
+    public void SetSobaekInteraction(bool enable)
+    {
+        enableSobaekInteraction = enable;
+
+        if (!enable && Sobaek.Instance != null)
+        {
+            Sobaek.Instance.StopInteraction(); // 비활성화시 소백이 복귀
+        }
     }
 
     void Update()
@@ -79,24 +141,27 @@ public class FirePreventable : MonoBehaviour
         }
 
         // 예방 페이즈가 아닐때 Material이 켜져 있으면 끄기
-        if(GameManager.Instance.CurrentPhase != GamePhase.Prevention)
+        if (GameManager.Instance.CurrentPhase != GamePhase.Prevention)
         {
-            if(isActiveOnMaterials())
+            if (isActiveOnMaterials())
             {
                 SetActiveOnMaterials(false);
             }
         }
     }
+
     public void OnFirePreventionComplete()
     {
         _smokePrefab.SetActive(false);
         _shieldPrefab.SetActive(true);
     }
+
     public void SetFirePreventionPending()
     {
         _smokePrefab.SetActive(true);
         _shieldPrefab.SetActive(false);
     }
+
     //스모크 사이즈 셋팅
     private void ApplySmokeSettings() => _smokePrefab.transform.localScale =
             new Vector3(_smokeScale.x, _smokeScale.y, _smokeScale.z);
@@ -119,7 +184,7 @@ public class FirePreventable : MonoBehaviour
 
     public void EnterPrevention(SelectEnterEventArgs Args)
     {
-        if(!_isFirePreventable)
+        if (!_isFirePreventable)
         {
             _isFirePreventable = true;
         }
@@ -159,7 +224,7 @@ public class FirePreventable : MonoBehaviour
         {
             activeNum = mat.GetFloat("_isNearPlayer");
             // 체크표시가 켜져있으면
-            if(activeNum == 1)
+            if (activeNum == 1)
             {
                 isActive = true;
                 break;

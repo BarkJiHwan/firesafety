@@ -11,9 +11,6 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
 
     [SerializeField] private PlayerSpawner _playerSpawner;
 
-    //CHM
-    [SerializeField] private GameObject sobaekPrefab; // 인스펙터에서 할당
-
     private void Start()
     {
         /* 네트워크 Instantiate 할 프리팹 풀 초기화 */
