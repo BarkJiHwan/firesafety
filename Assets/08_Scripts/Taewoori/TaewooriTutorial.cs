@@ -4,7 +4,7 @@ using UnityEngine;
 public class TaewooriTutorial : MonoBehaviour, IDamageable
 {
     [Header("체력 설정")]    
-    [SerializeField] private float currentHealth = 100f;
+    public float currentHealth = 100f;
 
     [Header("리스폰 설정")]
     [SerializeField] private float respawnCooltime = 3f; // 리스폰 쿨타임   
