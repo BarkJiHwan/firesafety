@@ -89,7 +89,10 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         {
             _supplyCooldown -= Time.deltaTime;
         }
-        //향후 게임 매니저와 연계
+        if (GameManager.Instance.CurrentPhase == GamePhase.Fever && !_isFeverTime)
+        {
+            FeverTimeOn();
+        }
     }
 
     private void ProcessHand(EHandType type)
@@ -120,10 +123,6 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         if (hand.triggerAction.action.WasReleasedThisFrame())
         {
             ResetSpray(type);
-        }
-        if (GameManager.Instance.CurrentPhase == GamePhase.Fever && !_isFeverTime)
-        {
-            
         }
     }
     private void FeverTimeOn()
