@@ -5,14 +5,16 @@ using UnityEngine;
 public class TutorialDataMgr : MonoBehaviour
 {
     public static TutorialDataMgr Instance { get; private set; }
+    [field: Header("플레이어별 상호작용 오브젝트 (0~5번)")]
+    [field: SerializeField]
+    public List<GameObject> InteractObjects { get; set; }
 
     [Header("플레이어별 튜토리얼 데이터 (0~5번)")]
     [SerializeField] private TutorialData[] allPlayerData;
 
     [Header("기본 데이터 (에러 발생 시 사용)")]
     [SerializeField] private TutorialData fallbackData;
-    [Header("플레이어별 상호작용 오브젝트")]
-    public List<GameObject> interactObjects; // 0~5번 인덱스에 플레이어별 오브젝트
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -23,7 +25,8 @@ public class TutorialDataMgr : MonoBehaviour
         Instance = this;
     }
 
-    public TutorialData GetPlayerData(int actorNumber)
+    // PlayerList 인덱스 기반 데이터 반환
+    public TutorialData GetPlayerData(int playerListIndex)
     {
         if (allPlayerData.Length == 0)
         {
@@ -31,11 +34,7 @@ public class TutorialDataMgr : MonoBehaviour
             return fallbackData;
         }
 
-        int index = Mathf.Clamp(
-            (actorNumber - 1) % allPlayerData.Length,
-            0,
-            allPlayerData.Length - 1
-        );
+        int index = Mathf.Clamp(playerListIndex, 0, allPlayerData.Length - 1);
 
         if (allPlayerData[index] == null)
         {
@@ -45,10 +44,14 @@ public class TutorialDataMgr : MonoBehaviour
 
         return allPlayerData[index];
     }
-    public GameObject GetInteractObject(int playerIndex)
+
+    public GameObject GetInteractObject(int playerListIndex)
     {
-        if (playerIndex < 0 || playerIndex >= interactObjects.Count)
-            return null;
-        return interactObjects[playerIndex];
+
+        if (playerListIndex < 0 || playerListIndex >= InteractObjects.Count)
+        { return null; }
+
+        return InteractObjects[playerListIndex - 1];
+
     }
 }
