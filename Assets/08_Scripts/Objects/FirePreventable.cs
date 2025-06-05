@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
-using Photon.Pun;
-using System.Linq;
 
 public class FirePreventable : MonoBehaviour
 {
@@ -56,7 +54,6 @@ public class FirePreventable : MonoBehaviour
         SetupSobaekInteraction();
 
         _view = GetComponent<PhotonView>();
-        GetComponent<XRSimpleInteractable>().selectEntered.AddListener(EnterPrevention);
         _smokePrefab.SetActive(false);
         _shieldPrefab.SetActive(false);
 
@@ -85,7 +82,7 @@ public class FirePreventable : MonoBehaviour
         _xrInteractable.hoverEntered.AddListener(OnSobaekHoverEnter);
         _xrInteractable.hoverExited.AddListener(OnSobaekHoverExit);
 
-        
+
     }
 
     //CHM - 호버 시작 시 소백이 이동 (페이즈 무관)
@@ -93,8 +90,8 @@ public class FirePreventable : MonoBehaviour
     {
         if (Sobaek.Instance != null && enableSobaekInteraction)
         {
-            Sobaek.Instance.MoveToInteractionTarget(transform);            
-        }        
+            Sobaek.Instance.MoveToInteractionTarget(transform);
+        }
     }
 
     //CHM - 호버 종료 시 소백이 복귀 (페이즈 무관)
@@ -102,7 +99,7 @@ public class FirePreventable : MonoBehaviour
     {
         if (Sobaek.Instance != null && enableSobaekInteraction)
         {
-            Sobaek.Instance.StopInteraction();            
+            Sobaek.Instance.StopInteraction();
         }
     }
 
@@ -245,14 +242,9 @@ public class FirePreventable : MonoBehaviour
     [PunRPC]
     public void CompleteFirePrevention(bool complete)
     {
-        Debug.Log(_view.ViewID+"?");
+        Debug.Log(_view.ViewID + "?");
         Debug.Log(PhotonNetwork.LocalPlayer + "누가누른건지 확인됨?" + "확인되네?");
-        _isFirePreventable = complete; 
+        _isFirePreventable = complete;
     }
-    //public int PreventionScore()
-    //{
-    //    _score = totalScore / (float)PhotonNetwork.PlayerList.Count();
-    //    int roundedScore = Mathf.RoundToInt(score);
 
-    //}
 }
