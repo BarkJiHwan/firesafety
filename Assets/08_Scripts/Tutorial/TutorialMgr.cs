@@ -18,10 +18,8 @@ public class TutorialMgr : MonoBehaviourPun
         if (!photonView.IsMine)
             return;
 
-        _playerIndex = PhotonNetwork.LocalPlayer.ActorNumber;
-        _myData = TutorialDataMgr.Instance.GetPlayerData(
-            _playerIndex
-        );
+        _playerIndex = PhotonNetwork.PlayerList.ToList().IndexOf(PhotonNetwork.LocalPlayer);
+        _myData = TutorialDataMgr.Instance.GetPlayerData(_playerIndex);
         SetTutorialPhase();
         ObjectActiveFalse();
         StartCoroutine(TutorialRoutine());

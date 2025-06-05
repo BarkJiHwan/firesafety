@@ -50,8 +50,7 @@ public class TutorialDataMgr : MonoBehaviour
 
         if (playerListIndex < 0 || playerListIndex >= InteractObjects.Count)
         { return null; }
-
-        return InteractObjects[playerListIndex - 1];
+        return InteractObjects[playerListIndex];
 
     }
 }
