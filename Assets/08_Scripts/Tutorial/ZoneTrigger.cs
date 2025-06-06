@@ -12,6 +12,7 @@ public class ZoneTrigger : MonoBehaviour
     {
         if(other.gameObject.layer == playerLayer)
         {
+            Debug.Log("");
             onEnter?.Invoke();
         }
     }

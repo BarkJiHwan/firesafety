@@ -65,7 +65,9 @@ public class TutorialMgr : MonoBehaviourPun
         bool completed = false;
         var trigger = _zone.GetComponent<ZoneTrigger>();
         if (trigger == null)
+        {
             trigger = _zone.AddComponent<ZoneTrigger>();
+        }
 
         trigger.onEnter += () =>
         {
