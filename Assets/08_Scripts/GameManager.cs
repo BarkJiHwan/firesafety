@@ -31,13 +31,14 @@ public class GameManager : MonoBehaviour
     }
 
     [SerializeField] private bool _isGameStart = false;
-    [SerializeField] private List<GamePhaseInfo> phases;
+    [SerializeField] private List<GamePhaseInfo> _phases;
     private int _currentPhaseIndex = -1;
     private Coroutine _gameTimerCoroutine;
 
     [field: SerializeField]
     public float GameTimer { get; private set; } = 0f;
     public GamePhase CurrentPhase { get; private set; } = GamePhase.Waiting;
+    public bool IsGameStart { get => _isGameStart; set => _isGameStart = value; }
 
     public event Action OnGameEnd;
     private void Awake()
@@ -55,14 +56,13 @@ public class GameManager : MonoBehaviour
         StopGame();
         GameTimer = 0f;
         _currentPhaseIndex = -1;
-        _isGameStart = true;
         _gameTimerCoroutine = StartCoroutine(GameTimerRoutine());
-        //GameStartBtn();
     }
 
     private IEnumerator GameTimerRoutine()
     {
-        while (_isGameStart)
+        yield return new WaitUntil(() => IsGameStart);
+        while (IsGameStart)
         {
             GameTimer += Time.deltaTime;
             UpdateGamePhaseCor();
@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
     }
     public void StopGame()
     {
-        _isGameStart = false;
+        IsGameStart = false;
         if (_gameTimerCoroutine != null)
         {
             StopCoroutine(_gameTimerCoroutine);
@@ -80,15 +80,15 @@ public class GameManager : MonoBehaviour
     }
     private void UpdateGamePhaseCor()
     {
-        for (int i = phases.Count - 1; i >= 0; i--)
+        for (int i = _phases.Count - 1; i >= 0; i--)
         {
-            if (GameTimer >= phases[i].StartTime)
+            if (GameTimer >= _phases[i].StartTime)
             {
                 if (_currentPhaseIndex != i)
                 {
                     _currentPhaseIndex = i;
-                    CurrentPhase = phases[i].Phase;
-                    phases[i].OnEnterPhase?.Invoke();
+                    CurrentPhase = _phases[i].Phase;
+                    _phases[i].OnEnterPhase?.Invoke();
 
                     if (CurrentPhase == GamePhase.LeaveDangerArea)
                         OnGameEnd?.Invoke();
@@ -139,7 +139,7 @@ public class GameManager : MonoBehaviour
                 //CHM 태우리 생존시간 끝내고 점수 판정함 
                 TaewooriPoolManager.Instance?.EndSurvivalTracking();
                 CurrentPhase = GamePhase.LeaveDangerArea;
-                _isGameStart = false; //스타트 멈춤
+                IsGameStart = false; //스타트 멈춤
                 Debug.Log("일단 게임종료 임");
             }
         }
@@ -147,12 +147,15 @@ public class GameManager : MonoBehaviour
 
     public void GameStartBtn()
     {
-        _isGameStart = true;
+        IsGameStart = true;
     }
-
+    public void GmaeOver()
+    {
+        IsGameStart = false;
+    }
     public void ResetGameTimer()
     {
-        _isGameStart = true;
+        //_isGameStart = true;
         GameTimer = 0f;
         //CHM 태우리 생존시간 리셋
         TaewooriPoolManager.Instance?.ResetSurvivalTracking();
