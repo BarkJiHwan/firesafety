@@ -78,6 +78,8 @@ public class GameManager : MonoBehaviour
             if (CurrentPhase != GamePhase.Fire)
             {
                 CurrentPhase = GamePhase.Fire;
+                //CHM 태우리 생존시간 추적
+                TaewooriPoolManager.Instance?.StartSurvivalTracking();
             }
         }
         else if(GameTimer < 250f)
@@ -91,6 +93,8 @@ public class GameManager : MonoBehaviour
         {
             if(CurrentPhase != GamePhase.leaveDangerArea)
             {
+                //CHM 태우리 생존시간 끝내고 점수 판정함 
+                TaewooriPoolManager.Instance?.EndSurvivalTracking();
                 CurrentPhase = GamePhase.leaveDangerArea;
                 _isGameStart = false; //스타트 멈춤
                 Debug.Log("일단 게임종료 임");
@@ -107,5 +111,7 @@ public class GameManager : MonoBehaviour
     {
         _isGameStart = true;
         GameTimer = 0f;
+        //CHM 태우리 생존시간 리셋
+        TaewooriPoolManager.Instance?.ResetSurvivalTracking();
     }
 }

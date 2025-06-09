@@ -1,8 +1,7 @@
-using System;
-using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
+/* 플레이어 생성 가능한것 추가 */
 public enum PlayerEnum {
     Bico,
     Jennie,

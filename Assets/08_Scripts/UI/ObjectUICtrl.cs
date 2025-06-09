@@ -89,7 +89,20 @@ public class ObjectUICtrl : MonoBehaviour
         Vector3 originPosition = fire.TaewooriPos();
         transform.position = originPosition + basicPos;
 
-        if(IsUIBlocked())
+        Vector3 targetForward = target.transform.forward;
+        Vector3 camDir = Camera.main.transform.position - target.transform.position;
+        float dot = Vector3.Dot(targetForward, camDir);
+        if(dot > 0)
+        {
+            transform.forward = -targetForward;
+        }
+        else
+        {
+            transform.forward = targetForward;
+        }
+
+
+        if (IsUIBlocked())
         {
             MoveUIPosition(originPosition);
         }
