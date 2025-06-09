@@ -350,6 +350,20 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
             _currentAmount = _maxAmount;
         }
     }
+    public void DetachSuppressor()
+    {
+        if (_rightHand.enabled)
+        {
+            _rightHand.modelPrefab.SetActive(false);
+            _rightHand.enabled = false;
+        }
+        else if (_leftHand.enabled)
+        {
+            _leftHand.modelPrefab.SetActive(false);
+            _leftHand.enabled = false;
+        }
+        _currentAmount = _maxAmount;
+    }
     private void OnDrawGizmos()
     {
         DrawSprayRange(_leftHand);
