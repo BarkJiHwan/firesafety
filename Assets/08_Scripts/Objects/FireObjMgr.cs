@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Photon.Pun;
 
 public class FireObjMgr : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class FireObjMgr : MonoBehaviour
 
     public Dictionary<int, MapIndex> _zoneDict = new Dictionary<int, MapIndex>();
     public List<FireObjScript> _fireObjList = new List<FireObjScript>();
+    public List<FirePreventable> _preventObjList = new List<FirePreventable>();
 
     private bool _hasAreaReset = false;
     private bool _hasRefreshedFireObjs = false;
@@ -38,6 +40,16 @@ public class FireObjMgr : MonoBehaviour
     [SerializeField] private int _playerCount = 1;
     private GamePhase currentPhase;
     private WaitForSeconds _forSeconds;
+    [SerializeField] private int _count;
+
+    [field: SerializeField]
+    public int CompletedPreventionScore { get; private set; }
+    [field: SerializeField]
+    public int _score { get; private set; }
+    public int Count { get => _count; set => _count = value; }
+
+    private Coroutine _phaseCoroutine;
+
 
     private void Awake()
     {
@@ -51,33 +63,40 @@ public class FireObjMgr : MonoBehaviour
         RefreshZoneDictionary();
     }
     private void Start()
-    {
+    {        
         currentPhase = GameManager.Instance.CurrentPhase;
-        _isBuringCoolTime = _isBuringCoolTime / _playerCount;
         _forSeconds = new WaitForSeconds(_isBuringCoolTime);
     }
     void Update()
     {
         currentPhase = GameManager.Instance.CurrentPhase;
-
         if (currentPhase == GamePhase.Prevention && !_hasAreaReset)
         {
+            _playerCount = PhotonNetwork.PlayerList.Count();
+            _isBuringCoolTime = _isBuringCoolTime / _playerCount;
             Debug.Log("예방 페이즈 - 모든 구역 초기화");
             foreach (var zone in _zoneDict.Values)
             {
                 ResetZone(zone);
             }
+            RefreshAllPrevention();
+            _phaseCoroutine = StartCoroutine(PreventionPhaseCoroutine());
             _hasAreaReset = true;
         }
-
+        //if(currentPhase == GamePhase.Prevention)
+        //{
+        //    StartPreventionPhase();
+        //}
         if (currentPhase == GamePhase.Fire && !_hasRefreshedFireObjs)
         {
             Debug.Log("화재 페이즈 - 오브젝트 갱신");
-            RefreshAllFireObjects();
-            RefreshZoneDictionary();
-            ListUpdateDictionary();
-            ActivateRandomFireObjectsPerZone();
-            StartCoroutine(ActivateTeawooriBurning());
+            CompletedPreventionPhase(); //예방 점수 측정
+            //CompletePrevention(); //스코어 점수 갱신
+            RefreshAllFireObjects(); //예방이 안된 오브젝트 갱신
+            RefreshZoneDictionary(); //갱신한 값으로 딕셔너리 초기화
+            ListUpdateDictionary(); //딕셔너리 값으로 화재오브젝트 리스트 업데이트
+            ActivateRandomFireObjectsPerZone(); //구역내에 최소 1개의 오브젝트먼저 불이나게 구현
+            StartCoroutine(ActivateTeawooriBurning()); //화재 코루틴 시작
             _hasRefreshedFireObjs = true;
         }
 
@@ -88,7 +107,7 @@ public class FireObjMgr : MonoBehaviour
             _forSeconds = new WaitForSeconds(_isBuringCoolTime);
             _isInBurningPhase = true;
         }
-        if (currentPhase == GamePhase.leaveDangerArea && !_hasLeaveDangerArea)
+        if (currentPhase == GamePhase.LeaveDangerArea && !_hasLeaveDangerArea)
         {
             Debug.Log("대피페이즈 돌입. 일단 게임 종료");
             StopCoroutine(ActivateTeawooriBurning());
@@ -136,6 +155,17 @@ public class FireObjMgr : MonoBehaviour
                         zone.FireObjects.Remove(fireObj);
                     }
                 }
+            }
+        }
+    }
+    public void RefreshAllPrevention()
+    {
+        foreach (var zone in _zoneDict.Values)
+        {
+            foreach (var zonePreventObj in zone.FirePreventables)
+            {
+                var preventObj = zonePreventObj.GetComponent<FirePreventable>();
+                _preventObjList.Add(preventObj);
             }
         }
     }
@@ -253,5 +283,88 @@ public class FireObjMgr : MonoBehaviour
             int rand = Random.Range(i, n);
             (list[i], list[rand]) = (list[rand], list[i]);
         }
+    }
+    public void CompletedPreventionPhase()
+    {
+        CompletedPreventionScore = CalculateScore(_playerCount, Count);
+    }
+    public int CalculateScore(int playerCount, int count)
+    {
+        switch (playerCount)
+        {
+            case 1:
+                if (count >= _preventObjList.Count)
+                    return 25;
+                else if (count >= 5)
+                    return 20;
+                else
+                    return 15;
+            case 2:
+                if (count >= 5)
+                    return 25;
+                else if (count >= 3)
+                    return 20;
+                else
+                    return 15;
+            case 3:
+                if (count >= 4)
+                    return 25;
+                else if (count >= 2)
+                    return 20;
+                else
+                    return 15;
+            case 4:
+                if (count >= 3)
+                    return 25;
+                else if (count == 2)
+                    return 20;
+                else
+                    return 15;
+            case 5:
+                if (count >= 2)
+                    return 25;
+                else if (count == 1)
+                    return 20;
+                else
+                    return 15;
+            case 6:
+                if (count >= 2)
+                    return 25;
+                else if (count == 1)
+                    return 20;
+                else
+                    return 15;
+            default:
+                return 0;
+        }
+    }
+
+    private IEnumerator PreventionPhaseCoroutine()
+    {
+        float _timer = Time.time;
+
+        // 모든 오브젝트가 예방될 때까지 대기
+        yield return new WaitUntil(() => Count >= _preventObjList.Count || currentPhase == GamePhase.Fire);
+
+        float elapsedTime = Time.time - _timer;
+        int calculatedScore = CalculateScore(elapsedTime, _playerCount);
+        _score += calculatedScore;
+
+        Debug.Log($"모든 오브젝트 예방 완료! 경과 시간: {elapsedTime:F2}초, 점수: {_score}");
+    }
+    private int CalculateScore(float time, int players)
+    {
+        players = Mathf.Clamp(players, 1, 6);
+        //if (players == 1)
+        //    return 25; // 혼자 할 때는 항상 만점
+        float maxScoreThreshold = Mathf.Round(60f / players);
+        float midScoreThreshold = maxScoreThreshold + 10f;
+
+        if (time <= maxScoreThreshold)
+            return 25;
+        else if (time <= midScoreThreshold)
+            return 20;
+        else
+            return 15;
     }
 }

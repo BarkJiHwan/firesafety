@@ -3,9 +3,8 @@ using UnityEngine;
 
 public class TaewooriTutorial : MonoBehaviour, IDamageable
 {
-    [Header("체력 설정")]
-    [SerializeField] public float maxHealth = 100f;
-    [SerializeField] public float currentHealth;
+    [Header("체력 설정")]    
+    public float currentHealth = 100f;
 
     [Header("리스폰 설정")]
     [SerializeField] private float respawnCooltime = 3f; // 리스폰 쿨타임   
@@ -22,7 +21,7 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
     void Start()
     {
         SaveOriginalGradients();
-        currentHealth = maxHealth;
+
         isDead = false;
     }
 
@@ -61,7 +60,7 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
         // 데미지 받은 후 색상 업데이트
         UpdateHealthColor();
 
-        Debug.Log($"{gameObject.name} 데미지: {damage}, 현재 체력: {currentHealth}/{maxHealth}");
+       
 
         if (currentHealth <= 0)
         {
@@ -75,7 +74,7 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
         // 지정된 파티클 시스템들만 변경
         if (targetParticleSystems != null && targetParticleSystems.Length > 0)
         {
-            float healthPercentage = maxHealth > 0 ? currentHealth / maxHealth : 0f;
+            float healthPercentage = currentHealth > 0 ? currentHealth / 100 : 0f;
             UpdateParticleColorValues(healthPercentage);
         }
     }
@@ -163,7 +162,6 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
             {
                 //playerSuppressor.SetAmountZero();
                 firstDeath = false;
-            }
         }
     }
 
@@ -174,8 +172,7 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
         // 쿨타임 대기
         yield return new WaitForSeconds(respawnCooltime);
 
-        // 체력 및 상태 초기화
-        currentHealth = maxHealth;
+       
         isDead = false;
 
         // 색상 복원
