@@ -170,7 +170,7 @@ public class FirePreventable : MonoBehaviour
     {
         _smokePrefab = Instantiate(_smokePrefab, transform.position, transform.rotation);
         _smokePrefab.transform.parent = transform;
-            new Vector3(_smokeScale.x, _smokeScale.y, _smokeScale.z);
+        _smokePrefab.transform.localScale = new Vector3(_smokeScale.x, _smokeScale.y, _smokeScale.z);
         _smokePrefab.transform.position = transform.position;
     }
     //쉴드 사이즈 셋팅
