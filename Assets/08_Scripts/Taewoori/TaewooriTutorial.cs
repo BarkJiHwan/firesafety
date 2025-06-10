@@ -9,7 +9,7 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
     [Header("리스폰 설정")]
     [SerializeField] private float respawnCooltime = 3f; // 리스폰 쿨타임   
     [SerializeField] private bool firstDeath;//태우리 첫 죽음에만 소화기 고갈 적용
-
+    // 1 -> 메인 / 2 -> 메인
     [Header("체력별 색상 설정")]
     [SerializeField] private float maxGreenBoost = 1.0f; // 최대 G값 증가량 (체력 0%일 때)   
     [SerializeField] private ParticleSystem[] targetParticleSystems; // 색상 변경할 파티클 시스템들 
@@ -59,8 +59,6 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
 
         // 데미지 받은 후 색상 업데이트
         UpdateHealthColor();
-
-       
 
         if (currentHealth <= 0)
         {
@@ -154,14 +152,17 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
 
         // 쿨타임 후 리스폰
         StartCoroutine(RespawnAfterDelay());
-        //첫 사망시 사용자 소화기 용량을 바닥나게 한다
+        //첫 사망시 소화기 비활성화
         if (firstDeath)
         {
-            var playerSuppressor = FindObjectOfType<FireSuppressantManager>();
+            var playerSuppressor = FindObjectOfType<TutorialSuppressor>();
+            var playerRPCSuppressor = FindObjectOfType<FireSuppressantManager>();
             if (playerSuppressor != null)
             {
                 //playerSuppressor.SetAmountZero();
                 firstDeath = false;
+                playerSuppressor.enabled = false;
+                playerRPCSuppressor.enabled = true;
             }
         }
     }

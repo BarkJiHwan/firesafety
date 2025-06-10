@@ -170,26 +170,4 @@ public class TutorialSuppressor : MonoBehaviour
         _currentAmount = _maxAmount;
     }
     public void SetAmountZero() => _currentAmount = 0;
-    private void OnDrawGizmos()
-    {
-        DrawSprayRange(_leftHand);
-        DrawSprayRange(_rightHand);
-    }
-    private void DrawSprayRange(HandData hand)
-    {
-        //보급 인지 범위
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(hand.grabSpot.position, _supplyDetectRange);
-        //소화기 범위
-        if (_sprayOrigin == null)
-        {
-            return;
-        }
-        Gizmos.color = Color.cyan;
-        Vector3 start = _sprayOrigin.position;
-        Vector3 end = start + (_sprayOrigin.forward * _sprayLength);
-        Gizmos.DrawWireSphere(start, _sprayRadius);
-        Gizmos.DrawWireSphere(end, _sprayRadius);
-        Gizmos.DrawLine(start, end);
-    }
 }

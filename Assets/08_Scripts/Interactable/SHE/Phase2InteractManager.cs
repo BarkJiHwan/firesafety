@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class TowelInteractManager : MonoBehaviour
+public class Phase2InteractManager : MonoBehaviour
 {
     public class TowelHandData
     {
@@ -34,7 +34,7 @@ public class TowelInteractManager : MonoBehaviour
     [Header("수도")]
     [SerializeField] private float _tapInteractRadius;
     [SerializeField] private LayerMask _tapMask;
-    [SerializeField] private TapWater _tapWater;
+    [SerializeField, Tooltip("배치 필쑤!!")] private TapWater _tapWater;
     private void Update()
     {
         CheckCols(_leftHand);
