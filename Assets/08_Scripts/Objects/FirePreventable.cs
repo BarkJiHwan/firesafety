@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -34,8 +34,9 @@ public class FirePreventable : MonoBehaviour
     [SerializeField] private bool enableSobaekInteraction = true; // 소백이 상호작용 활성화
 
     Renderer _renderer;
-    XRSimpleInteractable _xrInteractable; //CHM - XR 컴포넌트 참조
-
+    PhotonView _view;
+    XRSimpleInteractable _xrInteractable;
+    private bool _isXRinteract = true;
     public bool IsFirePreventable
     {
         get => _isFirePreventable;
@@ -47,14 +48,11 @@ public class FirePreventable : MonoBehaviour
         //CHM - XR 컴포넌트 가져오기
         _xrInteractable = GetComponent<XRSimpleInteractable>();
 
-        // 기존 selectEntered 이벤트
-        _xrInteractable.selectEntered.AddListener(EnterPrevention);
-
         //CHM - 소백이 상호작용 이벤트 자동 연결
         SetupSobaekInteraction();
 
-        _smokePrefab.SetActive(false);
-        _shieldPrefab.SetActive(false);
+        _view = GetComponent<PhotonView>();
+        SetActivePrefab();
 
         // 예방 가능한 오브젝트에 새로운 Material 생성
         _renderer = GetComponent<Renderer>();
@@ -81,7 +79,7 @@ public class FirePreventable : MonoBehaviour
         _xrInteractable.hoverEntered.AddListener(OnSobaekHoverEnter);
         _xrInteractable.hoverExited.AddListener(OnSobaekHoverExit);
 
-        
+
     }
 
     //CHM - 호버 시작 시 소백이 이동 (페이즈 무관)
@@ -89,8 +87,8 @@ public class FirePreventable : MonoBehaviour
     {
         if (Sobaek.Instance != null && enableSobaekInteraction)
         {
-            Sobaek.Instance.MoveToInteractionTarget(transform);            
-        }        
+            Sobaek.Instance.MoveToInteractionTarget(transform);
+        }
     }
 
     //CHM - 호버 종료 시 소백이 복귀 (페이즈 무관)
@@ -98,7 +96,7 @@ public class FirePreventable : MonoBehaviour
     {
         if (Sobaek.Instance != null && enableSobaekInteraction)
         {
-            Sobaek.Instance.StopInteraction();            
+            Sobaek.Instance.StopInteraction();
         }
     }
 
@@ -123,6 +121,11 @@ public class FirePreventable : MonoBehaviour
 
         if (currentPhase == GamePhase.Prevention)
         {
+            if(_isXRinteract)
+            {
+                _xrInteractable.selectEntered.AddListener(EnterPrevention);
+                _isXRinteract = false;
+            }
             // 예방 페이즈
             if (_isFirePreventable)
             {
@@ -135,10 +138,6 @@ public class FirePreventable : MonoBehaviour
                 SetFirePreventionPending();
             }
         }
-        else
-        {
-            _smokePrefab.SetActive(false);
-        }
 
         // 예방 페이즈가 아닐때 Material이 켜져 있으면 끄기
         if (GameManager.Instance.CurrentPhase != GamePhase.Prevention)
@@ -148,6 +147,11 @@ public class FirePreventable : MonoBehaviour
                 SetActiveOnMaterials(false);
             }
         }
+    }
+    public void SetActivePrefab()
+    {
+        _smokePrefab.SetActive(false);
+        _shieldPrefab.SetActive(false);
     }
 
     public void OnFirePreventionComplete()
@@ -184,13 +188,18 @@ public class FirePreventable : MonoBehaviour
 
     public void EnterPrevention(SelectEnterEventArgs Args)
     {
-        if (!_isFirePreventable)
+        if (_view.IsMine)
         {
-            _isFirePreventable = true;
-        }
-        else
-        {
-            return;
+            if (!_isFirePreventable)
+            {
+                ++FireObjMgr.Instance.Count;
+                _isFirePreventable = true;
+                _view.RPC("CompleteFirePrevention", RpcTarget.AllBuffered, _isFirePreventable);
+            }
+            else
+            {
+                return;
+            }
         }
     }
 
@@ -232,4 +241,13 @@ public class FirePreventable : MonoBehaviour
         }
         return isActive;
     }
+
+    [PunRPC]
+    public void CompleteFirePrevention(bool complete)
+    {
+        Debug.Log(_view.ViewID + "?");
+        Debug.Log(PhotonNetwork.LocalPlayer + "누가누른건지 확인됨?" + "확인되네?");
+        _isFirePreventable = complete;
+    }
+
 }
