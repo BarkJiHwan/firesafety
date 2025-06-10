@@ -12,8 +12,6 @@ public class ScoreBoardController : MonoBehaviour
     [Header("평가 항목")]
     [SerializeField] TextMeshProUGUI[] scoreItems;
     [TextArea] public string[] scoreItemsText;
-    [Header("총점")]
-    [SerializeField] TextMeshProUGUI totalScoreText;
 
     int startIndex = 0;
     void Start()
