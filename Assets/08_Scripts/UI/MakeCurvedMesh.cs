@@ -1,22 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using ExitGames.Client.Photon;
 using UnityEngine;
-using UnityEngine.Rendering.Universal.Internal;
-using UnityEngine.XR.Interaction.Toolkit.UI;
-using UnityEngine.XR.Management;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class MakeCurvedMesh : MonoBehaviour
 {
     public float radius;
-    public float height;
+    public float height { get; private set; }
+    [SerializeField] float heightOffset;
     public float angle;
     public int segement;
     [SerializeField] Canvas canvas;
     [SerializeField] float offset;
     [SerializeField] GameObject xrRig;
-    public Vector3 xrRigCameraOffSet = new Vector3(0, 5, 0.2f);
-    [SerializeField] GameObject canvasMeshRoot;
+    [SerializeField] Camera renderTextureCam;
+    [SerializeField] Vector3 xrRigCameraOffSet = new Vector3(0, 5, 0.2f);
+    [SerializeField] bool isFullScreenButton;
+    [Range(0f, 1f)]
+    [SerializeField] float baseOrthoSize;
+
+    RectTransform canvasTransform;
+    MeshCollider meshCol;
 
     public Vector3 xrRigCurvedMeshDist
     {
@@ -25,6 +30,12 @@ public class MakeCurvedMesh : MonoBehaviour
 
     void Start()
     {
+        meshCol = GetComponent<MeshCollider>();
+        if(canvas != null)
+        {
+            canvasTransform = canvas.GetComponent<RectTransform>();
+        }
+        height = canvasTransform.rect.height * canvas.transform.localScale.y * 2 - heightOffset;
         MakeCurvedUIMesh();
     }
 
@@ -98,12 +109,34 @@ public class MakeCurvedMesh : MonoBehaviour
         }
         mesh.normals = normals;
 
+        if(isFullScreenButton == true)
+        {
+            // 픽셀 단위 크기
+            float pixelWidth = canvasTransform.rect.width;
+            float pixelHeight = canvasTransform.rect.height;
+
+            // 실제 월드 유닛 기준 크기
+            float worldWidth = pixelWidth * canvasTransform.lossyScale.x;
+            float worldHeight = pixelHeight * canvasTransform.lossyScale.y;
+
+            // 곡률 반지름과 각도로 전체 호 길이 계산
+            float arcLength = Mathf.Deg2Rad * angle * radius;
+
+            float othoSize = renderTextureCam.orthographicSize;
+            float scaleFactor = arcLength / pixelWidth;
+            canvas.transform.localScale = Vector3.one * scaleFactor;
+
+            renderTextureCam.orthographicSize = othoSize * worldHeight * baseOrthoSize;
+            Debug.Log(renderTextureCam.orthographicSize);
+        }
+
         //transform.position += new Vector3(0, 0.9f, 0);
         PositionCurvedUIInFront();
         MoveCameraCenter();
         // 카메라를 원통형의 중간으로 오게 함
 
         // MeshFilter에 메쉬 할당
+        meshCol.sharedMesh = mesh;
         GetComponent<MeshFilter>().mesh = mesh;
     }
 
@@ -113,7 +146,12 @@ public class MakeCurvedMesh : MonoBehaviour
         Vector3 canForward = canvas.transform.forward;
         // 기준 위치 : Canvas의 중심
         Vector3 canvasPos = canvas.transform.position;
-        Vector3 meshPos = canvasPos - canForward * (radius / 2 + offset);
+        Vector3 meshPos = canvasPos - canForward * (radius / 2 + offset) + new Vector3(0, heightOffset, 0);
+        if(isFullScreenButton == true)
+        {
+            float canvasHeight = canvasTransform.rect.height * canvasTransform.lossyScale.y / 2;
+            meshPos += new Vector3(0, canvasHeight / 2 - 0.2f, 0);
+        }
         //Transform xrOriginTrans = Camera.main.transform.parent;
         //xrOriginTrans.position = meshPos - new Vector3(0, 0, 1f);
         transform.position = meshPos;
@@ -127,7 +165,7 @@ public class MakeCurvedMesh : MonoBehaviour
 
         Vector3 meshNormal = transform.forward;
 
-        xrRig.transform.position = meshCenter + meshNormal - new Vector3(0, height / xrRigCameraOffSet.y, 0);
+        xrRig.transform.position = meshCenter + meshNormal - new Vector3(0, height / xrRigCameraOffSet.y, xrRigCameraOffSet.z);
         xrRig.transform.rotation = Quaternion.LookRotation(meshNormal, Vector3.up);
 
         xrRigCurvedMeshDist = transform.position - xrRig.transform.position;

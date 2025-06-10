@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class CanvasMeshRootCtrl : MonoBehaviour
 {
+    [SerializeField] GameObject canvas;
     [SerializeField] GameObject curvedMesh;
     [SerializeField] float angleThreshold = 30f;
 
     Transform xrCam;
     MakeCurvedMesh curvedManager;
 
+    RectTransform canvasTransform;
     float lastYAngle;
 
     void Awake()
@@ -19,6 +21,11 @@ public class CanvasMeshRootCtrl : MonoBehaviour
 
     void Start()
     {
+        if (canvas != null)
+        {
+            canvasTransform = canvas.GetComponent<RectTransform>();
+            canvasTransform.SetParent(transform, false);
+        }
         xrCam = Camera.main.transform;
         lastYAngle = GetYaw(xrCam.forward);
         FollowUser();
@@ -26,6 +33,10 @@ public class CanvasMeshRootCtrl : MonoBehaviour
 
     void LateUpdate()
     {
+        if(xrCam == null)
+        {
+            return;
+        }
         float currentYaw = GetYaw(xrCam.forward);
         float angleDelta = Mathf.Abs(Mathf.DeltaAngle(lastYAngle, currentYaw));
 
@@ -38,8 +49,6 @@ public class CanvasMeshRootCtrl : MonoBehaviour
 
     void FollowUser()
     {
-        Transform xrCam = Camera.main.transform;
-
         Vector3 forward = new Vector3(xrCam.forward.x, 0, xrCam.forward.z).normalized;
 
         Quaternion rot = Quaternion.LookRotation(forward);
