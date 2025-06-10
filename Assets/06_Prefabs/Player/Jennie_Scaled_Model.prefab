@@ -1427,6 +1427,7 @@ MonoBehaviour:
   playerOrigin: {fileID: 0}
   playerCam: {fileID: 0}
   photonView: {fileID: 762319275}
+  sobaekPrefab: {fileID: 0}
 --- !u!114 &891625631411848100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1533,9 +1534,9 @@ MonoBehaviour:
     initialFireFX: {fileID: 5620353170418356998}
     modelPrefab: {fileID: 5253224623588374229}
     initialFire: 0
-    amount: 600
     enabled: 0
     isSpraying: 0
+    handType: 0
   _rightHand:
     triggerAction:
       m_UseReference: 1
@@ -1564,12 +1565,13 @@ MonoBehaviour:
     initialFireFX: {fileID: 5620353170101363083}
     modelPrefab: {fileID: 5253224623305573464}
     initialFire: 0
-    amount: 600
     enabled: 0
     isSpraying: 0
+    handType: 0
   _sprayLength: 2.5
   _sprayRadius: 1
   _damage: 5
+  _maxAmount: 100
   _decreaseAmount: 1
   _fireMask:
     serializedVersion: 2
@@ -1579,9 +1581,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _supplyDetectRange: 0.25
-  _isFeverTime: 0
   _supplyCooldown: 0
   _sprayOrigin: {fileID: 0}
+  _currentAmount: 100
   _isPressed: 0
 --- !u!1 &5079816538120435796
 GameObject:

@@ -419,7 +419,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3982813157638611328}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.75, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1192,7 +1192,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xrOrigin: {fileID: 3982813158359188711}
+  chaDriver: {fileID: 3982813158359188709}
   deviceSimulator: {fileID: 7842588539654800297}
+  controllersOffset: {fileID: 3982813158226588226}
 --- !u!1 &3982813158503462678
 GameObject:
   m_ObjectHideFlags: 0

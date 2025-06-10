@@ -440,6 +440,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isGameStart: 1
+  _phases: []
   <GameTimer>k__BackingField: 0
 --- !u!4 &1824487200
 Transform:
@@ -463,10 +464,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3982813157638611329, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+    - target: {fileID: 3982813158134952073, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
         type: 3}
-      propertyPath: m_LocalPosition.y
+      propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3982813158359188711, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_RequestedTrackingOriginMode
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3982813159479471952, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
         type: 3}

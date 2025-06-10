@@ -59,7 +59,7 @@ public class PlayerBehavior : MonoBehaviour
     private void CreateSobaek()
     {
         if (sobaekPrefab == null)
-        {            
+        {
             return;
         }
 
@@ -69,14 +69,14 @@ public class PlayerBehavior : MonoBehaviour
         if (sobaekScript != null)
         {
             // 플레이어 카메라 설정
-            sobaekScript.Player = playerCam.transform;            
+            sobaekScript.Player = playerCam.transform;
         }
         else
-        {            
+        {
             Destroy(sobaekInstance);
         }
     }
-   
+
 
     //CHM - 플레이어 파괴시 소백이도 같이 파괴
     private void OnDestroy()
@@ -94,6 +94,16 @@ public class PlayerBehavior : MonoBehaviour
         Vector3 updatedRot = new Vector3(currentRot.x, playerCamRot.y, currentRot.z);
 
         gameObject.transform.rotation = Quaternion.Euler(updatedRot);
-        gameObject.transform.position = playerOrigin.transform.position;
+
+        if (playerOrigin.RequestedTrackingOriginMode == XROrigin.TrackingOriginMode.Floor)
+        {
+            Vector3 currentFloorPos = new Vector3(playerCam.transform.position.x, gameObject.transform.position.y, playerCam.transform.position.z);
+            gameObject.transform.position = currentFloorPos;
+        }
+        else
+        {
+            gameObject.transform.position = playerOrigin.transform.position;
+        }
+
     }
 }
