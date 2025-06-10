@@ -7,6 +7,12 @@ using System.Diagnostics;
 using UnityEngine.XR;
 using Unity.VisualScripting;
 using Photon.Pun;
+
+public enum EHandType
+{
+    RightHand = 0,
+    LeftHand
+}
 [System.Serializable]
 public class HandData
 {
@@ -20,8 +26,9 @@ public class HandData
     public bool initialFire = false;
     public bool enabled = false;
     public bool isSpraying = false;
+    public EHandType handType;
 }
-public class FireSuppressantManager : MonoBehaviour
+public class FireSuppressantManager : MonoBehaviourPunCallbacks
 {
     [Header("양손 소화기 데이터")]
     [SerializeField] private HandData _leftHand;
@@ -37,17 +44,17 @@ public class FireSuppressantManager : MonoBehaviour
     [SerializeField] private float _refillCooldown = 3f;
     [SerializeField] private LayerMask _supplyMask;
     [SerializeField] private float _supplyDetectRange = 0.8f;
-    [SerializeField] private bool _isFeverTime;
     [SerializeField] private float _supplyCooldown;
     [SerializeField] private Transform _sprayOrigin; //스프레이 발사 지점
     [SerializeField] private int _currentAmount = 100;
 
     private readonly WaitForSeconds _checkTime = new(0.05f);
     private readonly WaitForSeconds _fireDelay = new(0.3f);
-
+    private bool _isFeverTime = false;
     private readonly Collider[] _fireHits = new Collider[20];
     private readonly Collider[] _supplyHits = new Collider[10];
     private readonly Dictionary<Collider, IDamageable> _cacheds = new();
+    private Dictionary<EHandType, HandData> _hands = new();
     private readonly Collider[] _checkingCols = new Collider[20];
     private Vector3 _sprayStartPos;
     private Vector3 _sprayEndPos;
@@ -57,55 +64,78 @@ public class FireSuppressantManager : MonoBehaviour
     private int _fireHitCount;
     //Stopwatch stopwatch = new();
     private IEnumerator _currentCor;
-    private HandData _currentHand;
+
+    private HandData GetHand(EHandType type)
+    {
+        if (_hands.TryGetValue(type, out var hand))
+        {
+            return hand;
+        }
+        return null;
+    }
+    private void Awake()
+    {
+        if (photonView.IsMine)
+        {
+            _hands[EHandType.LeftHand] = _leftHand;
+            _hands[EHandType.RightHand] = _rightHand;
+        }
+    }
     private void Update()
     {
-        ProcessHand(_rightHand);
-        ProcessHand(_leftHand);
+        ProcessHand(EHandType.RightHand);
+        ProcessHand(EHandType.LeftHand);
         if (_supplyCooldown > 0)
         {
             _supplyCooldown -= Time.deltaTime;
         }
-        //향후 게임 매니저와 연계
+        if (GameManager.Instance.CurrentPhase == GamePhase.Fever && !_isFeverTime)
+        {
+            FeverTimeOn();
+        }
     }
 
-    private void ProcessHand(HandData hand)
+    private void ProcessHand(EHandType type)
     {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+        var hand = GetHand(type);
         _triggerValue = hand.triggerAction.action.ReadValue<float>();
         _isPressed = _triggerValue > 0.1f;
-        if (!_isFeverTime)
-        {
-            _colHitCount = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
-        }
+        _colHitCount = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
         //if (_isPressed && _colHitCounts > 0 && !_isFeverTime) <-- 본래 조건문
         if (_colHitCount > 0 && !_isFeverTime)//테스트용
         {
-            Supply(hand);
+            Supply(type);
             _supplyCooldown = _refillCooldown;
         }
         if (_isPressed && !hand.isSpraying && hand.enabled && hand.triggerAction.action.WasPressedThisFrame())
         {
             if (_currentCor == null)
             {
-                _currentCor = SuppressingFire(hand);
+                _currentCor = SuppressingFire(type);
                 StartCoroutine(_currentCor);
             }
             hand.isSpraying = true;
         }
         if (hand.triggerAction.action.WasReleasedThisFrame())
         {
-            ResetSpray(hand);
+            ResetSpray(type);
         }
-        if (GameManager.Instance.CurrentPhase == GamePhase.Fever)
+    }
+    private void FeverTimeOn()
+    {
+        if (!_isFeverTime)
         {
-            if (!_isFeverTime)
-            {
-                _isFeverTime = true;
-                FeverTimeOn(hand);
-            }
+            _isFeverTime = true;
+            _damage *= 2;
+            _currentAmount = 100;
         }
     }
 
+    //CHM 변경 
     //private void Spray(HandData hand)
     //{
     //    _sprayStartPos = _sprayOrigin.transform.position;
@@ -117,50 +147,74 @@ public class FireSuppressantManager : MonoBehaviour
     //        hand.normalFireFX.Play();
     //    }
     //
-    //    if (Photon.Pun.PhotonNetwork.IsMasterClient)
+    //    // CHM: 마스터 클라이언트 체크 제거 - 각 클라이언트가 자신의 데미지 요청 처리
+    //    for (int i = 0; i < _fireHitCount; i++)
     //    {
-    //        for (int i = 0; i < _fireHitCount; i++)
+    //        var hit = _fireHits[i];
+    //        if (!_cacheds.TryGetValue(hit, out var cached))
     //        {
-    //            var hit = _fireHits[i];
-    //            if (!_cacheds.TryGetValue(hit, out var cached))
+    //            cached = hit.gameObject.GetComponent<IDamageable>();
+    //            if (!_cacheds.ContainsKey(hit) && cached != null)
     //            {
-    //                cached = hit.gameObject.GetComponent<IDamageable>();
-    //                if (!_cacheds.ContainsKey(hit) && cached != null)
-    //                {
-    //                    _cacheds[hit] = cached;
-    //                }
+    //                _cacheds[hit] = cached;
     //            }
-    //            cached?.TakeDamage(_damage);
     //        }
-    //    }
-    //}
-
-    //CHM 변경 
-    private void Spray(HandData hand)
+    //     }
+    //
+    //        // CHM: 네트워크 동기화를 위한 태우리 타입별 분기 처리 추가
+    private void Spray(EHandType type)
     {
+        var hand = GetHand(type);
         _sprayStartPos = _sprayOrigin.transform.position;
         _sprayEndPos = _sprayStartPos + (_sprayOrigin.forward * _sprayLength);
-    
+
         _fireHitCount = Physics.OverlapCapsuleNonAlloc(_sprayStartPos, _sprayEndPos, _sprayRadius, _fireHits, _fireMask);
         if (!hand.normalFireFX.isPlaying)
         {
             hand.normalFireFX.Play();
+            photonView.RPC("RPC_PlayNormalFX", RpcTarget.Others, type);
         }
-    
-        // CHM: 마스터 클라이언트 체크 제거 - 각 클라이언트가 자신의 데미지 요청 처리
+        photonView.RPC(nameof(RPC_RequestDamage), RpcTarget.MasterClient, _sprayStartPos, _sprayEndPos);
+        #region 포톤 마스터 클라이언트에게 요청 시키기 전
+        //if (Photon.Pun.PhotonNetwork.IsMasterClient)
+        //{
+        //    for (int i = 0; i < _fireHitCount; i++)
+        //    {
+        //        var hit = _fireHits[i];
+        //        if (!_cacheds.TryGetValue(hit, out var cached))
+        //        {
+        //            cached = hit.gameObject.GetComponent<IDamageable>();
+        //            if (!_cacheds.ContainsKey(hit) && cached != null)
+        //            {
+        //                _cacheds[hit] = cached;
+        //            }
+        //        }
+        //        cached?.TakeDamage(_damage);
+        //    }
+        //}
+        #endregion
+    }
+    [PunRPC]
+    private void RPC_RequestDamage(Vector3 start, Vector3 end, PhotonMessageInfo info)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+        _fireHitCount = Physics.OverlapCapsuleNonAlloc(start, end, _sprayRadius, _fireHits, _fireMask);
         for (int i = 0; i < _fireHitCount; i++)
         {
             var hit = _fireHits[i];
             if (!_cacheds.TryGetValue(hit, out var cached))
             {
                 cached = hit.gameObject.GetComponent<IDamageable>();
-                if (!_cacheds.ContainsKey(hit) && cached != null)
+                if (cached != null)
                 {
                     _cacheds[hit] = cached;
                 }
             }
-    
-            // CHM: 네트워크 동기화를 위한 태우리 타입별 분기 처리 추가
+            //_cacheds[hit]?.TakeDamage(_damage);
+            UnityEngine.Debug.Log("데미지 처리. 호출자: " + info.Sender);
             if (cached != null)
             {
                 // CHM: 태우리 타입인지 확인하고 네트워크 데미지 요청
@@ -185,41 +239,56 @@ public class FireSuppressantManager : MonoBehaviour
             }
         }
     }
-    private IEnumerator SuppressingFire(HandData hand)
+    [PunRPC]
+    private IEnumerator SuppressingFire(EHandType type)
     {
+        if (!photonView.IsMine)
+        {
+            yield break;
+        }
+        var hand = GetHand(type);
         if (!hand.initialFire && _currentAmount > 0)
         {
             hand.initialFireFX.Play();
+            photonView.RPC("RPC_PlayInitialFX", RpcTarget.Others, type);
             yield return _fireDelay;
             hand.initialFireFX.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            photonView.RPC("RPC_StopPlayFX", RpcTarget.Others, type);
             hand.initialFire = true;
         }
         while (hand.triggerAction.action.ReadValue<float>() > 0)
         {
             if (_currentAmount > 0)
             {
-                if (_currentAmount > 0 && !_isFeverTime)
+                if (!_isFeverTime)
                 {
                     _currentAmount -= _decreaseAmount;
                 }
-                Spray(hand);
+                Spray(type);
             }
             if (_currentAmount <= 0)
             {
                 if (hand.normalFireFX.isPlaying)
                 {
                     hand.normalFireFX.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                    photonView.RPC("RPC_StopPlayFX", RpcTarget.Others, type);
                 }
                 if (!hand.zeroAmountFireFX.isPlaying)
                 {
                     hand.zeroAmountFireFX.Play();
+                    photonView.RPC("RPC_PlayZeroAmountFX", RpcTarget.Others, type);
                 }
             }
             yield return _checkTime;
         }
     }
-    private void ResetSpray(HandData hand)
+    private void ResetSpray(EHandType type)
     {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+        var hand = GetHand(type);
         if (hand.normalFireFX.isPlaying)
         {
             hand.normalFireFX.Stop();
@@ -237,7 +306,7 @@ public class FireSuppressantManager : MonoBehaviour
         hand.initialFire = false;
         _currentCor = null;
     }
-    private void Supply(HandData hand)
+    private void Supply(EHandType type)
     {
         #region Instantiate ver
         //if (!_rightHand.enabled && !_leftHand.enabled)
@@ -255,13 +324,19 @@ public class FireSuppressantManager : MonoBehaviour
         //    Debug.Log("보급: 생성 및 할당");
         //}
         #endregion
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+        var hand = GetHand(type);
         if (!_rightHand.enabled && !_leftHand.enabled)
         {
             hand.modelPrefab.SetActive(true);
             hand.enabled = true;
             _sprayOrigin = hand.modelPrefab.transform.Find("SprayOrigin");
+            photonView.RPC("RPC_SetActiveModel", RpcTarget.Others);
         }
-        else if (_currentHand != hand)
+        else if (!hand.enabled)
         {
             _rightHand.modelPrefab.SetActive(false);
             _leftHand.modelPrefab.SetActive(false);
@@ -269,16 +344,24 @@ public class FireSuppressantManager : MonoBehaviour
             _leftHand.enabled = false;
             hand.modelPrefab.SetActive(true);
             hand.enabled = true;
-            _currentHand = hand;
         }
-        if (hand.enabled && _currentAmount < 600)
+        if (hand.enabled && _currentAmount < _maxAmount)
         {
             _currentAmount = _maxAmount;
         }
     }
-    private void FeverTimeOn(HandData hand)
+    public void DetachSuppressor()
     {
-        _damage *= 2;
+        if (_rightHand.enabled)
+        {
+            _rightHand.modelPrefab.SetActive(false);
+            _rightHand.enabled = false;
+        }
+        else if (_leftHand.enabled)
+        {
+            _leftHand.modelPrefab.SetActive(false);
+            _leftHand.enabled = false;
+        }
         _currentAmount = _maxAmount;
     }
     private void OnDrawGizmos()
@@ -287,6 +370,62 @@ public class FireSuppressantManager : MonoBehaviour
         DrawSprayRange(_rightHand);
     }
     public void SetAmountZero() => _currentAmount = 0;
+    [PunRPC]
+    private void RPC_PlayInitialFX(EHandType type)
+    {
+        var hand = GetHand(type);
+        hand.initialFireFX.Play();
+    }
+    [PunRPC]
+    private void RPC_PlayNormalFX(EHandType type)
+    {
+        var hand = GetHand(type);
+        hand.normalFireFX.Play();
+    }
+    [PunRPC]
+    private void RPC_PlayZeroAmountFX(EHandType type)
+    {
+        var hand = GetHand(type);
+        hand.zeroAmountFireFX.Play();
+    }
+    [PunRPC]
+    private void RPC_StopPlayFX(EHandType type)
+    {
+        var hand = GetHand(type);
+        if (hand.initialFireFX.isPlaying)
+        {
+            hand.initialFireFX.Stop();
+        }
+        if (hand.normalFireFX.isPlaying)
+        {
+            hand.normalFireFX.Stop();
+        }
+        if (hand.zeroAmountFireFX.isPlaying)
+        {
+            hand.zeroAmountFireFX.Stop();
+        }
+    }
+    [PunRPC]
+    private void RPC_SetActiveModel(EHandType type)
+    {
+        var hand = GetHand(type);
+        if (!hand.modelPrefab.activeSelf)
+        {
+            hand.modelPrefab.SetActive(true);
+        }
+    }
+    [PunRPC]
+    private void RPC_SetActiveModelFalse()
+    {
+        if (!_rightHand.enabled && _rightHand.modelPrefab.activeSelf)
+        {
+            _rightHand.modelPrefab.SetActive(false);
+        }
+        if (!_leftHand.enabled && _leftHand.modelPrefab.activeSelf)
+        {
+            _leftHand.modelPrefab.SetActive(false);
+        }
+    }
 
     private void DrawSprayRange(HandData hand)
     {

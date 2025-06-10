@@ -160,8 +160,7 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
             var playerSuppressor = FindObjectOfType<FireSuppressantManager>();
             if (playerSuppressor != null)
             {
-                playerSuppressor.SetAmountZero();
-            }
+                //playerSuppressor.SetAmountZero();
                 firstDeath = false;
         }
     }

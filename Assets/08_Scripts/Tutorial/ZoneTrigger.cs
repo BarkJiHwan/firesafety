@@ -11,7 +11,7 @@ public class ZoneTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.layer == playerLayer)
-        {
+        {            
             onEnter?.Invoke();
         }
     }

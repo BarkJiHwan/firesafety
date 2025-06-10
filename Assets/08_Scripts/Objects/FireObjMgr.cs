@@ -107,7 +107,7 @@ public class FireObjMgr : MonoBehaviour
             _forSeconds = new WaitForSeconds(_isBuringCoolTime);
             _isInBurningPhase = true;
         }
-        if (currentPhase == GamePhase.leaveDangerArea && !_hasLeaveDangerArea)
+        if (currentPhase == GamePhase.LeaveDangerArea && !_hasLeaveDangerArea)
         {
             Debug.Log("대피페이즈 돌입. 일단 게임 종료");
             StopCoroutine(ActivateTeawooriBurning());

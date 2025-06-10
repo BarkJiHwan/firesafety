@@ -36,6 +36,7 @@ public class FirePreventable : MonoBehaviour
     Renderer _renderer;
     PhotonView _view;
     XRSimpleInteractable _xrInteractable;
+    private bool _isXRinteract = true;
     public bool IsFirePreventable
     {
         get => _isFirePreventable;
@@ -47,15 +48,11 @@ public class FirePreventable : MonoBehaviour
         //CHM - XR 컴포넌트 가져오기
         _xrInteractable = GetComponent<XRSimpleInteractable>();
 
-        // 기존 selectEntered 이벤트
-        _xrInteractable.selectEntered.AddListener(EnterPrevention);
-
         //CHM - 소백이 상호작용 이벤트 자동 연결
         SetupSobaekInteraction();
 
         _view = GetComponent<PhotonView>();
-        _smokePrefab.SetActive(false);
-        _shieldPrefab.SetActive(false);
+        SetActivePrefab();
 
         // 예방 가능한 오브젝트에 새로운 Material 생성
         _renderer = GetComponent<Renderer>();
@@ -124,6 +121,11 @@ public class FirePreventable : MonoBehaviour
 
         if (currentPhase == GamePhase.Prevention)
         {
+            if(_isXRinteract)
+            {
+                _xrInteractable.selectEntered.AddListener(EnterPrevention);
+                _isXRinteract = false;
+            }
             // 예방 페이즈
             if (_isFirePreventable)
             {
@@ -136,10 +138,6 @@ public class FirePreventable : MonoBehaviour
                 SetFirePreventionPending();
             }
         }
-        else
-        {
-            _smokePrefab.SetActive(false);
-        }
 
         // 예방 페이즈가 아닐때 Material이 켜져 있으면 끄기
         if (GameManager.Instance.CurrentPhase != GamePhase.Prevention)
@@ -149,6 +147,11 @@ public class FirePreventable : MonoBehaviour
                 SetActiveOnMaterials(false);
             }
         }
+    }
+    public void SetActivePrefab()
+    {
+        _smokePrefab.SetActive(false);
+        _shieldPrefab.SetActive(false);
     }
 
     public void OnFirePreventionComplete()
