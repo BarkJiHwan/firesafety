@@ -261,6 +261,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7699982557037334562}
+  - component: {fileID: 2671582690616864560}
+  - component: {fileID: 2404228047667002900}
+  - component: {fileID: -451065029462939307}
   m_Layer: 0
   m_Name: OldWire
   m_TagString: Untagged
@@ -286,6 +289,68 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &2671582690616864560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7030125591678044824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe66b56a6f578bb40b95178d80bb876e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isBurning: 0
+  _spawnOffset: {x: 0, y: 0.1, z: 0}
+  _spawnRotation: {x: 0, y: 0, z: 0}
+--- !u!114 &2404228047667002900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7030125591678044824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c292c7e863b40249b6c9438a45907cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isFirePreventable: 0
+  _smokePrefab: {fileID: 1785776904012352, guid: 0c6dadad4eec3ef4c9d806c63041cf9e,
+    type: 3}
+  _shieldPrefab: {fileID: 6931219769576118933, guid: 17be3b380da08c94c89caa7d3d4dd821,
+    type: 3}
+  _data: {fileID: 11400000, guid: fae6ddd91d441ca41990de2287257988, type: 2}
+  _myType: 1
+  _smokeScale:
+    x: 0
+    y: 0
+    z: 0
+  _shieldRadius: 1
+  enableSobaekInteraction: 1
+--- !u!114 &-451065029462939307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7030125591678044824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &8927214778112840150
 GameObject:
   m_ObjectHideFlags: 0
