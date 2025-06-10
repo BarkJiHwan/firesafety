@@ -343,9 +343,9 @@ GameObject:
   - component: {fileID: 5013175709313231720}
   - component: {fileID: 272607512035187737}
   - component: {fileID: 2630616572504458877}
-  - component: {fileID: 4975564284859280079}
+  - component: {fileID: -3277553408064283153}
   m_Layer: 7
-  m_Name: Taeuri
+  m_Name: Taewoori (Tutorial)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -359,7 +359,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5681766003718697426}
   m_LocalRotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.5, z: 0}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -422,7 +422,7 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4975564284859280079
+--- !u!114 &-3277553408064283153
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -431,23 +431,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 5681766003718697426}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62625a5e96bc2ac48b276d4609089295, type: 3}
+  m_Script: {fileID: 11500000, guid: f11993361d201fc48b5f104b0075dc95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  currentHealth: 0
-  feverTimeExtraHealth: 50
+  currentHealth: 100
+  respawnCooltime: 3
+  firstDeath: 0
+  maxGreenBoost: 1
   targetParticleSystems:
   - {fileID: 8868607570557910279}
   - {fileID: 4307863798362769450}
-  maxGreenBoost: 1
-  throwForce: 1
-  upwardForce: 4
-  fireRadius: 2
-  useRandomDirection: 0
-  maxSmallTaewooriCount: 4
-  projectileCooldown: 5
-  spawnHeight: 0.5
 --- !u!1 &7254350412939266676
 GameObject:
   m_ObjectHideFlags: 0

@@ -103,6 +103,7 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
 
         GameManager.Instance.ResetGameTimer();
         Debug.Log("나 참가 " + PhotonNetwork.LocalPlayer + "Room : " + PhotonNetwork.CurrentRoom.Name);
+        TutorialDataMgr.Instance.StartTutorial();
     }
 
 

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Sobaek : MonoBehaviour
 {
@@ -11,9 +9,9 @@ public class Sobaek : MonoBehaviour
     #region 인스펙터 설정
     [Header("기본 위치 설정")]
     [SerializeField] private Transform player; // VR 카메라 또는 플레이어 Transform
-    [SerializeField] private float offsetDistance = 1.5f; // 플레이어와의 좌우 거리 (X축)
-    [SerializeField] private float offsetHeight = 0.5f; // 플레이어 어깨 높이 (Y축)
-    [SerializeField] private float offsetForward = 0.5f; // 플레이어 앞뒤 거리 (Z축, + = 앞쪽, - = 뒤쪽)
+    [SerializeField] private float offsetX = 1.5f; // 플레이어와의 좌우 거리 (X축)
+    [SerializeField] private float offsetY = 0.5f; // 플레이어 어깨 높이 (Y축)
+    [SerializeField] private float offsetZ = 0.5f; // 플레이어 앞뒤 거리 (Z축, + = 앞쪽, - = 뒤쪽)
     [SerializeField] private bool stayOnRightSide = true; // 오른쪽에 고정
 
     [Header("둥둥 떠다니기 효과")]
@@ -50,7 +48,7 @@ public class Sobaek : MonoBehaviour
             Instance = this;
         }
         else
-        {           
+        {
             Destroy(gameObject);
             return;
         }
@@ -117,13 +115,13 @@ public class Sobaek : MonoBehaviour
             return;
 
         // 좌우 방향 (X축)
-        Vector3 rightDirection = player.right * (stayOnRightSide ? offsetDistance : -offsetDistance);
+        Vector3 rightDirection = player.right * (stayOnRightSide ? offsetX : -offsetX);
 
         // 앞뒤 방향 (Z축)
-        Vector3 forwardDirection = player.forward * offsetForward;
+        Vector3 forwardDirection = player.forward * offsetZ;
 
         // 최종 홈 포지션 = 플레이어 위치 + 좌우오프셋 + 앞뒤오프셋 + 높이오프셋
-        homePosition = player.position + rightDirection + forwardDirection + Vector3.up * offsetHeight;
+        homePosition = player.position + rightDirection + forwardDirection + Vector3.up * offsetY;
     }
 
     /// <summary>
@@ -155,7 +153,7 @@ public class Sobaek : MonoBehaviour
         {
             isInteracting = false;
             SetHomePosition();
-            basePosition = homePosition;           
+            basePosition = homePosition;
         }
     }
 
@@ -220,7 +218,7 @@ public class Sobaek : MonoBehaviour
     public void MoveToInteractionTarget(Transform target)
     {
         if (!enableInteractionMovement || target == null)
-        {            
+        {
             return;
         }
 
@@ -233,9 +231,9 @@ public class Sobaek : MonoBehaviour
 
         interactionTarget = target.position + directionFromTarget * interactionOffset;
         isInteracting = true;
-                
+
     }
- 
+
 
     /// <summary>
     /// 소백이 원래 위치로 돌아가는 함수
@@ -246,7 +244,7 @@ public class Sobaek : MonoBehaviour
             return;
 
         isInteracting = false;
-        
+
     }
 
     /// <summary>
@@ -259,7 +257,7 @@ public class Sobaek : MonoBehaviour
         {
             StopInteraction();
         }
-        
+
     }
     #endregion
 
@@ -292,10 +290,10 @@ public class Sobaek : MonoBehaviour
 
     public void SetAllOffsets(float distance, float forward, float height)
     {
-        offsetDistance = Mathf.Clamp(distance, 0.5f, 5f);
-        offsetForward = Mathf.Clamp(forward, -3f, 3f);
-        offsetHeight = Mathf.Clamp(height, -1f, 3f);
+        offsetX = Mathf.Clamp(distance, 0.5f, 5f);
+        offsetZ = Mathf.Clamp(forward, -3f, 3f);
+        offsetY = Mathf.Clamp(height, -1f, 3f);
     }
     #endregion
-   
+
 }
