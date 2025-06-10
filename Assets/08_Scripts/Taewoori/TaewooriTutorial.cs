@@ -162,6 +162,7 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
             {
                 //playerSuppressor.SetAmountZero();
                 firstDeath = false;
+            }
         }
     }
 
