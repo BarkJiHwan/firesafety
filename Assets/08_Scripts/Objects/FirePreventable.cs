@@ -45,9 +45,11 @@ public class FirePreventable : MonoBehaviour
 
     private void Start()
     {
+        ApplySmokeSettings();
+        ApplyShieldSettings();
         //CHM - XR 컴포넌트 가져오기
         _xrInteractable = GetComponent<XRSimpleInteractable>();
-
+        
         //CHM - 소백이 상호작용 이벤트 자동 연결
         SetupSobaekInteraction();
 
@@ -113,9 +115,6 @@ public class FirePreventable : MonoBehaviour
 
     void Update()
     {
-        ApplySmokeSettings();
-        ApplyShieldSettings();
-
         // 페이즈 확인
         var currentPhase = GameManager.Instance.CurrentPhase;
 
@@ -167,11 +166,18 @@ public class FirePreventable : MonoBehaviour
     }
 
     //스모크 사이즈 셋팅
-    private void ApplySmokeSettings() => _smokePrefab.transform.localScale =
-            new Vector3(_smokeScale.x, _smokeScale.y, _smokeScale.z);
+    private void ApplySmokeSettings()
+    {
+        _smokePrefab = Instantiate(_smokePrefab, transform.position, transform.rotation);
+        _smokePrefab.transform.parent = transform;
+        _smokePrefab.transform.localScale = new Vector3(_smokeScale.x, _smokeScale.y, _smokeScale.z);
+        _smokePrefab.transform.position = transform.position;
+    }
     //쉴드 사이즈 셋팅
     private void ApplyShieldSettings()
     {
+        _shieldPrefab = Instantiate(_shieldPrefab, transform.position, transform.rotation);
+        _shieldPrefab.transform.parent = transform;
         float diameter = _shieldRadius;
 
         _shieldPrefab.transform.localScale =
