@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8629489149276309412}
   - component: {fileID: 6724643533899892429}
   - component: {fileID: 2034464437302606466}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sobaek.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 6201212515823244601}
   - component: {fileID: 67287062111588163}
   - component: {fileID: -8431423380906028267}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sobaek
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -151,12 +151,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 8646238192673766983, guid: 7e954d8e794a74313a4846a6181fdc67, type: 3}
-  offsetDistance: 0.5
-  offsetHeight: 0
-  offsetForward: 1
+  offsetX: 0.3
+  offsetY: 0
+  offsetZ: 0.7
   stayOnRightSide: 1
-  floatAmplitude: 0.2
-  floatSpeed: 2
+  floatAmplitude: 0.1
+  floatSpeed: 1
   lookAtSpeed: 3
   enableInteractionMovement: 1
   interactionMoveSpeed: 5

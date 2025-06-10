@@ -4,16 +4,16 @@ using UnityEngine;
 
 public enum PreventType
 {
+    ElectricBlanket,
     OldWire,
     HairDryer,
     PowerBank,
-    WashingMachine,
-    ElectricKettle,
     Microwave,
+    ElectricKettle,
     Iron,
     PowerStrip,
-    FluorescentLight,
-    ElectricBlanket
+    PortableGasStove,
+    Asyrtay
 }
 [System.Serializable]
 public class SafetyItem

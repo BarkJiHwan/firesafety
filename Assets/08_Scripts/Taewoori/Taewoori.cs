@@ -242,29 +242,46 @@ public class Taewoori : BaseTaewoori
 
     #region 사망 처리
     /// <summary>
-    /// 태우리 사망 처리 - 마스터는 이벤트 발생 및 네트워크 동기화, 클라이언트는 풀 반환만
+    /// 태우리 사망 처리 - 생존시간 기록, 처치 점수, 네트워크 동기화, 리스폰 처리
     /// </summary>
     public override void Die()
     {
-        if (_isDead)
+        if (_isDead) // isDead 대신 _isDead 사용
             return;
 
-        _isDead = true;
-        isDead = true;
+        _isDead = true; // _isDead 사용
 
-        // 마스터만 이벤트 발생 및 네트워크 동기화
+        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "마스터" : "클라이언트")}] 태우리 {networkID} 사망");
+
+        // 마스터만 실제 로직 처리
         if (PhotonNetwork.IsMasterClient && !isClientOnly)
         {
-            OnTaewooriDestroyed?.Invoke(this, sourceFireObj);
+            // 1. 처치자 ID 가져오기
+            int killerID = GetLastAttackerID();
 
-            // 네트워크로 파괴 알림
-            if (manager != null && networkID != -1)
+            // 2. 생존시간 및 처치 기록 (매니저에 직접 기록)
+            if (manager != null && killerID != -1)
+            {
+                ((TaewooriPoolManager)manager).UpdateSurvivalTimeAndRecordKill(networkID, killerID);
+                Debug.Log($"[마스터] 태우리 {networkID} 처치자 {killerID} 기록 완료");
+            }
+            else if (killerID == -1)
+            {
+                Debug.LogWarning($"[마스터] 태우리 {networkID} 처치자 정보 없음!");
+            }
+
+            // 3. 네트워크로 파괴 알림
+            if (manager != null)
             {
                 ((TaewooriPoolManager)manager).SyncTaewooriDestroy(networkID);
+                Debug.Log($"[마스터] 태우리 {networkID} 파괴 동기화 전송");
             }
+
+            // 4. 이벤트 발생 (리스폰 처리용) - sourceFireObj 사용
+            OnTaewooriDestroyed?.Invoke(this, sourceFireObj);
         }
 
-        // 풀로 반환
+        // 5. 풀로 반환 (마스터/클라이언트 공통)
         if (manager != null)
         {
             manager.ReturnTaewooriToPool(gameObject);
@@ -283,8 +300,9 @@ public class Taewoori : BaseTaewoori
         if (PhotonNetwork.IsMasterClient || !isClientOnly)
             return;
 
-        _isDead = true;
-        isDead = true;
+        Debug.Log($"[클라이언트] 태우리 {networkID} 네트워크 파괴 받음");
+
+        _isDead = true; // _isDead 사용
 
         // 클라이언트는 풀로만 반환
         if (manager != null)
@@ -295,6 +313,31 @@ public class Taewoori : BaseTaewoori
         {
             Destroy(gameObject);
         }
+    }
+
+    /// <summary>
+    /// 마지막 공격자 ID 가져오기 - BaseTaewoori의 lastAttackerID 사용
+    /// </summary>
+    private int GetLastAttackerID()
+    {
+        // BaseTaewoori에 lastAttackerID 변수가 있다면 사용
+        // return lastAttackerID;
+
+        // 임시: 랜덤 플레이어 ID 반환 (테스트용)
+        if (PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.PlayerCount > 0)
+        {
+            var players = PhotonNetwork.CurrentRoom.Players;
+            var playerArray = new int[players.Count];
+            int index = 0;
+            foreach (var player in players.Values)
+            {
+                playerArray[index++] = player.ActorNumber;
+            }
+            return playerArray[UnityEngine.Random.Range(0, playerArray.Length)];
+        }
+
+        Debug.LogWarning("GetLastAttackerID() - 플레이어 정보 없음!");
+        return -1;
     }
     #endregion
 }
