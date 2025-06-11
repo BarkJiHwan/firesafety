@@ -150,32 +150,32 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     public bool IsSurvivalTracking => isSurvivalTracking;
 
     /// <summary>
-    /// 플레이어별 태우리 처치 점수 조회
+    /// 플레이어별 태우리 처치 점수 조회 어떤 플레이어가 태우리 잡은 횟수보고 점수계산되서 담겨있음 (차연우씨 이거 플레이어 개별점수임)
     /// </summary>
     public int GetPlayerKillScore(int playerID) => playerKillScores.GetValueOrDefault(playerID, 0);
 
     /// <summary>
-    /// 플레이어별 태우리 처치 횟수 조회
+    /// 플레이어별 태우리 처치 횟수 조회 어떤 플레이어가 몇마리 잡았는지 알수있음 
     /// </summary>
     public int GetPlayerKillCount(int playerID) => playerTaewooriKills.GetValueOrDefault(playerID, 0);
 
     /// <summary>
-    /// 전체 처치된 태우리 수 (팀원용 프로퍼티)
+    /// 전체 처치된 태우리 수
     /// </summary>
     public int TotalTaewooriKilled => totalTaewooriKilled;
 
     /// <summary>
-    /// 모든 플레이어의 처치 정보 딕셔너리 (팀원용 프로퍼티)
+    /// 모든 플레이어의 태우리 잡은 횟수 담겨있음
     /// </summary>
     public Dictionary<int, int> AllPlayerKillCounts => new Dictionary<int, int>(playerTaewooriKills);
 
     /// <summary>
-    /// 모든 플레이어의 처치 점수 딕셔너리 (팀원용 프로퍼티)
+    /// 모든 플레이어의 처치된 점수 계산되서 담겨있음
     /// </summary>
     public Dictionary<int, int> AllPlayerKillScores => new Dictionary<int, int>(playerKillScores);
 
     /// <summary>
-    /// 게임 종합 점수 정보 (팀원용 프로퍼티)
+    /// 게임 종합 점수 정보 
     /// </summary>
     public GameScoreInfo CurrentGameScore => gameScoreInfo;
     #endregion
