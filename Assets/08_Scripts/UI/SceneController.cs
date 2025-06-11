@@ -7,8 +7,8 @@ using UnityEngine.SceneManagement;
 public enum SceneType
 {
     MainScene,
-    SelectCharacterScene,
     SceneChooseScene,
+    SelectCharacterScene,
     Tutorial,
     IngameScene_Fire,
     IngameScene_Evacuation

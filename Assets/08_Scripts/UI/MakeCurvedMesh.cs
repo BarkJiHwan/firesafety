@@ -127,7 +127,7 @@ public class MakeCurvedMesh : MonoBehaviour
             canvas.transform.localScale = Vector3.one * scaleFactor;
 
             renderTextureCam.orthographicSize = othoSize * worldHeight * baseOrthoSize;
-            Debug.Log(renderTextureCam.orthographicSize);
+            //Debug.Log(renderTextureCam.orthographicSize);
         }
 
         //transform.position += new Vector3(0, 0.9f, 0);

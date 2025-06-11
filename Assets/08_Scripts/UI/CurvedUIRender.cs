@@ -46,7 +46,9 @@ public class CurvedUIRender : MonoBehaviour
         if(meshSurface != null)
         {
             var mr = meshSurface.GetComponent<MeshRenderer>();
-            var mat = new Material(curvedUIMaterial);
+            //var mat = new Material(curvedUIMaterial);
+            mr.material = curvedUIMaterial;
+            var mat = mr.material;
             //var mat = new Material(Shader.Find("Unlit/Transparent"));
             //mat.mainTexture = outputTexture;
             mat.SetTexture("_MainTex", outputTexture);
