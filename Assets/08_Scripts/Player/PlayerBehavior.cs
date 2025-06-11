@@ -11,8 +11,10 @@ public class PlayerBehavior : MonoBehaviour
     private bool isMoving;
 
     public XROrigin playerOrigin;
-    public Camera playerCam;
     public PhotonView photonView;
+
+    private Camera playerCam;
+    private GameObject playerCamOffset;
 
     //CHM - 소백이 관련
     [SerializeField] private GameObject sobaekPrefab;
@@ -25,6 +27,9 @@ public class PlayerBehavior : MonoBehaviour
     // 내꺼 아니면 스크립트 자동으로 꺼지게하기
     private void Awake()
     {
+        playerCam = playerOrigin.Camera;
+        playerCamOffset = playerOrigin.CameraFloorOffsetObject;
+
         if (!photonView.IsMine)
         {
             this.enabled = false;
@@ -59,7 +64,7 @@ public class PlayerBehavior : MonoBehaviour
     private void CreateSobaek()
     {
         if (sobaekPrefab == null)
-        {            
+        {
             return;
         }
 
@@ -69,14 +74,14 @@ public class PlayerBehavior : MonoBehaviour
         if (sobaekScript != null)
         {
             // 플레이어 카메라 설정
-            sobaekScript.Player = playerCam.transform;            
+            sobaekScript.Player = playerCam.transform;
         }
         else
-        {            
+        {
             Destroy(sobaekInstance);
         }
     }
-   
+
 
     //CHM - 플레이어 파괴시 소백이도 같이 파괴
     private void OnDestroy()
@@ -94,6 +99,15 @@ public class PlayerBehavior : MonoBehaviour
         Vector3 updatedRot = new Vector3(currentRot.x, playerCamRot.y, currentRot.z);
 
         gameObject.transform.rotation = Quaternion.Euler(updatedRot);
-        gameObject.transform.position = playerOrigin.transform.position;
+
+        if (playerOrigin.RequestedTrackingOriginMode == XROrigin.TrackingOriginMode.Floor)
+        {
+            Vector3 currentFloorPos = playerCam.transform.position - playerCamOffset.transform.position;
+            gameObject.transform.position = currentFloorPos;
+        }
+        else
+        {
+            gameObject.transform.position = playerOrigin.transform.position;
+        }
     }
 }
