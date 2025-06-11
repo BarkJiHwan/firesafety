@@ -90,9 +90,15 @@ public class ObjectUICtrl : MonoBehaviour
         transform.position = originPosition + basicPos;
 
         Vector3 targetForward = target.transform.forward;
+        targetForward.y = 0;
+        targetForward.Normalize();
+
         Vector3 camDir = Camera.main.transform.position - target.transform.position;
+        //camDir.y = 0;
+        //camDir.Normalize();
+
         float dot = Vector3.Dot(targetForward, camDir);
-        if(dot > 0)
+        if (dot > 0)
         {
             transform.forward = -targetForward;
         }
@@ -101,8 +107,27 @@ public class ObjectUICtrl : MonoBehaviour
             transform.forward = targetForward;
         }
 
+        Vector3 canvasForward = transform.forward;
+        Vector3 toCam = (Camera.main.transform.position - transform.position).normalized;
 
-        if (IsUIBlocked())
+        float dots = Vector3.Dot(canvasForward, toCam);
+        if (dots > 0)
+        {
+            transform.Rotate(0, 180, 0);
+        }
+
+        if (currentPrevent.MyType == PreventType.ElectricKettle)
+        {
+            transform.position = originPosition + basicPos;
+            transform.Rotate(0, 0, 0);
+        }
+
+        else if(currentPrevent.MyType == PreventType.OldWire)
+        {
+            transform.position = originPosition + new Vector3(0, 0, 1);
+        }
+
+        else if (IsUIBlocked())
         {
             MoveUIPosition(originPosition);
         }

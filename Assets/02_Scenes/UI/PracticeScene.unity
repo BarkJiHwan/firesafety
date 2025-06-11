@@ -453,13 +453,18 @@ PrefabInstance:
     - target: {fileID: 3730916225136171698, guid: f083486cb0f046249947a496ebbff5b9,
         type: 3}
       propertyPath: isFullScreenButton
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3730916226655663049, guid: f083486cb0f046249947a496ebbff5b9,
         type: 3}
       propertyPath: canvas
       value: 
       objectReference: {fileID: 586744088}
+    - target: {fileID: 3730916226655663049, guid: f083486cb0f046249947a496ebbff5b9,
+        type: 3}
+      propertyPath: isPlayerMove
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3730916226655663094, guid: f083486cb0f046249947a496ebbff5b9,
         type: 3}
       propertyPath: m_RootOrder
@@ -842,7 +847,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scorePanel: {fileID: 1605826676}
   showScoreTime: 10
-  restSecondText: {fileID: 0}
+  restSecondText: {fileID: 2046147515}
 --- !u!1 &586870758
 GameObject:
   m_ObjectHideFlags: 0
@@ -2290,10 +2295,10 @@ MonoBehaviour:
   outlineImage: {fileID: 1200257124}
   charcaterImage: {fileID: 1237796297}
   scoreItems:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1264606962}
+  - {fileID: 718675055}
+  - {fileID: 1558351276}
+  - {fileID: 1972793829}
   scoreItemsText:
   - "\uC608\uBC29 \uAC1C\uC218"
   - "\uC608\uBC29 \uC644\uB8CC\uAE4C\uC9C0 \uAC78\uB9B0 \uC2DC\uAC04"

@@ -7,6 +7,7 @@ public class CanvasMeshRootCtrl : MonoBehaviour
     [SerializeField] GameObject canvas;
     [SerializeField] GameObject curvedMesh;
     [SerializeField] float angleThreshold = 30f;
+    [SerializeField] bool isPlayerMove;
 
     Transform xrCam;
     MakeCurvedMesh curvedManager;
@@ -55,7 +56,14 @@ public class CanvasMeshRootCtrl : MonoBehaviour
         Vector3 rotatedOffset = rot * curvedManager.xrRigCurvedMeshDist;
 
         Vector3 pos = xrCam.position + new Vector3(rotatedOffset.x, 0, rotatedOffset.z);
-        pos.y = 0;
+        if(isPlayerMove == false)
+        {
+            pos.y = 0;
+        }
+        else
+        {
+            pos.y -= 0.5f;
+        }
         transform.position = pos;
         transform.rotation = rot;
     }

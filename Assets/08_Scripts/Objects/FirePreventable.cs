@@ -43,6 +43,11 @@ public class FirePreventable : MonoBehaviour
         set => _isFirePreventable = value;
     }
 
+    public PreventType MyType
+    {
+        get => _myType;
+    }
+
     private void Start()
     {
         ApplySmokeSettings();
