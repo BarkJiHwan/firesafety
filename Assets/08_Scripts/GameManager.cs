@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
 
     [field: SerializeField]
     public float GameTimer { get; private set; } = 0f;
-    public GamePhase CurrentPhase { get; private set; } = GamePhase.Waiting;
+    public GamePhase CurrentPhase { get; set; } = GamePhase.Waiting;
     public bool IsGameStart { get => _isGameStart; set => _isGameStart = value; }
 
     public event Action OnGameEnd;

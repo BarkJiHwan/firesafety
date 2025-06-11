@@ -799,6 +799,21 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.11
       objectReference: {fileID: 0}
+    - target: {fileID: 805607748029534605, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: _spawnOffset.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 805607748029534605, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: _spawnOffset.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 805607748029534605, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: _spawnOffset.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 996968631051024247, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
       propertyPath: m_LocalPosition.y
@@ -807,6 +822,21 @@ PrefabInstance:
     - target: {fileID: 996968631676811796, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1015063990888135571, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: _spawnOffset.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1015063990888135571, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: _spawnOffset.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1015063990888135571, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: _spawnOffset.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1134394514699667457, guid: bcc073301b2c04454a03d6cb68c3a7dd,
@@ -868,6 +898,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Radius
       value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1535460424704291809, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: _spawnOffset.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1535460424704291809, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: _spawnOffset.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1535460424704291809, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: _spawnOffset.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1819361708237454474, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
@@ -1044,6 +1089,21 @@ PrefabInstance:
       propertyPath: _firePreventables.Array.data[0]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 4942500941754224011, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: _spawnOffset.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4942500941754224011, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: _spawnOffset.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4942500941754224011, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: _spawnOffset.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5307784485573316849, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
       propertyPath: _smokeScale.x
@@ -1204,6 +1264,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6786902567907350213, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: _spawnOffset.y
+      value: -0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 6803969403098873861, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
       propertyPath: sceneViewId
@@ -1218,6 +1283,21 @@ PrefabInstance:
         type: 3}
       propertyPath: sceneViewId
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7255801292171070723, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: _spawnOffset.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7255801292171070723, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: _spawnOffset.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7255801292171070723, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: _spawnOffset.z
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 7299426883909125000, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
@@ -1369,7 +1449,8 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 9
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6786902567907350213, guid: bcc073301b2c04454a03d6cb68c3a7dd, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bcc073301b2c04454a03d6cb68c3a7dd, type: 3}
 --- !u!1 &1701025119
 GameObject:
