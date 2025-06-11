@@ -16,8 +16,9 @@ public class TutorialMgr : MonoBehaviourPun
     private GameObject _currentMonster;
     private GameObject _extinguisher;
 
-    [PunRPC]
-    void StartGameCountdown() => StartCoroutine(CountdownRoutine());
+    private Coroutine _countdownCoroutine;
+   
+
     void Start()
     {
         if (!photonView.IsMine)
@@ -27,7 +28,7 @@ public class TutorialMgr : MonoBehaviourPun
         _myData = TutorialDataMgr.Instance.GetPlayerData(_playerIndex);
         SetTutorialPhase();
         ObjectActiveFalse();
-        StartGameCountdown();
+        _countdownCoroutine = StartCoroutine(CountdownRoutine());
     }
     public void SetTutorialPhase()
     {
@@ -49,13 +50,12 @@ public class TutorialMgr : MonoBehaviourPun
         float timer = 3f;
         while (timer > 0f)
         {
-            //UI에 타이머 연결 현제 관련 내용 기획에 없음
-            //photonView.RPC("UpdateCountdown", RpcTarget.All, timer);
             timer -= Time.deltaTime;
             yield return null;
         }
-        Debug.Log("이제 게임 시작할게요?");
+        Debug.Log("튜토리얼 시작");
         StartCoroutine(TutorialRoutine());
+        StartCoroutine(StopTutoria());
     }
     private IEnumerator TutorialRoutine()
     {
@@ -80,8 +80,14 @@ public class TutorialMgr : MonoBehaviourPun
     // 1. 이동 페이즈
     private IEnumerator HandleMovementPhase()
     {
-        _zone.SetActive(true);
+        //사운드가 끝나면 시작합니다.
+        //이 부분에 Tutorial_NAR_001이 종료 될 때 까지 기다렸다 시작하면 됨
 
+        //튜토리얼 시작 트리거
+        TutorialDataMgr.Instance.IsStartTutorial = true;
+
+        _zone.SetActive(true);
+        //이 부분에서 Tutorial_NAR_002 실행하면 됨
         bool completed = false;
         var trigger = _zone.GetComponent<ZoneTrigger>();
         if (trigger == null)
@@ -91,24 +97,23 @@ public class TutorialMgr : MonoBehaviourPun
 
         trigger.onEnter += () =>
         {
+            //TUT_SND_001 미션 클리어 사운드 실행
+            //Tutorial_NAR_002번 나레이션 종료
             completed = true;
             Destroy(_zone);
-            Debug.Log("이동 완료!");
+            Debug.Log("이동 튜토리얼 완료");
         };
 
         yield return new WaitUntil(() => completed);
+        //Tutorial_NAR_003번 나레이션 실행 : 잘했어요!
     }
 
     // 2. 상호작용 페이즈
     private IEnumerator HandleInteractionPhase()
     {
-        float timer = 3f;
-        while (timer > 0f)
-        {
-            // Debug.Log($"다음 튜토리얼 준비까지: {timer:F1}초");
-            timer -= Time.deltaTime;
-            yield return null;
-        }
+        //Tutorial_NAR_003번 나레이션이 끝난 것을 확인하고
+        //Tutorial_NAR_004번 나레이션 실행
+
         var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
         var preventable = interactObj.GetComponent<FirePreventable>();
         preventable.SetFirePreventionPending();
@@ -116,26 +121,23 @@ public class TutorialMgr : MonoBehaviourPun
         bool completed = false;
         interactable.selectEntered.AddListener(tutorialSelect =>
         {
+            //Tutorial_NAR_004번 나레이션 종료
+            //TUT_SND_001 미션 클리어 사운드 실행
             completed = true;
-            Debug.Log("상호작용 성공!");
+            Debug.Log("상호작용 튜토리얼 완료");
+            //Tutorial_NAR_005번 나레이션 실행 : 멋져요!
             preventable.OnFirePreventionComplete();
         });
-
         yield return new WaitUntil(() => completed);
         interactable.selectEntered.RemoveAllListeners();
-        timer = 3f;
-        while (timer > 0f)
-        {
-            Debug.Log($"다음 튜토리얼 준비까지: {timer:F1}초");
-            timer -= Time.deltaTime;
-            yield return null;
-        }
         preventable.SetActivePrefab();
     }
 
     // 3. 전투 페이즈
     private IEnumerator HandleCombatPhase()
     {
+        //Tutorial_NAR_005번 나레이션이 끝난 것을 확인하고
+        //Tutorial_NAR_006번 나레이션 실행
         _currentMonster.SetActive(true);
         _extinguisher.SetActive(true);
 
@@ -148,13 +150,40 @@ public class TutorialMgr : MonoBehaviourPun
 
         // 3. 체력 0 될 때까지 폴링
         yield return new WaitUntil(() => tutorial.currentHealth <= 0);
+        //Tutorial_NAR_006번 나레이션이 켜져 있으면 종료
+        //Tutorial_NAR_007번 나레이션 실행
 
-        // 4. 완료 처리
-        _currentMonster.SetActive(false);
-        _extinguisher.SetActive(false);
-        TutorialDataMgr.Instance.IsTutorialComplete();
-        Debug.Log("튜토리얼 완료");
+        //소화기 상호작용 완료까지 대기하기.
+        //완료 되면
+        //Tutorial_NAR_007번 나레이션 종료
+        //TUT_SND_001 미션 클리어 사운드 실행        
+        _currentMonster.SetActive(false); //태우리 끄기
+        _extinguisher.SetActive(false); //소화기 끄기
+        //준비 완료
+        Debug.Log("모든 튜토리얼 완료");
+        TutorialDataMgr.Instance.StopTutorialRoutine();
         Hashtable props = new Hashtable() { { "IsReady", true } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+
+        //Tutorial_NAR_008번 나레이션 실행
+        //8번 나레이션이 종료 될때 까지 잠깐 대기
+
+        if(PhotonNetwork.PlayerList.Count() > 1)
+        {
+            //8번 나래이션 끝나면 9번 나래이션 실행 : 아직 안끝난 친구를 기다려!
+        }
+        //Tutorial_NAR_010번 나레이션 실행
+    }
+
+    private IEnumerator StopTutoria()
+    {
+        yield return new WaitUntil(() => TutorialDataMgr.Instance.IsTutorialFailed);
+        StopCoroutine(_countdownCoroutine);
+        ObjectActiveFalse();
+
+        Hashtable props = new Hashtable() { { "IsReady", true } };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+
+        //11번 나레이션 실행 : 아쉽지만 어쩌구...
     }
 }
