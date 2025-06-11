@@ -34,6 +34,8 @@ public class FirePreventable : MonoBehaviour
     [SerializeField] private bool enableSobaekInteraction = true; // 소백이 상호작용 활성화
 
     Renderer _renderer;
+    Material[] originMats;
+
     PhotonView _view;
     XRSimpleInteractable _xrInteractable;
     private bool _isXRinteract = true;
@@ -48,6 +50,8 @@ public class FirePreventable : MonoBehaviour
         get => _myType;
     }
 
+    public FirePreventableObject fireObject { get; set; }
+
     private void Start()
     {
         ApplySmokeSettings();
@@ -61,13 +65,12 @@ public class FirePreventable : MonoBehaviour
         _view = GetComponent<PhotonView>();
         SetActivePrefab();
 
-        // 예방 가능한 오브젝트에 새로운 Material 생성
-        _renderer = GetComponent<Renderer>();
-        Material[] arrMat = new Material[2];
-        arrMat[0] = Resources.Load<Material>("Materials/OutlineMat");
-        arrMat[1] = Resources.Load<Material>("Materials/OriginMat");
-        _renderer.materials = arrMat;
-        SetActiveOnMaterials(false);
+        ChangeMaterial(gameObject);
+        // 자식이 있으면 자식까지 반복해야 함
+        if (transform.childCount > 0 && transform.GetChild(0).gameObject.activeSelf == true)
+        {
+            ChangeMaterial(transform.GetChild(0).gameObject);
+        }
     }
 
     //CHM - 소백이 상호작용 자동 설정 (싱글톤 방식으로 수정)
@@ -218,7 +221,11 @@ public class FirePreventable : MonoBehaviour
     {
         foreach (var mat in _renderer.materials)
         {
-            mat.SetFloat("_isNearPlayer", isActive ? 1f : 0f);
+            if(mat.HasProperty("_isNearPlayer"))
+            {
+                Debug.Log(mat.GetFloat("_isNearPlayer"));
+                mat.SetFloat("_isNearPlayer", isActive ? 1f : 0f);
+            }
         }
     }
 
@@ -242,15 +249,53 @@ public class FirePreventable : MonoBehaviour
         bool isActive = false;
         foreach (var mat in _renderer.materials)
         {
-            activeNum = mat.GetFloat("_isNearPlayer");
-            // 체크표시가 켜져있으면
-            if (activeNum == 1)
+            if(mat.HasProperty("_isNearPlayer"))
             {
-                isActive = true;
-                break;
+                activeNum = mat.GetFloat("_isNearPlayer");
+                // 체크표시가 켜져있으면
+                if (activeNum == 1)
+                {
+                    isActive = true;
+                    break;
+                }
             }
         }
         return isActive;
+    }
+
+    public void ChangeMaterial(GameObject obj)
+    {
+        _renderer = obj.GetComponent<Renderer>();
+        // 예방 가능한 오브젝트에 새로운 Material(아웃라인, 빛나는 거) 생성
+        Material[] arrMat = new Material[2];
+        arrMat[0] = Resources.Load<Material>("Materials/OutlineMat");
+        arrMat[1] = Resources.Load<Material>("Materials/OriginMat");
+        // 기존의 메테리얼
+        originMats = new Material[_renderer.materials.Length];
+        originMats = _renderer.materials;
+        Texture baseTexture;
+        // BaseMap이 있는 Material이면 Texture 받아오기
+        foreach (Material originMat in originMats)
+        {
+            baseTexture = originMat.GetTexture("_BaseMap");
+            if (baseTexture != null)
+            {
+                arrMat[1].SetTexture("_PreventTexture", baseTexture);
+            }
+        }
+        // _myType이 OldWire와 PowerStrip이 아니면 실행
+        if (_myType != PreventType.OldWire && _myType != PreventType.PowerStrip)
+        {
+            _renderer.materials = arrMat;
+            SetActiveOnMaterials(false);
+        }
+    }
+
+    public void MakeExceptPreventObject()
+    {
+        // 밑에 것은 플레이어가 시야 안으로 들어오면 실행
+        // OldWire면 기존 Material을 지우고 추가
+        // Powerstrip은 기존 메테리얼 중 63(두번째 거) 하나만 냅두고 추가
     }
 
     [PunRPC]

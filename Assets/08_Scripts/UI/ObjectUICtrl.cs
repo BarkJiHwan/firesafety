@@ -51,7 +51,7 @@ public class ObjectUICtrl : MonoBehaviour
         // 아이콘 비활성화
         iconImg.gameObject.SetActive(false);
         // 오브젝트 위에 떠야 하는 UI 기본 위치
-        basicPos = new Vector3(0, 0.5f, 0);
+        basicPos = new Vector3(0, uiPos, 0);
     }
 
     void Update()
@@ -187,7 +187,7 @@ public class ObjectUICtrl : MonoBehaviour
         List<Vector3> candidatePos = new List<Vector3>
         {
             originPos + new Vector3(uiPos * 2, 0, 0),
-            originPos + new Vector3(0, -uiPos, 0),
+            originPos + new Vector3(0, -uiPos / 2, 0),
             originPos + new Vector3(-uiPos * 2, 0, 0),
             //originPos + new Vector3(0, 0, 1),
             //originPos + new Vector3(0, 0, -1)

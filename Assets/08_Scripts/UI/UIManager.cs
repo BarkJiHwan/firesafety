@@ -31,8 +31,10 @@ public class UIManager : MonoBehaviour
                     isHaveChild = true;
                 }
             }
-            // 자식 있는 게임 오브젝트 찾기
+            // firePreventObject 클래스에 데이터 저장
             firePreventObjects[i] = new FirePreventableObject(firePrevent[i].gameObject, firePrevent[i].MyType, isHaveChild);
+            // 해당 FirePreventable 스크립트에 FirePreventObject 내용 넣어주기
+            firePrevent[i].fireObject = firePreventObjects[i];
             if(isHaveChild == true)
             {
                 isHaveChild = false;
