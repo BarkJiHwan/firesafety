@@ -160,6 +160,7 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
             if (playerSuppressor != null)
             {
                 //playerSuppressor.SetAmountZero();
+                playerSuppressor.DetachSuppressor();
                 firstDeath = false;
                 playerSuppressor.enabled = false;
                 playerRPCSuppressor.enabled = true;

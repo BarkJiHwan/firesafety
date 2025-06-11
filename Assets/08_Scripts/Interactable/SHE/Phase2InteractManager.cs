@@ -35,6 +35,17 @@ public class Phase2InteractManager : MonoBehaviour
     [SerializeField] private float _tapInteractRadius;
     [SerializeField] private LayerMask _tapMask;
     [SerializeField, Tooltip("배치 필쑤!!")] private TapWater _tapWater;
+    [Header("물대포")]
+    [SerializeField] private int _damage = 1;
+    [SerializeField] private GameObject _waterShooterPrefab;
+    [SerializeField] private float _fireDelay = 0.5f;
+    private void Awake()
+    {
+        if (GameManager.Instance != null && GameManager.Instance.CurrentPhase != GamePhase.LeaveDangerArea)
+        {
+            enabled = false;
+        }
+    }
     private void Update()
     {
         CheckCols(_leftHand);
