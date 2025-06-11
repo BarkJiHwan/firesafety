@@ -315,7 +315,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3944638138752333101}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.28, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -351,7 +351,6 @@ GameObject:
   - component: {fileID: 6131185705973232159}
   - component: {fileID: 3629580143090430581}
   - component: {fileID: 2379595476675143941}
-  - component: {fileID: 1304794325786492256}
   m_Layer: 0
   m_Name: Drawer_01 (1)
   m_TagString: Untagged
@@ -427,19 +426,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &1304794325786492256
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8152828835123742900}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: -0.00000011920929, z: 0.00000035762787}
 --- !u!1001 &150546326037592934
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1089,7 +1075,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -4169240443481586537, guid: a872d871706167a4b933377cec763d63, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a872d871706167a4b933377cec763d63, type: 3}
 --- !u!4 &5306607860139353164 stripped
 Transform:
@@ -1389,7 +1376,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: GlueGun (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -8807652274230824328, guid: 029b3ebf632386049bc9d9cacbf2e405, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 029b3ebf632386049bc9d9cacbf2e405, type: 3}
 --- !u!4 &8066946612108043337 stripped
 Transform:
@@ -1882,7 +1870,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: CristmasTree (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -9016442833201448795, guid: 862727f8999f96c488373f870dab8376, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 862727f8999f96c488373f870dab8376, type: 3}
 --- !u!4 &1420422825419408716 stripped
 Transform:
