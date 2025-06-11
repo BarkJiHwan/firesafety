@@ -7,7 +7,6 @@ public class FireObjScript : MonoBehaviour, ITaewooriPos
 
     [Header("태우리 스폰 위치 및 회전 설정")]
     [SerializeField] private Vector3 _spawnOffset = new Vector3(0f, 0.1f, 0f);
-    //CHM 추가함
     [SerializeField] private Vector3 _spawnRotation = new Vector3(0f, 0f, 0f); // 태우리 회전값
 
     // 상태 변경 이벤트 정의
@@ -33,7 +32,6 @@ public class FireObjScript : MonoBehaviour, ITaewooriPos
                 {
                     if (TaewooriPoolManager.Instance != null)
                     {
-
                         TaewooriPoolManager.Instance.SpawnTaewooriAtPosition(TaewooriPos(), this);
                     }
                 }
@@ -46,7 +44,7 @@ public class FireObjScript : MonoBehaviour, ITaewooriPos
         get => _spawnOffset;
         set => _spawnOffset = value;
     }
-    // CHM 추가함
+
     public Vector3 SpawnRotation
     {
         get => _spawnRotation;
@@ -59,29 +57,13 @@ public class FireObjScript : MonoBehaviour, ITaewooriPos
         _isBurning = false;
     }
 
-    // 스폰 위치 계산 
+    // 오브젝트 위치 + 설정한 오프셋
     public Vector3 TaewooriPos()
     {
-        Collider col = GetComponent<Collider>();
-        if (col == null)
-        {
-            Debug.LogWarning($"{gameObject.name}에 Collider가 없습니다! 오브젝트 위치 + 오프셋 사용");
-            return transform.position + _spawnOffset;
-        }
-
-        Vector3 colCenter = col.bounds.center;
-        Vector3 colExtents = col.bounds.extents;
-
-        Vector3 basePos = new Vector3(
-            colCenter.x,
-            colCenter.y + colExtents.y,
-            colCenter.z
-        );
-
-        return basePos + _spawnOffset;
+        return transform.position + _spawnOffset;
     }
 
-    // CHM 추가함 스폰 회전 계산
+    // 스폰 회전 계산
     public Quaternion TaewooriRotation()
     {
         // 설정된 회전값 그대로 사용
@@ -104,7 +86,6 @@ public class FireObjScript : MonoBehaviour, ITaewooriPos
         return _activeTaewoori != null && _activeTaewoori.gameObject.activeInHierarchy;
     }
 
-    // CHM 변경함 
     private void OnDrawGizmos()
     {
         // 태우리 스폰 위치 계산
