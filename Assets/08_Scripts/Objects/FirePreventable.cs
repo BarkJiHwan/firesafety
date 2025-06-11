@@ -92,21 +92,23 @@ public class FirePreventable : MonoBehaviour
 
     }
 
-    //CHM - 호버 시작 시 소백이 이동 (페이즈 무관)
+    //CHM - 호버 시작 시 소백이 이동 (토킹은 도착 후 자동 시작)
     private void OnSobaekHoverEnter(HoverEnterEventArgs args)
     {
         if (Sobaek.Instance != null && enableSobaekInteraction)
         {
             Sobaek.Instance.MoveToInteractionTarget(transform);
+            Sobaek.Instance.StartHovering(); // 이동 시작 (토킹은 도착 후 자동)
         }
     }
 
-    //CHM - 호버 종료 시 소백이 복귀 (페이즈 무관)
+    //CHM - 호버 종료 시 소백이 복귀 + 토킹 중단
     private void OnSobaekHoverExit(HoverExitEventArgs args)
     {
         if (Sobaek.Instance != null && enableSobaekInteraction)
         {
             Sobaek.Instance.StopInteraction();
+            Sobaek.Instance.StopHovering(); // 토킹 중단 및 복귀
         }
     }
 
@@ -223,7 +225,7 @@ public class FirePreventable : MonoBehaviour
         {
             if(mat.HasProperty("_isNearPlayer"))
             {
-                Debug.Log(mat.GetFloat("_isNearPlayer"));
+                //Debug.Log(mat.GetFloat("_isNearPlayer"));
                 mat.SetFloat("_isNearPlayer", isActive ? 1f : 0f);
             }
         }
