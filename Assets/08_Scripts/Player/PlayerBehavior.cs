@@ -11,8 +11,10 @@ public class PlayerBehavior : MonoBehaviour
     private bool isMoving;
 
     public XROrigin playerOrigin;
-    public Camera playerCam;
     public PhotonView photonView;
+
+    private Camera playerCam;
+    private GameObject playerCamOffset;
 
     //CHM - 소백이 관련
     [SerializeField] private GameObject sobaekPrefab;
@@ -25,6 +27,9 @@ public class PlayerBehavior : MonoBehaviour
     // 내꺼 아니면 스크립트 자동으로 꺼지게하기
     private void Awake()
     {
+        playerCam = playerOrigin.Camera;
+        playerCamOffset = playerOrigin.CameraFloorOffsetObject;
+
         if (!photonView.IsMine)
         {
             this.enabled = false;
@@ -97,13 +102,12 @@ public class PlayerBehavior : MonoBehaviour
 
         if (playerOrigin.RequestedTrackingOriginMode == XROrigin.TrackingOriginMode.Floor)
         {
-            Vector3 currentFloorPos = new Vector3(playerCam.transform.position.x, gameObject.transform.position.y, playerCam.transform.position.z);
+            Vector3 currentFloorPos = playerCam.transform.position - playerCamOffset.transform.position;
             gameObject.transform.position = currentFloorPos;
         }
         else
         {
             gameObject.transform.position = playerOrigin.transform.position;
         }
-
     }
 }
