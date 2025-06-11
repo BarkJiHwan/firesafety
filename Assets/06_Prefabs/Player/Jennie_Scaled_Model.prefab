@@ -1281,6 +1281,7 @@ GameObject:
   - component: {fileID: 8646238192549996217}
   - component: {fileID: 762319275}
   - component: {fileID: 762319276}
+  - component: {fileID: 6284734437639265927}
   - component: {fileID: 2019223859}
   m_Layer: 9
   m_Name: Jennie_Scaled_Model
@@ -1494,7 +1495,7 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
---- !u!114 &2019223859
+--- !u!114 &6284734437639265927
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1502,6 +1503,79 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4981747460995190306}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1034d0d80e10b2347b842fd286f27385, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _leftHand:
+    triggerAction:
+      m_UseReference: 1
+      m_Action:
+        m_Name: Trigger
+        m_Type: 0
+        m_ExpectedControlType: 
+        m_Id: d704dc87-1d11-48e4-836a-a4825543c58a
+        m_Processors: 
+        m_Interactions: 
+        m_SingletonActionBindings: []
+        m_Flags: 0
+      m_Reference: {fileID: -4289430672226363583, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
+    grabSpot: {fileID: 1071150720}
+    normalFireFX: {fileID: 5620353170134276096}
+    zeroAmountFireFX: {fileID: 5620353170107157527}
+    initialFireFX: {fileID: 5620353170418356998}
+    modelPrefab: {fileID: 5253224623588374229}
+    initialFire: 0
+    enabled: 0
+    isSpraying: 0
+    handType: 1
+  _rightHand:
+    triggerAction:
+      m_UseReference: 1
+      m_Action:
+        m_Name: Trigger
+        m_Type: 0
+        m_ExpectedControlType: 
+        m_Id: 0b4386e8-b441-48fc-bb3d-bf53116dbc80
+        m_Processors: 
+        m_Interactions: 
+        m_SingletonActionBindings: []
+        m_Flags: 0
+      m_Reference: {fileID: 7904272356298805229, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
+    grabSpot: {fileID: 988166284}
+    normalFireFX: {fileID: 5620353170388494989}
+    zeroAmountFireFX: {fileID: 5620353170424037018}
+    initialFireFX: {fileID: 5620353170101363083}
+    modelPrefab: {fileID: 5253224623305573464}
+    initialFire: 0
+    enabled: 0
+    isSpraying: 0
+    handType: 0
+  _sprayLength: 2.5
+  _sprayRadius: 1
+  _damage: 1
+  _maxAmount: 100
+  _decreaseAmount: 1
+  _fireMask:
+    serializedVersion: 2
+    m_Bits: 128
+  _refillCooldown: 3
+  _supplyMask:
+    serializedVersion: 2
+    m_Bits: 64
+  _supplyDetectRange: 0.8
+  _sprayOrigin: {fileID: 0}
+  _currentAmount: 100
+--- !u!114 &2019223859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4981747460995190306}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b7831cc6ba61ab540866892822bb1692, type: 3}
   m_Name: 
