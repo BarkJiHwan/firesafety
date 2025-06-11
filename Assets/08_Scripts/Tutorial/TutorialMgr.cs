@@ -17,7 +17,7 @@ public class TutorialMgr : MonoBehaviourPun
     private GameObject _extinguisher;
 
     private Coroutine _countdownCoroutine;
-   
+
 
     void Start()
     {
@@ -111,9 +111,19 @@ public class TutorialMgr : MonoBehaviourPun
     // 2. 상호작용 페이즈
     private IEnumerator HandleInteractionPhase()
     {
+<<<<<<< HEAD
+        float timer = 3f;
+        while (timer > 0f)
+        {
+            // Debug.Log($"다음 튜토리얼 준비까지: {timer:F1}초");
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+=======
         //Tutorial_NAR_003번 나레이션이 끝난 것을 확인하고
         //Tutorial_NAR_004번 나레이션 실행
 
+>>>>>>> BJH_Ending_Branch
         var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
         var preventable = interactObj.GetComponent<FirePreventable>();
         preventable.SetFirePreventionPending();
@@ -136,8 +146,11 @@ public class TutorialMgr : MonoBehaviourPun
     // 3. 전투 페이즈
     private IEnumerator HandleCombatPhase()
     {
+<<<<<<< HEAD
+=======
         //Tutorial_NAR_005번 나레이션이 끝난 것을 확인하고
         //Tutorial_NAR_006번 나레이션 실행
+>>>>>>> BJH_Ending_Branch
         _currentMonster.SetActive(true);
         _extinguisher.SetActive(true);
 
