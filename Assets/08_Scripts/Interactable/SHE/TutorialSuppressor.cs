@@ -67,7 +67,7 @@ public class TutorialSuppressor : MonoBehaviour
         _sprayStartPos = _sprayOrigin.transform.position;
         _sprayEndPos = _sprayStartPos + (_sprayOrigin.forward * _sprayLength);
         _fireHitCount = Physics.OverlapCapsuleNonAlloc(_sprayStartPos, _sprayEndPos, _sprayRadius, _fireHits, _fireMask);
-        if (!hand.normalFireFX)
+        if (!hand.normalFireFX.isPlaying)
         {
             hand.normalFireFX.Play();
         }
