@@ -55,7 +55,7 @@ public class RoomMgr : MonoBehaviourPunCallbacks
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable()
             {
-                { "isLocked", true },
+                //{ "isLocked", true },
                 { "gameStarted", true }
             });
 

@@ -48,9 +48,6 @@ public class FireObjMgr : MonoBehaviour
     public int _score { get; private set; }
     public int Count { get => _count; set => _count = value; }
 
-    private Coroutine _phaseCoroutine;
-
-
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -80,18 +77,13 @@ public class FireObjMgr : MonoBehaviour
                 ResetZone(zone);
             }
             RefreshAllPrevention();
-            _phaseCoroutine = StartCoroutine(PreventionPhaseCoroutine());
+            StartCoroutine(PreventionPhaseCoroutine());
             _hasAreaReset = true;
         }
-        //if(currentPhase == GamePhase.Prevention)
-        //{
-        //    StartPreventionPhase();
-        //}
         if (currentPhase == GamePhase.Fire && !_hasRefreshedFireObjs)
         {
             Debug.Log("화재 페이즈 - 오브젝트 갱신");
             CompletedPreventionPhase(); //예방 점수 측정
-            //CompletePrevention(); //스코어 점수 갱신
             RefreshAllFireObjects(); //예방이 안된 오브젝트 갱신
             RefreshZoneDictionary(); //갱신한 값으로 딕셔너리 초기화
             ListUpdateDictionary(); //딕셔너리 값으로 화재오브젝트 리스트 업데이트
@@ -110,7 +102,7 @@ public class FireObjMgr : MonoBehaviour
         if (currentPhase == GamePhase.LeaveDangerArea && !_hasLeaveDangerArea)
         {
             Debug.Log("대피페이즈 돌입. 일단 게임 종료");
-            StopCoroutine(ActivateTeawooriBurning());
+            StopAllCoroutines();
             Debug.Log("코루틴 멈춤");
             _hasLeaveDangerArea = true;
         }

@@ -80,7 +80,15 @@ public class TutorialDataMgr : MonoBehaviourPun
             timer -= Time.deltaTime;
             yield return null;
         }
-        CompleteTutorial();
+        if(timer > 0f)
+        {
+            CompleteTutorial();
+        }
+        else
+        {
+            //시간 초과시 발생해야 하는 이벤트 등....을 여기서 추가하면 됨
+            CompleteTutorial();
+        }
     }
     public void IsTutorialComplete() => _tutorialCompleted = true;
 
