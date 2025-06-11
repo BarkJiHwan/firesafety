@@ -105,7 +105,7 @@ public class TutorialMgr : MonoBehaviourPun
         float timer = 3f;
         while (timer > 0f)
         {
-            Debug.Log($"다음 튜토리얼 준비까지: {timer:F1}초");
+            // Debug.Log($"다음 튜토리얼 준비까지: {timer:F1}초");
             timer -= Time.deltaTime;
             yield return null;
         }
@@ -135,7 +135,7 @@ public class TutorialMgr : MonoBehaviourPun
 
     // 3. 전투 페이즈
     private IEnumerator HandleCombatPhase()
-    {        
+    {
         _currentMonster.SetActive(true);
         _extinguisher.SetActive(true);
 

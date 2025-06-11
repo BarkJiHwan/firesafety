@@ -68,7 +68,7 @@ public class TutorialDataMgr : MonoBehaviourPun
         float timer = 3f;
         while (timer > 0f)
         {
-            //Debug.Log($"튜토리얼 준비까지: {timer:F1}초");
+            // Debug.Log($"튜토리얼 준비까지: {timer:F1}초");
             timer -= Time.deltaTime;
             yield return null;
         }
@@ -76,7 +76,7 @@ public class TutorialDataMgr : MonoBehaviourPun
         timer = 90f;
         while (timer > 0 && !_tutorialCompleted)
         {
-            //Debug.Log($"튜토리얼중 {timer:F1}초");
+            // Debug.Log($"튜토리얼중 {timer:F1}초");
             timer -= Time.deltaTime;
             yield return null;
         }

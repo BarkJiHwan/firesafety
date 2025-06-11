@@ -11,8 +11,10 @@ public class PlayerBehavior : MonoBehaviour
     private bool isMoving;
 
     public XROrigin playerOrigin;
-    public Camera playerCam;
     public PhotonView photonView;
+
+    private Camera playerCam;
+    private GameObject playerCamOffset;
 
     //CHM - 소백이 관련
     [SerializeField] private GameObject sobaekPrefab;
@@ -26,6 +28,9 @@ public class PlayerBehavior : MonoBehaviour
     // 내꺼 아니면 스크립트 자동으로 꺼지게하기
     private void Awake()
     {
+        playerCam = playerOrigin.Camera;
+        playerCamOffset = playerOrigin.CameraFloorOffsetObject;
+
         if (!photonView.IsMine)
         {
             this.enabled = false;
@@ -216,56 +221,15 @@ public class PlayerBehavior : MonoBehaviour
         Vector3 updatedRot = new Vector3(currentRot.x, playerCamRot.y, currentRot.z);
 
         gameObject.transform.rotation = Quaternion.Euler(updatedRot);
-        gameObject.transform.position = playerOrigin.transform.position;
-    }
 
-    #region 공개 메서드 (UI나 다른 스크립트에서 사용)
-
-    /// <summary>
-    /// 소백이 말하기 (UI 담당자용)
-    /// </summary>
-    /// <param name="duration">말하는 시간</param>
-    public void MakeSobaekTalk(float duration = 3f)
-    {
-        if (sobaekInstance != null)
+        if (playerOrigin.RequestedTrackingOriginMode == XROrigin.TrackingOriginMode.Floor)
         {
-            Sobaek sobaekScript = sobaekInstance.GetComponent<Sobaek>();
-            if (sobaekScript != null)
-            {
-                sobaekScript.StartTalking(duration);
-            }
+            Vector3 currentFloorPos = playerCam.transform.position - playerCamOffset.transform.position;
+            gameObject.transform.position = currentFloorPos;
+        }
+        else
+        {
+            gameObject.transform.position = playerOrigin.transform.position;
         }
     }
-
-    /// <summary>
-    /// 소백이 말하기 중단
-    /// </summary>
-    public void StopSobaekTalking()
-    {
-        if (sobaekInstance != null)
-        {
-            Sobaek sobaekScript = sobaekInstance.GetComponent<Sobaek>();
-            if (sobaekScript != null)
-            {
-                sobaekScript.StopTalking();
-            }
-        }
-    }
-
-    /// <summary>
-    /// 소백이 강제 활성화/비활성화 (디버그용)
-    /// </summary>
-    public void SetSobaekActive(bool active)
-    {
-        if (sobaekInstance != null)
-        {
-            Sobaek sobaekScript = sobaekInstance.GetComponent<Sobaek>();
-            if (sobaekScript != null)
-            {
-                sobaekScript.SetSobaekActive(active);
-            }
-        }
-    }
-
-    #endregion
 }
