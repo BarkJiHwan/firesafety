@@ -44,7 +44,7 @@ public class TutorialSuppressor : MonoBehaviour
         _isPressed = _triggerValue > 0.1f;
         _colHitCount = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
         //if (_isPressed && _colHitCounts > 0 && !_isFeverTime) <-- 본래 조건문
-        if (_isPressed && _colHitCount > 0)
+        if (_triggerValue > 0.1f && _colHitCount > 0)
         {
             Supply(hand);
         }
@@ -67,7 +67,7 @@ public class TutorialSuppressor : MonoBehaviour
         _sprayStartPos = _sprayOrigin.transform.position;
         _sprayEndPos = _sprayStartPos + (_sprayOrigin.forward * _sprayLength);
         _fireHitCount = Physics.OverlapCapsuleNonAlloc(_sprayStartPos, _sprayEndPos, _sprayRadius, _fireHits, _fireMask);
-        if (!hand.normalFireFX)
+        if (!hand.normalFireFX.isPlaying)
         {
             hand.normalFireFX.Play();
         }

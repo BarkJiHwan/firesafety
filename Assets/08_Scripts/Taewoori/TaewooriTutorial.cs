@@ -8,7 +8,6 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
 
     [Header("리스폰 설정")]
     [SerializeField] private float respawnCooltime = 3f; // 리스폰 쿨타임   
-    [SerializeField] private bool firstDeath;//태우리 첫 죽음에만 소화기 고갈 적용
     // 1 -> 메인 / 2 -> 메인
     [Header("체력별 색상 설정")]
     [SerializeField] private float maxGreenBoost = 1.0f; // 최대 G값 증가량 (체력 0%일 때)   
@@ -150,22 +149,14 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
 
         Debug.Log($"{gameObject.name}이(가) 죽었습니다. {respawnCooltime}초 후 리스폰됩니다.");
 
-        // 쿨타임 후 리스폰
-        StartCoroutine(RespawnAfterDelay());
-        //첫 사망시 소화기 비활성화
-        if (firstDeath)
-        {
-            var playerSuppressor = FindObjectOfType<TutorialSuppressor>();
-            var playerRPCSuppressor = FindObjectOfType<FireSuppressantManager>();
-            if (playerSuppressor != null)
-            {
-                //playerSuppressor.SetAmountZero();
-                playerSuppressor.DetachSuppressor();
-                firstDeath = false;
-                playerSuppressor.enabled = false;
-                playerRPCSuppressor.enabled = true;
-            }
-        }
+        // 쿨타임 후 리스폰 이젠 안함 ㅅㄱ
+        //StartCoroutine(RespawnAfterDelay());
+        //사망시 소화기 비활성화
+        var playerSuppressor = FindObjectOfType<TutorialSuppressor>();
+        var playerRPCSuppressor = FindObjectOfType<FireSuppressantManager>();
+        playerSuppressor.DetachSuppressor();
+        playerSuppressor.enabled = false;
+        playerRPCSuppressor.enabled = true;
     }
 
     private IEnumerator RespawnAfterDelay()
