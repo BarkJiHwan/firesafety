@@ -22,6 +22,7 @@ public class TutorialDataMgr : MonoBehaviourPun
     public bool IsTutorialFailed { get; set; }
     public float Timer { get; private set; } = 90f;
 
+
     void Awake()
     {
         if (Instance != null && Instance != this)
