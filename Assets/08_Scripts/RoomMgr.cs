@@ -29,10 +29,16 @@ public class RoomMgr : MonoBehaviourPunCallbacks
     [PunRPC]
     private IEnumerator StartGameCountdown()
     {
+        int prevCount = -1;
         float timer = 3f;
         while (timer > 0f)
         {
-            photonView.RPC("UpdateCountdownUI", RpcTarget.All, timer);
+            int currentCount = Mathf.CeilToInt(timer);
+            if (currentCount != prevCount)
+            {
+                photonView.RPC("UpdateCountdownUI", RpcTarget.All, currentCount);
+                prevCount = currentCount;
+            }
             timer -= Time.deltaTime;
             yield return null;
         }
@@ -40,7 +46,7 @@ public class RoomMgr : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void UpdateCountdownUI(float time)
+    void UpdateCountdownUI(int time)
     {
         // UI 업데이트 - 카운트다운 표시
         Debug.Log($"게임 시작까지: {time:F1}초");

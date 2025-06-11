@@ -20,8 +20,9 @@ public class TutorialDataMgr : MonoBehaviourPun
 
     public bool IsStartTutorial { get; set; }
     public bool IsTutorialFailed { get; set; }
-    public float Timer { get; private set; } = 90f;
 
+    [field: SerializeField, Header("튜토리얼시간은 90초 인스팩터창에서 임시로 노출 시켜 둠")]
+    public float Timer { get; private set; } = 90f;
 
     void Awake()
     {
@@ -74,10 +75,9 @@ public class TutorialDataMgr : MonoBehaviourPun
     private IEnumerator TutorialRoutine()
     {
         yield return new WaitUntil(() => IsStartTutorial);
-        float timer = 90f;
-        while (timer > 0)
+        while (Timer > 0)
         {
-            timer -= Time.deltaTime;
+            Timer -= Time.deltaTime;
             yield return null;
         }
         TutorialFailed();

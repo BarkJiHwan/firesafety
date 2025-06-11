@@ -179,7 +179,7 @@ public class TutorialMgr : MonoBehaviourPun
         yield return new WaitUntil(() => TutorialDataMgr.Instance.IsTutorialFailed);
         StopCoroutine(_countdownCoroutine);
         ObjectActiveFalse();
-
+        Debug.Log("으휴! 이것도 못해?!");
         Hashtable props = new Hashtable() { { "IsReady", true } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
