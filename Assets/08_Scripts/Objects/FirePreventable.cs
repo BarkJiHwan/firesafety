@@ -227,6 +227,8 @@ public class FirePreventable : MonoBehaviour
                 mat.SetFloat("_isNearPlayer", isActive ? 1f : 0f);
             }
         }
+
+        // 자식도 해야 함
     }
 
     public void SetHighlightStronger(float interValue)
@@ -241,6 +243,8 @@ public class FirePreventable : MonoBehaviour
         }
         float rimPower = Mathf.Lerp(2, -0.2f, interValue);
         highlightMat.SetFloat("_RimPower", rimPower);
+
+        // 자식도 해야 함
     }
 
     bool isActiveOnMaterials()
