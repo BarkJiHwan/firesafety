@@ -58,7 +58,7 @@ public class FirePreventable : MonoBehaviour
         ApplyShieldSettings();
         //CHM - XR 컴포넌트 가져오기
         _xrInteractable = GetComponent<XRSimpleInteractable>();
-        
+
         //CHM - 소백이 상호작용 이벤트 자동 연결
         SetupSobaekInteraction();
 
@@ -92,32 +92,35 @@ public class FirePreventable : MonoBehaviour
 
     }
 
-    //CHM - 호버 시작 시 소백이 이동 (페이즈 무관)
+    //CHM - 호버 시작 시 소백이 이동 6-12 함수명변경
     private void OnSobaekHoverEnter(HoverEnterEventArgs args)
     {
         if (Sobaek.Instance != null && enableSobaekInteraction)
         {
-            Sobaek.Instance.MoveToInteractionTarget(transform);
+            Sobaek.Instance.MoveToTarget(transform);
+
         }
     }
 
-    //CHM - 호버 종료 시 소백이 복귀 (페이즈 무관)
+    //CHM - 호버 종료 시 소백이 복귀 + 토킹 중단 6-12 함수명변경
     private void OnSobaekHoverExit(HoverExitEventArgs args)
     {
         if (Sobaek.Instance != null && enableSobaekInteraction)
         {
-            Sobaek.Instance.StopInteraction();
+            Sobaek.Instance.StopTalking();
+            Sobaek.Instance.ReturnHome();
         }
     }
 
-    //CHM - 소백이 상호작용 활성화/비활성화
+    //CHM - 소백이 상호작용 활성화/비활성화 6-12 함수명변경
     public void SetSobaekInteraction(bool enable)
     {
         enableSobaekInteraction = enable;
 
         if (!enable && Sobaek.Instance != null)
         {
-            Sobaek.Instance.StopInteraction(); // 비활성화시 소백이 복귀
+            Sobaek.Instance.StopTalking();
+            Sobaek.Instance.ReturnHome();
         }
     }
 
@@ -128,7 +131,7 @@ public class FirePreventable : MonoBehaviour
 
         if (currentPhase == GamePhase.Prevention)
         {
-            if(_isXRinteract)
+            if (_isXRinteract)
             {
                 _xrInteractable.selectEntered.AddListener(EnterPrevention);
                 _isXRinteract = false;
@@ -225,9 +228,9 @@ public class FirePreventable : MonoBehaviour
     {
         foreach (var mat in _renderer.materials)
         {
-            if(mat.HasProperty("_isNearPlayer"))
+            if (mat.HasProperty("_isNearPlayer"))
             {
-                Debug.Log(mat.GetFloat("_isNearPlayer"));
+                //Debug.Log(mat.GetFloat("_isNearPlayer"));
                 mat.SetFloat("_isNearPlayer", isActive ? 1f : 0f);
             }
         }
@@ -253,7 +256,7 @@ public class FirePreventable : MonoBehaviour
         bool isActive = false;
         foreach (var mat in _renderer.materials)
         {
-            if(mat.HasProperty("_isNearPlayer"))
+            if (mat.HasProperty("_isNearPlayer"))
             {
                 activeNum = mat.GetFloat("_isNearPlayer");
                 // 체크표시가 켜져있으면
