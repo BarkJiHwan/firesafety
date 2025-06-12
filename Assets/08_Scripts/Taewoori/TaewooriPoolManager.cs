@@ -335,8 +335,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
 
         // 게임 점수 정보 초기화
         UpdateGameScoreInfo();
-
-        Debug.Log("[통합점수] Fire 페이즈 시작 - 생존시간 추적 및 처치 기록 시작");
     }
 
     /// <summary>
@@ -362,8 +360,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         // 최종 게임 점수 정보 업데이트
         UpdateGameScoreInfo();
 
-        Debug.Log($"[통합점수] 최종 점수 - 생존시간: {maxSurvivalTime:F1}초({calculatedScore}점), 처치 점수 동기화 완료");
-
         // 추적 데이터 정리
         taewooriSpawnTimes.Clear();
     }
@@ -377,7 +373,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             return;
 
         taewooriSpawnTimes[taewooriID] = Time.time;
-        Debug.Log($"[통합점수] 태우리 {taewooriID} 스폰시간 기록: {Time.time:F1}초");
     }
 
     /// <summary>
@@ -399,7 +394,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             {
                 maxSurvivalTime = survivalTime;
                 UpdateGameScoreInfo();
-                Debug.Log($"[통합점수] 새로운 최대 생존시간: {survivalTime:F1}초 (태우리 {taewooriID} 사망)");
             }
 
             // 스폰시간 기록 제거 (죽었으므로)
@@ -431,8 +425,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
 
         // 게임 점수 정보 리셋
         gameScoreInfo = new GameScoreInfo();
-
-        Debug.Log("[통합점수] 생존시간 추적 및 처치 기록 리셋");
     }
 
     /// <summary>
@@ -455,8 +447,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         // 인스펙터 정보 업데이트
         UpdateInspectorKillInfo();
         UpdateGameScoreInfo();
-
-        Debug.Log($"[통합점수] 최종 점수 동기화 - 생존시간: {finalMaxTime:F1}초({finalSurvivalScore}점), 처치 점수 {playerIDs.Length}명 동기화 완료");
     }
 
     /// <summary>
@@ -492,7 +482,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     /// </summary>
     private void UpdateGameScoreInfo()
     {
-        // 1등 킬러 찾기
+        // 태우리 처치 1등 찾기 (혹시 필요할까봐 만들어둠)
         string topKiller = "없음";
         int topKillerCount = 0;
 
@@ -690,8 +680,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             // 네트워크로 태우리 생성 알림
             photonView.RPC("NetworkSpawnTaewoori", RpcTarget.Others,
                 taewooriComponent.NetworkID, spawnPosition, spawnRotation);
-
-            Debug.Log($"[마스터] 태우리 {taewooriComponent.NetworkID} 생성: {spawnPosition}");
             return taewooriObj;
         }
 
@@ -709,7 +697,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         int currentCount = GetSmallTaewooriCount(taewoori);
         if (currentCount >= taewoori.MaxSmallTaewooriCount)
         {
-            Debug.Log($"파이어 파티클 발사 불가: 스몰 태우리 최대 개수 도달 {currentCount}/{taewoori.MaxSmallTaewooriCount}");
             return null;
         }
 
@@ -763,8 +750,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             // 네트워크로 스몰 태우리 생성 알림
             photonView.RPC("NetworkSpawnSmallTaewoori", RpcTarget.Others,
                 originTaewoori.NetworkID, position, smallTaewooriComponent.NetworkID);
-
-            Debug.Log($"[마스터] 스몰태우리 {smallTaewooriComponent.NetworkID} 생성");
         }
 
         return smallTaewoori;
@@ -795,7 +780,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             }
 
             taewooriObj.SetActive(true);
-            Debug.Log($"[클라이언트] 태우리 {taewooriID} 시각적 생성 완료");
         }
     }
 
@@ -851,8 +835,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
                     smallTaewooriComponent.InitializeAsClient(originTaewoori, smallTaewooriID);
                     networkSmallTaewooriDict[smallTaewooriID] = smallTaewoori;
                 }
-
-                Debug.Log($"[클라이언트] 스몰태우리 {smallTaewooriID} 시각적 생성 완료");
             }
         }
     }
@@ -872,7 +854,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             if (taewoori != null)
             {
                 taewoori.SyncHealthFromNetwork(currentHealth, maxHealth);
-                Debug.Log($"[클라이언트] 태우리 {taewooriID} 체력 동기화: {currentHealth}/{maxHealth}");
             }
         }
     }
@@ -892,7 +873,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             if (smallTaewoori != null)
             {
                 smallTaewoori.SyncHealthFromNetwork(currentHealth, maxHealth);
-                Debug.Log($"[클라이언트] 스몰태우리 {smallTaewooriID} 체력 동기화: {currentHealth}/{maxHealth}");
             }
         }
     }
@@ -914,7 +894,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
                 taewoori.DieAsClient();
             }
             networkTaewooriDict.Remove(taewooriID);
-            Debug.Log($"[클라이언트] 태우리 {taewooriID} 파괴 동기화");
         }
     }
 
@@ -935,7 +914,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
                 smallTaewoori.DieAsClient();
             }
             networkSmallTaewooriDict.Remove(smallTaewooriID);
-            Debug.Log($"[클라이언트] 스몰태우리 {smallTaewooriID} 파괴 동기화");
         }
     }
 
@@ -954,7 +932,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             if (taewoori != null && !taewoori.IsDead)
             {
                 taewoori.TakeDamage(damage);
-                Debug.Log($"[마스터] 클라이언트 {senderID}가 태우리 {taewooriID}에게 {damage} 데미지");
             }
         }
     }
@@ -974,7 +951,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             if (smallTaewoori != null && !smallTaewoori.IsDead)
             {
                 smallTaewoori.TakeDamage(damage);
-                Debug.Log($"[마스터] 클라이언트 {senderID}가 스몰태우리 {smallTaewooriID}에게 {damage} 데미지");
             }
         }
     }

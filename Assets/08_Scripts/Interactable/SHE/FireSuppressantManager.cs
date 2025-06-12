@@ -7,6 +7,7 @@ using System.Diagnostics;
 using UnityEngine.XR;
 using Unity.VisualScripting;
 using Photon.Pun;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public enum EHandType
 {
@@ -27,6 +28,7 @@ public class HandData
     public bool enabled = false;
     public bool isSpraying = false;
     public EHandType handType;
+    public XRRayInteractor interator;
 }
 public class FireSuppressantManager : MonoBehaviourPunCallbacks
 {
@@ -83,12 +85,12 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
+        if (!GameManager.Instance.IsGameStart)
+        {
+            return;
+        }
         ProcessHand(EHandType.RightHand);
         ProcessHand(EHandType.LeftHand);
-        if (_supplyCooldown > 0)
-        {
-            _supplyCooldown -= Time.deltaTime;
-        }
         if (GameManager.Instance.CurrentPhase == GamePhase.Fever && !_isFeverTime)
         {
             FeverTimeOn();
@@ -104,10 +106,11 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         var hand = GetHand(type);
         _triggerValue = hand.triggerAction.action.ReadValue<float>();
         _isPressed = _triggerValue > 0.1f;
-        _colHitCount = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
+        //_colHitCount = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
         //if (_isPressed && _colHitCounts > 0 && !_isFeverTime) <-- 본래 조건문
-        if (_colHitCount > 0 && !_isFeverTime)//테스트용
+        if (hand.interator.TryGetCurrent3DRaycastHit(out RaycastHit hit) && !_isFeverTime)//테스트용
         {
+            if (hit.collider.gameObject.layer == _supplyMask)
             Supply(type);
             _supplyCooldown = _refillCooldown;
         }

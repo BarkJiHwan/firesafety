@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 
 public class TaewooriTutorial : MonoBehaviour, IDamageable
@@ -146,51 +147,22 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
             return;
 
         isDead = true;
-
-        Debug.Log($"{gameObject.name}이(가) 죽었습니다. {respawnCooltime}초 후 리스폰됩니다.");
-
-        // 쿨타임 후 리스폰 이젠 안함 ㅅㄱ
-        //StartCoroutine(RespawnAfterDelay());
         //사망시 소화기 비활성화
-        var playerSuppressor = FindObjectOfType<TutorialSuppressor>();
-        var playerRPCSuppressor = FindObjectOfType<FireSuppressantManager>();
-        playerSuppressor.DetachSuppressor();
-        playerSuppressor.enabled = false;
-        playerRPCSuppressor.enabled = true;
-    }
-
-    private IEnumerator RespawnAfterDelay()
-    {
-        gameObject.SetActive(false);
-
-        // 쿨타임 대기
-        yield return new WaitForSeconds(respawnCooltime);
-
-       
-        isDead = false;
-
-        // 색상 복원
-        RestoreOriginalColors();
-
-
-        gameObject.SetActive(true);
-
-        Debug.Log($"{gameObject.name}이(가) 리스폰되었습니다!");
-    }
-
-    // 원본 색상으로 복원
-    private void RestoreOriginalColors()
-    {
-        if (targetParticleSystems == null || originalGradients == null)
-            return;
-
-        for (int i = 0; i < targetParticleSystems.Length && i < originalGradients.Length; i++)
+        var players = FindObjectsOfType<FireSuppressantManager>();
+        foreach (var player in players)
         {
-            if (targetParticleSystems[i] != null && originalGradients[i] != null)
+            if (player.photonView.IsMine)
             {
-                var colorOverLifetime = targetParticleSystems[i].colorOverLifetime;
-                colorOverLifetime.color = originalGradients[i];
+                var tuto = player.gameObject.GetComponent<TutorialSuppressor>();
+                tuto.SetAmountZero();
             }
         }
+
+
+        //var playerSuppressor = FindObjectOfType<TutorialSuppressor>();
+        //var playerRPCSuppressor = FindObjectOfType<FireSuppressantManager>();
+        //playerSuppressor.DetachSuppressor();
+        //playerSuppressor.enabled = false;
+        //playerRPCSuppressor.enabled = true;
     }
 }

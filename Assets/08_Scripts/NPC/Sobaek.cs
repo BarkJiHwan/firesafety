@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class Sobaek : MonoBehaviour
 {
@@ -8,41 +9,49 @@ public class Sobaek : MonoBehaviour
 
     #region 인스펙터 설정
     [Header("기본 위치 설정")]
-    [SerializeField] private Transform player; // VR 카메라 또는 플레이어 Transform
-    [SerializeField] private float offsetX = 1.5f; // 플레이어와의 좌우 거리 (X축)
-    [SerializeField] private float offsetY = 0.5f; // 플레이어 어깨 높이 (Y축)
-    [SerializeField] private float offsetZ = 0.5f; // 플레이어 앞뒤 거리 (Z축, + = 앞쪽, - = 뒤쪽)
-    [SerializeField] private bool stayOnRightSide = true; // 오른쪽에 고정
+    [SerializeField] private Transform player;
+    [SerializeField] private float offsetX = 1.5f;
+    [SerializeField] private float offsetY = 0.5f;
+    [SerializeField] private float offsetZ = 0.5f;
+    [SerializeField] private bool stayOnRightSide = true;
 
     [Header("둥둥 떠다니기 효과")]
-    [SerializeField] private float floatAmplitude = 0.3f; // 위아래 움직임 크기
-    [SerializeField] private float floatSpeed = 1f; // 위아래 움직임 속도
-    [SerializeField] private float lookAtSpeed = 2f; // 플레이어 바라보는 회전 속도
+    [SerializeField] private float floatAmplitude = 0.3f;
+    [SerializeField] private float floatSpeed = 1f;
+    [SerializeField] private float lookAtSpeed = 2f;
 
-    [Header("상호작용 이동 설정")]
-    [SerializeField] private bool enableInteractionMovement = true; // 상호작용 이동 활성화
-    [SerializeField] private float interactionMoveSpeed = 4f; // 상호작용 이동 속도
-    [SerializeField] private float interactionOffset = 0.5f; // 상호작용 오브젝트에서 떨어진 거리
-    [SerializeField] private float returnSpeed = 3f; // 돌아오는 속도
+    [Header("이동 설정")]
+    [SerializeField] private float moveSpeed = 4f;
+    [SerializeField] private float arrivalDistance = 0.3f; // 도착 판정 거리
+
+    [Header("애니메이션 설정")]
+    [SerializeField] private Animator animator;
     #endregion
 
     #region 변수 선언
-    private Vector3 homePosition; // 기본 대기 위치
-    private Vector3 basePosition; // 둥둥 효과 기준 위치
-    private Vector3 interactionTarget; // 상호작용 타겟 위치
-    private bool isInteracting = false; // 상호작용 중인지
-    private float floatTimer = 0f; // 둥둥 효과용 타이머
-    #endregion
+    private Vector3 homePosition;
+    private Vector3 basePosition;
+    private Vector3 targetPosition;
+    private Transform currentTarget;
 
-    #region 프로퍼티
-    public Transform Player { get => player; set => player = value; }
-    public bool IsInteracting => isInteracting;
+    private bool isMovingToTarget = false;
+    private bool isMovingToHome = false;
+    private bool isTalking = false;
+    private bool sobaekInteractionEnabled = true; // 소백이 상호작용 활성화 여부
+
+    private float floatTimer = 0f;
+    private GamePhase lastPhase; // 이전 페이즈 저장용
+
+    // 애니메이션 해시
+    private readonly int hashIsFlying = Animator.StringToHash("isFlying");
+    private readonly int hashIsTalking = Animator.StringToHash("isTalking");
+    private readonly int hashStartJump = Animator.StringToHash("StartJump");
+    private readonly int hashBackJump = Animator.StringToHash("BackJump");
     #endregion
 
     #region 유니티 라이프사이클
     void Start()
     {
-        // 싱글톤 설정
         if (Instance == null)
         {
             Instance = this;
@@ -56,21 +65,18 @@ public class Sobaek : MonoBehaviour
         InitializeReferences();
         SetHomePosition();
         basePosition = homePosition;
-
     }
 
     void Update()
     {
-        if (player == null)
-            return;
-
+        CheckGamePhase();
         UpdatePosition();
         UpdateFloatingEffect();
+        UpdateAnimations();
     }
 
     void OnDestroy()
     {
-        // 싱글톤 해제
         if (Instance == this)
         {
             Instance = null;
@@ -79,12 +85,17 @@ public class Sobaek : MonoBehaviour
     #endregion
 
     #region 초기화
-    /// <summary>
-    /// VR 레퍼런스들 초기화
-    /// </summary>
     void InitializeReferences()
     {
-        // 플레이어가 설정되지 않았다면 VR 카메라를 찾기
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+            if (animator == null)
+            {
+                animator = GetComponentInChildren<Animator>();
+            }
+        }
+
         if (player == null)
         {
             Camera mainCam = Camera.main;
@@ -94,7 +105,6 @@ public class Sobaek : MonoBehaviour
             }
             else
             {
-                // Oculus/Meta Quest의 경우
                 GameObject centerEye = GameObject.Find("CenterEyeAnchor");
                 if (centerEye != null)
                 {
@@ -105,195 +115,255 @@ public class Sobaek : MonoBehaviour
     }
     #endregion
 
-    #region 위치 및 이동 시스템
+    #region 게임 페이즈 감지
     /// <summary>
-    /// 홈 포지션 설정 (플레이어 옆 고정 위치)
+    /// 게임 페이즈 변경 감지 및 처리
     /// </summary>
+    void CheckGamePhase()
+    {
+        if (GameManager.Instance == null)
+            return;
+
+        GamePhase currentPhase = GameManager.Instance.CurrentPhase;
+
+        // 페이즈가 변경되었을 때만 처리
+        if (currentPhase != lastPhase)
+        {
+
+            if (currentPhase == GamePhase.Fire)
+            {
+                // 화재 페이즈: 상호작용 비활성화, 홈으로 복귀
+                sobaekInteractionEnabled = false;
+                StopTalkingAndReturnHome();
+            }
+            else if (currentPhase == GamePhase.Prevention)
+            {
+                // 예방 페이즈: 상호작용 활성화
+                sobaekInteractionEnabled = true;
+            }
+
+            lastPhase = currentPhase;
+        }
+    }
+    #endregion
+
+    #region 위치 및 이동
     void SetHomePosition()
     {
         if (player == null)
             return;
 
-        // 좌우 방향 (X축)
         Vector3 rightDirection = player.right * (stayOnRightSide ? offsetX : -offsetX);
-
-        // 앞뒤 방향 (Z축)
         Vector3 forwardDirection = player.forward * offsetZ;
-
-        // 최종 홈 포지션 = 플레이어 위치 + 좌우오프셋 + 앞뒤오프셋 + 높이오프셋
         homePosition = player.position + rightDirection + forwardDirection + Vector3.up * offsetY;
     }
 
-    /// <summary>
-    /// 위치 업데이트 (홈 포지션 추적 또는 상호작용 이동)
-    /// </summary>
     void UpdatePosition()
-    {
-        if (isInteracting)
-        {
-            // 상호작용 타겟으로 이동
-            basePosition = Vector3.Lerp(basePosition, interactionTarget, interactionMoveSpeed * Time.deltaTime);
-        }
-        else
-        {
-            // 홈 포지션 업데이트 (플레이어가 움직이면 따라감)
-            SetHomePosition();
-
-            // 부드럽게 홈 포지션으로 이동
-            basePosition = Vector3.Lerp(basePosition, homePosition, returnSpeed * Time.deltaTime);
-        }
-    }
-
-    /// <summary>
-    /// 소백이를 원래 위치로 즉시 이동
-    /// </summary>
-    public void TeleportToPlayer()
-    {
-        if (player != null)
-        {
-            isInteracting = false;
-            SetHomePosition();
-            basePosition = homePosition;
-        }
-    }
-
-    /// <summary>
-    /// 소백이 위치를 왼쪽/오른쪽으로 전환
-    /// </summary>
-    public void ToggleSide()
-    {
-        stayOnRightSide = !stayOnRightSide;
-        SetHomePosition();
-    }
-    #endregion
-
-    #region 둥둥 효과 및 회전
-    /// <summary>
-    /// 둥둥 떠다니는 효과
-    /// </summary>
-    void UpdateFloatingEffect()
-    {
-        floatTimer += Time.deltaTime * floatSpeed;
-
-        // 위아래 움직임
-        float floatY = Mathf.Sin(floatTimer) * floatAmplitude;
-        Vector3 floatingPosition = basePosition + Vector3.up * floatY;
-
-        // 위치 적용
-        transform.position = floatingPosition;
-
-        // 플레이어를 바라보는 회전
-        LookAtPlayerSmooth();
-    }
-
-    /// <summary>
-    /// 부드럽게 플레이어를 바라보기
-    /// </summary>
-    void LookAtPlayerSmooth()
     {
         if (player == null)
             return;
 
-        Vector3 directionToPlayer = (player.position - transform.position).normalized;
-
-        // Y축 회전만 적용 (상하로 고개 너무 많이 돌리지 않게)
-        directionToPlayer.y = 0;
-
-        if (directionToPlayer != Vector3.zero)
+        if (isMovingToTarget)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation,
-                targetRotation,
-                lookAtSpeed * Time.deltaTime
-            );
+            // 타겟으로 이동
+            basePosition = Vector3.MoveTowards(basePosition, targetPosition, moveSpeed * Time.deltaTime);
+
+            // 도착 체크
+            if (Vector3.Distance(basePosition, targetPosition) <= arrivalDistance)
+            {
+                isMovingToTarget = false;
+                isTalking = true; // 도착하면 자동으로 토킹 시작
+            }
         }
+        else if (isMovingToHome)
+        {
+            // 홈으로 이동 (홈 위치는 한 번만 계산)
+            basePosition = Vector3.MoveTowards(basePosition, homePosition, moveSpeed * Time.deltaTime);
+
+            // 도착 체크
+            if (Vector3.Distance(basePosition, homePosition) <= arrivalDistance)
+            {
+                isMovingToHome = false;
+            }
+        }
+        else if (!isMovingToTarget && !isMovingToHome && !isTalking)
+        {
+            // 평상시에만 홈 위치 추적 (이동 중도 토킹 중도 아닐 때만)
+            SetHomePosition();
+            basePosition = Vector3.Lerp(basePosition, homePosition, 3f * Time.deltaTime);
+        }
+    }
+
+    void UpdateFloatingEffect()
+    {
+        floatTimer += Time.deltaTime * floatSpeed;
+        float floatY = Mathf.Sin(floatTimer) * floatAmplitude;
+        transform.position = basePosition + Vector3.up * floatY;
+
+        UpdateLookDirection();
+    }
+
+    void UpdateLookDirection()
+    {
+        Vector3 targetDirection = Vector3.zero;
+
+        if (isMovingToTarget && currentTarget != null)
+        {
+            targetDirection = (currentTarget.position - transform.position).normalized;
+        }
+        else if (player != null)
+        {
+            targetDirection = (player.position - transform.position).normalized;
+        }
+
+        if (targetDirection != Vector3.zero)
+        {
+            targetDirection.y = 0;
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, lookAtSpeed * Time.deltaTime);
+        }
+    }
+
+    void UpdateAnimations()
+    {
+        if (animator == null)
+            return;
+
+        // 이동 중이면 Flying
+        bool isFlying = isMovingToTarget || isMovingToHome;
+        animator.SetBool(hashIsFlying, isFlying);
+
+        // 토킹 상태
+        animator.SetBool(hashIsTalking, isTalking);
     }
     #endregion
 
-    #region 상호작용 이동
+    #region 플레이어가 호출할 간단한 함수들
     /// <summary>
-    /// XRSimpleInteractable 컴포넌트 달린 오브젝트의 설정 오프셋으로 이동
+    /// 타겟으로 이동 (플레이어 호출용) - 상호작용 활성화 상태에서만 작동
     /// </summary>
-    public void MoveToInteractionTarget(Transform target)
+    public void MoveToTarget(Transform target)
     {
-        if (!enableInteractionMovement || target == null)
+        // 상호작용이 비활성화되어 있으면 무시
+        if (!sobaekInteractionEnabled)
         {
             return;
         }
 
-        // 타겟에서 약간 떨어진 위치 계산
+        if (target == null)
+            return;
+
+        currentTarget = target;
         Vector3 directionFromTarget = (transform.position - target.position).normalized;
         if (directionFromTarget == Vector3.zero)
-        {
             directionFromTarget = Vector3.up;
-        }
 
-        interactionTarget = target.position + directionFromTarget * interactionOffset;
-        isInteracting = true;
+        targetPosition = target.position + directionFromTarget * 0.5f;
+
+        isMovingToTarget = true;
+        isMovingToHome = false;
+        isTalking = false; // 이동 시작하면 토킹 중단
 
     }
 
+    /// <summary>
+    /// 토킹 중단하고 홈으로 복귀 (플레이어 호출용)
+    /// </summary>
+    public void StopTalkingAndReturnHome()
+    {
+        isTalking = false;
+        isMovingToTarget = false;
+        isMovingToHome = true;
+        currentTarget = null;
+
+        // 홈 위치 미리 계산
+        SetHomePosition();
+    }
 
     /// <summary>
-    /// 소백이 원래 위치로 돌아가는 함수
+    /// 수동 토킹 시작 (필요시 사용) - 상호작용 활성화 상태에서만 작동
     /// </summary>
-    public void StopInteraction()
+    public void StartTalking()
     {
-        if (!enableInteractionMovement)
+        if (!sobaekInteractionEnabled)
             return;
 
-        isInteracting = false;
-
+        isTalking = true;
     }
 
     /// <summary>
-    /// 상호작용 이동 활성화/비활성화
+    /// 토킹만 중단 (위치는 유지)
     /// </summary>
-    public void SetInteractionMovement(bool enable)
+    public void StopTalking()
     {
-        enableInteractionMovement = enable;
-        if (!enable)
+        isTalking = false;
+    }
+
+    /// <summary>
+    /// 홈으로 돌아가기
+    /// </summary>
+    public void ReturnHome()
+    {
+        isMovingToTarget = false;
+        isMovingToHome = true;
+        isTalking = false;
+        currentTarget = null;
+
+    }
+    #endregion
+
+    #region 소백이 활성화/비활성화
+    public void SetSobaekActive(bool active)
+    {
+        gameObject.SetActive(active);
+
+        if (active)
         {
-            StopInteraction();
+            if (player != null)
+            {
+                SetHomePosition();
+                basePosition = homePosition;
+                transform.position = homePosition;
+            }
+
+            if (animator != null)
+            {
+                animator.SetTrigger(hashStartJump);
+            }
         }
+        else
+        {
+            if (animator != null)
+            {
+                animator.SetTrigger(hashBackJump);
+            }
+            StartCoroutine(DeactivateAfterAnimation());
+        }
+    }
 
+    private IEnumerator DeactivateAfterAnimation()
+    {
+        yield return new WaitForSeconds(1f);
+        gameObject.SetActive(false);
     }
     #endregion
 
-    #region 설정 변경 메서드
-    public void SetFloatingEffect(float amplitude, float speed)
+    #region 프로퍼티
+    public Transform Player { get => player; set => player = value; }
+    public bool IsMoving => isMovingToTarget || isMovingToHome;
+    public bool IsTalking => isTalking;
+    public bool SobaekInteractionEnabled
     {
-        floatAmplitude = amplitude;
-        floatSpeed = speed;
-    }
-
-    public void SetLookAtSpeed(float speed)
-    {
-        lookAtSpeed = Mathf.Clamp(speed, 0.1f, 10f);
-    }
-
-    public void SetInteractionMoveSpeed(float speed)
-    {
-        interactionMoveSpeed = Mathf.Clamp(speed, 0.5f, 10f);
-    }
-
-    public void SetInteractionOffset(float offset)
-    {
-        interactionOffset = Mathf.Clamp(offset, 0.1f, 3f);
-    }
-
-    public void SetReturnSpeed(float speed)
-    {
-        returnSpeed = Mathf.Clamp(speed, 0.5f, 10f);
-    }
-
-    public void SetAllOffsets(float distance, float forward, float height)
-    {
-        offsetX = Mathf.Clamp(distance, 0.5f, 5f);
-        offsetZ = Mathf.Clamp(forward, -3f, 3f);
-        offsetY = Mathf.Clamp(height, -1f, 3f);
+        get => sobaekInteractionEnabled;
+        set
+        {
+            sobaekInteractionEnabled = value;
+            if (!value)
+            {
+                // 비활성화 시 홈으로 복귀
+                StopTalkingAndReturnHome();
+            }
+        }
     }
     #endregion
-
 }
