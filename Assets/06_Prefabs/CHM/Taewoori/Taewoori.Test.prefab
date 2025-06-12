@@ -678,6 +678,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TaeuriFire
       objectReference: {fileID: 0}
+    - target: {fileID: 6546500973772680124, guid: 9437f0dde30d61f48b468105340fccbb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6658231780542135713, guid: 9437f0dde30d61f48b468105340fccbb,
         type: 3}
       propertyPath: m_RootOrder
@@ -731,6 +736,16 @@ PrefabInstance:
     - target: {fileID: 6658231780542135713, guid: 9437f0dde30d61f48b468105340fccbb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7248686006943484263, guid: 9437f0dde30d61f48b468105340fccbb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8869778556484905976, guid: 9437f0dde30d61f48b468105340fccbb,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
