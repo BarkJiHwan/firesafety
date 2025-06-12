@@ -7,14 +7,14 @@ public class CurvedUIRender : MonoBehaviour
 {
     [SerializeField] LayerMask UILayer;
 
-    [SerializeField] RenderTexture outputTexture;
+    public RenderTexture outputTexture;
     [SerializeField] Camera UICamera;
     [SerializeField] Canvas canvas;
     [SerializeField] GameObject meshSurface;
     [SerializeField] Material curvedUIMaterial;
 
     Vector2 renderSize;
-    void Start()
+    void Awake()
     {
         renderSize = new Vector2(1024,512);
         SetRenderTextureUI();
@@ -52,6 +52,7 @@ public class CurvedUIRender : MonoBehaviour
             //var mat = new Material(Shader.Find("Unlit/Transparent"));
             //mat.mainTexture = outputTexture;
             mat.SetTexture("_MainTex", outputTexture);
+            //mat.SetTexture("_BaseMap", outputTexture);
             mr.material = mat;
         }
     }
