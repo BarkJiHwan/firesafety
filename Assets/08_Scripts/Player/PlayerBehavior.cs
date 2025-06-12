@@ -181,7 +181,7 @@ public class PlayerBehavior : MonoBehaviour
         if (sobaekScript != null)
         {
             // 플레이어 카메라 설정
-            sobaekScript.Player = playerCam.transform;
+            sobaekScript.Player = _playerCam.transform;
 
             // 게임이 시작된 상태라면 활성화, 아니면 비활성화
             bool shouldActivate = GameManager.Instance != null && GameManager.Instance.IsGameStart;
