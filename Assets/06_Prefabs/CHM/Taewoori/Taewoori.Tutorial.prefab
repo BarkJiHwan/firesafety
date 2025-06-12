@@ -996,10 +996,10 @@ GameObject:
   - component: {fileID: 4948150450207705061}
   - component: {fileID: 1318270782063517087}
   - component: {fileID: 212024562779386004}
-  - component: {fileID: 7830367279728510819}
   - component: {fileID: 5750490635913526368}
+  - component: {fileID: -264257956901992414}
   m_Layer: 7
-  m_Name: Taewoori.Ani
+  m_Name: Taewoori.Tutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1079,32 +1079,6 @@ LODGroup:
     renderers:
     - renderer: {fileID: 4265333177536249631}
   m_Enabled: 1
---- !u!114 &7830367279728510819
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5755754473064602975}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62625a5e96bc2ac48b276d4609089295, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 0
-  feverTimeExtraHealth: 50
-  targetParticleSystems:
-  - {fileID: 6623866343465681098}
-  - {fileID: 7509235829024528869}
-  maxGreenBoost: 1
-  throwForce: 1
-  upwardForce: 4
-  fireRadius: 2
-  useRandomDirection: 0
-  maxSmallTaewooriCount: 4
-  projectileCooldown: 5
-  spawnHeight: 0.5
 --- !u!136 &5750490635913526368
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1119,6 +1093,23 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-264257956901992414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5755754473064602975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f11993361d201fc48b5f104b0075dc95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentHealth: 100
+  maxGreenBoost: 1
+  targetParticleSystems:
+  - {fileID: 6623866343465681098}
+  - {fileID: 7509235829024528869}
 --- !u!1 &5887494048018585571
 GameObject:
   m_ObjectHideFlags: 0
@@ -1637,7 +1628,7 @@ PrefabInstance:
     - target: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.303
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
         type: 3}
