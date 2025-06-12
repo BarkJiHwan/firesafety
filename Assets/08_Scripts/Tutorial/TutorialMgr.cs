@@ -128,7 +128,7 @@ public class TutorialMgr : MonoBehaviourPun
         });
         yield return new WaitUntil(() => completed);
         interactable.selectEntered.RemoveAllListeners();
-        preventable.SetActivePrefab();
+        preventable.SetActiveOut();
     }
 
     // 3. 전투 페이즈
