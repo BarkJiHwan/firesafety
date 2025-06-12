@@ -18,6 +18,7 @@ public class TutorialDataMgr : MonoBehaviourPun
 
     private Coroutine _tutorialRoutine;
 
+    public bool IsTriggerSupply { get; set; }
     public bool IsStartTutorial { get; set; }
     public bool IsTutorialFailed { get; set; }
 
@@ -34,6 +35,7 @@ public class TutorialDataMgr : MonoBehaviourPun
         Instance = this;
         IsStartTutorial = false;
         IsTutorialFailed = false;
+        IsTriggerSupply = false;
     }
 
     // PlayerList 인덱스 기반 데이터 반환

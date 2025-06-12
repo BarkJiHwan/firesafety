@@ -6,9 +6,6 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
 {
     [Header("체력 설정")]    
     public float currentHealth = 100f;
-
-    [Header("리스폰 설정")]
-    [SerializeField] private float respawnCooltime = 3f; // 리스폰 쿨타임   
     // 1 -> 메인 / 2 -> 메인
     [Header("체력별 색상 설정")]
     [SerializeField] private float maxGreenBoost = 1.0f; // 최대 G값 증가량 (체력 0%일 때)   
