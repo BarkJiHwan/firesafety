@@ -119,7 +119,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position:
     x: 1
-    y: 0
+    y: 1
     z: 1
     w: 0
   rotation:
@@ -624,7 +624,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
+  near clip plane: 0.4
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -1218,7 +1218,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3982813158359188710
 Transform:
   m_ObjectHideFlags: 0
@@ -1254,7 +1254,7 @@ MonoBehaviour:
   m_OriginBaseGameObject: {fileID: 3982813158359188633}
   m_CameraFloorOffsetObject: {fileID: 3982813157638611328}
   m_RequestedTrackingOriginMode: 2
-  m_CameraYOffset: 0.75
+  m_CameraYOffset: 1
 --- !u!114 &3982813158359188708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3758,6 +3758,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 9126010614512562493}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6758644887062533023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4288731581212114719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69b0932f20b768946a953a91e08d68e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9123048625833418002 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 17326306045570095, guid: 4ab117ceceedc456bb94c4bffc46ce07,
