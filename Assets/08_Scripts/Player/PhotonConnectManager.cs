@@ -117,10 +117,4 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("방 참여 실패, code : " + returnCode + " msg : " + message);
     }
-
-    // 디버그용
-    public void DisconnectPhoton()
-    {
-        PhotonNetwork.LeaveRoom();
-    }
 }
