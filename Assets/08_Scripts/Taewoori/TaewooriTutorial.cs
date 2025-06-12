@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 
 public class TaewooriTutorial : MonoBehaviour, IDamageable
@@ -152,11 +153,22 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
         // 쿨타임 후 리스폰 이젠 안함 ㅅㄱ
         //StartCoroutine(RespawnAfterDelay());
         //사망시 소화기 비활성화
-        var playerSuppressor = FindObjectOfType<TutorialSuppressor>();
-        var playerRPCSuppressor = FindObjectOfType<FireSuppressantManager>();
-        playerSuppressor.DetachSuppressor();
-        playerSuppressor.enabled = false;
-        playerRPCSuppressor.enabled = true;
+        var players = FindObjectsOfType<FireSuppressantManager>();
+        foreach (var player in players)
+        {
+            if (player.photonView.IsMine)
+            {
+                var tuto = player.gameObject.GetComponent<TutorialSuppressor>();
+                tuto.SetAmountZero();
+            }
+        }
+
+
+        //var playerSuppressor = FindObjectOfType<TutorialSuppressor>();
+        //var playerRPCSuppressor = FindObjectOfType<FireSuppressantManager>();
+        //playerSuppressor.DetachSuppressor();
+        //playerSuppressor.enabled = false;
+        //playerRPCSuppressor.enabled = true;
     }
 
     private IEnumerator RespawnAfterDelay()
