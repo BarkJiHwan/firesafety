@@ -139,6 +139,7 @@ public class TutorialSuppressor : MonoBehaviour
         {
             DetachSuppressor();
             enabled = false;
+            TutorialDataMgr.Instance.IsTriggerSupply = true;
         }
         if (!_rightHand.enabled && !_leftHand.enabled)
         {
