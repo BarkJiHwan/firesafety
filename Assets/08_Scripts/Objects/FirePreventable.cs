@@ -63,7 +63,7 @@ public class FirePreventable : MonoBehaviour
         SetupSobaekInteraction();
 
         _view = GetComponent<PhotonView>();
-        SetActivePrefab();
+        SetActiveOut();
 
         ChangeMaterial(gameObject);
         // 자식이 있으면 자식까지 반복해야 함
@@ -155,7 +155,7 @@ public class FirePreventable : MonoBehaviour
             }
         }
     }
-    public void SetActivePrefab()
+    public void SetActiveOut()
     {
         _smokePrefab.SetActive(false);
         _shieldPrefab.SetActive(false);
@@ -171,6 +171,10 @@ public class FirePreventable : MonoBehaviour
     {
         _smokePrefab.SetActive(true);
         _shieldPrefab.SetActive(false);
+    }
+    public void SomkePrefabActiveOut()
+    {
+        _smokePrefab.SetActive(false);
     }
 
     //스모크 사이즈 셋팅
