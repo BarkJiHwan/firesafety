@@ -135,6 +135,11 @@ public class TutorialSuppressor : MonoBehaviour
     }
     private void Supply(HandData hand)
     {
+        if (_currentAmount <= 0)
+        {
+            DetachSuppressor();
+            enabled = false;
+        }
         if (!_rightHand.enabled && !_leftHand.enabled)
         {
             hand.modelPrefab.SetActive(true);
