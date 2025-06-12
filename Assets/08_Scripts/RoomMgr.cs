@@ -22,17 +22,23 @@ public class RoomMgr : MonoBehaviourPunCallbacks
                 !(bool)player.CustomProperties["IsReady"])
                 return;
         }
-
+        Debug.Log("모두 준비 됐으니 게임 시작합니다");
         // 모든 플레이어 준비 완료 → 3초 카운트다운 시작
         photonView.RPC("StartGameCountdown", RpcTarget.All);
     }
     [PunRPC]
     private IEnumerator StartGameCountdown()
     {
+        int prevCount = -1;
         float timer = 3f;
         while (timer > 0f)
         {
-            photonView.RPC("UpdateCountdownUI", RpcTarget.All, timer);
+            int currentCount = Mathf.CeilToInt(timer);
+            if (currentCount != prevCount)
+            {
+                photonView.RPC("UpdateCountdownUI", RpcTarget.All, currentCount);
+                prevCount = currentCount;
+            }
             timer -= Time.deltaTime;
             yield return null;
         }
@@ -40,7 +46,7 @@ public class RoomMgr : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void UpdateCountdownUI(float time)
+    void UpdateCountdownUI(int time)
     {
         // UI 업데이트 - 카운트다운 표시
         Debug.Log($"게임 시작까지: {time:F1}초");

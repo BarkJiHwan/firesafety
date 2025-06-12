@@ -45,15 +45,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position:
-    x: 0
-    y: 0
-    z: 0
+    x: 1
+    y: 1
+    z: 1
     w: 0
   rotation:
-    x: 0
-    y: 0
-    z: 0
-    w: 0
+    x: 1
+    y: 1
+    z: 1
+    w: 1
   syncTarget: {fileID: 4477638814844636165}
 --- !u!1 &6534375738412561049
 GameObject:
@@ -100,15 +100,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position:
-    x: 0
-    y: 0
-    z: 0
+    x: 1
+    y: 1
+    z: 1
     w: 0
   rotation:
-    x: 0
-    y: 0
-    z: 0
-    w: 0
+    x: 1
+    y: 1
+    z: 1
+    w: 1
   syncTarget: {fileID: 6682506689630628559}
 --- !u!1 &8646238192456485302
 GameObject:
@@ -2116,7 +2116,7 @@ PrefabInstance:
         type: 3}
       propertyPath: sobaekPrefab
       value: 
-      objectReference: {fileID: 6720761809259302787, guid: 8ce2d666037d402438681caac128f543,
+      objectReference: {fileID: 2550521804121879437, guid: 8c557239dc3323e42a0bb6401677f15b,
         type: 3}
     - target: {fileID: 8646238192549996217, guid: 4ab117ceceedc456bb94c4bffc46ce07,
         type: 3}

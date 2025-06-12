@@ -1,13 +1,11 @@
 ﻿using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 
 public class TaewooriTutorial : MonoBehaviour, IDamageable
 {
     [Header("체력 설정")]    
     public float currentHealth = 100f;
-
-    [Header("리스폰 설정")]
-    [SerializeField] private float respawnCooltime = 3f; // 리스폰 쿨타임   
     // 1 -> 메인 / 2 -> 메인
     [Header("체력별 색상 설정")]
     [SerializeField] private float maxGreenBoost = 1.0f; // 최대 G값 증가량 (체력 0%일 때)   
@@ -146,51 +144,22 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
             return;
 
         isDead = true;
-
-        Debug.Log($"{gameObject.name}이(가) 죽었습니다. {respawnCooltime}초 후 리스폰됩니다.");
-
-        // 쿨타임 후 리스폰 이젠 안함 ㅅㄱ
-        //StartCoroutine(RespawnAfterDelay());
         //사망시 소화기 비활성화
-        var playerSuppressor = FindObjectOfType<TutorialSuppressor>();
-        var playerRPCSuppressor = FindObjectOfType<FireSuppressantManager>();
-        playerSuppressor.DetachSuppressor();
-        playerSuppressor.enabled = false;
-        playerRPCSuppressor.enabled = true;
-    }
-
-    private IEnumerator RespawnAfterDelay()
-    {
-        gameObject.SetActive(false);
-
-        // 쿨타임 대기
-        yield return new WaitForSeconds(respawnCooltime);
-
-       
-        isDead = false;
-
-        // 색상 복원
-        RestoreOriginalColors();
-
-
-        gameObject.SetActive(true);
-
-        Debug.Log($"{gameObject.name}이(가) 리스폰되었습니다!");
-    }
-
-    // 원본 색상으로 복원
-    private void RestoreOriginalColors()
-    {
-        if (targetParticleSystems == null || originalGradients == null)
-            return;
-
-        for (int i = 0; i < targetParticleSystems.Length && i < originalGradients.Length; i++)
+        var players = FindObjectsOfType<FireSuppressantManager>();
+        foreach (var player in players)
         {
-            if (targetParticleSystems[i] != null && originalGradients[i] != null)
+            if (player.photonView.IsMine)
             {
-                var colorOverLifetime = targetParticleSystems[i].colorOverLifetime;
-                colorOverLifetime.color = originalGradients[i];
+                var tuto = player.gameObject.GetComponent<TutorialSuppressor>();
+                tuto.SetAmountZero();
             }
         }
+
+
+        //var playerSuppressor = FindObjectOfType<TutorialSuppressor>();
+        //var playerRPCSuppressor = FindObjectOfType<FireSuppressantManager>();
+        //playerSuppressor.DetachSuppressor();
+        //playerSuppressor.enabled = false;
+        //playerRPCSuppressor.enabled = true;
     }
 }
