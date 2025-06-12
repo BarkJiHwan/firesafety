@@ -668,10 +668,8 @@ MonoBehaviour:
   floatAmplitude: 0.1
   floatSpeed: 1
   lookAtSpeed: 3
-  interactionMoveSpeed: 4
-  returnSpeed: 4
-  interactionOffset: 0.5
-  arrivalThreshold: 0.2
+  moveSpeed: 1
+  arrivalDistance: 0.3
   animator: {fileID: 9137445655480841037}
 --- !u!1 &2632856105434143133
 GameObject:

@@ -167,16 +167,10 @@ public class PlayerBehavior : MonoBehaviour
     //CHM - 소백이 생성 메서드
     private void CreateSobaek()
     {
-
-
         if (sobaekPrefab == null)
         {
-
             return;
         }
-
-
-
         sobaekInstance = Instantiate(sobaekPrefab);
 
 
@@ -184,23 +178,12 @@ public class PlayerBehavior : MonoBehaviour
 
         if (sobaekScript != null)
         {
-
-
             // 플레이어 카메라 설정
             sobaekScript.Player = playerCam.transform;
 
             // 게임이 시작된 상태라면 활성화, 아니면 비활성화
             bool shouldActivate = GameManager.Instance != null && GameManager.Instance.IsGameStart;
-
-
             sobaekScript.SetSobaekActive(shouldActivate);
-
-
-        }
-        else
-        {
-
-            Destroy(sobaekInstance);
         }
     }
 
