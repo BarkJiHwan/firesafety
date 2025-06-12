@@ -37,6 +37,11 @@ public class TutorialSuppressor : MonoBehaviour
     {
         ProcessHand(_leftHand);
         ProcessHand(_rightHand);
+        if (GameManager.Instance.IsGameStart)
+        {
+            DetachSuppressor();
+            enabled = false;
+        }
     }
     private void ProcessHand(HandData hand)
     {
@@ -137,8 +142,6 @@ public class TutorialSuppressor : MonoBehaviour
     {
         if (_currentAmount <= 0)
         {
-            DetachSuppressor();
-            enabled = false;
             TutorialDataMgr.Instance.IsTriggerSupply = true;
         }
         if (!_rightHand.enabled && !_leftHand.enabled)
@@ -168,7 +171,7 @@ public class TutorialSuppressor : MonoBehaviour
             _rightHand.modelPrefab.SetActive(false);
             _rightHand.enabled = false;
         }
-        else if (_leftHand.enabled)
+        if (_leftHand.enabled)
         {
             _leftHand.modelPrefab.SetActive(false);
             _leftHand.enabled = false;
