@@ -33,7 +33,7 @@ public class PlayerBehavior : MonoBehaviour
         _playerCamOffset = playerOrigin.CameraFloorOffsetObject;
         _animator = GetComponent<Animator>();
 
-        if (!photonView.IsMine)
+        if (photonView != null && !photonView.IsMine)
         {
             this.enabled = false;
             return;
@@ -43,7 +43,7 @@ public class PlayerBehavior : MonoBehaviour
     //CHM - 내 플레이어일 때만 게임 시작 이벤트 구독
     private void Start()
     {
-        if (photonView.IsMine)
+        if (photonView != null && photonView.IsMine)
         {
             SubscribeToGameManager();
         }

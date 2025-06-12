@@ -77,7 +77,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     }
     private void Awake()
     {
-        if (photonView.IsMine)
+        if (photonView != null && photonView.IsMine)
         {
             _hands[EHandType.LeftHand] = _leftHand;
             _hands[EHandType.RightHand] = _rightHand;

@@ -1,194 +1,285 @@
-﻿using System.Collections;
-using Photon.Pun.Demo.PunBasics;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 /// <summary>
-/// VR 화재 대피 게임용 불 캐릭터 - BaseTaewoori를 상속받아 플레이어 추적 기능 제공
-/// 플레이어를 따라다니며 물총에 맞으면 사라지는 어린이 친화적 캐릭터
+/// Sobaek 방식으로 관리하는 ExitTaewoori - basePosition + 둥둥효과 분리
 /// </summary>
-public class ExitTaewoori : BaseTaewoori
+public class ExitTaewoori : MonoBehaviour, IDamageable
 {
     #region 인스펙터 설정
+    [Header("체력 설정")]
+    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float currentHealth;
+
     [Header("이동 설정")]
-    [SerializeField] private float floatingSpeed = 1f;
-    [SerializeField] private float floatingHeight = 0.5f;
+    [SerializeField] private float floatingSpeed = 1f; // 둥둥 효과 속도
+    [SerializeField] private float floatingHeight = 0.2f; // 둥둥 효과 높이
+    [SerializeField] private float moveSpeed = 1f; // 플레이어 향해 이동 속도
+    [SerializeField] private float rotationSpeed = 2f; // 회전 속도
+    [SerializeField] private float stopDistance = 2f; // 플레이어에게서 멈출 거리
     #endregion
 
     #region 변수 선언
-    private Vector3 startPosition;
-    private Coroutine movementCoroutine;
-    private ExitTaewooriSpawner spawner;
+    private Vector3 basePosition; // 기준 위치 (이동만 담당)
+    private Transform targetTransform; // 플레이어 카메라
+    private FireThreatManager threatManager;
+    private bool isDead = false;
+    private float floatTimer = 0f; // 둥둥 효과용 타이머
+    private int threatIndex = 0; // 부채꼴 배치용 인덱스
     #endregion
 
     #region 프로퍼티
-    /// <summary>
-    /// 이 캐릭터를 생성한 스포너 참조
-    /// </summary>
-    public ExitTaewooriSpawner Spawner => spawner;
+    public FireThreatManager ThreatManager => threatManager;
+    public bool IsDead => isDead;
     #endregion
 
     #region 유니티 라이프사이클
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
+        currentHealth = maxHealth;
     }
 
-    protected override void OnEnable()
+    private void Start()
     {
-        base.OnEnable();
-        StartMovement();
+        // 시작 위치를 기준 위치로 설정
+        basePosition = transform.position;
+        Debug.Log($"ExitTaewoori Start: basePosition 설정 = {basePosition}");
+        XRSimpleInteractable interactable = GetComponent<XRSimpleInteractable>();
+        if (interactable != null)
+        {
+            interactable.activated.AddListener(OnClicked);
+        }
     }
 
-    private void OnDisable()
+    private void Update()
     {
-        StopMovement();
+        if (!isDead)
+        {
+            UpdateMovement(); // basePosition만 업데이트
+            UpdateFloatingEffect(); // basePosition + 둥둥효과로 최종 위치 설정
+            UpdateRotation(); // 회전 처리
+        }
     }
     #endregion
 
     #region 초기화
     /// <summary>
-    /// ExitTaewoori 초기화 - 스포너 참조와 기본 설정
+    /// 초기화 - 매니저, 고정 위치, 이동 설정
     /// </summary>
-    /// <param name="exitSpawner">이 캐릭터를 생성한 스포너</param>
-    public void Initialize(ExitTaewooriSpawner exitSpawner)
+    public void Initialize(FireThreatManager manager, Transform fixedPosition, float moveSpd, float rotSpd)
     {
-        spawner = exitSpawner;
-        startPosition = transform.position;
+        threatManager = manager;
+        targetTransform = fixedPosition; // 고정 위치를 타겟으로 설정
+        moveSpeed = moveSpd;
+        rotationSpeed = rotSpd;
 
-        // BaseTaewoori의 체력 초기화 호출
-        InitializeHealth();
-        ResetState();
+        currentHealth = maxHealth;
+        isDead = false;
 
-        Debug.Log($"ExitTaewoori 초기화 완료: {gameObject.name}");
+        // 현재 위치를 기준 위치로 설정
+        basePosition = transform.position;
+
+        Debug.Log($"ExitTaewoori 초기화 완료: {gameObject.name}, 고정위치: {fixedPosition.name}");
     }
     #endregion
 
-    #region 이동 시스템
-    /// <summary>
-    /// 이동 시작 - 둥둥 떠다니기
-    /// </summary>
-    private void StartMovement()
+    void OnClicked(ActivateEventArgs args)
     {
-        StopMovement(); // 기존 코루틴 정리
-        movementCoroutine = StartCoroutine(FloatingMovement());
+        TakeDamage(25f); // 클릭하면 25 데미지
     }
 
+    #region 이동 시스템 (Sobaek 방식)
     /// <summary>
-    /// 이동 중지
+    /// 기준 위치 업데이트 - 고정 위치로 이동
     /// </summary>
-    private void StopMovement()
+    private void UpdateMovement()
     {
-        if (movementCoroutine != null)
+        if (targetTransform == null)
+            return;
+
+        Vector3 currentPos = basePosition;
+        Vector3 targetPos = targetTransform.position; // 고정 위치
+
+        // 목표 위치까지의 거리 계산
+        float distanceToTarget = Vector3.Distance(currentPos, targetPos);
+
+        // 일정 거리(0.3m) 이상 떨어져 있으면 목표 위치로 이동
+        if (distanceToTarget > 0.3f)
         {
-            StopCoroutine(movementCoroutine);
-            movementCoroutine = null;
+            Vector3 moveDirection = (targetPos - currentPos).normalized;
+
+            // basePosition 업데이트 - 고정 위치로 부드럽게 이동
+            basePosition += moveDirection * moveSpeed * Time.deltaTime;
         }
     }
 
     /// <summary>
-    /// 제자리에서 둥둥 떠다니는 움직임
+    /// 둥둥 떠다니는 효과 적용 (Sobaek 방식)
     /// </summary>
-    private IEnumerator FloatingMovement()
+    private void UpdateFloatingEffect()
     {
-        while (!isDead)
+        floatTimer += Time.deltaTime * floatingSpeed;
+        float floatY = Mathf.Sin(floatTimer) * floatingHeight;
+
+        // 최종 위치 = 기준 위치 + 둥둥 효과
+        transform.position = basePosition + Vector3.up * floatY;
+    }
+
+    /// <summary>
+    /// 회전 처리 (플레이어 바라보기)
+    /// </summary>
+    private void UpdateRotation()
+    {
+        if (threatManager == null || threatManager.PlayerCamera == null)
+            return;
+
+        // 플레이어 카메라 위치를 바라보기
+        Vector3 playerPos = threatManager.PlayerCamera.transform.position;
+        Vector3 lookDirection = (playerPos - transform.position);
+        lookDirection.y = 0; // Y축 차이 무시 (수평으로만 회전)
+
+        if (lookDirection != Vector3.zero)
         {
-            // 위아래로 둥둥
-            float newY = startPosition.y + Mathf.Sin(Time.time * floatingSpeed) * floatingHeight;
-            transform.position = new Vector3(transform.position.x, newY, transform.position.z);
-
-            // 좌우로 살짝 회전 (선택사항)
-            float rotationY = Mathf.Sin(Time.time * floatingSpeed * 0.5f) * 15f;
-            transform.rotation = Quaternion.Euler(0, rotationY, 0);
-
-            yield return null;
+            Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation,
+                rotationSpeed * Time.deltaTime);
         }
     }
     #endregion
 
-    #region 데미지 시스템
+    #region 데미지 시스템 (IDamageable 구현)
     /// <summary>
-    /// 데미지 처리 - BaseTaewoori의 시스템 활용
+    /// 데미지 처리 - IDamageable 인터페이스 구현
     /// </summary>
-    /// <param name="damage">적용할 데미지량</param>
-    public override void TakeDamage(float damage)
+    public void TakeDamage(float damage)
     {
         if (isDead)
             return;
 
-        // BaseTaewoori의 데미지 처리 (체력 감소 + 색상 변화)
-        base.TakeDamage(damage);
-
+        currentHealth -= damage;
         Debug.Log($"{gameObject.name} 피격! 데미지: {damage}, 남은 체력: {currentHealth}/{maxHealth}");
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
     }
     #endregion
 
     #region 사망 처리
     /// <summary>
-    /// ExitTaewoori 사망 처리 - 점수 추가, 이펙트 재생, 스포너에 알림
+    /// 사망 처리
     /// </summary>
-    public override void Die()
+    public void Die()
     {
         if (isDead)
             return;
 
         isDead = true;
-        StopMovement();
 
-        // 스포너에 사망 알림
-        if (spawner != null)
+        // 매니저에 사망 알림
+        if (threatManager != null)
         {
-            spawner.OnTaewooriDestroyed(this);
+            threatManager.OnThreatDestroyed(this);
         }
 
         Debug.Log($"{gameObject.name} 사망!");
 
-        // 오브젝트 제거 또는 풀 반환
-        StartCoroutine(DestroyAfterDelay(0.5f)); // 이펙트 재생 시간 고려
-    }
-
-    /// <summary>
-    /// 지연 후 오브젝트 제거
-    /// </summary>
-    private IEnumerator DestroyAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-
-        if (spawner != null)
-        {
-            spawner.ReturnToPool(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        // 즉시 제거
+        Destroy(gameObject);
     }
     #endregion
 
     #region 퍼블릭 메서드
     /// <summary>
-    /// 즉시 제거 (게임 종료 시 등)
+    /// 타겟 설정
+    /// </summary>
+    public void SetTarget(Transform target)
+    {
+        targetTransform = target;
+        Debug.Log($"{gameObject.name} 타겟 변경: {(target != null ? target.name : "없음")}");
+    }
+
+    /// <summary>
+    /// 이동 속도 설정
+    /// </summary>
+    public void SetMoveSpeed(float speed)
+    {
+        moveSpeed = Mathf.Max(0f, speed);
+    }
+
+    /// <summary>
+    /// 회전 속도 설정
+    /// </summary>
+    public void SetRotationSpeed(float speed)
+    {
+        rotationSpeed = Mathf.Max(0f, speed);
+    }
+
+    /// <summary>
+    /// 정지 거리 설정
+    /// </summary>
+    public void SetStopDistance(float distance)
+    {
+        stopDistance = Mathf.Max(0.5f, distance);
+    }
+
+    /// <summary>
+    /// 즉시 제거
     /// </summary>
     public void ForceDestroy()
     {
         isDead = true;
-        StopMovement();
-
-        if (spawner != null)
-        {
-            spawner.ReturnToPool(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        Destroy(gameObject);
     }
 
     /// <summary>
-    /// 현재 체력 비율 반환 (UI 표시용)
+    /// 현재 체력 비율 반환
     /// </summary>
     public float GetHealthPercentage()
     {
         return maxHealth > 0 ? currentHealth / maxHealth : 0f;
+    }
+
+    /// <summary>
+    /// 플레이어와의 거리 반환
+    /// </summary>
+    public float GetDistanceToTarget()
+    {
+        if (targetTransform == null)
+            return float.MaxValue;
+
+        return Vector3.Distance(transform.position, targetTransform.position);
+    }
+
+    /// <summary>
+    /// 위협 인덱스 설정 (부채꼴 배치용)
+    /// </summary>
+    public void SetThreatIndex(int index)
+    {
+        threatIndex = index;
+        Debug.Log($"{gameObject.name} 위협 인덱스 설정: {threatIndex}");
+    }
+    #endregion
+
+    #region 디버그
+    private void OnDrawGizmosSelected()
+    {
+        // 정지 거리 표시
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, stopDistance);
+
+        // 타겟으로의 연결선 표시
+        if (targetTransform != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, targetTransform.position);
+        }
+
+        // 기준 위치 표시
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(basePosition, 0.3f);
+        Gizmos.DrawLine(basePosition, transform.position);
     }
     #endregion
 }
