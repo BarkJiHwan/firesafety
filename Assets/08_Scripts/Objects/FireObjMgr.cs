@@ -139,6 +139,7 @@ public class FireObjMgr : MonoBehaviour
         {
             foreach (var preventable in zone.FirePreventables)
             {
+                preventable.SomkePrefabActiveOut();
                 if (preventable.IsFirePreventable)
                 {
                     var fireObj = preventable.GetComponent<FireObjScript>();
