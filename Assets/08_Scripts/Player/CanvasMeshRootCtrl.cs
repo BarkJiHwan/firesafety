@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class CanvasMeshRootCtrl : MonoBehaviour
 {
+    [SerializeField] GameObject canvas;
     [SerializeField] GameObject curvedMesh;
+    [SerializeField] float angleThreshold = 30f;
+    [SerializeField] bool isPlayerMove;
 
+    Transform xrCam;
     MakeCurvedMesh curvedManager;
+
+    RectTransform canvasTransform;
+    float lastYAngle;
 
     void Awake()
     {
@@ -15,26 +22,54 @@ public class CanvasMeshRootCtrl : MonoBehaviour
 
     void Start()
     {
-        
+        if (canvas != null)
+        {
+            canvasTransform = canvas.GetComponent<RectTransform>();
+            canvasTransform.SetParent(transform, false);
+        }
+        xrCam = Camera.main.transform;
+        lastYAngle = GetYaw(xrCam.forward);
+        FollowUser();
     }
 
     void LateUpdate()
     {
-        FollowUser();
+        if(xrCam == null)
+        {
+            return;
+        }
+        float currentYaw = GetYaw(xrCam.forward);
+        float angleDelta = Mathf.Abs(Mathf.DeltaAngle(lastYAngle, currentYaw));
+
+        if(angleDelta > angleThreshold)
+        {
+            FollowUser();
+            lastYAngle = currentYaw;
+        }
     }
 
     void FollowUser()
     {
-        Transform xrCam = Camera.main.transform;
-
         Vector3 forward = new Vector3(xrCam.forward.x, 0, xrCam.forward.z).normalized;
 
         Quaternion rot = Quaternion.LookRotation(forward);
         Vector3 rotatedOffset = rot * curvedManager.xrRigCurvedMeshDist;
 
         Vector3 pos = xrCam.position + new Vector3(rotatedOffset.x, 0, rotatedOffset.z);
-        pos.y = 0;
+        if(isPlayerMove == false)
+        {
+            pos.y = 0;
+        }
+        else
+        {
+            pos.y -= 0.5f;
+        }
         transform.position = pos;
         transform.rotation = rot;
+    }
+
+    float GetYaw(Vector3 forward)
+    {
+        return Mathf.Atan2(forward.x, forward.z) * Mathf.Rad2Deg;
     }
 }

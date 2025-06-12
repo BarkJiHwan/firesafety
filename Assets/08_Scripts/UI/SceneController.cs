@@ -8,15 +8,17 @@ public enum SceneType
 {
     MainScene,
     SelectCharacterScene,
+    SceneChooseScene,
     Tutorial,
     IngameScene_Fire,
-    IngameScene_Evaciaton
+    IngameScene_Evacuation
 }
 
 public class SceneController : MonoBehaviour
 {
     static SceneController _instance;
     AsyncOperation oper;
+    public SceneType chooseSceneType { get; set; }
 
     public static SceneController Instance
     {
@@ -49,4 +51,13 @@ public class SceneController : MonoBehaviour
         LoadScene((int)SceneType.SelectCharacterScene);
     }
 
+    public void MoveToSceneChoose()
+    {
+        LoadScene((int)SceneType.SceneChooseScene);
+    }
+
+    public void MoveToMainScene()
+    {
+        LoadScene((int)SceneType.MainScene);
+    }
 }
