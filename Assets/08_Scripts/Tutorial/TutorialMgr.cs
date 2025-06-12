@@ -135,7 +135,7 @@ public class TutorialMgr : MonoBehaviourPun
     private IEnumerator HandleCombatPhase()
     {
         //Tutorial_NAR_005번 나레이션이 끝난 것을 확인하고
-        //Tutorial_NAR_006번 나레이션 실행
+        //Tutorial_NAR_006번 나레이션 실행 : 마지막으로 소화기를 사용해보세요 어쩌구....
 
         _currentMonster.SetActive(true);
         _extinguisher.SetActive(true);
@@ -149,22 +149,23 @@ public class TutorialMgr : MonoBehaviourPun
 
         // 3. 체력 0 될 때까지 폴링
         yield return new WaitUntil(() => tutorial.currentHealth <= 0);
+        _currentMonster.SetActive(false); //태우리 끄기
         //Tutorial_NAR_006번 나레이션이 켜져 있으면 종료
-        //Tutorial_NAR_007번 나레이션 실행
+        //Tutorial_NAR_007번 나레이션 실행 : 소화기를 다쓰면 바꿔라
+        //태우리 처치 완료
+        //Tutorial_NAR_007번 나레이션 종료
 
         //소화기 상호작용 완료까지 대기하기.
-        //완료 되면
-        //Tutorial_NAR_007번 나레이션 종료
-        //TUT_SND_001 미션 클리어 사운드 실행        
-        _currentMonster.SetActive(false); //태우리 끄기
-        _extinguisher.SetActive(false); //소화기 끄기
+        yield return new WaitUntil(() => TutorialDataMgr.Instance.IsTriggerSupply);
+        //Tutorial_NAR_008번 나레이션 실행 : 잘했다 모두 끝났다.
+        //TUT_SND_001 미션 클리어 사운드 실행
+
         //준비 완료
         Debug.Log("모든 튜토리얼 완료");
         TutorialDataMgr.Instance.StopTutorialRoutine();
         Hashtable props = new Hashtable() { { "IsReady", true } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
-        //Tutorial_NAR_008번 나레이션 실행
         //8번 나레이션이 종료 될때 까지 잠깐 대기
 
         if(PhotonNetwork.PlayerList.Count() > 1)
@@ -172,6 +173,8 @@ public class TutorialMgr : MonoBehaviourPun
             //8번 나래이션 끝나면 9번 나래이션 실행 : 아직 안끝난 친구를 기다려!
         }
         //Tutorial_NAR_010번 나레이션 실행 : 이제 게임 할거니까 잠깐 기다려~
+        yield return new WaitUntil(()=> GameManager.Instance.IsGameStart);
+        ObjectActiveFalse(); //소화기 끄기
     }
 
     private IEnumerator StopTutoria()
