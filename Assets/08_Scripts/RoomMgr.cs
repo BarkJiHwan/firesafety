@@ -22,7 +22,7 @@ public class RoomMgr : MonoBehaviourPunCallbacks
                 !(bool)player.CustomProperties["IsReady"])
                 return;
         }
-
+        Debug.Log("모두 준비 됐으니 게임 시작합니다");
         // 모든 플레이어 준비 완료 → 3초 카운트다운 시작
         photonView.RPC("StartGameCountdown", RpcTarget.All);
     }
