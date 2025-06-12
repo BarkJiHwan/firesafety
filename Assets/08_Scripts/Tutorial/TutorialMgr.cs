@@ -99,7 +99,7 @@ public class TutorialMgr : MonoBehaviourPun
             //TUT_SND_001 미션 클리어 사운드 실행
             //Tutorial_NAR_002번 나레이션 종료
             completed = true;
-            Destroy(_zone);
+            _zone.SetActive(false);
             Debug.Log("이동 튜토리얼 완료");
         };
 
@@ -171,7 +171,7 @@ public class TutorialMgr : MonoBehaviourPun
         {
             //8번 나래이션 끝나면 9번 나래이션 실행 : 아직 안끝난 친구를 기다려!
         }
-        //Tutorial_NAR_010번 나레이션 실행
+        //Tutorial_NAR_010번 나레이션 실행 : 이제 게임 할거니까 잠깐 기다려~
     }
 
     private IEnumerator StopTutoria()
