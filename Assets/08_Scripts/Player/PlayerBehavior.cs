@@ -207,14 +207,14 @@ public class PlayerBehavior : MonoBehaviour
 
         if (playerOrigin.RequestedTrackingOriginMode == XROrigin.TrackingOriginMode.Floor)
         {
-            updatePos = _playerCam.transform.position - _playerCamOffset.transform.position;
+            updatePos = new Vector3(_playerCam.transform.position.x, 0, _playerCam.transform.position.z);
         }
         else
         {
             updatePos = playerOrigin.transform.position;
         }
 
-        if (lastPos - updatePos != Vector3.zero)
+        if (Vector3.Distance(lastPos, updatePos) >= 0.01f)
         {
             _isMoving = true;
         }
