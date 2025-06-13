@@ -23,6 +23,9 @@ public class CurvedUIRender : MonoBehaviour
     void SetRenderTextureUI()
     {
         outputTexture = new RenderTexture((int)renderSize.x, (int)renderSize.y, 16);
+        //outputTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8A8_UNorm;
+        outputTexture.useMipMap = false;
+        outputTexture.autoGenerateMips = false;
         outputTexture.antiAliasing = 4;
         outputTexture.name = "CurvedUI_RenderTexture";
         outputTexture.useMipMap = false;

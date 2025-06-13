@@ -41,11 +41,41 @@ public class CanvasMeshRootCtrl : MonoBehaviour
         float currentYaw = GetYaw(xrCam.forward);
         float angleDelta = Mathf.Abs(Mathf.DeltaAngle(lastYAngle, currentYaw));
 
-        if(angleDelta > angleThreshold)
+        if (isPlayerMove == true)
         {
-            FollowUser();
-            lastYAngle = currentYaw;
+            FollowUserMove();
+
+            if (angleDelta > angleThreshold)
+            {
+                FollowUserRotation(currentYaw);
+                lastYAngle = currentYaw;
+            }
         }
+        else
+        {
+            if (angleDelta > angleThreshold)
+            {
+                FollowUser();
+                lastYAngle = currentYaw;
+            }
+        }
+    }
+
+    void FollowUserMove()
+    {
+        //Vector3 forward = new Vector3(xrCam.forward.x, 0, xrCam.forward.z).normalized;
+
+        //Quaternion rot = Quaternion.LookRotation(forward);
+        //Vector3 rotatedOffset = rot * curvedManager.xrRigCurvedMeshDist;
+
+        //Vector3 pos = xrCam.position + new Vector3(rotatedOffset.x, -0.9f, rotatedOffset.z);
+        //transform.position = pos;
+
+        Quaternion rot = Quaternion.Euler(0, lastYAngle, 0);
+        Vector3 rotatedOffset = rot * curvedManager.xrRigCurvedMeshDist;
+
+        Vector3 pos = xrCam.position + new Vector3(rotatedOffset.x, -0.9f, rotatedOffset.z);
+        transform.position = pos;
     }
 
     void FollowUser()
@@ -56,15 +86,26 @@ public class CanvasMeshRootCtrl : MonoBehaviour
         Vector3 rotatedOffset = rot * curvedManager.xrRigCurvedMeshDist;
 
         Vector3 pos = xrCam.position + new Vector3(rotatedOffset.x, 0, rotatedOffset.z);
-        if(isPlayerMove == false)
-        {
-            pos.y = 0;
-        }
-        else
-        {
-            pos.y -= 0.5f;
-        }
+
+        pos.y = 0;
+
         transform.position = pos;
+        transform.rotation = rot;
+    }
+
+    void FollowUserRotation(float angle)
+    {
+        //Vector3 forward = new Vector3(xrCam.forward.x, 0, xrCam.forward.z).normalized;
+        //Quaternion rot = Quaternion.LookRotation(forward);
+
+        //Vector3 rotatedOffset = rot * curvedManager.xrRigCurvedMeshDist;
+
+        //Vector3 pos = new Vector3(xrCam.position.x + rotatedOffset.x, transform.position.y, xrCam.position.z + rotatedOffset.z);
+
+        //transform.position = pos;
+        //transform.rotation = rot;
+
+        Quaternion rot = Quaternion.Euler(0, angle, 0);
         transform.rotation = rot;
     }
 

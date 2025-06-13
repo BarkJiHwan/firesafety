@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CharacterManager : MonoBehaviour
 {
@@ -27,6 +28,17 @@ public class CharacterManager : MonoBehaviour
                 charChoose.GetCharacterObject()[i].GetComponent<ChooseCharacterManager>().ChangeMaterialToGrey();
             }
         }
+    }
+
+    // 임시
+    public AsyncOperation LoadScene(int sceneNum)
+    {
+        return SceneManager.LoadSceneAsync(sceneNum);
+    }
+
+    public void ChangePracticeScene()
+    {
+        LoadScene((int)3);
     }
 
 }

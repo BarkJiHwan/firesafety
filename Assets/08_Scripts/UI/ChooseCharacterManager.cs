@@ -7,12 +7,12 @@ public class ChooseCharacterManager : MonoBehaviour
 {
     [SerializeField] CharacterManager characterMgr;
     [SerializeField] CharacterChoose charChoose;
-    [SerializeField] CharacterType charType;
+    [SerializeField] PlayerEnum charType;
     [SerializeField] Material doNotChooseMat;
 
     SkinnedMeshRenderer skinnedMesh;
 
-    public CharacterType myType { get; private set; }
+    public PlayerEnum myType { get; private set; }
 
     Material[] mats;
     Material[] changeMats;

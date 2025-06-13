@@ -14,20 +14,12 @@ public enum SceneType
     IngameScene_Evacuation
 }
 
-public enum CharacterType
-{
-    Shak,
-    Jennie,
-    Toto,
-    Bbabbico
-}
-
 public class SceneController : MonoBehaviour
 {
     static SceneController _instance;
     AsyncOperation oper;
     public SceneType chooseSceneType { get; set; }
-    public CharacterType charType { get; set; }
+    public PlayerEnum charType { get; set; }
 
     public static SceneController Instance
     {
@@ -70,7 +62,7 @@ public class SceneController : MonoBehaviour
         LoadScene((int)SceneType.MainScene);
     }
 
-    public void GetChooseCharacterType(CharacterType type)
+    public void GetChooseCharacterType(PlayerEnum type)
     {
         charType = type;
         Debug.Log(charType);

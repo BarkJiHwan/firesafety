@@ -17,7 +17,7 @@ public class ScoreBoardController : MonoBehaviour
     void Start()
     {
         // 임시
-        SceneController.Instance.chooseSceneType = SceneType.IngameScene_Evacuation;
+        SceneController.Instance.chooseSceneType = SceneType.IngameScene_Fire;
 
         if(SceneController.Instance.chooseSceneType == SceneType.IngameScene_Fire)
         {

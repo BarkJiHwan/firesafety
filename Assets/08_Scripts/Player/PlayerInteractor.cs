@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PlayerInteractor : MonoBehaviour
 {
+    bool isActive = false;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.transform.parent == gameObject.transform.parent)
@@ -25,7 +27,12 @@ public class PlayerInteractor : MonoBehaviour
         {
             return;
         }
+
+        // 예외인 애들 추가
+        preventFire.MakeExceptPreventObject(preventFire.MyType);
         preventFire.SetActiveOnMaterials(true);
+
+        isActive = false;
     }
 
     private void OnTriggerStay(Collider other)
@@ -45,13 +52,24 @@ public class PlayerInteractor : MonoBehaviour
         {
             return;
         }
+
+        if(isActive == false)
+        {
+            preventFire.MakeExceptPreventObject(preventFire.MyType);
+            preventFire.SetActiveOnMaterials(true);
+            isActive = true;
+        }
+
         // 플레이어가 가까워질수록 내 Material _RimPower -시켜야 함 2->-0.2
         float distance = Vector3.Distance(other.transform.position, transform.position);
 
         // 빛을 더 밝게 빛나기 위해서 * 2 했음
         float t = (1 - Mathf.Clamp01(distance / 2f)) * 2;
 
-        preventFire.SetHighlightStronger(t);
+        if(preventFire.GetHighlightProperty() == true)
+        {
+            preventFire.SetHighlight(t);
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -68,11 +86,17 @@ public class PlayerInteractor : MonoBehaviour
         {
             return;
         }
-        preventFire.SetActiveOnMaterials(false);
+
+        if(isActive == true)
+        {
+            preventFire.SetActiveOnMaterials(false);
+            // 예외인 애들 추가
+            preventFire.MakeExceptObjectOff();
+        }
     }
 
     // 에디터에서만 DrawGizmo 그려주기
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Vector3 playerPos = gameObject.transform.position;

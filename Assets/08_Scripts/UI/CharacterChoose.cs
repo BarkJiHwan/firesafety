@@ -9,7 +9,7 @@ public class CharacterChoose : MonoBehaviour
     [System.Serializable]
     class ButtonInteractor
     {
-        public CharacterType charType;
+        public PlayerEnum charType;
         public Button applyButton;
         public GameObject characterObject;
     }
@@ -27,7 +27,7 @@ public class CharacterChoose : MonoBehaviour
         SceneController.Instance.MoveToSceneChoose();
     }
 
-    public void SetActiveButton(CharacterType type)
+    public void SetActiveButton(PlayerEnum type)
     {
         foreach (var button in checkButtonList)
         {
