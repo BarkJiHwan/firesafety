@@ -8,19 +8,12 @@ public class CustomTunnelingVignette : MonoBehaviour, ITunnelingVignetteProvider
 {
     [SerializeField] private TunnelingVignetteController _tunnelingVignetteController;
 
-    // Start is called before the first frame update
-    private void Start()
-    {
-        FadeOut();
-        FadeIn();
-    }
-
-    private void FadeOut()
+    public void FadeOut()
     {
         _tunnelingVignetteController.BeginTunnelingVignette(this);
     }
 
-    private void FadeIn()
+    public void FadeIn()
     {
         _tunnelingVignetteController.EndTunnelingVignette(this);
     }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -7,4 +8,18 @@ public class PlayerComponents : MonoBehaviour
     public GameObject xRComponents;
     public GameObject model;
     public CustomTunnelingVignette customTunnelingVignette;
+
+    private void Start()
+    {
+        // StartCoroutine(TestFadeInOut());;
+    }
+
+    /* 페이드인 / 페이드 아웃 테스트용 */
+    private IEnumerator TestFadeInOut()
+    {
+        yield return new WaitForSeconds(1f);
+        customTunnelingVignette.FadeOut();
+        yield return new WaitForSeconds(1f);
+        customTunnelingVignette.FadeIn();
+    }
 }
