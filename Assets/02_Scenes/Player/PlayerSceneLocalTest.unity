@@ -440,6 +440,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 132e531952478493088170c6234caf6d, type: 3}
+--- !u!114 &557014078 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 86827973367261954, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+    type: 3}
+  m_PrefabInstance: {fileID: 3982813159091206054}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f77acc01db85341edaabcbd8f42cab77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1824487198
 GameObject:
   m_ObjectHideFlags: 0
@@ -523,12 +535,22 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 3982813158359188633, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3982813158359188707, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
         type: 3}
       propertyPath: chaDriver
       value: 
       objectReference: {fileID: 3982813158359188709, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
         type: 3}
+    - target: {fileID: 3982813158359188707, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: playerComponents
+      value: 
+      objectReference: {fileID: 557014078}
     - target: {fileID: 3982813159479471952, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
         type: 3}
       propertyPath: m_RootOrder
@@ -588,6 +610,66 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Jennie_Player_With_XR_Floor
+      objectReference: {fileID: 0}
+    - target: {fileID: 6316659473019392376, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6316659473019392377, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_DefaultParameters.m_ApertureSize
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6316659473019392377, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_DefaultParameters.m_FeatheringEffect
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6316659473019392377, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocomotionVignetteProviders.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6316659473019392377, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocomotionVignetteProviders.Array.data[0].m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6316659473019392377, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocomotionVignetteProviders.Array.data[0].m_OverrideParameters.m_EaseInTime
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6316659473019392377, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocomotionVignetteProviders.Array.data[0].m_OverrideParameters.m_EaseOutTime
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6316659473019392377, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocomotionVignetteProviders.Array.data[0].m_OverrideParameters.m_ApertureSize
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6316659473019392377, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocomotionVignetteProviders.Array.data[0].m_OverrideParameters.m_VignetteColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6316659473019392377, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocomotionVignetteProviders.Array.data[0].m_OverrideParameters.m_FeatheringEffect
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6316659473019392377, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocomotionVignetteProviders.Array.data[0].m_OverrideParameters.m_VignetteColorBlend.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7957310315866995814, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 9126010614857539734, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
         type: 3}
