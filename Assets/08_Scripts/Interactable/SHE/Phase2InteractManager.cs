@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class Phase2InteractManager : MonoBehaviour
 {
@@ -13,7 +15,9 @@ public class Phase2InteractManager : MonoBehaviour
         public GameObject wetPrefab;
         public bool isWet;
         public bool isEnabled = false;
+        public XRRayInteractor interactor;
     }
+    [SerializeField] private DaTaewoori _daTaewoori;
     [SerializeField] private GameObject _checkingWearing; //수건 입에 가져다 댄 건가요?
     [SerializeField] private bool _isWear;//가져다 댄 거 맞지요?
     [Header("양손 수건 데이터")]
@@ -39,6 +43,8 @@ public class Phase2InteractManager : MonoBehaviour
     [SerializeField] private int _damage = 1;
     [SerializeField] private GameObject _waterShooterPrefab;
     [SerializeField] private float _fireDelay = 0.5f;
+    [SerializeField] private LayerMask _weaponLayer;
+    private RaycastHit hit;
     private void Awake()
     {
         if (GameManager.Instance != null && GameManager.Instance.CurrentPhase != GamePhase.LeaveDangerArea)
@@ -55,19 +61,16 @@ public class Phase2InteractManager : MonoBehaviour
     private void CheckCols(TowelHandData hand)
     {
         _triggerValue = hand.triggerAction.action.ReadValue<float>();
-        if (!_gotTowel && _triggerValue > 0.1f)//수건 가져오기
+        if (hand.interactor.TryGetCurrent3DRaycastHit(out hit) && !_gotTowel)//수건 가져오기
         {
-            _towelHitNums = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _towelInteractRadius, _towelHitCols, _towelMask);
-            if (_towelHitNums > 0)
+            if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _towelMask))
             {
                 TowelSupply(hand);
-                _towelHitNums = 0;
             }
         }
-        if (_gotTowel)//물에 적시기
+        if (_gotTowel && hand.interactor.TryGetCurrent3DRaycastHit(out hit))//물에 적시기
         {
-            _towelHitNums = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _towelInteractWater, _towelHitCols, _waterMask);
-            if (_towelHitNums > 0)
+            if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _waterMask))
             {
                 WettingTowel(hand);
             }

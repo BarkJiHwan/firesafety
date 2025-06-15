@@ -66,7 +66,10 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     private int _fireHitCount;
     //Stopwatch stopwatch = new();
     private IEnumerator _currentCor;
-
+    public static bool IsInLayerMask(GameObject obj, LayerMask mask)
+    {
+        return (mask.value & (1 << obj.layer)) != 0;
+    }
     private HandData GetHand(EHandType type)
     {
         if (_hands.TryGetValue(type, out var hand))
@@ -81,6 +84,10 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         {
             _hands[EHandType.LeftHand] = _leftHand;
             _hands[EHandType.RightHand] = _rightHand;
+        }
+        if (GameManager.Instance.CurrentPhase == GamePhase.LeaveDangerArea)
+        {
+            enabled = false;
         }
     }
     private void Update()
@@ -108,11 +115,12 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         _isPressed = _triggerValue > 0.1f;
         //_colHitCount = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
         //if (_isPressed && _colHitCounts > 0 && !_isFeverTime) <-- 본래 조건문
-        if (hand.interator.TryGetCurrent3DRaycastHit(out RaycastHit hit) && !_isFeverTime)//테스트용
+        if (hand.interator.TryGetCurrent3DRaycastHit(out RaycastHit hit) && !_isFeverTime)
         {
-            if (hit.collider.gameObject.layer == _supplyMask)
-            Supply(type);
-            _supplyCooldown = _refillCooldown;
+            if (IsInLayerMask(hit.collider.gameObject, _supplyMask))
+            {
+                Supply(type);
+            }
         }
         if (_isPressed && !hand.isSpraying && hand.enabled && hand.triggerAction.action.WasPressedThisFrame())
         {
