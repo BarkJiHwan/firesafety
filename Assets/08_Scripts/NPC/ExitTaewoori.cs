@@ -43,7 +43,6 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     {
         // 시작 위치를 기준 위치로 설정
         basePosition = transform.position;
-        Debug.Log($"ExitTaewoori Start: basePosition 설정 = {basePosition}");
         XRSimpleInteractable interactable = GetComponent<XRSimpleInteractable>();
         if (interactable != null)
         {
@@ -78,15 +77,26 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
 
         // 현재 위치를 기준 위치로 설정
         basePosition = transform.position;
+    }
 
-        Debug.Log($"ExitTaewoori 초기화 완료: {gameObject.name}, 고정위치: {fixedPosition.name}");
+    /// <summary>
+    /// 초기화 - 매니저, 고정 위치 설정 (속도는 프리팹 값 사용)
+    /// </summary>
+    public void Initialize(FireThreatManager manager, Transform fixedPosition)
+    {
+        threatManager = manager;
+        targetTransform = fixedPosition; // 고정 위치를 타겟으로 설정
+
+        currentHealth = maxHealth;
+        isDead = false;
+
+        // 현재 위치를 기준 위치로 설정
+        basePosition = transform.position;
+
+        Debug.Log($"태우리 초기화 - 프리팹 설정값 사용 (이동: {moveSpeed}, 회전: {rotationSpeed})");
     }
     #endregion
 
-    void OnClicked(ActivateEventArgs args)
-    {
-        TakeDamage(25f); // 클릭하면 25 데미지
-    }
 
     #region 이동 시스템 (Sobaek 방식)
     /// <summary>
@@ -148,6 +158,11 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     #endregion
 
     #region 데미지 시스템 (IDamageable 구현)
+
+    void OnClicked(ActivateEventArgs args)
+    {
+        TakeDamage(25f); // 클릭하면 25 데미지
+    }
     /// <summary>
     /// 데미지 처리 - IDamageable 인터페이스 구현
     /// </summary>
@@ -157,7 +172,6 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
             return;
 
         currentHealth -= damage;
-        Debug.Log($"{gameObject.name} 피격! 데미지: {damage}, 남은 체력: {currentHealth}/{maxHealth}");
 
         if (currentHealth <= 0)
         {
@@ -197,7 +211,6 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     public void SetTarget(Transform target)
     {
         targetTransform = target;
-        Debug.Log($"{gameObject.name} 타겟 변경: {(target != null ? target.name : "없음")}");
     }
 
     /// <summary>
@@ -258,28 +271,7 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     public void SetThreatIndex(int index)
     {
         threatIndex = index;
-        Debug.Log($"{gameObject.name} 위협 인덱스 설정: {threatIndex}");
     }
     #endregion
-
-    #region 디버그
-    private void OnDrawGizmosSelected()
-    {
-        // 정지 거리 표시
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, stopDistance);
-
-        // 타겟으로의 연결선 표시
-        if (targetTransform != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, targetTransform.position);
-        }
-
-        // 기준 위치 표시
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(basePosition, 0.3f);
-        Gizmos.DrawLine(basePosition, transform.position);
-    }
-    #endregion
+   
 }

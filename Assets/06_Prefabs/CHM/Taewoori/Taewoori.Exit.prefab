@@ -215,7 +215,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8133989755165922580}
   - component: {fileID: 195866144605171980}
-  - component: {fileID: 4839300813606089270}
   m_Layer: 8
   m_Name: Baby_LOD2
   m_TagString: Untagged
@@ -313,19 +312,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.10399604, y: 0.3283286, z: -0.10124038}
     m_Extent: {x: 0.43690377, y: 0.5713762, z: 0.40316045}
   m_DirtyAABB: 0
---- !u!135 &4839300813606089270
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2087817764944354831}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.61403686
-  m_Center: {x: -0.08063511, y: -0.0036339164, z: -0.11725467}
 --- !u!1 &2319537640634885306
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,7 +448,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8321839223534404273}
   - component: {fileID: 4004429003099863329}
-  - component: {fileID: 8884465282773602890}
   m_Layer: 8
   m_Name: Baby_LOD3
   m_TagString: Untagged
@@ -560,19 +545,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.10661909, y: 0.32877296, z: -0.104837686}
     m_Extent: {x: 0.433201, y: 0.5698212, z: 0.39951846}
   m_DirtyAABB: 0
---- !u!135 &8884465282773602890
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3782843536018170002}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.6120997
-  m_Center: {x: -0.08319588, y: -0.0032299757, z: -0.12090127}
 --- !u!1 &3860826784269976476
 GameObject:
   m_ObjectHideFlags: 0
@@ -583,7 +555,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1047550151982286502}
   - component: {fileID: 4265333177536249631}
-  - component: {fileID: 5269210361198418864}
   m_Layer: 8
   m_Name: Baby_LOD4
   m_TagString: Untagged
@@ -681,19 +652,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.108269334, y: 0.32598957, z: -0.10095519}
     m_Extent: {x: 0.43498087, y: 0.5730999, z: 0.40351188}
   m_DirtyAABB: 0
---- !u!135 &5269210361198418864
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3860826784269976476}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.6156688
-  m_Center: {x: -0.08503321, y: -0.005719006, z: -0.1169046}
 --- !u!1 &3941737886259652765
 GameObject:
   m_ObjectHideFlags: 0
@@ -1488,7 +1446,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4936073891882642960}
   - component: {fileID: 200440604150498852}
-  - component: {fileID: 2194422814160596591}
   m_Layer: 8
   m_Name: Baby_LOD1
   m_TagString: Untagged
@@ -1586,19 +1543,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.10399604, y: 0.3280837, z: -0.10124038}
     m_Extent: {x: 0.43690377, y: 0.5716211, z: 0.40316045}
   m_DirtyAABB: 0
---- !u!135 &2194422814160596591
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8024552420446816137}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.61428106
-  m_Center: {x: -0.08064859, y: -0.0038781464, z: -0.1172424}
 --- !u!1 &8210205843925188761
 GameObject:
   m_ObjectHideFlags: 0
