@@ -20,7 +20,6 @@ public class APTController : MonoBehaviour
         // 배열 크기 체크
         if (floorFirePrefabs.Length < 4)
         {
-            Debug.LogError("불 파티클 프리팹이 4개 미만입니다! 1~4층 프리팹을 모두 할당해주세요.");
             return;
         }
 
@@ -69,14 +68,6 @@ public class APTController : MonoBehaviour
         {
             floorFirePrefabs[floorIndex].SetActive(isActive);
 
-            // 디버그 로그
-            string floorName = (floorIndex + 1) + "층";
-            string status = isActive ? "활성화" : "비활성화";
-            Debug.Log($"{floorName} 불 파티클 {status}");
-        }
-        else
-        {
-            Debug.LogWarning($"{floorIndex + 1}층 불 파티클 프리팹이 할당되지 않았습니다!");
         }
     }
 
@@ -127,7 +118,6 @@ public class APTController : MonoBehaviour
             case 4:
                 return floor4Fire;
             default:
-                Debug.LogError("층수는 1~4 사이여야 합니다!");
                 return false;
         }
     }
