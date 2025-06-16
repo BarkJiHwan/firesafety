@@ -33,7 +33,7 @@ public class PlayerBehavior : MonoBehaviour
         _playerCamOffset = playerOrigin.CameraFloorOffsetObject;
         _animator = GetComponent<Animator>();
 
-        if (!photonView.IsMine)
+        if (photonView != null && !photonView.IsMine)
         {
             this.enabled = false;
             return;
@@ -43,7 +43,7 @@ public class PlayerBehavior : MonoBehaviour
     //CHM - 내 플레이어일 때만 게임 시작 이벤트 구독
     private void Start()
     {
-        if (photonView.IsMine)
+        if (photonView != null && photonView.IsMine)
         {
             SubscribeToGameManager();
         }
@@ -207,14 +207,14 @@ public class PlayerBehavior : MonoBehaviour
 
         if (playerOrigin.RequestedTrackingOriginMode == XROrigin.TrackingOriginMode.Floor)
         {
-            updatePos = _playerCam.transform.position - _playerCamOffset.transform.position;
+            updatePos = new Vector3(_playerCam.transform.position.x, 0, _playerCam.transform.position.z);
         }
         else
         {
             updatePos = playerOrigin.transform.position;
         }
 
-        if (lastPos - updatePos != Vector3.zero)
+        if (Vector3.Distance(lastPos, updatePos) >= 0.01f)
         {
             _isMoving = true;
         }

@@ -251,7 +251,6 @@ public class Taewoori : BaseTaewoori
 
         _isDead = true; // _isDead 사용
 
-        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "마스터" : "클라이언트")}] 태우리 {networkID} 사망");
 
         // 마스터만 실제 로직 처리
         if (PhotonNetwork.IsMasterClient && !isClientOnly)
@@ -263,7 +262,7 @@ public class Taewoori : BaseTaewoori
             if (manager != null && killerID != -1)
             {
                 ((TaewooriPoolManager)manager).UpdateSurvivalTimeAndRecordKill(networkID, killerID);
-                Debug.Log($"[마스터] 태우리 {networkID} 처치자 {killerID} 기록 완료");
+                
             }
             else if (killerID == -1)
             {
@@ -274,7 +273,6 @@ public class Taewoori : BaseTaewoori
             if (manager != null)
             {
                 ((TaewooriPoolManager)manager).SyncTaewooriDestroy(networkID);
-                Debug.Log($"[마스터] 태우리 {networkID} 파괴 동기화 전송");
             }
 
             // 4. 이벤트 발생 (리스폰 처리용) - sourceFireObj 사용
@@ -299,8 +297,6 @@ public class Taewoori : BaseTaewoori
     {
         if (PhotonNetwork.IsMasterClient || !isClientOnly)
             return;
-
-        Debug.Log($"[클라이언트] 태우리 {networkID} 네트워크 파괴 받음");
 
         _isDead = true; // _isDead 사용
 
@@ -336,7 +332,6 @@ public class Taewoori : BaseTaewoori
             return playerArray[UnityEngine.Random.Range(0, playerArray.Length)];
         }
 
-        Debug.LogWarning("GetLastAttackerID() - 플레이어 정보 없음!");
         return -1;
     }
     #endregion
