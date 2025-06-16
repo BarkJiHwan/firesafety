@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 103603095}
-  - component: {fileID: 103603097}
   - component: {fileID: 103603096}
   m_Layer: 0
   m_Name: Floor4 WayPoints.End
@@ -33,27 +32,6 @@ Transform:
   m_Father: {fileID: 903988398}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &103603097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 103603094}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfc365f4ae03e1040828fd573352fedc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waypointType: 1
-  floorNumber: 4
-  playerTag: Player
-  floorEventType: 0
-  aptController: {fileID: 1349377689}
-  fireThreatManager: {fileID: 0}
-  daTaeuriBoss: {fileID: 0}
-  floorEndWaypoint: {fileID: 0}
-  nextFloorStartWaypoint: {fileID: 227130887}
 --- !u!65 &103603096
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -76,7 +54,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 227130888}
-  - component: {fileID: 227130890}
   - component: {fileID: 227130889}
   m_Layer: 0
   m_Name: Floor3 WayPoints.Start
@@ -100,27 +77,6 @@ Transform:
   m_Father: {fileID: 903988398}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &227130890
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 227130887}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfc365f4ae03e1040828fd573352fedc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waypointType: 0
-  floorNumber: 3
-  playerTag: Player
-  floorEventType: 2
-  aptController: {fileID: 1349377689}
-  fireThreatManager: {fileID: 0}
-  daTaeuriBoss: {fileID: 0}
-  floorEndWaypoint: {fileID: 899917189}
-  nextFloorStartWaypoint: {fileID: 0}
 --- !u!65 &227130889
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -128,73 +84,6 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 227130887}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3, y: 3, z: 3}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &321806506
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 321806507}
-  - component: {fileID: 321806509}
-  - component: {fileID: 321806508}
-  m_Layer: 0
-  m_Name: Floor1 WayPoints.Boss
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &321806507
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 321806506}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -32.8, y: 1.76, z: -0.18958378}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 903988398}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &321806509
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 321806506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfc365f4ae03e1040828fd573352fedc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waypointType: 2
-  floorNumber: 0
-  playerTag: Player
-  floorEventType: 0
-  aptController: {fileID: 1349377689}
-  fireThreatManager: {fileID: 0}
-  daTaeuriBoss: {fileID: 0}
-  floorEndWaypoint: {fileID: 0}
-  nextFloorStartWaypoint: {fileID: 0}
---- !u!65 &321806508
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 321806506}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
@@ -210,7 +99,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 549928495}
-  - component: {fileID: 549928496}
   - component: {fileID: 549928497}
   m_Layer: 0
   m_Name: Floor4 WayPoints.Start
@@ -234,27 +122,6 @@ Transform:
   m_Father: {fileID: 903988398}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &549928496
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 549928494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfc365f4ae03e1040828fd573352fedc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waypointType: 0
-  floorNumber: 4
-  playerTag: Player
-  floorEventType: 1
-  aptController: {fileID: 1349377689}
-  fireThreatManager: {fileID: 0}
-  daTaeuriBoss: {fileID: 0}
-  floorEndWaypoint: {fileID: 103603094}
-  nextFloorStartWaypoint: {fileID: 0}
 --- !u!65 &549928497
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -277,7 +144,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 666016160}
-  - component: {fileID: 666016162}
   - component: {fileID: 666016161}
   m_Layer: 0
   m_Name: Floor2 WayPoints.Start
@@ -301,27 +167,6 @@ Transform:
   m_Father: {fileID: 903988398}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &666016162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 666016159}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfc365f4ae03e1040828fd573352fedc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waypointType: 0
-  floorNumber: 2
-  playerTag: Player
-  floorEventType: 1
-  aptController: {fileID: 1349377689}
-  fireThreatManager: {fileID: 0}
-  daTaeuriBoss: {fileID: 0}
-  floorEndWaypoint: {fileID: 1199151850}
-  nextFloorStartWaypoint: {fileID: 0}
 --- !u!65 &666016161
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -335,37 +180,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3, y: 3, z: 3}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &721453099
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 721453100}
-  m_Layer: 0
-  m_Name: Floor4 TaewooriPos
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &721453100
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 721453099}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -15.85, y: 18.75, z: 0.8}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7524651344830276143}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &899917189
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,7 +189,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 899917190}
-  - component: {fileID: 899917192}
   - component: {fileID: 899917191}
   m_Layer: 0
   m_Name: Floor3 WayPoints.End
@@ -399,27 +212,6 @@ Transform:
   m_Father: {fileID: 903988398}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &899917192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 899917189}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfc365f4ae03e1040828fd573352fedc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waypointType: 1
-  floorNumber: 3
-  playerTag: Player
-  floorEventType: 0
-  aptController: {fileID: 1349377689}
-  fireThreatManager: {fileID: 0}
-  daTaeuriBoss: {fileID: 0}
-  floorEndWaypoint: {fileID: 0}
-  nextFloorStartWaypoint: {fileID: 666016159}
 --- !u!65 &899917191
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -469,7 +261,6 @@ Transform:
   - {fileID: 1199151851}
   - {fileID: 1714145082}
   - {fileID: 2115863512}
-  - {fileID: 321806507}
   m_Father: {fileID: 7524651344830276143}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -482,7 +273,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1199151851}
-  - component: {fileID: 1199151853}
   - component: {fileID: 1199151852}
   m_Layer: 0
   m_Name: Floor2 WayPoints.End
@@ -506,27 +296,6 @@ Transform:
   m_Father: {fileID: 903988398}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1199151853
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1199151850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfc365f4ae03e1040828fd573352fedc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waypointType: 1
-  floorNumber: 2
-  playerTag: Player
-  floorEventType: 0
-  aptController: {fileID: 1349377689}
-  fireThreatManager: {fileID: 0}
-  daTaeuriBoss: {fileID: 0}
-  floorEndWaypoint: {fileID: 0}
-  nextFloorStartWaypoint: {fileID: 1714145081}
 --- !u!65 &1199151852
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -540,37 +309,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3, y: 3, z: 3}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &1490440331
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1490440332}
-  m_Layer: 0
-  m_Name: Floor2 TaewooriPos
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1490440332
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1490440331}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -18.09, y: 8.29, z: -0.47}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7524651344830276143}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1714145081
 GameObject:
   m_ObjectHideFlags: 0
@@ -580,7 +318,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1714145082}
-  - component: {fileID: 1714145084}
   - component: {fileID: 1714145083}
   m_Layer: 0
   m_Name: Floor1 WayPoints.Start
@@ -604,27 +341,6 @@ Transform:
   m_Father: {fileID: 903988398}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1714145084
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1714145081}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfc365f4ae03e1040828fd573352fedc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waypointType: 0
-  floorNumber: 1
-  playerTag: Player
-  floorEventType: 3
-  aptController: {fileID: 1349377689}
-  fireThreatManager: {fileID: 0}
-  daTaeuriBoss: {fileID: 0}
-  floorEndWaypoint: {fileID: 2115863511}
-  nextFloorStartWaypoint: {fileID: 0}
 --- !u!65 &1714145083
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -647,7 +363,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2115863512}
-  - component: {fileID: 2115863514}
   - component: {fileID: 2115863513}
   m_Layer: 0
   m_Name: Floor1 WayPoints.End
@@ -671,27 +386,6 @@ Transform:
   m_Father: {fileID: 903988398}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2115863514
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2115863511}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfc365f4ae03e1040828fd573352fedc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waypointType: 1
-  floorNumber: 1
-  playerTag: Player
-  floorEventType: 0
-  aptController: {fileID: 1349377689}
-  fireThreatManager: {fileID: 0}
-  daTaeuriBoss: {fileID: 0}
-  floorEndWaypoint: {fileID: 0}
-  nextFloorStartWaypoint: {fileID: 321806506}
 --- !u!65 &2115863513
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -714,7 +408,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7524651344830276143}
-  - component: {fileID: 1349377689}
   m_Layer: 0
   m_Name: APT
   m_TagString: Untagged
@@ -740,32 +433,9 @@ Transform:
   - {fileID: 2984914133348215874}
   - {fileID: 543450653647704657}
   - {fileID: 903988398}
-  - {fileID: 721453100}
-  - {fileID: 1490440332}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1349377689
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2119143044244713059}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1882e56ba92d6cb49b7e350a96ab5a50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  floorFirePrefabs:
-  - {fileID: 6069496077981495751}
-  - {fileID: 8136646300176119127}
-  - {fileID: 260122328804800302}
-  - {fileID: 1577851505720232197}
-  floor1Fire: 0
-  floor2Fire: 0
-  floor3Fire: 0
-  floor4Fire: 0
 --- !u!1001 &85816762
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1432,6 +1102,33 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 40383052876230457}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5296199054961989288 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5327926407616461201, guid: 49168d16f3f1a474e8449953fff49dbb,
+    type: 3}
+  m_PrefabInstance: {fileID: 40383052876230457}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &274170869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5296199054961989288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8770e57d3383da4ba7b72c439f48aa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floorNumber: 4
+  floorEventType: 1
+  playerTag: Player
+  startWaypoint: {fileID: 549928494}
+  endWaypoint: {fileID: 103603094}
+  allParticleGroup: {fileID: 1577851505720232197}
+  taewooliStartDelay: 5
+  taewooliSpawnInterval: 5
+  nextFloorManager: {fileID: 1786443997}
 --- !u!1 &7277306160106418605 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7237662048870833812, guid: 49168d16f3f1a474e8449953fff49dbb,
@@ -1451,6 +1148,81 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.20000015, y: 2.4, z: 2.0000002}
   m_Center: {x: -0.000000014901161, y: 1.200001, z: 0}
+--- !u!1001 &2960393361696698135
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 2984914133348215874}
+    m_Modifications:
+    - target: {fileID: 100358074646129475, guid: 02df47ebb1f8a3e4a90a7d02b443d645,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 100358074646129475, guid: 02df47ebb1f8a3e4a90a7d02b443d645,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100358074646129475, guid: 02df47ebb1f8a3e4a90a7d02b443d645,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.552
+      objectReference: {fileID: 0}
+    - target: {fileID: 100358074646129475, guid: 02df47ebb1f8a3e4a90a7d02b443d645,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100358074646129475, guid: 02df47ebb1f8a3e4a90a7d02b443d645,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100358074646129475, guid: 02df47ebb1f8a3e4a90a7d02b443d645,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100358074646129475, guid: 02df47ebb1f8a3e4a90a7d02b443d645,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100358074646129475, guid: 02df47ebb1f8a3e4a90a7d02b443d645,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100358074646129475, guid: 02df47ebb1f8a3e4a90a7d02b443d645,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100358074646129475, guid: 02df47ebb1f8a3e4a90a7d02b443d645,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100358074646129475, guid: 02df47ebb1f8a3e4a90a7d02b443d645,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4391231216022332946, guid: 02df47ebb1f8a3e4a90a7d02b443d645,
+        type: 3}
+      propertyPath: m_Name
+      value: Floor 4 Particle
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 02df47ebb1f8a3e4a90a7d02b443d645, type: 3}
+--- !u!1 &1577851505720232197 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4391231216022332946, guid: 02df47ebb1f8a3e4a90a7d02b443d645,
+    type: 3}
+  m_PrefabInstance: {fileID: 2960393361696698135}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4542673332891806782
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1641,6 +1413,108 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.10000002, y: 1.2, z: 2}
   m_Center: {x: 0.000000011175871, y: 0.6, z: 0}
+--- !u!1 &8573245666883605935 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5327926407616461201, guid: 3c5ca77a44f0cf24b9672616f85fc833,
+    type: 3}
+  m_PrefabInstance: {fileID: 4542673332891806782}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1541721204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8573245666883605935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8770e57d3383da4ba7b72c439f48aa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floorNumber: 1
+  floorEventType: 3
+  playerTag: Player
+  startWaypoint: {fileID: 1714145081}
+  endWaypoint: {fileID: 2115863511}
+  allParticleGroup: {fileID: 6069496077981495751}
+  taewooliStartDelay: 5
+  taewooliSpawnInterval: 5
+  nextFloorManager: {fileID: 0}
+--- !u!1001 &5013765407524491526
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 5430036747704614533}
+    m_Modifications:
+    - target: {fileID: 3854893959090136145, guid: be8143f76c7bb60488c42e07b54d1877,
+        type: 3}
+      propertyPath: m_Name
+      value: Floor 2 Particle
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329038820123219163, guid: be8143f76c7bb60488c42e07b54d1877,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329038820123219163, guid: be8143f76c7bb60488c42e07b54d1877,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329038820123219163, guid: be8143f76c7bb60488c42e07b54d1877,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329038820123219163, guid: be8143f76c7bb60488c42e07b54d1877,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329038820123219163, guid: be8143f76c7bb60488c42e07b54d1877,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329038820123219163, guid: be8143f76c7bb60488c42e07b54d1877,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329038820123219163, guid: be8143f76c7bb60488c42e07b54d1877,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329038820123219163, guid: be8143f76c7bb60488c42e07b54d1877,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329038820123219163, guid: be8143f76c7bb60488c42e07b54d1877,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329038820123219163, guid: be8143f76c7bb60488c42e07b54d1877,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329038820123219163, guid: be8143f76c7bb60488c42e07b54d1877,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: be8143f76c7bb60488c42e07b54d1877, type: 3}
+--- !u!1 &8136646300176119127 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3854893959090136145, guid: be8143f76c7bb60488c42e07b54d1877,
+    type: 3}
+  m_PrefabInstance: {fileID: 5013765407524491526}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5862624441349414769
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1648,6 +1522,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6508337458793640912}
     m_Modifications:
+    - target: {fileID: 5065838012273582954, guid: c8fbae1868701fd40b516e668f7468dd,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.275
+      objectReference: {fileID: 0}
     - target: {fileID: 5962794764803319903, guid: c8fbae1868701fd40b516e668f7468dd,
         type: 3}
       propertyPath: m_Name
@@ -1720,166 +1599,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5962794764803319903, guid: c8fbae1868701fd40b516e668f7468dd,
     type: 3}
   m_PrefabInstance: {fileID: 5862624441349414769}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &6801062219618629849
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 5430036747704614533}
-    m_Modifications:
-    - target: {fileID: 3353236400157543822, guid: 20f3e6f4fbf7ee347883bf71facf7e1b,
-        type: 3}
-      propertyPath: m_Name
-      value: Floor 2 Particle
-      objectReference: {fileID: 0}
-    - target: {fileID: 3353236400157543822, guid: 20f3e6f4fbf7ee347883bf71facf7e1b,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098321165791739140, guid: 20f3e6f4fbf7ee347883bf71facf7e1b,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098321165791739140, guid: 20f3e6f4fbf7ee347883bf71facf7e1b,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098321165791739140, guid: 20f3e6f4fbf7ee347883bf71facf7e1b,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098321165791739140, guid: 20f3e6f4fbf7ee347883bf71facf7e1b,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098321165791739140, guid: 20f3e6f4fbf7ee347883bf71facf7e1b,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098321165791739140, guid: 20f3e6f4fbf7ee347883bf71facf7e1b,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098321165791739140, guid: 20f3e6f4fbf7ee347883bf71facf7e1b,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098321165791739140, guid: 20f3e6f4fbf7ee347883bf71facf7e1b,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098321165791739140, guid: 20f3e6f4fbf7ee347883bf71facf7e1b,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098321165791739140, guid: 20f3e6f4fbf7ee347883bf71facf7e1b,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098321165791739140, guid: 20f3e6f4fbf7ee347883bf71facf7e1b,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 20f3e6f4fbf7ee347883bf71facf7e1b, type: 3}
---- !u!1 &8136646300176119127 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3353236400157543822, guid: 20f3e6f4fbf7ee347883bf71facf7e1b,
-    type: 3}
-  m_PrefabInstance: {fileID: 6801062219618629849}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &7051056957773605475
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 2984914133348215874}
-    m_Modifications:
-    - target: {fileID: 5308485849487289911, guid: 9e2292f20e32ccb4d95e91db4f9abe46,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 5308485849487289911, guid: 9e2292f20e32ccb4d95e91db4f9abe46,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5308485849487289911, guid: 9e2292f20e32ccb4d95e91db4f9abe46,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2.552
-      objectReference: {fileID: 0}
-    - target: {fileID: 5308485849487289911, guid: 9e2292f20e32ccb4d95e91db4f9abe46,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5308485849487289911, guid: 9e2292f20e32ccb4d95e91db4f9abe46,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5308485849487289911, guid: 9e2292f20e32ccb4d95e91db4f9abe46,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5308485849487289911, guid: 9e2292f20e32ccb4d95e91db4f9abe46,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5308485849487289911, guid: 9e2292f20e32ccb4d95e91db4f9abe46,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5308485849487289911, guid: 9e2292f20e32ccb4d95e91db4f9abe46,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5308485849487289911, guid: 9e2292f20e32ccb4d95e91db4f9abe46,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5308485849487289911, guid: 9e2292f20e32ccb4d95e91db4f9abe46,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8376630866325103462, guid: 9e2292f20e32ccb4d95e91db4f9abe46,
-        type: 3}
-      propertyPath: m_Name
-      value: Floor 4 Particle
-      objectReference: {fileID: 0}
-    - target: {fileID: 8376630866325103462, guid: 9e2292f20e32ccb4d95e91db4f9abe46,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9e2292f20e32ccb4d95e91db4f9abe46, type: 3}
---- !u!1 &1577851505720232197 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8376630866325103462, guid: 9e2292f20e32ccb4d95e91db4f9abe46,
-    type: 3}
-  m_PrefabInstance: {fileID: 7051056957773605475}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7113627054542781950
 PrefabInstance:
@@ -1980,6 +1699,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 259af151f8f3e5f459c283515b688285, type: 3}
+--- !u!1 &3118802987490182255 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5327926407616461201, guid: 259af151f8f3e5f459c283515b688285,
+    type: 3}
+  m_PrefabInstance: {fileID: 7113627054542781950}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1249314849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3118802987490182255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8770e57d3383da4ba7b72c439f48aa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floorNumber: 2
+  floorEventType: 1
+  playerTag: Player
+  startWaypoint: {fileID: 666016159}
+  endWaypoint: {fileID: 1199151850}
+  allParticleGroup: {fileID: 8136646300176119127}
+  taewooliStartDelay: 5
+  taewooliSpawnInterval: 5
+  nextFloorManager: {fileID: 1541721204}
 --- !u!4 &5430036747704614533 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3018524159130026875, guid: 259af151f8f3e5f459c283515b688285,
@@ -2065,6 +1811,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 79459c6611efc514484a76ad06a209a5, type: 3}
+--- !u!1 &4197681423437842746 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5327926407616461201, guid: 79459c6611efc514484a76ad06a209a5,
+    type: 3}
+  m_PrefabInstance: {fileID: 8336639915758596267}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1786443997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4197681423437842746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8770e57d3383da4ba7b72c439f48aa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floorNumber: 3
+  floorEventType: 2
+  playerTag: Player
+  startWaypoint: {fileID: 227130887}
+  endWaypoint: {fileID: 899917189}
+  allParticleGroup: {fileID: 260122328804800302}
+  taewooliStartDelay: 5
+  taewooliSpawnInterval: 5
+  nextFloorManager: {fileID: 1249314849}
 --- !u!4 &6508337458793640912 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3018524159130026875, guid: 79459c6611efc514484a76ad06a209a5,

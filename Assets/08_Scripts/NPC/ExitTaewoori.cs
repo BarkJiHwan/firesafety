@@ -2,7 +2,7 @@
 using UnityEngine.XR.Interaction.Toolkit;
 
 /// <summary>
-/// Sobaek 방식으로 관리하는 ExitTaewoori - basePosition + 둥둥효과 분리
+/// 새 구조용 ExitTaewoori - ExitTaewooliSpawnParticle에서 생성됨
 /// </summary>
 public class ExitTaewoori : MonoBehaviour, IDamageable
 {
@@ -21,15 +21,14 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
 
     #region 변수 선언
     private Vector3 basePosition; // 기준 위치 (이동만 담당)
-    private Transform targetTransform; // 플레이어 카메라
-    private FireThreatManager threatManager;
+    private Transform targetTransform; // 플레이어 주변 고정 위치
+    private ExitTaewooliSpawnParticle spawnParticle; // 생성한 파티클 스크립트
     private bool isDead = false;
     private float floatTimer = 0f; // 둥둥 효과용 타이머
-    private int threatIndex = 0; // 부채꼴 배치용 인덱스
     #endregion
 
     #region 프로퍼티
-    public FireThreatManager ThreatManager => threatManager;
+    public ExitTaewooliSpawnParticle SpawnParticle => spawnParticle;
     public bool IsDead => isDead;
     #endregion
 
@@ -43,6 +42,8 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     {
         // 시작 위치를 기준 위치로 설정
         basePosition = transform.position;
+
+        // XR 인터랙션 설정
         XRSimpleInteractable interactable = GetComponent<XRSimpleInteractable>();
         if (interactable != null)
         {
@@ -63,28 +64,11 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
 
     #region 초기화
     /// <summary>
-    /// 초기화 - 매니저, 고정 위치, 이동 설정
+    /// 초기화 - 생성 파티클, 고정 위치 설정 (새 구조용)
     /// </summary>
-    public void Initialize(FireThreatManager manager, Transform fixedPosition, float moveSpd, float rotSpd)
+    public void Initialize(ExitTaewooliSpawnParticle particle, Transform fixedPosition)
     {
-        threatManager = manager;
-        targetTransform = fixedPosition; // 고정 위치를 타겟으로 설정
-        moveSpeed = moveSpd;
-        rotationSpeed = rotSpd;
-
-        currentHealth = maxHealth;
-        isDead = false;
-
-        // 현재 위치를 기준 위치로 설정
-        basePosition = transform.position;
-    }
-
-    /// <summary>
-    /// 초기화 - 매니저, 고정 위치 설정 (속도는 프리팹 값 사용)
-    /// </summary>
-    public void Initialize(FireThreatManager manager, Transform fixedPosition)
-    {
-        threatManager = manager;
+        spawnParticle = particle;
         targetTransform = fixedPosition; // 고정 위치를 타겟으로 설정
 
         currentHealth = maxHealth;
@@ -93,12 +77,12 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
         // 현재 위치를 기준 위치로 설정
         basePosition = transform.position;
 
-        Debug.Log($"태우리 초기화 - 프리팹 설정값 사용 (이동: {moveSpeed}, 회전: {rotationSpeed})");
+        Debug.Log($"태우리 초기화 완료 (새 구조) - 목표 위치: {fixedPosition.name}");
     }
+
     #endregion
 
-
-    #region 이동 시스템 (Sobaek 방식)
+    #region 이동 시스템
     /// <summary>
     /// 기준 위치 업데이트 - 고정 위치로 이동
     /// </summary>
@@ -124,7 +108,7 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     }
 
     /// <summary>
-    /// 둥둥 떠다니는 효과 적용 (Sobaek 방식)
+    /// 둥둥 떠다니는 효과 적용
     /// </summary>
     private void UpdateFloatingEffect()
     {
@@ -140,11 +124,15 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     /// </summary>
     private void UpdateRotation()
     {
-        if (threatManager == null || threatManager.PlayerCamera == null)
+        if (spawnParticle == null)
+            return;
+
+        Camera playerCamera = spawnParticle.GetPlayerCamera();
+        if (playerCamera == null)
             return;
 
         // 플레이어 카메라 위치를 바라보기
-        Vector3 playerPos = threatManager.PlayerCamera.transform.position;
+        Vector3 playerPos = playerCamera.transform.position;
         Vector3 lookDirection = (playerPos - transform.position);
         lookDirection.y = 0; // Y축 차이 무시 (수평으로만 회전)
 
@@ -158,11 +146,14 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     #endregion
 
     #region 데미지 시스템 (IDamageable 구현)
-
+    /// <summary>
+    /// XR 클릭 이벤트 처리
+    /// </summary>
     void OnClicked(ActivateEventArgs args)
     {
         TakeDamage(25f); // 클릭하면 25 데미지
     }
+
     /// <summary>
     /// 데미지 처리 - IDamageable 인터페이스 구현
     /// </summary>
@@ -191,10 +182,15 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
 
         isDead = true;
 
-        // 매니저에 사망 알림
-        if (threatManager != null)
+        // 생성 파티클에 사망 알림
+        if (spawnParticle != null)
         {
-            threatManager.OnThreatDestroyed(this);
+            Debug.Log($"태우리 사망 - 파티클에 알림: {spawnParticle.name}");
+            spawnParticle.OnTaewooliDestroyed(this);
+        }
+        else
+        {
+            Debug.LogWarning("spawnParticle이 null입니다!");
         }
 
         Debug.Log($"{gameObject.name} 사망!");
@@ -264,14 +260,5 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
 
         return Vector3.Distance(transform.position, targetTransform.position);
     }
-
-    /// <summary>
-    /// 위협 인덱스 설정 (부채꼴 배치용)
-    /// </summary>
-    public void SetThreatIndex(int index)
-    {
-        threatIndex = index;
-    }
     #endregion
-   
 }

@@ -44,7 +44,6 @@ GameObject:
   - component: {fileID: 3044635591708694441}
   - component: {fileID: 3258114226072848918}
   - component: {fileID: 1568443947}
-  - component: {fileID: 1568443946}
   m_Layer: 0
   m_Name: DaTaeuri.001
   m_TagString: Untagged
@@ -130,21 +129,3 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.4950484
   m_Center: {x: -0.008208439, y: 0.005084276, z: -0.0035054982}
---- !u!114 &1568443946
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1849835719524810822}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 452547b916e5d2546b9e1014d23cebfe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTransform: {fileID: 0}
-  floatingSpeed: 2
-  floatingHeight: 1
-  rotationSpeed: 2
-  approachSpeed: 1
-  approachDistance: 5
