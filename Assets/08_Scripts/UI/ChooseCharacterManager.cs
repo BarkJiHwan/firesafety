@@ -40,7 +40,7 @@ public class ChooseCharacterManager : MonoBehaviour
 
     void OnSelected(SelectEnterEventArgs args)
     {
-        SceneController.Instance.GetChooseCharacterType(charType);
+        //SceneController.Instance.GetChooseCharacterType(charType);
         charChoose.SetActiveButton(charType);
         characterMgr.selectCharacter = gameObject;
         //skinnedMesh.materials = mats;

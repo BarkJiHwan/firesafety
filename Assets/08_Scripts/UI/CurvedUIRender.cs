@@ -16,7 +16,7 @@ public class CurvedUIRender : MonoBehaviour
     Vector2 renderSize;
     void Awake()
     {
-        renderSize = new Vector2(1024,512);
+        renderSize = new Vector2(2560,1440);
         SetRenderTextureUI();
     }
 
@@ -29,7 +29,8 @@ public class CurvedUIRender : MonoBehaviour
         outputTexture.antiAliasing = 4;
         outputTexture.name = "CurvedUI_RenderTexture";
         outputTexture.useMipMap = false;
-        outputTexture.filterMode = FilterMode.Bilinear;
+        outputTexture.filterMode = FilterMode.Point;
+        outputTexture.anisoLevel = 1;
         outputTexture.Create();
 
         //GameObject camObj = new GameObject("UI Render Camera");

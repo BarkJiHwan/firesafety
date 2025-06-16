@@ -22,6 +22,7 @@ public class MakeCurvedMesh : MonoBehaviour
 
     RectTransform canvasTransform;
     MeshCollider meshCol;
+    CanvasMeshRootCtrl canvasMeshCtrl;
 
     public Vector3 xrRigCurvedMeshDist
     {
@@ -30,6 +31,7 @@ public class MakeCurvedMesh : MonoBehaviour
 
     void Start()
     {
+        canvasMeshCtrl = GetComponentInParent<CanvasMeshRootCtrl>();
         meshCol = GetComponent<MeshCollider>();
         if(canvas != null)
         {
@@ -131,8 +133,16 @@ public class MakeCurvedMesh : MonoBehaviour
         }
 
         //transform.position += new Vector3(0, 0.9f, 0);
-        PositionCurvedUIInFront();
-        MoveCameraCenter();
+        if(canvasMeshCtrl.isPlayerMove == false)
+        {
+            PositionCurvedUIInFront();
+            MoveCameraCenter(xrRig);
+        }
+        // Ingame 내에서 캐릭터가 생성되기 때문에 xrRig 필요
+        else
+        {
+            transform.position += new Vector3(0, xrRigCameraOffSet.y, xrRigCameraOffSet.z);
+        }
         // 카메라를 원통형의 중간으로 오게 함
 
         // MeshFilter에 메쉬 할당
@@ -156,19 +166,25 @@ public class MakeCurvedMesh : MonoBehaviour
         //xrOriginTrans.position = meshPos - new Vector3(0, 0, 1f);
         transform.position = meshPos;
     }
-    void MoveCameraCenter()
+
+    void PositionFixedUIInfront()
     {
-        if (xrRig == null)
+
+    }
+
+    void MoveCameraCenter(GameObject xrRigObject)
+    {
+        if (xrRigObject == null)
             return;
         //Vector3 meshCenter = transform.position;
         Vector3 meshCenter = transform.position;
 
         Vector3 meshNormal = transform.forward;
 
-        xrRig.transform.position = meshCenter + meshNormal - new Vector3(0, height / xrRigCameraOffSet.y, xrRigCameraOffSet.z);
-        xrRig.transform.rotation = Quaternion.LookRotation(meshNormal, Vector3.up);
+        xrRigObject.transform.position = meshCenter + meshNormal - new Vector3(0, height / xrRigCameraOffSet.y, xrRigCameraOffSet.z);
+        xrRigObject.transform.rotation = Quaternion.LookRotation(meshNormal, Vector3.up);
 
-        xrRigCurvedMeshDist = transform.position - xrRig.transform.position;
+        xrRigCurvedMeshDist = transform.position - xrRigObject.transform.position;
     }
 
 }

@@ -8,19 +8,29 @@ public class FixedViewCanvasController : MonoBehaviour
 {
     [Header("점수판")]
     [SerializeField] GameObject scorePanel;
+    [SerializeField] GameObject conversationBoard;
     [SerializeField] float showScoreTime;
-    [SerializeField] TextMeshProUGUI restSecondText; 
+    [SerializeField] TextMeshProUGUI restSecondText;
+
+    ScoreBoardController scoreBoardCtrl;
+    
+
+    private void Awake()
+    {
+        scoreBoardCtrl = scorePanel.GetComponent<ScoreBoardController>();
+
+    }
 
     void Start()
     {
-        // 임시
-        scorePanel.SetActive(true);
-        StartCoroutine(CloseScoreBoard());
+        // 임시 => 예방/화재 이후, 엔딩씬 이후로 구분 필요
+        //TurnOnScoreBoard();
 
         // => 옵저버 패턴
 
         // 1. 점수판
-        // 화재 페이즈가 끝나면 점수판 출력 (GameManager.Instance.CurrentPhase == leaveDangerArea) -> 예외처리 필요 : scorePanel이 켜져있을때
+        // 화재 페이즈가 끝나면 점수판 출력 (GameManager.Instance.CurrentPhase == leaveDangerArea)
+        // ScoreBoardController.ChangeBoardStandard(sceneType);
     }
 
     void Update()
@@ -28,14 +38,28 @@ public class FixedViewCanvasController : MonoBehaviour
         
     }
 
+    void TurnOnScoreBoard()
+    {
+        scorePanel.SetActive(true);
+        if(scorePanel.activeSelf == true)
+        {
+            StartCoroutine(CloseScoreBoard());
+        }
+    }
+
     IEnumerator CloseScoreBoard()
     {
-        float startTime = Time.realtimeSinceStartup;
-        float elapsedTime = showScoreTime - startTime;
-        int restSecond = Mathf.FloorToInt(elapsedTime);
-        restSecondText.text = restSecond.ToString();
-        yield return new WaitForSeconds(showScoreTime);
+        float elapsedTime = 0;
+        int restSecond = 0;
+        while (elapsedTime <= showScoreTime)
+        {
+            elapsedTime += Time.deltaTime;
+            restSecond = Mathf.CeilToInt(showScoreTime - elapsedTime);
+            restSecondText.text = restSecond.ToString();
+            yield return null;
+        }
         Debug.Log("끝남");
+        scorePanel.SetActive(false);
 
         // 예방/화재에서는 초가 끝나면 방을 나가서 씬 선택 창으로 이동
         //if(SceneController.Instance.chooseSceneType == SceneType.IngameScene_Fire)
