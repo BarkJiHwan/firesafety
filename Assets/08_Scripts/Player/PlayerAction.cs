@@ -27,28 +27,40 @@ public class PlayerAction : MonoBehaviour
     {
         while (this.enabled)
         {
+            // 연동하고 있는 Behavior 없어졌을 경우 무한루프 종료
             if (!_playerBehavior)
             {
-                Debug.Log("hihi");
                 yield break;
             }
 
+            //
             if (_observedMove != _playerBehavior.IsMoving)
             {
                 _observedMove = _playerBehavior.IsMoving;
-                _photonView.RPC("AnimateWalk", RpcTarget.All);
+                DecideAnimationMethod(_moving, _observedMove);
             }
-
-            Debug.Log("IsMoving : " + _playerBehavior.IsMoving);
 
             yield return new WaitForSeconds(0.1f);
         }
     }
 
-    [PunRPC]
-    public void AnimateWalk()
+    // 포톤 뷰 존재 여부에 따라 애니메이션 재생 수행하는 방법 분기
+    public void DecideAnimationMethod(int animatorParam, bool flag)
     {
-        _animator.SetBool(_moving, _observedMove);
-        Debug.Log("animateWalk");
+        if (_photonView == null)
+        {
+            Animate(animatorParam, flag);
+        }
+        else
+        {
+            object[] parameters = { animatorParam, flag };
+            _photonView.RPC("Animate", RpcTarget.All, parameters);
+        }
+    }
+
+    [PunRPC]
+    public void Animate(int animatorParam, bool flag)
+    {
+        _animator.SetBool(animatorParam, flag);
     }
 }
