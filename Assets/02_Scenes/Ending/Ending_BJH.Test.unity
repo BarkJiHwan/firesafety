@@ -1109,7 +1109,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &875530350
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1316,7 +1316,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1331398967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2768,20 +2768,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fe27954755b2c348948e68868072a30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exitTaewooriPrefab: {fileID: 5755754473064602975, guid: 90691631894a7ad47b4b383dfd5555a5,
-    type: 3}
-  spawnPoints:
-  - {fileID: 1136370837}
-  maxActiveCharacters: 8
-  poolSize: 15
-  spawnInterval: 3
-  minSpawnInterval: 1
-  maxSpawnInterval: 5
-  useRandomInterval: 1
-  autoSpawn: 1
-  useWaypoints: 1
-  globalWaypoints:
-  - {fileID: 549928495}
 --- !u!4 &1733353173
 Transform:
   m_ObjectHideFlags: 0
