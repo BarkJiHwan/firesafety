@@ -11,10 +11,10 @@ public class TutorialDataMgr : MonoBehaviourPun
     public List<GameObject> InteractObjects { get; set; }
 
     [Header("플레이어별 튜토리얼 데이터 (0~5번)")]
-    [SerializeField] private TutorialData[] allPlayerData;
+    [SerializeField] private TutorialData[] _allTutorialData;
 
     [Header("기본 데이터 (에러 발생 시 사용)")]
-    [SerializeField] private TutorialData fallbackData;
+    [SerializeField] private TutorialData _defaultData;
 
     private Coroutine _tutorialRoutine;
 
@@ -41,21 +41,21 @@ public class TutorialDataMgr : MonoBehaviourPun
     // PlayerList 인덱스 기반 데이터 반환
     public TutorialData GetPlayerData(int playerListIndex)
     {
-        if (allPlayerData.Length == 0)
+        if (_allTutorialData.Length == 0)
         {
             Debug.LogError("튜토리얼 데이터가 설정되지 않았습니다!");
-            return fallbackData;
+            return _defaultData;
         }
 
-        int index = Mathf.Clamp(playerListIndex, 0, allPlayerData.Length - 1);
+        int index = Mathf.Clamp(playerListIndex, 0, _allTutorialData.Length - 1);
 
-        if (allPlayerData[index] == null)
+        if (_allTutorialData[index] == null)
         {
             Debug.LogError($"인덱스 {index}의 튜토리얼 데이터가 없습니다!");
-            return fallbackData;
+            return _defaultData;
         }
 
-        return allPlayerData[index];
+        return _allTutorialData[index];
     }
 
     public GameObject GetInteractObject(int playerListIndex)

@@ -567,15 +567,12 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
 
     #region 리스폰 시스템
     /// <summary>
-    /// 태우리 파괴 이벤트 핸들러 - 마스터만 처리
+    /// 태우리 파괴 이벤트 - 마스터만 처리
     /// </summary>
     private void HandleTaewooriDestroyed(Taewoori taewoori, FireObjScript fireObj)
     {
         if (!PhotonNetwork.IsMasterClient)
             return;
-
-        // 생존시간 기록은 Taewoori.Die()에서 직접 처리
-        // 여기서는 리스폰만 처리
 
         if (fireObj != null)
         {

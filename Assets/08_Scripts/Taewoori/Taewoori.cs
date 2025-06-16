@@ -212,9 +212,6 @@ public class Taewoori : BaseTaewoori
 
         currentHealth = newCurrentHealth;
         maxHealth = newMaxHealth;
-
-        // 색상 업데이트 (BaseTaewoori의 public 메서드)
-        UpdateHealthColor();
     }
 
     /// <summary>

@@ -7,11 +7,12 @@ public class PlayerInteractor : MonoBehaviour
 {
     bool isActive = false;
 
+    private readonly int _playerLayer = 9;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.transform.parent == gameObject.transform.parent)
+        if (other.gameObject.layer == _playerLayer)
         {
-            Debug.Log("이건 나임 : " + other);
+            Debug.Log("플레이어는 무시함 : " + other);
             return;
         }
 
