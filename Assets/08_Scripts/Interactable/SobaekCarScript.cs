@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Splines;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public enum CarSpped {
@@ -14,10 +15,12 @@ public class SobaekCarScript : MonoBehaviour
     public GameObject player;
 
     private XRSimpleInteractable _simpleInteractable;
+    private SplineAnimate _splineAnimate;
     private void Awake()
     {
         _simpleInteractable = GetComponent<XRSimpleInteractable>();
         _simpleInteractable.selectEntered.AddListener(OnEnteredCar);
+        _splineAnimate = GetComponent<SplineAnimate>();
     }
 
     /* 한번 탑승하면 Interactable 꺼버리기 */
@@ -30,5 +33,13 @@ public class SobaekCarScript : MonoBehaviour
 
         _simpleInteractable.selectEntered.RemoveListener(OnEnteredCar);
         _simpleInteractable.enabled = false;
+
+        /* 터치하면 바로 출발함, 따로 빼려면 메서드 호출 다른데서 하도록*/
+        StartTrack();
+    }
+
+    public void StartTrack()
+    {
+        _splineAnimate.Play();
     }
 }
