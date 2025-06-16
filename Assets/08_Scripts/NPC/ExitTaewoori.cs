@@ -78,6 +78,23 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
         // 현재 위치를 기준 위치로 설정
         basePosition = transform.position;
     }
+
+    /// <summary>
+    /// 초기화 - 매니저, 고정 위치 설정 (속도는 프리팹 값 사용)
+    /// </summary>
+    public void Initialize(FireThreatManager manager, Transform fixedPosition)
+    {
+        threatManager = manager;
+        targetTransform = fixedPosition; // 고정 위치를 타겟으로 설정
+
+        currentHealth = maxHealth;
+        isDead = false;
+
+        // 현재 위치를 기준 위치로 설정
+        basePosition = transform.position;
+
+        Debug.Log($"태우리 초기화 - 프리팹 설정값 사용 (이동: {moveSpeed}, 회전: {rotationSpeed})");
+    }
     #endregion
 
 
