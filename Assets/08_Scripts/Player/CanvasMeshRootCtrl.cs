@@ -7,7 +7,7 @@ public class CanvasMeshRootCtrl : MonoBehaviour
     [SerializeField] GameObject canvas;
     [SerializeField] GameObject curvedMesh;
     [SerializeField] float angleThreshold = 30f;
-    [SerializeField] bool isPlayerMove;
+    public bool isPlayerMove;
 
     Transform xrCam;
     MakeCurvedMesh curvedManager;
@@ -15,9 +15,14 @@ public class CanvasMeshRootCtrl : MonoBehaviour
     RectTransform canvasTransform;
     float lastYAngle;
 
+    Camera uiCam;
+
+    bool isMade;
+
     void Awake()
     {
         curvedManager = curvedMesh.GetComponent<MakeCurvedMesh>();
+        uiCam = transform.GetComponentInChildren<Camera>();
     }
 
     void Start()
@@ -25,27 +30,68 @@ public class CanvasMeshRootCtrl : MonoBehaviour
         if (canvas != null)
         {
             canvasTransform = canvas.GetComponent<RectTransform>();
+        }
+        if (isPlayerMove == false)
+        {
             canvasTransform.SetParent(transform, false);
         }
-        xrCam = Camera.main.transform;
-        lastYAngle = GetYaw(xrCam.forward);
-        FollowUser();
+        else
+        {
+            uiCam.transform.parent = null;
+        }
+        // 캐릭터가 생성된 후에 해야 할 수 있음
+        if(Camera.main != null)
+        {
+            xrCam = Camera.main.transform;
+            lastYAngle = GetYaw(xrCam.forward);
+            FollowUser();
+            isMade = true;
+        }
     }
 
     void LateUpdate()
     {
-        if(xrCam == null)
+        if(Camera.main == null)
         {
             return;
+        }
+        else if(isMade == false)
+        {
+            xrCam = Camera.main.transform;
+            lastYAngle = GetYaw(xrCam.forward);
+            FollowUser();
+            isMade = true;
         }
         float currentYaw = GetYaw(xrCam.forward);
         float angleDelta = Mathf.Abs(Mathf.DeltaAngle(lastYAngle, currentYaw));
 
-        if(angleDelta > angleThreshold)
+        if (isPlayerMove == true)
         {
-            FollowUser();
-            lastYAngle = currentYaw;
+            FollowUserMove();
+
+            if (angleDelta > angleThreshold)
+            {
+                FollowUserRotation(currentYaw);
+                lastYAngle = currentYaw;
+            }
         }
+        else
+        {
+            if (angleDelta > angleThreshold)
+            {
+                FollowUser();
+                lastYAngle = currentYaw;
+            }
+        }
+    }
+
+    void FollowUserMove()
+    {
+        Quaternion rot = Quaternion.Euler(0, lastYAngle, 0);
+        Vector3 rotatedOffset = rot * curvedManager.xrRigCurvedMeshDist;
+
+        Vector3 pos = xrCam.position + new Vector3(rotatedOffset.x, -0.9f, rotatedOffset.z);
+        transform.position = pos;
     }
 
     void FollowUser()
@@ -56,15 +102,16 @@ public class CanvasMeshRootCtrl : MonoBehaviour
         Vector3 rotatedOffset = rot * curvedManager.xrRigCurvedMeshDist;
 
         Vector3 pos = xrCam.position + new Vector3(rotatedOffset.x, 0, rotatedOffset.z);
-        if(isPlayerMove == false)
-        {
-            pos.y = 0;
-        }
-        else
-        {
-            pos.y -= 0.5f;
-        }
+
+        pos.y = 0;
+
         transform.position = pos;
+        transform.rotation = rot;
+    }
+
+    void FollowUserRotation(float angle)
+    {
+        Quaternion rot = Quaternion.Euler(0, angle, 0);
         transform.rotation = rot;
     }
 
