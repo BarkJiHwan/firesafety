@@ -494,41 +494,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 942744986, guid: 2afdc61cd17554d7a8912d1bb60f7b06, type: 3}
-      propertyPath: position.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3982813157638611329, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3982813157638611329, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3982813157639212270, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
-        type: 3}
-      propertyPath: near clip plane
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3982813158226588227, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3982813158226588227, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3982813158359188707, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
-        type: 3}
-      propertyPath: chaDriver
-      value: 
-      objectReference: {fileID: 3982813158359188709, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
-        type: 3}
     - target: {fileID: 3982813159479471952, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
         type: 3}
       propertyPath: m_RootOrder
@@ -588,11 +553,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Jennie_Player_With_XR_Floor
-      objectReference: {fileID: 0}
-    - target: {fileID: 9126010614857539734, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
-        type: 3}
-      propertyPath: sceneViewId
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2afdc61cd17554d7a8912d1bb60f7b06, type: 3}

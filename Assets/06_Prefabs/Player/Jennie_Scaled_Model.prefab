@@ -1278,9 +1278,11 @@ GameObject:
   - component: {fileID: 5866666021955946619}
   - component: {fileID: 5866666021955946620}
   - component: {fileID: 891625631411848100}
+  - component: {fileID: 4586800665107484942}
   - component: {fileID: 8646238192549996217}
   - component: {fileID: 762319275}
   - component: {fileID: 762319276}
+  - component: {fileID: 454540275180752925}
   - component: {fileID: 6284734437639265927}
   - component: {fileID: 2019223859}
   m_Layer: 9
@@ -1426,7 +1428,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerOrigin: {fileID: 0}
-  playerCam: {fileID: 0}
   photonView: {fileID: 762319275}
   sobaekPrefab: {fileID: 2550521804121879437, guid: 8c557239dc3323e42a0bb6401677f15b,
     type: 3}
@@ -1440,6 +1441,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dd75eaf9d1a2843cb8f5ad29e6dbb345, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4586800665107484942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4981747460995190306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3094e52a22024974a0dabd86d1278e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!135 &8646238192549996217
@@ -1496,6 +1509,18 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &454540275180752925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4981747460995190306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69b0932f20b768946a953a91e08d68e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6284734437639265927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1531,6 +1556,7 @@ MonoBehaviour:
     enabled: 0
     isSpraying: 0
     handType: 1
+    interator: {fileID: 0}
   _rightHand:
     triggerAction:
       m_UseReference: 1
@@ -1554,6 +1580,7 @@ MonoBehaviour:
     enabled: 0
     isSpraying: 0
     handType: 0
+    interator: {fileID: 0}
   _sprayLength: 2.5
   _sprayRadius: 1
   _damage: 1
@@ -1612,6 +1639,7 @@ MonoBehaviour:
     enabled: 0
     isSpraying: 0
     handType: 0
+    interator: {fileID: 0}
   _rightHand:
     triggerAction:
       m_UseReference: 1
@@ -1643,6 +1671,7 @@ MonoBehaviour:
     enabled: 0
     isSpraying: 0
     handType: 0
+    interator: {fileID: 0}
   _sprayLength: 2.5
   _sprayRadius: 1
   _damage: 5

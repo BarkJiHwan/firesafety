@@ -1,12 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Photon.Pun;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 
 public class PlayerBehavior : MonoBehaviour
 {
-    private static readonly int _moving = Animator.StringToHash("IsMoving");
-
     /* 플레이어의 상태 나타내는 변수 */
     private bool _isSitting;
     private bool _isMoving;
@@ -16,7 +15,6 @@ public class PlayerBehavior : MonoBehaviour
 
     private Camera _playerCam;
     private GameObject _playerCamOffset;
-    private Animator _animator;
 
     //CHM - 소백이 관련
     [SerializeField] private GameObject sobaekPrefab;
@@ -31,12 +29,10 @@ public class PlayerBehavior : MonoBehaviour
     {
         _playerCam = playerOrigin.Camera;
         _playerCamOffset = playerOrigin.CameraFloorOffsetObject;
-        _animator = GetComponent<Animator>();
 
         if (photonView != null && !photonView.IsMine)
         {
             this.enabled = false;
-            return;
         }
     }
 
@@ -118,7 +114,6 @@ public class PlayerBehavior : MonoBehaviour
     //CHM - 게임 시작 시 호출
     private void OnGameStart()
     {
-
         CreateSobaekWhenReady();
     }
     //CHM - 게임 종료 시 호출
@@ -207,14 +202,14 @@ public class PlayerBehavior : MonoBehaviour
 
         if (playerOrigin.RequestedTrackingOriginMode == XROrigin.TrackingOriginMode.Floor)
         {
-            updatePos = _playerCam.transform.position - _playerCamOffset.transform.position;
+            updatePos = new Vector3(_playerCam.transform.position.x, 0, _playerCam.transform.position.z);
         }
         else
         {
             updatePos = playerOrigin.transform.position;
         }
 
-        if (lastPos - updatePos != Vector3.zero)
+        if (Vector3.Distance(lastPos, updatePos) >= 0.01f)
         {
             _isMoving = true;
         }
@@ -224,7 +219,6 @@ public class PlayerBehavior : MonoBehaviour
         }
 
         gameObject.transform.position = updatePos;
-        _animator.SetBool(_moving, IsMoving);
     }
 
     private void FixedUpdate()
