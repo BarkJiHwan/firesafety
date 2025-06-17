@@ -333,14 +333,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         // 인스펙터 표시용 업데이트
         UpdateInspectorKillInfo();
 
-        // 실시간으로 ScoreManager에 점수 전달 (현재 플레이어인 경우)
-        if (PhotonNetwork.LocalPlayer != null && killerPlayerID == PhotonNetwork.LocalPlayer.ActorNumber)
-        {
-            if (scoreManager != null)
-            {
-                scoreManager.SetScore(ScoreType.Fire_Count, killScore);
-            }
-        }
     }
 
     /// <summary>
