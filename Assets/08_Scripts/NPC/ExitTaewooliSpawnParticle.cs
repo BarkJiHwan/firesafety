@@ -26,6 +26,8 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
     private static bool[] positionOccupied; // 위치 점유 상태
     private static bool positionsInitialized = false; // 위치 초기화 여부
     private bool managedByFloorManager = true; // 매니저에 의해 관리되는지 여부
+                                              
+    private FloorManager floorManager;
     #endregion
 
     #region 유니티 라이프사이클
@@ -57,7 +59,6 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
             SetActiveComplete(false);
         }
 
-        Debug.Log($"{gameObject.name} Start() - 매니저 관리: {managedByFloorManager}");
     }
 
     /// <summary>
@@ -79,7 +80,6 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
             positionOccupied = new bool[allTaewooliPositions.Length];
             positionsInitialized = true;
 
-            Debug.Log($"태우리 위치 {allTaewooliPositions.Length}개 자동 찾기 완료");
         }
     }
     #endregion
@@ -90,7 +90,6 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
     /// </summary>
     public void ActivateImmediately()
     {
-        Debug.Log($"{gameObject.name} 매니저에서 즉시 활성화 요청");
 
         // 위치 자동 배정
         if (autoAssignPosition)
@@ -109,7 +108,6 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
         }
 
         isActive = true;
-        Debug.Log($"{gameObject.name} 즉시 활성화 완료");
     }
     #endregion
 
@@ -119,7 +117,6 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
     /// </summary>
     public void SetActive(bool active)
     {
-        Debug.Log($"{gameObject.name} SetActive 호출: {active}");
 
         isActive = active;
 
@@ -131,8 +128,6 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
             // 비활성화 시 위치 해제
             ReleaseAssignedPosition();
         }
-
-        Debug.Log($"{gameObject.name} {(active ? "활성화" : "비활성화")} 완료");
     }
 
     /// <summary>
@@ -150,7 +145,6 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
             SetChildrenActive(true);
         }
 
-        Debug.Log($"{gameObject.name} 전체 오브젝트 {(active ? "활성화" : "비활성화")}");
     }
 
     /// <summary>
@@ -161,7 +155,6 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.SetActive(active);
-            Debug.Log($"자식 오브젝트 {i}: {transform.GetChild(i).name} → {active}");
         }
     }
 
@@ -172,7 +165,6 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
     {
         if (allTaewooliPositions == null || allTaewooliPositions.Length == 0)
         {
-            Debug.LogWarning($"{gameObject.name}: 태우리 위치가 없습니다");
             return;
         }
 
@@ -183,13 +175,9 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
             {
                 positionOccupied[i] = true;
                 assignedPosition = allTaewooliPositions[i];
-
-                Debug.Log($"{gameObject.name}: {i}번 위치 배정됨 ({assignedPosition.name})");
                 return;
             }
         }
-
-        Debug.LogWarning($"{gameObject.name}: 사용 가능한 위치가 없습니다");
     }
 
     /// <summary>
@@ -206,7 +194,6 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
             if (allTaewooliPositions[i] == assignedPosition)
             {
                 positionOccupied[i] = false;
-                Debug.Log($"{gameObject.name}: {i}번 위치 해제됨");
                 break;
             }
         }
@@ -223,13 +210,11 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
     {
         if (exitTaewooriPrefab == null)
         {
-            Debug.LogWarning($"{gameObject.name}: ExitTaewoori 프리팹이 설정되지 않음");
             return;
         }
 
         if (assignedPosition == null)
         {
-            Debug.LogWarning($"{gameObject.name}: 배정된 위치가 없음");
             return;
         }
 
@@ -242,13 +227,10 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
             // 배정된 위치로 이동하도록 초기화
             taewoori.Initialize(this, assignedPosition);
             spawnedTaewoori = taewoori; // 생성된 태우리 참조 저장
-
-            Debug.Log($"{gameObject.name}에서 태우리 즉시 생성 - 목표: {assignedPosition.name}");
         }
         else
         {
             Destroy(taewooliObj);
-            Debug.LogError($"{gameObject.name}: ExitTaewoori 컴포넌트 없음");
         }
     }
     #endregion
@@ -259,17 +241,26 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
     /// </summary>
     public void OnTaewooliDestroyed(ExitTaewoori taewoori)
     {
-        Debug.Log($"{gameObject.name}: 태우리 제거됨 - 파티클도 비활성화");
+        // FloorManager에 처치 알림
+        if (floorManager != null)
+        {
+            floorManager.OnTaewooliKilled();
+        }
 
-        // 생성된 태우리 참조 해제
+        // 기존 코드...
         if (spawnedTaewoori == taewoori)
         {
             spawnedTaewoori = null;
         }
-
-        // 태우리가 죽으면 파티클도 비활성화
         SetActive(false);
     }
+
+
+    public void SetFloorManager(FloorManager manager)
+    {
+        floorManager = manager;
+    }
+
 
     /// <summary>
     /// 플레이어 카메라 반환 (ExitTaewoori에서 사용)
@@ -277,56 +268,6 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
     public Camera GetPlayerCamera()
     {
         return playerCamera;
-    }
-    #endregion
-
-    #region 퍼블릭 메서드
-    /// <summary>
-    /// 즉시 태우리 생성 (테스트용)
-    /// </summary>
-    [ContextMenu("즉시 태우리 생성")]
-    public void SpawnNow()
-    {
-        if (!hasSpawned)
-        {
-            if (autoAssignPosition)
-            {
-                AssignPosition();
-            }
-            SetActiveComplete(true); // 전체 활성화
-            SpawnTaewoori();
-            hasSpawned = true;
-        }
-    }
-
-    /// <summary>
-    /// 생성 상태 초기화
-    /// </summary>
-    public void ResetSpawnState()
-    {
-        hasSpawned = false;
-        spawnedTaewoori = null;
-        ReleaseAssignedPosition();
-    }
-
-    /// <summary>
-    /// 강제로 전체 활성화 (테스트용)
-    /// </summary>
-    [ContextMenu("전체 활성화")]
-    public void ForceActivateAll()
-    {
-        SetActiveComplete(true);
-        isActive = true;
-    }
-
-    /// <summary>
-    /// 강제로 전체 비활성화 (테스트용)
-    /// </summary>
-    [ContextMenu("전체 비활성화")]
-    public void ForceDeactivateAll()
-    {
-        SetActiveComplete(false);
-        isActive = false;
     }
     #endregion
 }

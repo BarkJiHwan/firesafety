@@ -8,24 +8,33 @@ public class Sobaek : MonoBehaviour
     #endregion
 
     #region 인스펙터 설정
-    [Header("기본 위치 설정")]
-    [SerializeField] private Transform player;
+    [Header("홈 포지션 설정")]
     [SerializeField] private float offsetX = 1.5f;
     [SerializeField] private float offsetY = 0.5f;
     [SerializeField] private float offsetZ = 0.5f;
+
+    [Header("좌,우 설정")]
     [SerializeField] private bool stayOnRightSide = true;
 
-    [Header("둥둥 떠다니기 효과")]
+    [Header("위아래 높이")]
     [SerializeField] private float floatAmplitude = 0.3f;
+    [Header("위아래 속도")]
     [SerializeField] private float floatSpeed = 1f;
+
+    [Header("플레이어 프리팹")]
+    [SerializeField] private Transform player;
+    [Header("소백이 이동속도")]
+    [SerializeField] private float moveSpeed = 4f;
+    [Header("소백이 와 플레이어 거리")]
+    [SerializeField] private float arrivalDistance = 0.3f; // 도착 판정 거리
+    [Header("소백이가 플레이어 쳐다보는 속도")]
     [SerializeField] private float lookAtSpeed = 2f;
 
-    [Header("이동 설정")]
-    [SerializeField] private float moveSpeed = 4f;
-    [SerializeField] private float arrivalDistance = 0.3f; // 도착 판정 거리
-
-    [Header("애니메이션 설정")]
+    [Header("애니메이션")]
     [SerializeField] private Animator animator;
+
+    [Header("대피씬 에서 체크해야함")]
+    [SerializeField] private bool useGameManager = true; // 게임매니저 사용 여부
     #endregion
 
     #region 변수 선언
@@ -45,8 +54,28 @@ public class Sobaek : MonoBehaviour
     // 애니메이션 해시
     private readonly int hashIsFlying = Animator.StringToHash("isFlying");
     private readonly int hashIsTalking = Animator.StringToHash("isTalking");
-    private readonly int hashStartJump = Animator.StringToHash("StartJump");
     private readonly int hashBackJump = Animator.StringToHash("BackJump");
+    #endregion
+
+
+    #region 프로퍼티
+    public Transform Player { get => player; set => player = value; }
+    public bool IsMoving => isMovingToTarget || isMovingToHome;
+    public bool IsTalking => isTalking;
+    public bool SobaekInteractionEnabled
+    {
+        get => sobaekInteractionEnabled;
+        set
+        {
+            sobaekInteractionEnabled = value;
+            if (!value)
+            {
+                // 비활성화 시 홈으로 복귀
+                StopTalkingAndReturnHome();
+            }
+        }
+    }
+    public bool UseGameManager { get => useGameManager; set => useGameManager = value; }
     #endregion
 
     #region 유니티 라이프사이클
@@ -69,7 +98,11 @@ public class Sobaek : MonoBehaviour
 
     void Update()
     {
-        CheckGamePhase();
+        if (useGameManager)
+        {
+            CheckGamePhase();
+        }
+
         UpdatePosition();
         UpdateFloatingEffect();
         UpdateAnimations();
@@ -98,17 +131,35 @@ public class Sobaek : MonoBehaviour
 
         if (player == null)
         {
+            // 1. MainCamera 태그로 찾기
             Camera mainCam = Camera.main;
             if (mainCam != null)
             {
                 player = mainCam.transform;
+                Debug.Log($"소백이: MainCamera로 플레이어 찾음 - {player.name}");
             }
             else
             {
+                // 2. CenterEyeAnchor 이름으로 찾기 (VR)
                 GameObject centerEye = GameObject.Find("CenterEyeAnchor");
                 if (centerEye != null)
                 {
                     player = centerEye.transform;
+                    Debug.Log($"소백이: CenterEyeAnchor로 플레이어 찾음 - {player.name}");
+                }
+                else
+                {
+                    // 3. Player 태그로 찾기
+                    GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+                    if (playerObj != null)
+                    {
+                        player = playerObj.transform;
+                        Debug.Log($"소백이: Player 태그로 플레이어 찾음 - {player.name}");
+                    }
+                    else
+                    {
+                        Debug.LogWarning("소백이: 플레이어를 찾을 수 없습니다!");
+                    }
                 }
             }
         }
@@ -121,8 +172,13 @@ public class Sobaek : MonoBehaviour
     /// </summary>
     void CheckGamePhase()
     {
+        // GameManager.Instance 접근 전에 null 체크
         if (GameManager.Instance == null)
+        {
+            // GameManager가 없으면 useGameManager를 false로 설정
+            useGameManager = false;
             return;
+        }
 
         GamePhase currentPhase = GameManager.Instance.CurrentPhase;
 
@@ -326,10 +382,7 @@ public class Sobaek : MonoBehaviour
                 transform.position = homePosition;
             }
 
-            if (animator != null)
-            {
-                animator.SetTrigger(hashStartJump);
-            }
+            // 활성화 시에는 자동으로 점프 애니메이션이 실행됨 (Animator Controller에서 자동)
         }
         else
         {
@@ -348,22 +401,45 @@ public class Sobaek : MonoBehaviour
     }
     #endregion
 
-    #region 프로퍼티
-    public Transform Player { get => player; set => player = value; }
-    public bool IsMoving => isMovingToTarget || isMovingToHome;
-    public bool IsTalking => isTalking;
-    public bool SobaekInteractionEnabled
+    #region 게임매니저 없는 씬 전용 메서드
+    /// <summary>
+    /// 토킹 애니메이션만 실행 (게임매니저 없는 씬용 - UI 설명시 사용)
+    /// </summary>
+    public void PlayTalkingAnimation()
     {
-        get => sobaekInteractionEnabled;
-        set
+        if (!useGameManager)
         {
-            sobaekInteractionEnabled = value;
-            if (!value)
-            {
-                // 비활성화 시 홈으로 복귀
-                StopTalkingAndReturnHome();
-            }
+            isTalking = true;
+        }
+    }
+
+    /// <summary>
+    /// 토킹 애니메이션 중단 (게임매니저 없는 씬용)
+    /// </summary>
+    public void StopTalkingAnimation()
+    {
+        if (!useGameManager)
+        {
+            isTalking = false;
+        }
+    }
+
+    /// <summary>
+    /// 게임매니저 사용 여부 설정
+    /// </summary>
+    public void SetUseGameManager(bool use)
+    {
+        useGameManager = use;
+
+        if (!use)
+        {
+            // 게임매니저 없는 씬에서는 상호작용 비활성화
+            sobaekInteractionEnabled = false;
+            isMovingToTarget = false;
+            isMovingToHome = false;
+            currentTarget = null;
         }
     }
     #endregion
+
 }
