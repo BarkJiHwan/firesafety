@@ -5,9 +5,6 @@ using UnityEngine;
 public class PhotonConnectManager : MonoBehaviourPunCallbacks
 {
     private string _gameVersion = "1";
-
-    [SerializeField] private string _testLobbyName = "scTestLobby";
-
     [SerializeField] private PlayerSpawner _playerSpawner;
 
     private void Start()
@@ -50,10 +47,16 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        if (!PhotonNetwork.InRoom)
-        {
-            PhotonNetwork.JoinRandomRoom();
-        }
+        RoomOptions options = new RoomOptions { MaxPlayers = 6, IsOpen = true };
+        PhotonNetwork.JoinRandomOrCreateRoom(
+            null, // 랜덤 조건: 아무 조건 없음
+            6, // 최대 인원 수 (RoomOptions에도 지정해두면 안전)
+            MatchmakingMode.FillRoom, // 기존 방을 최대한 채우는 방식
+            null, // 로비 타입 (null: 기본)
+            null, // 추가 필터 (없음)
+            null, // 방 이름 (null: 자동 생성)
+            options // 방 옵션
+        );
     }
 
     // 테스트용, 이럴 일 없겠지만 누군가 방에 참가했을 때
@@ -103,9 +106,18 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
     }
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Debug.Log("일단 여긴 왔음");
-        RoomOptions options = new RoomOptions { MaxPlayers = 6, IsOpen = true };
-        PhotonNetwork.CreateRoom(null, options, new TypedLobby(_testLobbyName, LobbyType.Default));
+        switch (returnCode)
+        {
+            case 32765:
+                Debug.Log("방이 꽉 찼습니다.");
+                break;
+            case 32764:
+                Debug.Log("방이 닫혔습니다.");
+                break;
+            default:
+                Debug.Log("방 참여 실패, code : " + returnCode + " msg : " + message);
+                break;
+        }
     }
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
