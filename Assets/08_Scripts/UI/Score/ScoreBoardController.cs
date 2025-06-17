@@ -34,6 +34,8 @@ public class ScoreBoardController : MonoBehaviour
 
     public event Action<SceneType> OnScoreBoardOpen;
 
+    public bool hasAlreadyUpdated { get; set; }
+
     void Start()
     {
         // 임시
@@ -127,6 +129,10 @@ public class ScoreBoardController : MonoBehaviour
 
     private void OnEnable()
     {
-        ChangeBoardStandard(SceneController.Instance.chooseSceneType);
+        if(hasAlreadyUpdated == false)
+        {
+            ChangeBoardStandard(SceneController.Instance.chooseSceneType);
+            hasAlreadyUpdated = true;
+        }
     }
 }

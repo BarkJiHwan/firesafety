@@ -18,8 +18,15 @@ public class CharacterChoose : MonoBehaviour
     {
         foreach(var button in checkButtonList)
         {
+            button.applyButton.onClick.AddListener(() =>
+            {
+                Debug.Log("버튼 생성");
+                MoveScene(SceneController.Instance.chooseSceneType);
+            });
             button.applyButton.gameObject.SetActive(false);
         }
+        // 각자의 checkButtonList 버튼의 작동 로직 필요 => 이전의 씬에 씬 선택을 고른거에 따라 작동이 달라져야 함
+        // 옵저버 패턴으로 만약에 버튼이 켜지고 확인 버튼을 누르면 이전의 씬 선택에 따라 다른 씬으로 이동
     }
 
     public void BackToBeforeScene()
@@ -44,5 +51,20 @@ public class CharacterChoose : MonoBehaviour
             obj[i] = checkButtonList[i].characterObject;
         }
         return obj;
+    }
+
+    void MoveScene(SceneType type)
+    {
+        switch (type)
+        {
+            case SceneType.IngameScene_Fire:
+                Debug.Log("IngameScene_Fire");
+                SceneController.Instance.MoveToPreventionFireScene();
+                break;
+            case SceneType.IngameScene_Evacuation:
+                Debug.Log("IngameScene_Evacuation");
+                SceneController.Instance.MoveToEvacuationScene();
+                break;
+        }
     }
 }

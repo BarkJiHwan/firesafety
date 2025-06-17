@@ -62,7 +62,15 @@ public class SceneController : MonoBehaviour
         LoadScene((int)SceneType.MainScene);
     }
 
+    public void MoveToPreventionFireScene()
+    {
+        LoadScene((int)SceneType.IngameScene_Fire);
+    }
 
+    public void MoveToEvacuationScene()
+    {
+        LoadScene((int)SceneType.IngameScene_Evacuation);
+    }
 
     public void GetChooseCharacterType(PlayerEnum type)
     {

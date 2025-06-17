@@ -27,10 +27,6 @@ public class CanvasMeshRootCtrl : MonoBehaviour
 
     void Start()
     {
-        // 임시
-        if (SceneController.Instance.chooseSceneType == SceneType.IngameScene_Fire || SceneController.Instance.chooseSceneType == SceneType.IngameScene_Evacuation)
-            Debug.Log("Ingame chooseSceneType : " + SceneController.Instance.chooseSceneType);
-
         if (canvas != null)
         {
             canvasTransform = canvas.GetComponent<RectTransform>();

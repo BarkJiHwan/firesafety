@@ -49,7 +49,11 @@ public class FixedViewCanvasController : MonoBehaviour
         if(scorePanel.activeSelf == true)
         {
             SceneType sceneType = SceneController.Instance.chooseSceneType;
-            scoreBoardCtrl?.ChangeBoardStandard(sceneType);
+            if(scoreBoardCtrl.hasAlreadyUpdated == false)
+            {
+                scoreBoardCtrl?.ChangeBoardStandard(sceneType);
+                scoreBoardCtrl.hasAlreadyUpdated = true;
+            }
             StartCoroutine(CloseScoreBoard());
         }
     }
