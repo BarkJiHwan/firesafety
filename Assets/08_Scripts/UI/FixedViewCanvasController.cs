@@ -25,12 +25,17 @@ public class FixedViewCanvasController : MonoBehaviour
     {
         // 임시 => 예방/화재 이후, 엔딩씬 이후로 구분 필요
         //TurnOnScoreBoard();
-
+        if(scorePanel.activeSelf == true)
+        {
+            scorePanel.SetActive(false);
+        }
         // => 옵저버 패턴
 
         // 1. 점수판
         // 화재 페이즈가 끝나면 점수판 출력 (GameManager.Instance.CurrentPhase == leaveDangerArea)
+
         // ScoreBoardController.ChangeBoardStandard(sceneType);
+        GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
     }
 
     void Update()
@@ -43,6 +48,8 @@ public class FixedViewCanvasController : MonoBehaviour
         scorePanel.SetActive(true);
         if(scorePanel.activeSelf == true)
         {
+            SceneType sceneType = SceneController.Instance.chooseSceneType;
+            scoreBoardCtrl?.ChangeBoardStandard(sceneType);
             StartCoroutine(CloseScoreBoard());
         }
     }
@@ -60,6 +67,7 @@ public class FixedViewCanvasController : MonoBehaviour
         }
         Debug.Log("끝남");
         scorePanel.SetActive(false);
+        scoreBoardCtrl.InitateScoreBoard();
 
         // 예방/화재에서는 초가 끝나면 방을 나가서 씬 선택 창으로 이동
         //if(SceneController.Instance.chooseSceneType == SceneType.IngameScene_Fire)
@@ -75,5 +83,10 @@ public class FixedViewCanvasController : MonoBehaviour
         //    // MainScene으로 이동
         //    SceneController.Instance.MoveToMainScene();
         //}
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.OnGameEnd -= TurnOnScoreBoard;
     }
 }

@@ -1,17 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+// 임시
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CharacterManager : MonoBehaviour
 {
     [SerializeField] CharacterChoose charChoose;
+    [SerializeField] Button button;
 
     public GameObject selectCharacter { get; set; }
 
     private void Start()
     {
-        
+        // 임시
+        button.onClick.AddListener(() =>
+        {
+            Debug.Log("ChooseSceneType : " + SceneController.Instance.chooseSceneType);
+            SceneController.Instance.LoadScene(3);
+        });
     }
 
     public void MakeChooseCharacter()
@@ -29,16 +37,4 @@ public class CharacterManager : MonoBehaviour
             }
         }
     }
-
-    // 임시
-    public AsyncOperation LoadScene(int sceneNum)
-    {
-        return SceneManager.LoadSceneAsync(sceneNum);
-    }
-
-    public void ChangePracticeScene()
-    {
-        LoadScene((int)3);
-    }
-
 }

@@ -824,7 +824,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4060705980712908545
 RectTransform:
   m_ObjectHideFlags: 0
@@ -903,24 +903,28 @@ MonoBehaviour:
     scoreItemImage:
     - {fileID: 21300000, guid: 9e942076de1f45548b10256080b851a6, type: 3}
     - {fileID: 21300000, guid: c4122f4df2c54a641959f5f3ab8fdeea, type: 3}
+    scoreType: 0000000004000000
     scoreItem: {fileID: 4060705980909146502}
     stampImage: {fileID: 4060705980380300922}
   - scoreItemImagePos: {fileID: 4060705980092610547}
     scoreItemImage:
     - {fileID: 21300000, guid: cce342f869aa49a4687aff38f85f869d, type: 3}
     - {fileID: 21300000, guid: 96ccd409125811a42a4690e00a33a041, type: 3}
+    scoreType: 0100000005000000
     scoreItem: {fileID: 4060705981436433179}
     stampImage: {fileID: 4060705982074366224}
   - scoreItemImagePos: {fileID: 4060705981288011509}
     scoreItemImage:
     - {fileID: 21300000, guid: 0b8324552b4491d42891933d57867b28, type: 3}
     - {fileID: 21300000, guid: fc17aa52858ff294c98b311fcd5b06a1, type: 3}
+    scoreType: 0200000006000000
     scoreItem: {fileID: 4060705980733063896}
     stampImage: {fileID: 4060705981703217421}
   - scoreItemImagePos: {fileID: 4060705981514967695}
     scoreItemImage:
     - {fileID: 21300000, guid: df644c9def0a0954caa63e519e9173ca, type: 3}
     - {fileID: 21300000, guid: 2390b2cc39d607440beace7495a34d5f, type: 3}
+    scoreType: 0300000007000000
     scoreItem: {fileID: 4060705980073311889}
     stampImage: {fileID: 4060705980895948042}
   scoreItemsText:
@@ -931,8 +935,11 @@ MonoBehaviour:
   - "\uC5D8\uB808\uBCA0\uC774\uD130 \uBC84\uD2BC"
   - "\uC5F0\uAE30 \uD53C\uD558\uAE30"
   - "\uD0DC\uC6B0\uB9AC \uACF5\uACA9\uD558\uAE30"
-  - "\uB2E4\uD0DC\uC6B0\uB9AC \uACF5\uACA9\uD558\uAE30"
+  - "\uB2E4\uD0DC\uC6B0\uB9AC \uD574\uCE58\uC6B0\uAE30"
   mentionPos: {fileID: 4060705981892995214}
+  stampTypes:
+  - {fileID: 21300000, guid: dbef1c28279fb2245b4c0b7cff187a6f, type: 3}
+  - {fileID: 21300000, guid: 0149021c168574e4c8be18942a96246c, type: 3}
   mentionText:
   - "\uB300\uB2E8\uD574\uC694!"
   - "\uD6CC\uB96D\uD574\uC694!"
@@ -1789,7 +1796,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4060705981305032300}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 2.58}
   m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
   m_ConstrainProportionsScale: 0
@@ -2264,7 +2271,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4060705981842663254
 RectTransform:
   m_ObjectHideFlags: 0

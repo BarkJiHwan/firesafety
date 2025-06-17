@@ -348,8 +348,21 @@ public class FirePreventable : MonoBehaviour
     {
         Renderer rend = obj.GetComponent<Renderer>();
         Texture baseTexture;
+
+        Material[] arrMaterials;
+        if (obj == gameObject)
+        {
+            arrMaterials = new Material[originMats.Length];
+            arrMaterials = originMats;
+        }
+        else
+        {
+            arrMaterials = new Material[originChildMats.Length];
+            arrMaterials = originChildMats;
+        }
+
         // BaseMap이 있는 Material이면 Texture 받아오기
-        foreach (Material originMat in originMats)
+        foreach (Material originMat in arrMaterials)
         {
             baseTexture = originMat.GetTexture("_BaseMap");
             if (baseTexture != null)
