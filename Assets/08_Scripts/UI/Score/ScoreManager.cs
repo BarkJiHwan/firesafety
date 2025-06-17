@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour, IScorable
 {
-    Dictionary<ScoreType, float> dicScore = new Dictionary<ScoreType, float>();
+    Dictionary<ScoreType, int> dicScore = new Dictionary<ScoreType, int>();
 
-    public float GetScore(ScoreType scoreType)
+    public int GetScore(ScoreType scoreType)
     {
         return dicScore[scoreType];
     }
 
-    public void SetScore(ScoreType scoreType, float score)
+    public void SetScore(ScoreType scoreType, int score)
     {
         dicScore.Add(scoreType, score);
     }
@@ -21,7 +21,7 @@ public class ScoreManager : MonoBehaviour, IScorable
         return dicScore[scoreType] >= 15;
     }
 
-    public float SetScoreStep(ScoreType type)
+    public int SetScoreStep(ScoreType type)
     {
         return dicScore[type];
     }
