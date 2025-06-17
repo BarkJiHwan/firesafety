@@ -73,14 +73,6 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Debug.Log("플레이어 나감 : " + otherPlayer.NickName);
-        Debug.Log(otherPlayer.TagObject);
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            // _gameManager.RemoveReadyPlayer(otherPlayer);
-        }
-
         if (otherPlayer.TagObject != null)
         {
             ((GameObject)otherPlayer.TagObject).SetActive(false);
@@ -91,7 +83,6 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
     /* 테스트용 방 곧바로 입장시, 바로 플레이어 생성이후 XR 컴포넌트 켜줌. */
     public override void OnJoinedRoom()
     {
-        // 초
         GameObject player = _playerSpawner.NetworkInstantiate(PlayerEnum.Jennie);
         player.GetComponent<PlayerComponents>().xRComponents.SetActive(true);
 
