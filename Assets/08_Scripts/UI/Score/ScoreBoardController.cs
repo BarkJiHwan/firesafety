@@ -34,15 +34,16 @@ public class ScoreBoardController : MonoBehaviour
 
     public event Action<SceneType> OnScoreBoardOpen;
 
-    public bool hasAlreadyUpdated { get; set; }
+    private void Awake()
+    {
+        scoreMgr = FindObjectOfType<ScoreManager>();
+    }
 
     void Start()
     {
         // 임시
         //SceneController.Instance.chooseSceneType = SceneType.IngameScene_Fire;
         //ChangeBoardStandard(SceneController.Instance.chooseSceneType);
-
-        scoreMgr = FindObjectOfType<ScoreManager>();
         InitateScoreBoard();
 
         // 테스트
@@ -74,6 +75,10 @@ public class ScoreBoardController : MonoBehaviour
 
     public void ChangeBoardStandard(SceneType type)
     {
+        if (scoreMgr == null)
+        {
+            scoreMgr = FindObjectOfType<ScoreManager>();
+        }
         int typeNum = 0;
         switch (type)
         {
@@ -99,14 +104,16 @@ public class ScoreBoardController : MonoBehaviour
 
             // 평가 점수에 따른 도장 찍기
             // 해당 scoreType 가진 항목의 이미지 SetActive(false);
-            ScoreType type = scoreItems[i - startIndex].scoreType[typeNumber];
-            bool isCorrect = scoreMgr.IsScorePerfect(type);
+            ScoreType scoreType = scoreItems[i - startIndex].scoreType[typeNumber];
+            bool isCorrect = scoreMgr.IsScorePerfect(scoreType);
             if (isCorrect == true)
             {
-                scoreItems[i - startIndex].stampImage.sprite = GetImageTypeByScore(scoreMgr.GetScore(type));
+                scoreItems[i - startIndex].stampImage.sprite = GetImageTypeByScore(scoreMgr.GetScore(scoreType));
+                Debug.Log("스탬프 : " + scoreItems[i - startIndex].stampImage.gameObject);
                 scoreItems[i - startIndex].stampImage.gameObject.SetActive(true);
-                if(scoreMgr.GetScore(type) >= 20)
+                if (scoreMgr.GetScore(scoreType) >= 20)
                 {
+                    Debug.Log("20점 이상임!!");
                     stampNum++;
                 }
             }
@@ -119,9 +126,9 @@ public class ScoreBoardController : MonoBehaviour
     {
         switch (score)
         {
-            case >= 20:
+            case >= 25:
                 return stampTypes[0];
-            case >= 15:
+            case >= 20:
                 return stampTypes[1];
         }
         return null;
@@ -129,10 +136,10 @@ public class ScoreBoardController : MonoBehaviour
 
     private void OnEnable()
     {
-        if(hasAlreadyUpdated == false)
-        {
-            ChangeBoardStandard(SceneController.Instance.chooseSceneType);
-            hasAlreadyUpdated = true;
-        }
+        //if(hasAlreadyUpdated == false)
+        //{
+        //    ChangeBoardStandard(SceneController.Instance.chooseSceneType);
+        //    hasAlreadyUpdated = true;
+        //}
     }
 }

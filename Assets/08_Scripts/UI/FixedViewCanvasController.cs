@@ -35,6 +35,7 @@ public class FixedViewCanvasController : MonoBehaviour
         // 화재 페이즈가 끝나면 점수판 출력 (GameManager.Instance.CurrentPhase == leaveDangerArea)
 
         // ScoreBoardController.ChangeBoardStandard(sceneType);
+        //GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
         GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
     }
 
@@ -46,14 +47,16 @@ public class FixedViewCanvasController : MonoBehaviour
     void TurnOnScoreBoard()
     {
         scorePanel.SetActive(true);
-        if(scorePanel.activeSelf == true)
+        StartCoroutine(UpdateBoard());
+    }
+
+    IEnumerator UpdateBoard()
+    {
+        yield return new WaitForEndOfFrame();
+        if (scorePanel.activeSelf == true)
         {
             SceneType sceneType = SceneController.Instance.chooseSceneType;
-            if(scoreBoardCtrl.hasAlreadyUpdated == false)
-            {
-                scoreBoardCtrl?.ChangeBoardStandard(sceneType);
-                scoreBoardCtrl.hasAlreadyUpdated = true;
-            }
+            scoreBoardCtrl?.ChangeBoardStandard(sceneType);
             StartCoroutine(CloseScoreBoard());
         }
     }

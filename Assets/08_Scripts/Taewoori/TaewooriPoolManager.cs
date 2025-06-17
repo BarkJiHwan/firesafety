@@ -383,6 +383,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             {
                 int playerID = PhotonNetwork.LocalPlayer.ActorNumber;
                 int killScore = GetPlayerKillScore(playerID);
+                Debug.Log("스코어 넘버 전달");
                 scoreManager.SetScore(ScoreType.Fire_Count, killScore);
             }
         }
