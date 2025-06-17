@@ -380,12 +380,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
         calculatedScore = CalculateSurvivalScore(playerCount, maxSurvivalTime);
 
-        // 네트워크로 최종 점수 동기화 (생존시간 + 처치 점수 모두)
-        photonView.RPC("SyncFinalScores", RpcTarget.All,
-            maxSurvivalTime, calculatedScore,
-            playerTaewooriKills.Keys.ToArray(),
-            playerKillScores.Values.ToArray());
-
         // 최종 게임 점수 정보 업데이트
         UpdateInspectorKillInfo();
 
@@ -470,27 +464,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         playerTaewooriKills.Clear();
         playerKillScores.Clear();
         playerKillInfos.Clear();
-    }
-
-    /// <summary>
-    /// 최종 점수 네트워크 동기화 (생존시간 + 처치 점수 통합)
-    /// </summary>
-    [PunRPC]
-    private void SyncFinalScores(float finalMaxTime, int finalSurvivalScore, int[] playerIDs, int[] killScores)
-    {
-        // 생존시간 점수 동기화
-        maxSurvivalTime = finalMaxTime;
-        calculatedScore = finalSurvivalScore;
-
-        // 처치 점수 동기화
-        playerKillScores.Clear();
-        for (int i = 0; i < playerIDs.Length; i++)
-        {
-            playerKillScores[playerIDs[i]] = killScores[i];
-        }
-
-        // 인스펙터 정보 업데이트
-        UpdateInspectorKillInfo();
     }
 
     /// <summary>
