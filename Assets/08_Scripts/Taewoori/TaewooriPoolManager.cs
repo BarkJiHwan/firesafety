@@ -187,23 +187,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region 스코어 매니저 연동
-    /// <summary>
-    /// 현재 플레이어의 점수를 ScoreManager에 전달
-    /// </summary>
-    public void SendPlayerScoreToManager()
-    {
-        if (scoreManager != null)
-        {
-            int playerID = PhotonNetwork.LocalPlayer.ActorNumber;
-
-            // 생존시간 점수 전달
-            scoreManager.SetScore(ScoreType.Fire_Time, calculatedScore);
-
-            // 태우리 처치 점수 전달
-            int killScore = GetPlayerKillScore(playerID);
-            scoreManager.SetScore(ScoreType.Taewoori_Count, killScore);
-        }
-    }
 
     /// <summary>
     /// 플레이어별 태우리 처치 점수 조회 (내부용)
@@ -350,14 +333,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         // 인스펙터 표시용 업데이트
         UpdateInspectorKillInfo();
 
-        // 실시간으로 ScoreManager에 점수 전달 (현재 플레이어인 경우)
-        if (PhotonNetwork.LocalPlayer != null && killerPlayerID == PhotonNetwork.LocalPlayer.ActorNumber)
-        {
-            if (scoreManager != null)
-            {
-                scoreManager.SetScore(ScoreType.Fire_Count, killScore);
-            }
-        }
     }
 
     /// <summary>
@@ -396,12 +371,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         // 생존시간 점수 계산
         int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
         calculatedScore = CalculateSurvivalScore(playerCount, maxSurvivalTime);
-
-        // 네트워크로 최종 점수 동기화 (생존시간 + 처치 점수 모두)
-        photonView.RPC("SyncFinalScores", RpcTarget.All,
-            maxSurvivalTime, calculatedScore,
-            playerTaewooriKills.Keys.ToArray(),
-            playerKillScores.Values.ToArray());
 
         // 최종 게임 점수 정보 업데이트
         UpdateInspectorKillInfo();
@@ -458,10 +427,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
                 if (newSurvivalScore != calculatedScore)
                 {
                     calculatedScore = newSurvivalScore;
-                    if (scoreManager != null)
-                    {
-                        scoreManager.SetScore(ScoreType.Fire_Time, calculatedScore);
-                    }
                 }
             }
 
@@ -491,39 +456,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         playerTaewooriKills.Clear();
         playerKillScores.Clear();
         playerKillInfos.Clear();
-    }
-
-    /// <summary>
-    /// 최종 점수 네트워크 동기화 (생존시간 + 처치 점수 통합)
-    /// </summary>
-    [PunRPC]
-    private void SyncFinalScores(float finalMaxTime, int finalSurvivalScore, int[] playerIDs, int[] killScores)
-    {
-        // 생존시간 점수 동기화
-        maxSurvivalTime = finalMaxTime;
-        calculatedScore = finalSurvivalScore;
-
-        // 처치 점수 동기화
-        playerKillScores.Clear();
-        for (int i = 0; i < playerIDs.Length; i++)
-        {
-            playerKillScores[playerIDs[i]] = killScores[i];
-        }
-
-        // 인스펙터 정보 업데이트
-        UpdateInspectorKillInfo();
-
-        // 클라이언트에서도 ScoreManager에 점수 전달
-        if (scoreManager != null)
-        {
-            scoreManager.SetScore(ScoreType.Fire_Time, calculatedScore);
-            if (PhotonNetwork.LocalPlayer != null)
-            {
-                int playerID = PhotonNetwork.LocalPlayer.ActorNumber;
-                int killScore = playerKillScores.GetValueOrDefault(playerID, 0);
-                scoreManager.SetScore(ScoreType.Fire_Count, killScore);
-            }
-        }
     }
 
     /// <summary>

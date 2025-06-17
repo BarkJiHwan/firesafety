@@ -3,38 +3,56 @@ using UnityEngine;
 
 public class Sobaek : MonoBehaviour
 {
-    #region 싱글톤
-    public static Sobaek Instance { get; private set; }
-    #endregion
+   
+    
 
     #region 인스펙터 설정
-    [Header("홈 포지션 설정")]
+    [Header("기본 위치 설정")]
+    [SerializeField] private Transform player;
     [SerializeField] private float offsetX = 1.5f;
     [SerializeField] private float offsetY = 0.5f;
     [SerializeField] private float offsetZ = 0.5f;
-    [Header("소백이 와 오브젝트와의 거리")]
-    [SerializeField] private float arrivalDistance = 0.3f; // 도착 판정 거리
-
-    [Header("좌,우 설정")]
     [SerializeField] private bool stayOnRightSide = true;
 
-    [Header("위아래 높이")]
+    [Header("둥둥 떠다니기 효과")]
     [SerializeField] private float floatAmplitude = 0.3f;
-    [Header("위아래 속도")]
     [SerializeField] private float floatSpeed = 1f;
-
-    [Header("플레이어 프리팹")]
-    [SerializeField] private Transform player;
-    [Header("소백이 이동속도")]
-    [SerializeField] private float moveSpeed = 4f;
-    [Header("소백이가 플레이어 쳐다보는 속도")]
     [SerializeField] private float lookAtSpeed = 2f;
 
-    [Header("애니메이션")]
-    [SerializeField] private Animator animator;
+    [Header("이동 설정")]
+    [SerializeField] private float moveSpeed = 4f;
+    [SerializeField] private float arrivalDistance = 0.3f; // 도착 판정 거리
 
-    [Header("대피씬 에서 체크해야함")]
+    [Header("애니메이션 설정")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private GameObject sobaekCar;
+
+    [Header("대피씬에서 체크 해제")]
     [SerializeField] private bool useGameManager = true; // 게임매니저 사용 여부
+
+    [Header("테스트용 설정")]
+    [SerializeField] private bool testActivateCar = false;
+    #endregion
+
+    #region 프로퍼티
+    public static Sobaek Instance { get; private set; }
+    public Transform Player { get => player; set => player = value; }
+    public bool IsMoving => isMovingToTarget || isMovingToHome;
+    public bool IsTalking => isTalking;
+    public bool SobaekInteractionEnabled
+    {
+        get => sobaekInteractionEnabled;
+        set
+        {
+            sobaekInteractionEnabled = value;
+            if (!value)
+            {
+                // 비활성화 시 홈으로 복귀
+                StopTalkingAndReturnHome();
+            }
+        }
+    }
+    public bool UseGameManager { get => useGameManager; set => useGameManager = value; }
     #endregion
 
     #region 변수 선언
@@ -57,27 +75,6 @@ public class Sobaek : MonoBehaviour
     private readonly int hashBackJump = Animator.StringToHash("BackJump");
     #endregion
 
-
-    #region 프로퍼티
-    public Transform Player { get => player; set => player = value; }
-    public bool IsMoving => isMovingToTarget || isMovingToHome;
-    public bool IsTalking => isTalking;
-    public bool SobaekInteractionEnabled
-    {
-        get => sobaekInteractionEnabled;
-        set
-        {
-            sobaekInteractionEnabled = value;
-            if (!value)
-            {
-                // 비활성화 시 홈으로 복귀
-                StopTalkingAndReturnHome();
-            }
-        }
-    }
-    public bool UseGameManager { get => useGameManager; set => useGameManager = value; }
-    #endregion
-
     #region 유니티 라이프사이클
     void Start()
     {
@@ -94,6 +91,12 @@ public class Sobaek : MonoBehaviour
         InitializeReferences();
         SetHomePosition();
         basePosition = homePosition;
+
+        // 소백카 초기 비활성화
+        if (sobaekCar != null)
+        {
+            sobaekCar.SetActive(false);
+        }
     }
 
     void Update()
@@ -101,6 +104,12 @@ public class Sobaek : MonoBehaviour
         if (useGameManager)
         {
             CheckGamePhase();
+        }
+
+        if (testActivateCar)
+        {
+            testActivateCar = false;
+            ActivateSobaekCar();
         }
 
         UpdatePosition();
@@ -330,7 +339,7 @@ public class Sobaek : MonoBehaviour
     }
 
     /// <summary>
-    /// 수동 토킹 시작 (필요시 사용) - 상호작용 활성화 상태에서만 작동
+    /// 토킹 애니매이션 실행 UI 관련할때 쓰면됨
     /// </summary>
     public void StartTalking()
     {
@@ -341,7 +350,7 @@ public class Sobaek : MonoBehaviour
     }
 
     /// <summary>
-    /// 토킹만 중단 (위치는 유지)
+    /// 토킹애니매이션만 중단 (위치는 유지)
     /// </summary>
     public void StopTalking()
     {
@@ -374,8 +383,6 @@ public class Sobaek : MonoBehaviour
                 basePosition = homePosition;
                 transform.position = homePosition;
             }
-
-            // 활성화 시에는 자동으로 점프 애니메이션이 실행됨 (Animator Controller에서 자동)
         }
         else
         {
@@ -435,4 +442,21 @@ public class Sobaek : MonoBehaviour
     }
     #endregion
 
+    #region 소백카 관련 메서드
+    /// <summary>
+    /// 수건 입에 닿았을때 호출하면된다 한얼아
+    /// </summary>
+    public void ActivateSobaekCar()
+    {
+        if (sobaekCar != null)
+        {
+            // 소백카 활성화
+            sobaekCar.SetActive(true);
+
+            // 소백이 비활성화
+            gameObject.SetActive(false);
+        }
+    }
+
+    #endregion
 }
