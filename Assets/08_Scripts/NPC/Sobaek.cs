@@ -12,6 +12,8 @@ public class Sobaek : MonoBehaviour
     [SerializeField] private float offsetX = 1.5f;
     [SerializeField] private float offsetY = 0.5f;
     [SerializeField] private float offsetZ = 0.5f;
+    [Header("소백이 와 오브젝트와의 거리")]
+    [SerializeField] private float arrivalDistance = 0.3f; // 도착 판정 거리
 
     [Header("좌,우 설정")]
     [SerializeField] private bool stayOnRightSide = true;
@@ -25,8 +27,6 @@ public class Sobaek : MonoBehaviour
     [SerializeField] private Transform player;
     [Header("소백이 이동속도")]
     [SerializeField] private float moveSpeed = 4f;
-    [Header("소백이 와 플레이어 거리")]
-    [SerializeField] private float arrivalDistance = 0.3f; // 도착 판정 거리
     [Header("소백이가 플레이어 쳐다보는 속도")]
     [SerializeField] private float lookAtSpeed = 2f;
 
@@ -136,7 +136,6 @@ public class Sobaek : MonoBehaviour
             if (mainCam != null)
             {
                 player = mainCam.transform;
-                Debug.Log($"소백이: MainCamera로 플레이어 찾음 - {player.name}");
             }
             else
             {
@@ -145,7 +144,6 @@ public class Sobaek : MonoBehaviour
                 if (centerEye != null)
                 {
                     player = centerEye.transform;
-                    Debug.Log($"소백이: CenterEyeAnchor로 플레이어 찾음 - {player.name}");
                 }
                 else
                 {
@@ -154,11 +152,6 @@ public class Sobaek : MonoBehaviour
                     if (playerObj != null)
                     {
                         player = playerObj.transform;
-                        Debug.Log($"소백이: Player 태그로 플레이어 찾음 - {player.name}");
-                    }
-                    else
-                    {
-                        Debug.LogWarning("소백이: 플레이어를 찾을 수 없습니다!");
                     }
                 }
             }

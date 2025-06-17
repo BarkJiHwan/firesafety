@@ -185,8 +185,6 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
             spawnParticle.OnTaewooliDestroyed(this);
         }
 
-        Debug.Log($"{gameObject.name} 사망!");
-
         // 즉시 제거
         Destroy(gameObject);
     }
