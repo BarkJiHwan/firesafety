@@ -103,6 +103,7 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
     }
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
+        Debug.Log("일단 여긴 왔음");
         RoomOptions options = new RoomOptions { MaxPlayers = 6, IsOpen = true };
         PhotonNetwork.CreateRoom(null, options, new TypedLobby(_testLobbyName, LobbyType.Default));
     }
