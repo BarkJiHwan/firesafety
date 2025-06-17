@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Splines;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -35,7 +35,7 @@ public class SobaekCarScript : MonoBehaviour
         _simpleInteractable.enabled = false;
 
         /* 터치하면 바로 출발함, 따로 빼려면 메서드 호출 다른데서 하도록*/
-        StartTrack();
+        //StartTrack();
     }
 
     public void StartTrack()

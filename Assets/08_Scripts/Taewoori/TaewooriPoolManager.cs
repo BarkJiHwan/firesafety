@@ -187,23 +187,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region 스코어 매니저 연동
-    /// <summary>
-    /// 현재 플레이어의 점수를 ScoreManager에 전달
-    /// </summary>
-    public void SendPlayerScoreToManager()
-    {
-        if (scoreManager != null)
-        {
-            int playerID = PhotonNetwork.LocalPlayer.ActorNumber;
-
-            // 생존시간 점수 전달
-            scoreManager.SetScore(ScoreType.Fire_Time, calculatedScore);
-
-            // 태우리 처치 점수 전달
-            int killScore = GetPlayerKillScore(playerID);
-            scoreManager.SetScore(ScoreType.Taewoori_Count, killScore);
-        }
-    }
 
     /// <summary>
     /// 플레이어별 태우리 처치 점수 조회 (내부용)
@@ -458,10 +441,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
                 if (newSurvivalScore != calculatedScore)
                 {
                     calculatedScore = newSurvivalScore;
-                    if (scoreManager != null)
-                    {
-                        scoreManager.SetScore(ScoreType.Fire_Time, calculatedScore);
-                    }
                 }
             }
 
@@ -512,18 +491,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
 
         // 인스펙터 정보 업데이트
         UpdateInspectorKillInfo();
-
-        // 클라이언트에서도 ScoreManager에 점수 전달
-        if (scoreManager != null)
-        {
-            scoreManager.SetScore(ScoreType.Fire_Time, calculatedScore);
-            if (PhotonNetwork.LocalPlayer != null)
-            {
-                int playerID = PhotonNetwork.LocalPlayer.ActorNumber;
-                int killScore = playerKillScores.GetValueOrDefault(playerID, 0);
-                scoreManager.SetScore(ScoreType.Fire_Count, killScore);
-            }
-        }
     }
 
     /// <summary>
