@@ -6,7 +6,7 @@ public class ScoreManager : MonoBehaviour, IScorable
 {
     Dictionary<ScoreType, int> dicScore = new Dictionary<ScoreType, int>();
 
-    public float GetScore(ScoreType scoreType)
+    public int GetScore(ScoreType scoreType)
     {
         return dicScore[scoreType];
     }
@@ -21,7 +21,7 @@ public class ScoreManager : MonoBehaviour, IScorable
         return dicScore[scoreType] >= 15;
     }
 
-    public float SetScoreStep(ScoreType type)
+    public int SetScoreStep(ScoreType type)
     {
         return dicScore[type];
     }

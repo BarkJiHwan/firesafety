@@ -18,7 +18,7 @@ public interface IScorable
 {
     void SetScore(ScoreType scoreType, int score);
 
-    float GetScore(ScoreType scoreType);
+    int GetScore(ScoreType scoreType);
 
     bool IsScorePerfect(ScoreType scoreType);
 }
