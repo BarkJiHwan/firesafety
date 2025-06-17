@@ -122,29 +122,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &115481558 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3341619902235029888, guid: 89d20f9f903079c44a1d68ef6defda95,
-    type: 3}
-  m_PrefabInstance: {fileID: 929823674}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &115481560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 115481558}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4e787717cae9746ad9d22ee71c3e1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  exitTaewooriPrefab: {fileID: 5755754473064602975, guid: 90691631894a7ad47b4b383dfd5555a5,
-    type: 3}
-  playerCamera: {fileID: 348329834}
-  autoAssignPosition: 1
-  taewooliPositionTag: TaewooliPosition
 --- !u!1001 &124876959
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -458,29 +435,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &305390612 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2380700314200811438, guid: 89d20f9f903079c44a1d68ef6defda95,
-    type: 3}
-  m_PrefabInstance: {fileID: 929823674}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &305390614
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 305390612}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4e787717cae9746ad9d22ee71c3e1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  exitTaewooriPrefab: {fileID: 5755754473064602975, guid: 90691631894a7ad47b4b383dfd5555a5,
-    type: 3}
-  playerCamera: {fileID: 348329834}
-  autoAssignPosition: 1
-  taewooliPositionTag: TaewooliPosition
 --- !u!20 &348329834 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 4261196350826723123, guid: b3252782f80ba5549ac048497e3080f3,
@@ -558,27 +512,7 @@ PrefabInstance:
         type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1930947455}
-    - target: {fileID: 4475486153958860787, guid: 8c557239dc3323e42a0bb6401677f15b,
-        type: 3}
-      propertyPath: offsetY
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4475486153958860787, guid: 8c557239dc3323e42a0bb6401677f15b,
-        type: 3}
-      propertyPath: moveSpeed
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4475486153958860787, guid: 8c557239dc3323e42a0bb6401677f15b,
-        type: 3}
-      propertyPath: floatSpeed
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 9137445655480841037, guid: 8c557239dc3323e42a0bb6401677f15b,
-        type: 3}
-      propertyPath: m_ApplyRootMotion
-      value: 0
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 988082282}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c557239dc3323e42a0bb6401677f15b, type: 3}
 --- !u!1 &490147516
@@ -770,29 +704,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 132e531952478493088170c6234caf6d, type: 3}
---- !u!1 &769910374 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9133947649536417607, guid: 89d20f9f903079c44a1d68ef6defda95,
-    type: 3}
-  m_PrefabInstance: {fileID: 929823674}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &769910376
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 769910374}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4e787717cae9746ad9d22ee71c3e1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  exitTaewooriPrefab: {fileID: 5755754473064602975, guid: 90691631894a7ad47b4b383dfd5555a5,
-    type: 3}
-  playerCamera: {fileID: 348329834}
-  autoAssignPosition: 1
-  taewooliPositionTag: TaewooliPosition
 --- !u!1001 &929823674
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1042,6 +953,17 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 4669258923170561061, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: playerCamera
+      value: 
+      objectReference: {fileID: 348329834}
+    - target: {fileID: 4669258923170561061, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: exitTaewooriPrefab
+      value: 
+      objectReference: {fileID: 5755754473064602975, guid: 90691631894a7ad47b4b383dfd5555a5,
+        type: 3}
     - target: {fileID: 4914379955659626368, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_LocalPosition.y
@@ -1074,6 +996,17 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4984212041365608785, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: exitTaewooriPrefab
+      value: 
+      objectReference: {fileID: 5755754473064602975, guid: 90691631894a7ad47b4b383dfd5555a5,
+        type: 3}
+    - target: {fileID: 5008806412924027331, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: playerCamera
+      value: 
+      objectReference: {fileID: 348329834}
+    - target: {fileID: 5008806412924027331, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: exitTaewooriPrefab
       value: 
@@ -1142,7 +1075,7 @@ PrefabInstance:
     - target: {fileID: 7470029170683765286, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7
+      value: -11
       objectReference: {fileID: 0}
     - target: {fileID: 7470029170683765286, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
@@ -1152,7 +1085,7 @@ PrefabInstance:
     - target: {fileID: 7470029170683765286, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.5
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 7524651344830276143, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
@@ -1212,7 +1145,7 @@ PrefabInstance:
     - target: {fileID: 7565198799105750024, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11
+      value: -7
       objectReference: {fileID: 0}
     - target: {fileID: 7565198799105750024, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
@@ -1222,7 +1155,7 @@ PrefabInstance:
     - target: {fileID: 7565198799105750024, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.5
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: 7601449302571430015, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
@@ -1239,6 +1172,28 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -1.3
       objectReference: {fileID: 0}
+    - target: {fileID: 7616066831027281855, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: playerCamera
+      value: 
+      objectReference: {fileID: 348329834}
+    - target: {fileID: 7616066831027281855, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: exitTaewooriPrefab
+      value: 
+      objectReference: {fileID: 5755754473064602975, guid: 90691631894a7ad47b4b383dfd5555a5,
+        type: 3}
+    - target: {fileID: 7710200664456161441, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: playerCamera
+      value: 
+      objectReference: {fileID: 348329834}
+    - target: {fileID: 7710200664456161441, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: exitTaewooriPrefab
+      value: 
+      objectReference: {fileID: 5755754473064602975, guid: 90691631894a7ad47b4b383dfd5555a5,
+        type: 3}
     - target: {fileID: 7776533703776130353, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: playerCamera
@@ -1251,10 +1206,10 @@ PrefabInstance:
       objectReference: {fileID: 5755754473064602975, guid: 90691631894a7ad47b4b383dfd5555a5,
         type: 3}
     m_RemovedComponents:
-    - {fileID: 844995031, guid: 89d20f9f903079c44a1d68ef6defda95, type: 3}
-    - {fileID: 1227393281, guid: 89d20f9f903079c44a1d68ef6defda95, type: 3}
-    - {fileID: 184067611, guid: 89d20f9f903079c44a1d68ef6defda95, type: 3}
-    - {fileID: 992345778, guid: 89d20f9f903079c44a1d68ef6defda95, type: 3}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 89d20f9f903079c44a1d68ef6defda95, type: 3}
 --- !u!1 &955705736
 GameObject:
@@ -1354,6 +1309,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &988082282 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4261196350826723135, guid: b3252782f80ba5549ac048497e3080f3,
+    type: 3}
+  m_PrefabInstance: {fileID: 124876959}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1224384255 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149105314027, guid: 89d20f9f903079c44a1d68ef6defda95,
@@ -1372,32 +1333,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f86293e52eca4d74baf9765e40759a28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1737508230 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 675709566897603944, guid: 89d20f9f903079c44a1d68ef6defda95,
-    type: 3}
-  m_PrefabInstance: {fileID: 929823674}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1737508232
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1737508230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4e787717cae9746ad9d22ee71c3e1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  exitTaewooriPrefab: {fileID: 5755754473064602975, guid: 90691631894a7ad47b4b383dfd5555a5,
-    type: 3}
-  playerCamera: {fileID: 348329834}
-  autoAssignPosition: 1
-  taewooliPositionTag: TaewooliPosition
---- !u!4 &1930947455 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4370874263259061880, guid: b3252782f80ba5549ac048497e3080f3,
-    type: 3}
-  m_PrefabInstance: {fileID: 124876959}
-  m_PrefabAsset: {fileID: 0}

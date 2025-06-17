@@ -604,7 +604,7 @@ GameObject:
   - component: {fileID: 9137445655480841037}
   - component: {fileID: 4475486153958860787}
   m_Layer: 0
-  m_Name: Sobaek.Idle
+  m_Name: Sobaek.Exit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -640,7 +640,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 9ec0b457d3d330a4ca846fef395fd091, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -660,17 +660,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 352c22c219c69b94ab38a15e738f49ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 8646238192673766983, guid: 7e954d8e794a74313a4846a6181fdc67, type: 3}
   offsetX: 0.3
   offsetY: 0
   offsetZ: 0.7
+  arrivalDistance: 0
   stayOnRightSide: 1
   floatAmplitude: 0.1
-  floatSpeed: 1
-  lookAtSpeed: 3
-  moveSpeed: 1
-  arrivalDistance: 0.3
+  floatSpeed: 2
+  player: {fileID: 0}
+  moveSpeed: 10
+  lookAtSpeed: 10
   animator: {fileID: 9137445655480841037}
+  useGameManager: 1
 --- !u!1 &2632856105434143133
 GameObject:
   m_ObjectHideFlags: 0

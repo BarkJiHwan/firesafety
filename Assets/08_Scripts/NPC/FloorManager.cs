@@ -53,8 +53,9 @@ public class FloorManager : MonoBehaviour
     private Coroutine spawnSequenceCoroutine;
     private static bool isInitialized = false;
 
-    // 태우리 처치 카운트
+    // 태우리 처치 카운트 (전체 공유)
     private int taewooliKillCount = 0;
+    private static int totalTaewooliKills = 0; // 모든 층 공유
     #endregion
 
     #region 유니티 라이프사이클
@@ -134,7 +135,7 @@ public class FloorManager : MonoBehaviour
     {
         isActive = true;
         floorCompleted = false;
-        taewooliKillCount = 0; // 처치 카운트 초기화
+        taewooliKillCount = 0; // 개별 층 처치 카운트 초기화
 
         // 시작점만 활성화, 끝점은 비활성화
         if (startWaypoint != null)
@@ -218,8 +219,11 @@ public class FloorManager : MonoBehaviour
             spawnSequenceCoroutine = null;
         }
 
-        // 태우리 처치 점수를 ScoreManager에 전달
-        SendTaewooliScoreToManager();
+        // 1층에서만 점수 계산 (마지막 층이므로)
+        if (floorNumber == 1)
+        {
+            SendTotalTaewooliScoreToManager();
+        }
 
         // 현재 층 정리
         CleanupCurrentFloor();
@@ -242,38 +246,66 @@ public class FloorManager : MonoBehaviour
     public void OnTaewooliKilled()
     {
         taewooliKillCount++;
+        totalTaewooliKills++;
+
+        Debug.Log($"태우리 킬카운트 현재층: {taewooliKillCount}, 전체: {totalTaewooliKills}");
     }
 
     /// <summary>
-    /// 태우리 처치 점수 계산 및 ScoreManager 전달
+    /// 전체 태우리 처치 점수 계산 및 ScoreManager 전달 (1층에서만 호출)
     /// </summary>
-    private void SendTaewooliScoreToManager()
+
+    private void SendTotalTaewooliScoreToManager()
     {
         if (scoreManager == null)
             return;
 
-        // 처치 점수 계산 (대피 시나리오용)
-        int killScore = CalculateKillScore(taewooliKillCount);
+        int killScore = CalculateTotalKillScore(totalTaewooliKills);
 
-        // ScoreManager에 전달 (DaTaewoori = 대피시 태우리 처치 점수)
-        scoreManager.SetScore(ScoreType.DaTaewoori, killScore);
+        Debug.Log($"대피 최종 점수 계산: 총 {totalTaewooliKills}마리 → {killScore}점");
+
+        scoreManager.SetScore(ScoreType.Taewoori_Count, killScore);
     }
 
     /// <summary>
-    /// 처치 수에 따른 점수 계산 (대피 시나리오용)
+    /// 전체 처치 수에 따른 점수 계산 (2층 + 4층 총합, 최대 8마리)
     /// </summary>
-    private int CalculateKillScore(int killCount)
+    private int CalculateTotalKillScore(int totalKillCount)
     {
-        if (killCount >= 8)
-            return 25;      // 30마리 이상
-        else if (killCount >= 4)
-            return 20;      // 24마리 이상
+        if (totalKillCount >= 8)
+            return 25;      // 8마리 (전부)
+        else if (totalKillCount >= 4)
+            return 20;      // 4마리 이상
         else
-            return 15;      // 24마리 미만
+            return 15;      // 4마리 미만
+    }
+
+    /// <summary>
+    /// 현재 층 태우리 처치 수 반환
+    /// </summary>
+    public int GetTaewooliKillCount()
+    {
+        return taewooliKillCount;
+    }
+
+    /// <summary>
+    /// 전체 태우리 처치 수 반환
+    /// </summary>
+    public static int GetTotalTaewooliKills()
+    {
+        return totalTaewooliKills;
+    }
+
+    /// <summary>
+    /// 전체 태우리 처치 수 초기화 (게임 시작 시)
+    /// </summary>
+    public static void ResetTotalTaewooliKills()
+    {
+        totalTaewooliKills = 0;
     }
     #endregion
 
-    #region 태우리 스폰관리
+    #region 중앙집중식 스폰 시퀀스
     /// <summary>
     /// 층 이벤트 시퀀스 실행 - 매니저가 모든 타이밍 관리
     /// </summary>
@@ -397,11 +429,33 @@ public class FloorManager : MonoBehaviour
 
     #region 퍼블릭 메서드
     /// <summary>
-    /// 현재 태우리 처치 수 반환
+    /// 강제 활성화 (테스트용)
     /// </summary>
-    public int GetTaewooliKillCount()
+    [ContextMenu("층 강제 활성화")]
+    public void ForceActivate()
     {
-        return taewooliKillCount;
+        ActivateFloor();
+    }
+
+    /// <summary>
+    /// 강제 비활성화 (테스트용)
+    /// </summary>
+    [ContextMenu("층 강제 비활성화")]
+    public void ForceDeactivate()
+    {
+        DeactivateFloor();
+    }
+
+    /// <summary>
+    /// 시퀀스 강제 시작 (테스트용)
+    /// </summary>
+    [ContextMenu("시퀀스 강제 시작")]
+    public void ForceStartSequence()
+    {
+        if (isActive)
+        {
+            spawnSequenceCoroutine = StartCoroutine(ExecuteFloorEventSequence());
+        }
     }
     #endregion
 }
