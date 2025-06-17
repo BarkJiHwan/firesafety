@@ -71,9 +71,13 @@ public class SceneController : MonoBehaviour
         LoadScene((int)SceneType.IngameScene_Evacuation);
     }
 
-    public void GetChooseCharacterType(PlayerEnum type)
+    public void SetChooseCharacterType(PlayerEnum type)
     {
         charType = type;
-        Debug.Log(charType);
+    }
+
+    public PlayerEnum GetChooseCharacterType()
+    {
+        return charType;
     }
 }

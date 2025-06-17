@@ -20,7 +20,8 @@ public class CharacterChoose : MonoBehaviour
         {
             button.applyButton.onClick.AddListener(() =>
             {
-                Debug.Log("버튼 생성");
+                SceneController.Instance.SetChooseCharacterType(button.charType);
+                Debug.Log("캐릭터 종류 : " + SceneController.Instance.GetChooseCharacterType());
                 MoveScene(SceneController.Instance.chooseSceneType);
             });
             button.applyButton.gameObject.SetActive(false);
