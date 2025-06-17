@@ -2025,6 +2025,7 @@ MonoBehaviour:
   isSurvivalTracking: 0
   maxSurvivalTime: 0
   calculatedScore: 0
+  scoreManager: {fileID: 1058851943}
   totalTaewooriKilled: 0
   playerKillInfos: []
   gameScoreInfo:
@@ -2109,6 +2110,7 @@ MonoBehaviour:
   _count: 0
   <CompletedPreventionScore>k__BackingField: 0
   <_score>k__BackingField: 0
+  _scoreManager: {fileID: 1058851943}
 --- !u!4 &1775266234
 Transform:
   m_ObjectHideFlags: 0

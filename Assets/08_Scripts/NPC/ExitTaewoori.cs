@@ -16,7 +16,6 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     [SerializeField] private float floatingHeight = 0.2f; // 둥둥 효과 높이
     [SerializeField] private float moveSpeed = 1f; // 플레이어 향해 이동 속도
     [SerializeField] private float rotationSpeed = 2f; // 회전 속도
-    [SerializeField] private float stopDistance = 2f; // 플레이어에게서 멈출 거리
     #endregion
 
     #region 변수 선언
@@ -76,8 +75,6 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
 
         // 현재 위치를 기준 위치로 설정
         basePosition = transform.position;
-
-        Debug.Log($"태우리 초기화 완료 (새 구조) - 목표 위치: {fixedPosition.name}");
     }
 
     #endregion
@@ -147,7 +144,7 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
 
     #region 데미지 시스템 (IDamageable 구현)
     /// <summary>
-    /// XR 클릭 이벤트 처리
+    /// 클릭 공격 
     /// </summary>
     void OnClicked(ActivateEventArgs args)
     {
@@ -185,15 +182,8 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
         // 생성 파티클에 사망 알림
         if (spawnParticle != null)
         {
-            Debug.Log($"태우리 사망 - 파티클에 알림: {spawnParticle.name}");
             spawnParticle.OnTaewooliDestroyed(this);
         }
-        else
-        {
-            Debug.LogWarning("spawnParticle이 null입니다!");
-        }
-
-        Debug.Log($"{gameObject.name} 사망!");
 
         // 즉시 제거
         Destroy(gameObject);
@@ -223,14 +213,6 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     public void SetRotationSpeed(float speed)
     {
         rotationSpeed = Mathf.Max(0f, speed);
-    }
-
-    /// <summary>
-    /// 정지 거리 설정
-    /// </summary>
-    public void SetStopDistance(float distance)
-    {
-        stopDistance = Mathf.Max(0.5f, distance);
     }
 
     /// <summary>

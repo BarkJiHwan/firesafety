@@ -33,7 +33,7 @@ public class PlayerAction : MonoBehaviour
                 yield break;
             }
 
-            //
+            // 플레이어가 움직인다면 이동 애니메이션 재생
             if (_observedMove != _playerBehavior.IsMoving)
             {
                 _observedMove = _playerBehavior.IsMoving;
@@ -45,7 +45,7 @@ public class PlayerAction : MonoBehaviour
     }
 
     // 포톤 뷰 존재 여부에 따라 애니메이션 재생 수행하는 방법 분기
-    public void DecideAnimationMethod(int animatorParam, bool flag)
+    private void DecideAnimationMethod(int animatorParam, bool flag)
     {
         if (_photonView == null)
         {
