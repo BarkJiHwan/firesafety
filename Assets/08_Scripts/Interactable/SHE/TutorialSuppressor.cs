@@ -51,7 +51,7 @@ public class TutorialSuppressor : MonoBehaviour
         //if (_isPressed && _colHitCounts > 0 && !_isFeverTime) <-- 본래 조건문
         if (hand.interator.TryGetCurrent3DRaycastHit(out RaycastHit hit))
         {
-            if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _supplyMask))
+            if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _supplyMask) && hand.triggerAction.action.WasPressedThisFrame())
             {
                 Supply(hand);
             }

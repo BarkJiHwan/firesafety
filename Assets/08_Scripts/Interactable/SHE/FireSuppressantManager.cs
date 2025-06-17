@@ -115,7 +115,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         _isPressed = _triggerValue > 0.1f;
         //_colHitCount = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
         //if (_isPressed && _colHitCounts > 0 && !_isFeverTime) <-- 본래 조건문
-        if (hand.interator.TryGetCurrent3DRaycastHit(out RaycastHit hit) && !_isFeverTime)
+        if (hand.interator.TryGetCurrent3DRaycastHit(out RaycastHit hit) && !_isFeverTime && hand.triggerAction.action.WasPressedThisFrame())
         {
             if (IsInLayerMask(hit.collider.gameObject, _supplyMask))
             {
