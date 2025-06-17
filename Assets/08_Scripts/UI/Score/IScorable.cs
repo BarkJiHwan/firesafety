@@ -16,7 +16,7 @@ public enum ScoreType
 
 public interface IScorable
 {
-    void SetScore(ScoreType scoreType, float score);
+    void SetScore(ScoreType scoreType, int score);
 
     float GetScore(ScoreType scoreType);
 
