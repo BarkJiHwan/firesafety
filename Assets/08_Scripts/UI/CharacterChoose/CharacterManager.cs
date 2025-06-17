@@ -21,7 +21,6 @@ public class CharacterManager : MonoBehaviour
             }
             else
             {
-                Debug.Log(charChoose.GetCharacterObject()[i]);
                 charChoose.GetCharacterObject()[i].GetComponent<ChooseCharacterManager>().ChangeMaterialToGrey();
             }
         }

@@ -9,7 +9,6 @@ public enum SceneType
     MainScene,
     SceneChooseScene,
     SelectCharacterScene,
-    Tutorial,
     IngameScene_Fire,
     IngameScene_Evacuation
 }
