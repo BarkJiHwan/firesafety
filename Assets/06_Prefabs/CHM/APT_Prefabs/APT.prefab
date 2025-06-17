@@ -1126,6 +1126,7 @@ MonoBehaviour:
   startWaypoint: {fileID: 549928494}
   endWaypoint: {fileID: 103603094}
   allParticleGroup: {fileID: 1577851505720232197}
+  particleStartDelay: 0
   taewooliStartDelay: 5
   taewooliSpawnInterval: 5
   nextFloorManager: {fileID: 1786443997}
@@ -1437,6 +1438,7 @@ MonoBehaviour:
   startWaypoint: {fileID: 1714145081}
   endWaypoint: {fileID: 2115863511}
   allParticleGroup: {fileID: 6069496077981495751}
+  particleStartDelay: 0
   taewooliStartDelay: 5
   taewooliSpawnInterval: 5
   nextFloorManager: {fileID: 0}
@@ -1522,20 +1524,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6508337458793640912}
     m_Modifications:
-    - target: {fileID: 5065838012273582954, guid: c8fbae1868701fd40b516e668f7468dd,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -2.275
-      objectReference: {fileID: 0}
     - target: {fileID: 5962794764803319903, guid: c8fbae1868701fd40b516e668f7468dd,
         type: 3}
       propertyPath: m_Name
       value: 'Floor 3 Particle '
-      objectReference: {fileID: 0}
-    - target: {fileID: 5962794764803319903, guid: c8fbae1868701fd40b516e668f7468dd,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7202369927188795177, guid: c8fbae1868701fd40b516e668f7468dd,
         type: 3}
@@ -1723,6 +1715,7 @@ MonoBehaviour:
   startWaypoint: {fileID: 666016159}
   endWaypoint: {fileID: 1199151850}
   allParticleGroup: {fileID: 8136646300176119127}
+  particleStartDelay: 0
   taewooliStartDelay: 5
   taewooliSpawnInterval: 5
   nextFloorManager: {fileID: 1541721204}
@@ -1835,6 +1828,7 @@ MonoBehaviour:
   startWaypoint: {fileID: 227130887}
   endWaypoint: {fileID: 899917189}
   allParticleGroup: {fileID: 260122328804800302}
+  particleStartDelay: 0
   taewooliStartDelay: 5
   taewooliSpawnInterval: 5
   nextFloorManager: {fileID: 1249314849}
@@ -1851,11 +1845,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1650889147684400965}
     m_Modifications:
-    - target: {fileID: 2267566214333943072, guid: 0e75470948288224ebfb5843eaafaf87,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -1
-      objectReference: {fileID: 0}
     - target: {fileID: 3257000475194048161, guid: 0e75470948288224ebfb5843eaafaf87,
         type: 3}
       propertyPath: m_RootOrder
@@ -1915,11 +1904,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Floor 1 Particle
-      objectReference: {fileID: 0}
-    - target: {fileID: 3408543586536618475, guid: 0e75470948288224ebfb5843eaafaf87,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e75470948288224ebfb5843eaafaf87, type: 3}
