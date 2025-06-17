@@ -23,7 +23,7 @@ public class RoomMgr : MonoBehaviourPunCallbacks
                 return;
         }
         Debug.Log("모두 준비 됐으니 게임 시작합니다");
-        // 모든 플레이어 준비 완료 → 3초 카운트다운 시작
+        // 모든 플레이어 준비 완료 → 3초 카운트다운 시작        
         photonView.RPC("StartGameCountdown", RpcTarget.All);
     }
     [PunRPC]
@@ -101,6 +101,9 @@ public class RoomMgr : MonoBehaviourPunCallbacks
         Debug.Log("게임이 종료되었습니다.");
         //모든 코루틴 종료
         StopAllCoroutines();
-
+        if(PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.CurrentRoom.IsOpen = true;
+        }
     }
 }

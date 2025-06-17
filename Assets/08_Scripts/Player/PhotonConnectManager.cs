@@ -6,7 +6,6 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
 {
     private string _gameVersion = "1";
 
-    [SerializeField] private string _testRoomName = "testtest123";
     [SerializeField] private string _testLobbyName = "scTestLobby";
 
     [SerializeField] private PlayerSpawner _playerSpawner;
@@ -44,11 +43,7 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         {
             if (!PhotonNetwork.InRoom)
             {
-                PhotonNetwork.JoinOrCreateRoom(
-                    _testRoomName,
-                    new RoomOptions { MaxPlayers = 6 },
-                    new TypedLobby(_testLobbyName, LobbyType.Default)
-                );
+                PhotonNetwork.JoinRandomRoom();
             }
         }
     }
@@ -57,11 +52,7 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.InRoom)
         {
-            PhotonNetwork.JoinOrCreateRoom(
-                _testRoomName,
-                new RoomOptions { MaxPlayers = 6 },
-                new TypedLobby(_testLobbyName, LobbyType.Default)
-            );
+            PhotonNetwork.JoinRandomRoom();
         }
     }
 
@@ -106,15 +97,28 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         TutorialDataMgr.Instance.StartTutorial();
     }
 
-
-
     public override void OnJoinedLobby()
     {
         Debug.Log("Lobby : " + PhotonNetwork.CurrentLobby.Name);
     }
-
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        RoomOptions options = new RoomOptions { MaxPlayers = 6, IsOpen = true };
+        PhotonNetwork.CreateRoom(null, options, new TypedLobby(_testLobbyName, LobbyType.Default));
+    }
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        Debug.Log("방 참여 실패, code : " + returnCode + " msg : " + message);
+        switch (returnCode)
+        {
+            case 32765:
+                Debug.Log("방이 꽉 찼습니다.");
+                break;
+            case 32764:
+                Debug.Log("방이 닫혔습니다.");
+                break;
+            default:
+                Debug.Log("방 참여 실패, code : " + returnCode + " msg : " + message);
+                break;
+        }
     }
 }
