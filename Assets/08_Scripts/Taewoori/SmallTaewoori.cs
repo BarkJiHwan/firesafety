@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using Photon.Pun;
+﻿using Photon.Pun;
 
 /// <summary>
 /// 스몰태우리 클래스 - 파이어파티클이 충돌하여 생성되는 작은 적 유닛
@@ -41,7 +40,6 @@ public class SmallTaewoori : BaseTaewoori
         InitializeHealth();
         ResetState();
 
-        Debug.Log($"[마스터] 스몰태우리 {networkID} 생성 완료");
     }
 
     /// <summary>
@@ -59,8 +57,6 @@ public class SmallTaewoori : BaseTaewoori
 
         InitializeHealth();
         ResetState();
-
-        Debug.Log($"[마스터] 스몰태우리 {networkID} 생성 완료 (카운트 증가 없음)");
     }
 
     /// <summary>
@@ -77,7 +73,6 @@ public class SmallTaewoori : BaseTaewoori
         InitializeHealth();
         ResetState();
 
-        Debug.Log($"[클라이언트] 스몰태우리 {networkID} 시각적 생성 완료");
     }
     #endregion
 
@@ -91,7 +86,6 @@ public class SmallTaewoori : BaseTaewoori
         if (!PhotonNetwork.IsMasterClient || isClientOnly)
             return;
 
-        Debug.Log($"[마스터] 스몰태우리 {networkID} 데미지: {damage}, 체력: {currentHealth}/{maxHealth}");
 
         base.TakeDamage(damage);
 
@@ -99,7 +93,7 @@ public class SmallTaewoori : BaseTaewoori
         if (manager != null && networkID != -1)
         {
             ((TaewooriPoolManager)manager).SyncSmallTaewooriDamage(networkID, currentHealth, maxHealth);
-            Debug.Log($"[마스터] 스몰태우리 {networkID} 체력 동기화 전송: {currentHealth}/{maxHealth}");
+
         }
     }
 
@@ -113,15 +107,8 @@ public class SmallTaewoori : BaseTaewoori
         if (PhotonNetwork.IsMasterClient || !isClientOnly)
             return;
 
-        Debug.Log($"[클라이언트] 스몰태우리 {networkID} 체력 동기화 받음: {newCurrentHealth}/{newMaxHealth}");
-
         currentHealth = newCurrentHealth;
         maxHealth = newMaxHealth;
-
-        // 색상 업데이트 (BaseTaewoori의 public 메서드)
-        UpdateHealthColor();
-
-        Debug.Log($"[클라이언트] 스몰태우리 {networkID} 색상 업데이트 완료");
     }
 
     /// <summary>
@@ -140,7 +127,6 @@ public class SmallTaewoori : BaseTaewoori
             // 클라이언트면 마스터에게 요청
             if (TaewooriPoolManager.Instance != null && networkID != -1)
             {
-                Debug.Log($"[클라이언트] 스몰태우리 {networkID}에게 데미지 {damage} 요청 전송");
                 TaewooriPoolManager.Instance.photonView.RPC("RequestSmallTaewooriDamage",
                     RpcTarget.MasterClient, networkID, damage, PhotonNetwork.LocalPlayer.ActorNumber);
             }
@@ -159,7 +145,6 @@ public class SmallTaewoori : BaseTaewoori
 
         isDead = true;
 
-        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "마스터" : "클라이언트")}] 스몰태우리 {networkID} 사망");
 
         // 마스터만 카운트 감소 및 네트워크 동기화
         if (PhotonNetwork.IsMasterClient && !isClientOnly)
@@ -173,7 +158,6 @@ public class SmallTaewoori : BaseTaewoori
             if (manager != null && networkID != -1)
             {
                 ((TaewooriPoolManager)manager).SyncSmallTaewooriDestroy(networkID);
-                Debug.Log($"[마스터] 스몰태우리 {networkID} 파괴 동기화 전송");
             }
         }
 
@@ -195,8 +179,6 @@ public class SmallTaewoori : BaseTaewoori
     {
         if (PhotonNetwork.IsMasterClient || !isClientOnly)
             return;
-
-        Debug.Log($"[클라이언트] 스몰태우리 {networkID} 네트워크 파괴 받음");
 
         isDead = true;
 

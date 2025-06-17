@@ -47,7 +47,7 @@ public class FireObjMgr : MonoBehaviour
     [field: SerializeField]
     public int _score { get; private set; }
     public int Count { get => _count; set => _count = value; }
-
+    [SerializeField] private ScoreManager _scoreManager;
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -83,6 +83,10 @@ public class FireObjMgr : MonoBehaviour
         if (currentPhase == GamePhase.Fire && !_hasRefreshedFireObjs)
         {
             Debug.Log("화재 페이즈 - 오브젝트 갱신");
+            if(_scoreManager == null)
+            {
+                _scoreManager = FindObjectOfType<ScoreManager>();
+            }
             CompletedPreventionPhase(); //예방 점수 측정
             RefreshAllFireObjects(); //예방이 안된 오브젝트 갱신
             RefreshZoneDictionary(); //갱신한 값으로 딕셔너리 초기화
@@ -280,6 +284,7 @@ public class FireObjMgr : MonoBehaviour
     public void CompletedPreventionPhase()
     {
         CompletedPreventionScore = CalculateScore(_playerCount, Count);
+        _scoreManager.SetScore(ScoreType.Prevention_Count, CompletedPreventionScore);
     }
     public int CalculateScore(int playerCount, int count)
     {
@@ -341,9 +346,8 @@ public class FireObjMgr : MonoBehaviour
 
         float elapsedTime = Time.time - _timer;
         int calculatedScore = CalculateScore(elapsedTime, _playerCount);
-        _score += calculatedScore;
-
-        Debug.Log($"모든 오브젝트 예방 완료! 경과 시간: {elapsedTime:F2}초, 점수: {_score}");
+        _score = calculatedScore;
+        _scoreManager.SetScore(ScoreType.Prevention_Time, calculatedScore);
     }
     private int CalculateScore(float time, int players)
     {

@@ -43,7 +43,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -117,7 +117,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3730916225136171703}
+  - component: {fileID: 351730553917313049}
   - component: {fileID: 3730916225136171700}
   - component: {fileID: 3730916225136171701}
   - component: {fileID: 3730916225136171698}
@@ -129,7 +129,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3730916225136171703
+--- !u!4 &351730553917313049
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -260,7 +260,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3730916225136171703}
+  - {fileID: 351730553917313049}
   - {fileID: 3730916225065630988}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -280,3 +280,4 @@ MonoBehaviour:
   canvas: {fileID: 0}
   curvedMesh: {fileID: 3730916225136171699}
   angleThreshold: 50
+  isPlayerMove: 0
