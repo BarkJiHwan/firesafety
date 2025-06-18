@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.XR;
 
-public class TutorialSuppressor : MonoBehaviourPunCallbacks, ISupplyHandler
+public class TutorialSuppressor : MonoBehaviourPunCallbacks
 {
     [SerializeField] private HandData _leftHand;
     [SerializeField] private HandData _rightHand;

@@ -29,7 +29,7 @@ public class HandData
     public EHandType handType;
     public XRRayInteractor interator;
 }
-public class FireSuppressantManager : MonoBehaviourPunCallbacks, ISupplyHandler
+public class FireSuppressantManager : MonoBehaviourPunCallbacks
 {
     [Header("양손 소화기 데이터")]
     [SerializeField] public HandData _leftHand;
