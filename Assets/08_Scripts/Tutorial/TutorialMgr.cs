@@ -173,7 +173,6 @@ public class TutorialMgr : MonoBehaviourPun
 
         while (_currentPhase == 2)
         {
-            Debug.Log("실행 중");
             // 플레이어가 가까워질수록 내 Material _RimPower -시켜야 함 2->-0.2
             float distance = Vector3.Distance(_preventable.transform.position, player.transform.position);
             // 빛을 더 밝게 빛나기 위해서 * 2 했음

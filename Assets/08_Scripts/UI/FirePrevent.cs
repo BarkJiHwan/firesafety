@@ -158,8 +158,6 @@ public partial class FirePreventable : MonoBehaviour
             rend.materials = arrMat;
             SetActiveOnMaterials(false);
         }
-
-        Debug.Log("바꿈");
     }
 
     public void MakeExceptPreventObject(PreventType type)
@@ -206,13 +204,16 @@ public partial class FirePreventable : MonoBehaviour
 
     public void MakeExceptObjectOff()
     {
-        if (_myType == PreventType.PowerStrip)
+        if (_myType == PreventType.PowerStrip || _myType == PreventType.OldWire)
         {
-            _renderer.materials = originMats;
-        }
-        if (isHaveChild == true)
-        {
-            childRend.materials = originChildMats;
+            if(_myType== PreventType.PowerStrip)
+            {
+                _renderer.materials = originMats;
+            }
+            if (isHaveChild == true)
+            {
+                childRend.materials = originChildMats;
+            }
         }
     }
 
@@ -250,7 +251,6 @@ public partial class FirePreventable : MonoBehaviour
         }
         else
         {
-            Debug.Log("해제");
             OnAlreadyPrevented?.Invoke();
         }
     }
