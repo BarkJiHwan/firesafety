@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class CharacterChoose : MonoBehaviour
 {
     [SerializeField] List<ButtonInteractor> checkButtonList;
+    [SerializeField] GameObject xrRigObject;
+
     [System.Serializable]
     class ButtonInteractor
     {
@@ -33,6 +35,7 @@ public class CharacterChoose : MonoBehaviour
     public void BackToBeforeScene()
     {
         SceneController.Instance.MoveToSceneChoose();
+        xrRigObject.GetComponent<CustomTunnelingVignette>().FadeOut();
     }
 
     public void SetActiveButton(PlayerEnum type)
