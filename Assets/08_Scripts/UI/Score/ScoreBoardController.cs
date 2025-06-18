@@ -69,7 +69,8 @@ public class ScoreBoardController : MonoBehaviour
     {
         for(int i=0; i<scoreItems.Length; i++)
         {
-            scoreItems[i].stampImage.gameObject.SetActive(false);
+            //scoreItems[i].stampImage.gameObject.SetActive(false);
+            scoreItems[i].stampImage.enabled = false;
         }
     }
 
@@ -109,11 +110,10 @@ public class ScoreBoardController : MonoBehaviour
             if (isCorrect == true)
             {
                 scoreItems[i - startIndex].stampImage.sprite = GetImageTypeByScore(scoreMgr.GetScore(scoreType));
-                Debug.Log("스탬프 : " + scoreItems[i - startIndex].stampImage.gameObject);
-                scoreItems[i - startIndex].stampImage.gameObject.SetActive(true);
+                //scoreItems[i - startIndex].stampImage.gameObject.SetActive(true);
+                scoreItems[i - startIndex].stampImage.enabled = true;
                 if (scoreMgr.GetScore(scoreType) >= 20)
                 {
-                    Debug.Log("20점 이상임!!");
                     stampNum++;
                 }
             }
@@ -141,5 +141,10 @@ public class ScoreBoardController : MonoBehaviour
         //    ChangeBoardStandard(SceneController.Instance.chooseSceneType);
         //    hasAlreadyUpdated = true;
         //}
+    }
+
+    private void OnDisable()
+    {
+        
     }
 }

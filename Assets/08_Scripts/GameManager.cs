@@ -37,10 +37,30 @@ public class GameManager : MonoBehaviour
 
     [field: SerializeField]
     public float GameTimer { get; private set; } = 0f;
+
     public GamePhase CurrentPhase { get; set; } = GamePhase.Waiting;
+
+    // 차연우 수정
+    public GamePhase _currentPhase;
+    public GamePhase NowPhase
+    {
+        get => _currentPhase;
+        set
+        {
+            if (_currentPhase != value)
+            {
+                Debug.Log("_currentPhase : " + _currentPhase);
+                _currentPhase = value;
+                OnPhaseChanged?.Invoke(_currentPhase);
+            }
+        }
+    }
+
     public bool IsGameStart { get => _isGameStart; set => _isGameStart = value; }
 
     public event Action OnGameEnd;
+    public event Action<GamePhase> OnPhaseChanged;
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -88,6 +108,7 @@ public class GameManager : MonoBehaviour
                 {
                     _currentPhaseIndex = i;
                     CurrentPhase = _phases[i].Phase;
+                    NowPhase = _phases[i].Phase;
                     _phases[i].OnEnterPhase?.Invoke();
 
                     if (CurrentPhase == GamePhase.LeaveDangerArea)
@@ -100,49 +121,6 @@ public class GameManager : MonoBehaviour
     public void SetGameTimer(float time)
     {
         GameTimer = time;
-    }
-    //사용 하지 않을 수 있음 리팩터링중
-    private void UpdateGamePhase()
-    {
-        // 시간에 따라 페이즈 자동 전환
-        if (GameTimer < 10f)
-        {
-            CurrentPhase = GamePhase.Waiting;
-        }
-        else if (GameTimer < 70f)
-        {
-            if (CurrentPhase != GamePhase.Prevention)
-            {
-                CurrentPhase = GamePhase.Prevention;
-            }
-        }
-        else if (GameTimer < 190f)
-        {
-            if (CurrentPhase != GamePhase.Fire)
-            {
-                CurrentPhase = GamePhase.Fire;
-                //CHM 태우리 생존시간 추적
-                TaewooriPoolManager.Instance?.StartSurvivalTracking();
-            }
-        }
-        else if(GameTimer < 250f)
-        {
-            if (CurrentPhase != GamePhase.Fever)
-            {
-                CurrentPhase = GamePhase.Fever;
-            }
-        }
-        else
-        {
-            if(CurrentPhase != GamePhase.LeaveDangerArea)
-            {
-                //CHM 태우리 생존시간 끝내고 점수 판정함 
-                TaewooriPoolManager.Instance?.EndSurvivalTracking();
-                CurrentPhase = GamePhase.LeaveDangerArea;
-                IsGameStart = false; //스타트 멈춤
-                Debug.Log("일단 게임종료 임");
-            }
-        }
     }
 
     public void GameStartBtn()

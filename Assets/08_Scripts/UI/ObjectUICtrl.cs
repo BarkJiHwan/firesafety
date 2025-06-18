@@ -58,7 +58,7 @@ public class ObjectUICtrl : MonoBehaviour
     {
         if(GameManager.Instance.CurrentPhase != GamePhase.Prevention)
         {
-            if(backImage.gameObject.activeSelf == true)
+            if(backImage.gameObject.activeSelf == true || iconImg.gameObject.activeSelf == true)
             {
                 backImage.gameObject.SetActive(false);
                 iconImg.gameObject.SetActive(false);
@@ -123,6 +123,7 @@ public class ObjectUICtrl : MonoBehaviour
 
         if (currentPrevent.MyType == PreventType.ElectricKettle || currentPrevent.MyType == PreventType.PowerBank)
         {
+            Debug.Log("PowerBank");
             transform.position = originPosition + basicPos;
             transform.Rotate(0, 0, 0);
         }
