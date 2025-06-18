@@ -105,5 +105,6 @@ public class RoomMgr : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.CurrentRoom.IsOpen = true;
         }
+        PhotonNetwork.LeaveRoom();
     }
 }
