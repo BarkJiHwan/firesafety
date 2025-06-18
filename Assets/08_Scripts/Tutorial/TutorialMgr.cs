@@ -19,6 +19,9 @@ public class TutorialMgr : MonoBehaviourPun
     private FirePreventable _preventable;
     private Coroutine _countdownCoroutine;
 
+    DialogueLoader dialogueLoader;
+    DialoguePlayer dialoguePlayer;
+
     void Start()
     {
         if (!photonView.IsMine)
@@ -29,6 +32,17 @@ public class TutorialMgr : MonoBehaviourPun
         SetTutorialPhase();
         ObjectActiveFalse();
         _countdownCoroutine = StartCoroutine(CountdownRoutine());
+
+        GameObject dialogue = null;
+        if(dialogueLoader == null)
+        {
+            dialogueLoader = FindObjectOfType<DialogueLoader>();
+            dialogue = dialogueLoader.gameObject;
+        }
+        if(dialoguePlayer == null)
+        {
+            dialoguePlayer = dialogue.GetComponent<DialoguePlayer>();
+        }
     }
     public void SetTutorialPhase()
     {

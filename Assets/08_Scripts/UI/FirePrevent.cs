@@ -161,6 +161,8 @@ public partial class FirePreventable : MonoBehaviour
             rend.materials = arrMat;
             SetActiveOnMaterials(false);
         }
+
+        Debug.Log("바꿈");
     }
 
     public void MakeExceptPreventObject(PreventType type)
