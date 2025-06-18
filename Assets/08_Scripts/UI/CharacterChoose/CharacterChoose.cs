@@ -22,6 +22,7 @@ public class CharacterChoose : MonoBehaviour
         {
             button.applyButton.onClick.AddListener(() =>
             {
+                xrRigObject.GetComponent<CustomTunnelingVignette>().FadeOut();
                 SceneController.Instance.SetChooseCharacterType(button.charInfo);
                 Debug.Log("캐릭터 종류 : " + SceneController.Instance.GetChooseCharacterType().characterType);
                 MoveScene(SceneController.Instance.chooseSceneType);
@@ -35,7 +36,6 @@ public class CharacterChoose : MonoBehaviour
     public void BackToBeforeScene()
     {
         SceneController.Instance.MoveToSceneChoose();
-        xrRigObject.GetComponent<CustomTunnelingVignette>().FadeOut();
     }
 
     public void SetActiveButton(PlayerEnum type)
