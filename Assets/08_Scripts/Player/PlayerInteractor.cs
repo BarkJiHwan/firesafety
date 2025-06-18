@@ -45,7 +45,6 @@ public class PlayerInteractor : MonoBehaviour
 
         if (GameManager.Instance.CurrentPhase != GamePhase.Prevention)
         {
-            Debug.Log("돌아가!");
             return;
         }
 
