@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -83,7 +84,7 @@ public class FixedViewCanvasController : MonoBehaviour
         if (SceneController.Instance.chooseSceneType == SceneType.IngameScene_Fire)
         {
             // 현재 접속되어 있는 방 탈출
-
+            PhotonNetwork.LeaveRoom();
             // 씬 선택창으로 이동
             SceneController.Instance.MoveToSceneChoose();
         }

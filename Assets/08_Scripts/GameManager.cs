@@ -113,8 +113,8 @@ public class GameManager : MonoBehaviour
 
                     if (CurrentPhase == GamePhase.LeaveDangerArea)
                     {
-                        OnGameEnd?.Invoke();
                         GameOver();
+                        OnGameEnd?.Invoke();
                     }
                 }
                 break;

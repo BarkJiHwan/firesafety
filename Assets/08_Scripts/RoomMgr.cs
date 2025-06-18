@@ -101,10 +101,5 @@ public class RoomMgr : MonoBehaviourPunCallbacks
         Debug.Log("게임이 종료되었습니다.");
         //모든 코루틴 종료
         StopAllCoroutines();
-        if(PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.CurrentRoom.IsOpen = true;
-        }
-        PhotonNetwork.LeaveRoom();
     }
 }
