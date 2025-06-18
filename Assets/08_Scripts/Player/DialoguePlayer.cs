@@ -7,23 +7,19 @@ using UnityEngine.Events;
 [RequireComponent(typeof(DialogueLoader))]
 public class DialoguePlayer : MonoBehaviour
 {
-    private AudioListener _audioListener;
-
     public DialogueLoader dialogueLoader;
 
     public UnityAction OnPlayDialougue;
     public UnityAction OnStopDialogue;
 
-    public AudioListener AudioListener
-    {
-        get => _audioListener;
-        set => _audioListener = value;
-    }
+    public AudioSource currentAudioSource;
 
-    public void Play()
+    public string PlayWithText(string dialogueId)
     {
-        PlayAudio();
+        PlayAudio(dialogueId);
         OnPlayDialougue.Invoke();
+        StartCoroutine(WaitUntilAudioSourceEnd());
+        return dialogueLoader.GetDialogueText(dialogueId);
     }
 
     public void Stop()
@@ -33,15 +29,24 @@ public class DialoguePlayer : MonoBehaviour
     }
 
     /* 사운드 재생 */
-    private void PlayAudio()
+    private void PlayAudio(string dialogueId)
     {
-
+        AudioSource source = dialogueLoader.GetAudioSource(dialogueId);
+        source.Play();
     }
 
     /* 사운드 재생 중지 */
     private void StopAudio()
     {
-
+        if (currentAudioSource.isPlaying)
+        {
+            currentAudioSource.Stop();
+        }
     }
 
+    private IEnumerator WaitUntilAudioSourceEnd()
+    {
+        yield return new WaitWhile(() => currentAudioSource.isPlaying);
+        Stop();
+    }
 }

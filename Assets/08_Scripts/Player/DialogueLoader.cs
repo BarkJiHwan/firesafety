@@ -48,29 +48,29 @@ public class DialogueLoader : MonoBehaviour
     public Dictionary<string, AudioSource> AudioDict
     {
         get => _audioDict;
-        set => _audioDict = value;
     }
 
     private void Awake()
     {
         _dialogueList = new List<DialogueData>();
         _dialogueDict = new Dictionary<string, DialogueData>();
+        _audioDict = new Dictionary<string, AudioSource>();
     }
 
     // 처음은 튜토리얼 대화 흐름 읽어오기
     private void Start()
     {
-        ReadTutorialData();
+        LoadTutorialData();
     }
 
-    public void ReadTutorialData() => ReadDialogue(DialogueType.Tutorial);
-    public void ReadSobaekData() => ReadDialogue(DialogueType.Sobaek);
+    public void LoadTutorialData() => LoadDialogue(DialogueType.Tutorial);
+    public void LoadSobaekData() => LoadDialogue(DialogueType.Sobaek);
 
-    public void ReadDialogue(DialogueType type)
+    public void LoadDialogue(DialogueType type)
     {
         string fileName = "";
 
-        if (fileName == String.Empty)
+        if (fileName == string.Empty)
         {
             Debug.LogWarning("데이터가 없습니다, 확인해주세요");
             return;
@@ -88,10 +88,13 @@ public class DialogueLoader : MonoBehaviour
 
         _currentDialogueType = type;
 
-        TextAsset textAsset = Resources.Load<TextAsset>(_audioMetaDataFolder + fileName);
-        string[] allLines = textAsset.text.Split('\n');
-
         // 로드할떄 기존 데이터가 있었다면 삭제
+        ClearDialogueData();
+        ParseCSV(type, fileName);
+    }
+
+    public void ClearDialogueData()
+    {
         if (DialogueList.Count > 0)
         {
             DialogueList.Clear();
@@ -101,6 +104,17 @@ public class DialogueLoader : MonoBehaviour
         {
             DialogueDict.Clear();
         }
+
+        if (AudioDict.Count > 0)
+        {
+            AudioDict.Clear();
+        }
+    }
+
+    public void ParseCSV(DialogueType type, string fileName)
+    {
+        TextAsset textAsset = Resources.Load<TextAsset>(_audioMetaDataFolder + fileName);
+        string[] allLines = textAsset.text.Split('\n');
 
         // 첫 번째 라인은 헤더이므로 건너뛰기
         for (int i = 1; i < allLines.Length; i++)
@@ -116,6 +130,9 @@ public class DialogueLoader : MonoBehaviour
 
             DialogueList.Add(dialogueData);
             DialogueDict.Add(row[0], dialogueData);
+
+            AudioSource audioSource = Resources.Load<AudioSource>(_audioMetaDataFolder + type + "/" + row[1]);
+            AudioDict.Add(row[0], audioSource);
         }
     }
 
@@ -128,5 +145,29 @@ public class DialogueLoader : MonoBehaviour
         }
 
         return DialogueDict[dialogueId];
+    }
+
+    public AudioSource GetAudioSource(string dialogueId)
+    {
+        if (AudioDict == null || !AudioDict.ContainsKey(dialogueId))
+        {
+            Debug.LogWarning("오디오 소스의 아이디가 없습니다");
+            return null;
+        }
+
+        return AudioDict[dialogueId];
+    }
+
+    public string GetDialogueText(string dialogueId)
+    {
+        DialogueData dialogue = GetDialogue(dialogueId);
+
+        if (dialogue == null || string.Empty == dialogue.Text)
+        {
+            Debug.LogWarning("대화 텍스트가 없습니다");
+            return "";
+        }
+
+        return dialogue.Text;
     }
 }
