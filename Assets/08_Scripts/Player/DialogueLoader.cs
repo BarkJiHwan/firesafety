@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
 public enum DialogueType
@@ -67,7 +65,7 @@ public class DialogueLoader : MonoBehaviour
 
         // 아래는 테스트 코드
         // DialoguePlayer dialoguePlayer = FindObjectOfType<DialoguePlayer>();
-        // string text = dialoguePlayer.PlayWithText("TUT_001");
+        // string text = dialoguePlayer.PlayWithText("TUT_005");
         // Debug.Log("대사 : " + text);
         //
         // StartCoroutine(WaitForTest(3f));

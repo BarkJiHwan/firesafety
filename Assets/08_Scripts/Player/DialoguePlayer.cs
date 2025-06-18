@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 [RequireComponent(typeof(DialogueLoader))]
 public class DialoguePlayer : MonoBehaviour
@@ -31,6 +29,7 @@ public class DialoguePlayer : MonoBehaviour
     private void PlayAudio(string dialogueId)
     {
         AudioClip clip = dialogueLoader.GetAudioClip(dialogueId);
+        Debug.Log("clip : " + clip.name);
         audioSource.clip = clip;
         audioSource.Play();
     }
