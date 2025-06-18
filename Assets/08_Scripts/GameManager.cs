@@ -69,14 +69,10 @@ public class GameManager : MonoBehaviour
             return;
         }
         _instance = this;
-        DontDestroyOnLoad(gameObject);
     }
     private void Start()
     {
-        StopGame();
-        GameTimer = 0f;
-        _currentPhaseIndex = -1;
-        _gameTimerCoroutine = StartCoroutine(GameTimerRoutine());
+        GameOver();
     }
 
     private IEnumerator GameTimerRoutine()
@@ -113,8 +109,8 @@ public class GameManager : MonoBehaviour
 
                     if (CurrentPhase == GamePhase.LeaveDangerArea)
                     {
-                        GameOver();
                         OnGameEnd?.Invoke();
+                        GameOver();
                     }
                 }
                 break;
@@ -132,9 +128,11 @@ public class GameManager : MonoBehaviour
     }
     public void GameOver()
     {
-        GameTimer = 0;
-        CurrentPhase = GamePhase.Waiting;
-        IsGameStart = false;
+        _currentPhase = GamePhase.Waiting;
+        StopGame();
+        GameTimer = 0f;
+        _currentPhaseIndex = -1;
+        _gameTimerCoroutine = StartCoroutine(GameTimerRoutine());
     }
     public void ResetGameTimer()
     {
