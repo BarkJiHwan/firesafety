@@ -35,9 +35,6 @@ public class SobaekCarScript : MonoBehaviour
 
         _simpleInteractable.selectEntered.RemoveListener(OnEnteredCar);
         _simpleInteractable.enabled = false;
-
-        /* 터치하면 바로 출발함, 따로 빼려면 메서드 호출 다른데서 하도록*/
-        //StartTrack();//CHM 테스트
     }
 
     public void StartTrack()
