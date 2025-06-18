@@ -154,8 +154,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
 
         _instance = this;
-        DontDestroyOnLoad(gameObject);
-
         InitializePools();
 
         // ScoreManager 자동 찾기
