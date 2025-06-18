@@ -17,7 +17,6 @@ public enum EHandType
 [System.Serializable]
 public class HandData
 {
-    //public string handName; // 디버그용
     public InputActionProperty triggerAction;
     public Transform grabSpot;
     public ParticleSystem normalFireFX;
@@ -30,11 +29,11 @@ public class HandData
     public EHandType handType;
     public XRRayInteractor interator;
 }
-public class FireSuppressantManager : MonoBehaviourPunCallbacks
+public class FireSuppressantManager : MonoBehaviourPunCallbacks, ISupplyHandler
 {
     [Header("양손 소화기 데이터")]
-    [SerializeField] private HandData _leftHand;
-    [SerializeField] private HandData _rightHand;
+    [SerializeField] public HandData _leftHand;
+    [SerializeField] public HandData _rightHand;
 
     [Header("공통 설정")]
     [SerializeField] private float _sprayLength = 2.5f;
@@ -115,13 +114,13 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         _isPressed = _triggerValue > 0.1f;
         //_colHitCount = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
         //if (_isPressed && _colHitCounts > 0 && !_isFeverTime) <-- 본래 조건문
-        if (hand.interator.TryGetCurrent3DRaycastHit(out RaycastHit hit) && !_isFeverTime && hand.triggerAction.action.WasPressedThisFrame())
-        {
-            if (IsInLayerMask(hit.collider.gameObject, _supplyMask))
-            {
-                Supply(type);
-            }
-        }
+        //if (hand.interator.TryGetCurrent3DRaycastHit(out RaycastHit hit) && !_isFeverTime && hand.triggerAction.action.WasPressedThisFrame())
+        //{
+        //    if (IsInLayerMask(hit.collider.gameObject, _supplyMask))
+        //    {
+        //        Supply(type);
+        //    }
+        //}
         if (_isPressed && !hand.isSpraying && hand.enabled && hand.triggerAction.action.WasPressedThisFrame())
         {
             if (_currentCor == null)
@@ -317,7 +316,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         hand.initialFire = false;
         _currentCor = null;
     }
-    private void Supply(EHandType type)
+    public void Supply(EHandType type)
     {
         #region Instantiate ver
         //if (!_rightHand.enabled && !_leftHand.enabled)
@@ -440,9 +439,6 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
 
     private void DrawSprayRange(HandData hand)
     {
-        //보급 인지 범위
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(hand.grabSpot.position, _supplyDetectRange);
         //소화기 범위
         if (_sprayOrigin == null)
         {
@@ -455,4 +451,6 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         Gizmos.DrawWireSphere(end, _sprayRadius);
         Gizmos.DrawLine(start, end);
     }
+
+  
 }

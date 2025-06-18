@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.XR;
 
-public class TutorialSuppressor : MonoBehaviour
+public class TutorialSuppressor : MonoBehaviourPunCallbacks, ISupplyHandler
 {
-    [SerializeField] HandData _leftHand;
-    [SerializeField] HandData _rightHand;
+    [SerializeField] private HandData _leftHand;
+    [SerializeField] private HandData _rightHand;
     [SerializeField] private float _sprayLength = 2.5f;
     [SerializeField] private float _sprayRadius = 1;
     [SerializeField] private int _damage = 1;
@@ -25,6 +27,7 @@ public class TutorialSuppressor : MonoBehaviour
     private readonly Collider[] _supplyHits = new Collider[10];
     private readonly Dictionary<Collider, IDamageable> _cacheds = new();
     private readonly Collider[] _checkingCols = new Collider[20];
+    private Dictionary<EHandType, HandData> _hands = new();
     private Vector3 _sprayStartPos;
     private Vector3 _sprayEndPos;
     private float _triggerValue;
@@ -32,7 +35,22 @@ public class TutorialSuppressor : MonoBehaviour
     private int _fireHitCount;
     private IEnumerator _currentCor;
     private bool _isPressed;
-
+    private HandData GetHand(EHandType type)
+    {
+        if (_hands.TryGetValue(type, out var hand))
+        {
+            return hand;
+        }
+        return null;
+    }
+    private void Awake()
+    {
+        if (photonView != null && photonView.IsMine)
+        {
+            _hands[EHandType.LeftHand] = _leftHand;
+            _hands[EHandType.RightHand] = _rightHand;
+        }
+    }
     private void Update()
     {
         ProcessHand(_leftHand);
@@ -48,14 +66,6 @@ public class TutorialSuppressor : MonoBehaviour
         _triggerValue = hand.triggerAction.action.ReadValue<float>();
         _isPressed = _triggerValue > 0.1f;
         _colHitCount = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
-        //if (_isPressed && _colHitCounts > 0 && !_isFeverTime) <-- 본래 조건문
-        if (hand.interator.TryGetCurrent3DRaycastHit(out RaycastHit hit))
-        {
-            if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _supplyMask) && hand.triggerAction.action.WasPressedThisFrame())
-            {
-                Supply(hand);
-            }
-        }
         if (_isPressed && !hand.isSpraying && hand.enabled && hand.triggerAction.action.WasPressedThisFrame())
         {
             if (_currentCor == null)
@@ -141,8 +151,50 @@ public class TutorialSuppressor : MonoBehaviour
         hand.initialFire = false;
         _currentCor = null;
     }
-    private void Supply(HandData hand)
+    //public void Supply(EHandType type)
+    //{
+    //      if (_currentAmount <= 0)
+    //      {
+    //          TutorialDataMgr.Instance.IsTriggerSupply = true;
+    //      }
+    //      if (!_rightHand.enabled && !_leftHand.enabled)
+    //      {
+    //          hand.modelPrefab.SetActive(true);
+    //          hand.enabled = true;
+    //          _sprayOrigin = hand.modelPrefab.transform.Find("SprayOrigin");
+    //      }
+    //      else if (!hand.enabled)
+    //      {
+    //          _rightHand.modelPrefab.SetActive(false);
+    //          _leftHand.modelPrefab.SetActive(false);
+    //          _rightHand.enabled = false;
+    //          _leftHand.enabled = false;
+    //          hand.modelPrefab.SetActive(true);
+    //          hand.enabled = true;
+    //      }
+    //      if (hand.enabled && _currentAmount < _maxAmount)
+    //      {
+    //          _currentAmount = _maxAmount;
+    //      }
+    //}
+  public void DetachSuppressor()
     {
+        if (_rightHand.enabled)
+        {
+            _rightHand.modelPrefab.SetActive(false);
+            _rightHand.enabled = false;
+        }
+        if (_leftHand.enabled)
+        {
+            _leftHand.modelPrefab.SetActive(false);
+            _leftHand.enabled = false;
+        }
+        _currentAmount = _maxAmount;
+    }
+    public void SetAmountZero() => _currentAmount = 0;
+    public void Supply(EHandType type)
+    {
+        var hand = GetHand(type);
         if (_currentAmount <= 0)
         {
             TutorialDataMgr.Instance.IsTriggerSupply = true;
@@ -167,19 +219,4 @@ public class TutorialSuppressor : MonoBehaviour
             _currentAmount = _maxAmount;
         }
     }
-    public void DetachSuppressor()
-    {
-        if (_rightHand.enabled)
-        {
-            _rightHand.modelPrefab.SetActive(false);
-            _rightHand.enabled = false;
-        }
-        if (_leftHand.enabled)
-        {
-            _leftHand.modelPrefab.SetActive(false);
-            _leftHand.enabled = false;
-        }
-        _currentAmount = _maxAmount;
-    }
-    public void SetAmountZero() => _currentAmount = 0;
 }

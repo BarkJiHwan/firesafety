@@ -58,28 +58,28 @@ public class Phase2InteractManager : MonoBehaviour
     private void CheckCols(TowelHandData hand)
     {
         _triggerValue = hand.triggerAction.action.ReadValue<float>();
-        if (hand.interactor.TryGetCurrent3DRaycastHit(out hit) && !_gotTowel)//수건 가져오기
-        {
-            if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _towelMask))
-            {
-                TowelSupply(hand);
-            }
-        }
-        if (_gotTowel && hand.interactor.TryGetCurrent3DRaycastHit(out hit) && _tapEnable)//물에 적시기
-        {
-            if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _waterMask))
-            {
-                WettingTowel(hand);
-            }
-        }
-        if (hand.interactor.TryGetCurrent3DRaycastHit(out hit) && _gotTowel)//수도꼭지 활성화
-        {
-            if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _tapMask))
-            {
-                _tapWater.InteractTapWater();
-                _tapEnable = true;
-            }
-        }
+        //if (hand.interactor.TryGetCurrent3DRaycastHit(out hit) && !_gotTowel)//수건 가져오기
+        //{
+        //    if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _towelMask))
+        //    {
+        //        TowelSupply(hand);
+        //    }
+        //}
+        //if (_gotTowel && hand.interactor.TryGetCurrent3DRaycastHit(out hit) && _tapEnable)//물에 적시기
+        //{
+        //    if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _waterMask))
+        //    {
+        //        WettingTowel(hand);
+        //    }
+        //}
+        //if (hand.interactor.TryGetCurrent3DRaycastHit(out hit) && _gotTowel)//수도꼭지 활성화
+        //{
+        //    if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _tapMask))
+        //    {
+        //        _tapWater.InteractTapWater();
+        //        _tapEnable = true;
+        //    }
+        //}
     }
     private void TowelSupply(TowelHandData hand)
     {
