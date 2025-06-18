@@ -18,7 +18,7 @@ public class SceneController : MonoBehaviour
     static SceneController _instance;
     AsyncOperation oper;
     public SceneType chooseSceneType { get; set; }
-    public PlayerEnum charType { get; set; }
+    public PlayerCharacterSo charType { get; set; }
 
     public static SceneController Instance
     {
@@ -71,12 +71,12 @@ public class SceneController : MonoBehaviour
         LoadScene((int)SceneType.IngameScene_Evacuation);
     }
 
-    public void SetChooseCharacterType(PlayerEnum type)
+    public void SetChooseCharacterType(PlayerCharacterSo charInfo)
     {
-        charType = type;
+        charType = charInfo;
     }
 
-    public PlayerEnum GetChooseCharacterType()
+    public PlayerCharacterSo GetChooseCharacterType()
     {
         return charType;
     }

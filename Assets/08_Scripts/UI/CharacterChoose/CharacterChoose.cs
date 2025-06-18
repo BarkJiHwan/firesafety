@@ -6,10 +6,12 @@ using UnityEngine.UI;
 public class CharacterChoose : MonoBehaviour
 {
     [SerializeField] List<ButtonInteractor> checkButtonList;
+    [SerializeField] GameObject xrRigObject;
+
     [System.Serializable]
     class ButtonInteractor
     {
-        public PlayerEnum charType;
+        public PlayerCharacterSo charInfo;
         public Button applyButton;
         public GameObject characterObject;
     }
@@ -20,8 +22,8 @@ public class CharacterChoose : MonoBehaviour
         {
             button.applyButton.onClick.AddListener(() =>
             {
-                SceneController.Instance.SetChooseCharacterType(button.charType);
-                Debug.Log("캐릭터 종류 : " + SceneController.Instance.GetChooseCharacterType());
+                SceneController.Instance.SetChooseCharacterType(button.charInfo);
+                Debug.Log("캐릭터 종류 : " + SceneController.Instance.GetChooseCharacterType().characterType);
                 MoveScene(SceneController.Instance.chooseSceneType);
             });
             button.applyButton.gameObject.SetActive(false);
@@ -33,13 +35,14 @@ public class CharacterChoose : MonoBehaviour
     public void BackToBeforeScene()
     {
         SceneController.Instance.MoveToSceneChoose();
+        xrRigObject.GetComponent<CustomTunnelingVignette>().FadeOut();
     }
 
     public void SetActiveButton(PlayerEnum type)
     {
         foreach (var button in checkButtonList)
         {
-            button.applyButton.gameObject.SetActive(button.charType == type);
+            button.applyButton.gameObject.SetActive(button.charInfo.characterType == type);
         }
     }
 

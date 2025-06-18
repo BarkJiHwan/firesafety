@@ -45,6 +45,8 @@ public class ScoreBoardController : MonoBehaviour
         //SceneController.Instance.chooseSceneType = SceneType.IngameScene_Fire;
         //ChangeBoardStandard(SceneController.Instance.chooseSceneType);
         InitateScoreBoard();
+        // 선택한 캐릭터 이미지로 변경
+        charcaterImage.sprite = SceneController.Instance.GetChooseCharacterType().characterImage;
 
         // 테스트
         //SceneType type = SceneType.IngameScene_Evacuation;
