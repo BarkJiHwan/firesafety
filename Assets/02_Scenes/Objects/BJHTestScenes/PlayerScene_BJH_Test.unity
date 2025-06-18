@@ -646,6 +646,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSource: {fileID: 545725607}
   dialogueLoader: {fileID: 545725605}
+  _fvCanvasController: {fileID: 1338789932}
 --- !u!114 &545725605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1260,6 +1261,18 @@ Canvas:
     type: 3}
   m_PrefabInstance: {fileID: 1338789929}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1338789932 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4060705981305032297, guid: 7e8817f6f572b7146bdae7d547c81463,
+    type: 3}
+  m_PrefabInstance: {fileID: 1338789929}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338789930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 161cde2191fb0b244a8ef9dabb5c120f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1358177255 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2646225430964973364, guid: bcc073301b2c04454a03d6cb68c3a7dd,

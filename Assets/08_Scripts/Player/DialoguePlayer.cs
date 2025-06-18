@@ -8,42 +8,46 @@ public class DialoguePlayer : MonoBehaviour
 {
     public AudioSource audioSource;
     public DialogueLoader dialogueLoader;
-    public FixedViewCanvasController fvCanvasController;
 
-    private AudioClip _currentClip;
+    [SerializeField]
+    private FixedViewCanvasController _fvCanvasController;
+
+    public event Action onFinishDialogue;
+
     public void PlayWithText(string dialogueId)
     {
-        PlayAudio(dialogueId);
-        StartCoroutine(WaitUntilAudioSourceEnd());
+        StartCoroutine(PlayUntilAudioSourceEnd(dialogueId));
 
+        // 텍스트 바꾸고 대화창 켜주기
         string text = dialogueLoader.GetDialogueText(dialogueId);
-        // 대화창 켜주기
-        fvCanvasController.ConversationTxt.text = text;
-        fvCanvasController.ConversationPanel.SetActive(true);
+        _fvCanvasController.ConversationTxt.text = text;
+        _fvCanvasController.ConversationPanel.SetActive(true);
     }
 
-    public void PlayWithTexts(string[] dialogueId)
+    public void PlayWithTexts(string[] dialogueIds)
     {
-
+        StartCoroutine(PlayTextsUntilAudioSourceEnd(dialogueIds));
     }
 
-
+    // 오디오 끄고 대화창 꺼주기
     public void Stop()
     {
-        StopAudio();
+        if (audioSource.isPlaying)
+        {
+            StopAudio();
+        }
 
-        // 오디오 끄고 대화창 꺼주기
-        fvCanvasController.ConversationPanel.SetActive(false);
+        _fvCanvasController.ConversationPanel.SetActive(false);
     }
 
     /* 사운드 재생 */
     private void PlayAudio(string dialogueId)
     {
-        _currentClip = dialogueLoader.GetAudioClip(dialogueId);
+        AudioClip clip = dialogueLoader.GetAudioClip(dialogueId);
 
-        if (_currentClip != null)
+        if (clip != null)
         {
-            audioSource.clip = _currentClip;
+            audioSource.clip = clip;
             audioSource.Play();
         }
     }
@@ -57,9 +61,31 @@ public class DialoguePlayer : MonoBehaviour
         }
     }
 
-    private IEnumerator WaitUntilAudioSourceEnd()
+    /* 종료까지 기다림 */
+    private IEnumerator PlayUntilAudioSourceEnd(string dialogueId)
     {
+        PlayAudio(dialogueId);
         yield return new WaitWhile(() => audioSource.isPlaying);
         Stop();
+        onFinishDialogue?.Invoke();
+    }
+
+    /* 여러개 대화 재생, 오디오 끝날때까지 대기 후 0.3초 더 대기 */
+    private IEnumerator PlayTextsUntilAudioSourceEnd(string[] dialogueIds)
+    {
+        foreach (string dialogueId in dialogueIds)
+        {
+            PlayAudio(dialogueId);
+            // 텍스트 바꾸고 대화창 켜주기
+            string text = dialogueLoader.GetDialogueText(dialogueId);
+            _fvCanvasController.ConversationTxt.text = text;
+            _fvCanvasController.ConversationPanel.SetActive(true);
+
+            yield return new WaitWhile(() => audioSource.isPlaying);
+            Stop();
+            yield return new WaitForSeconds(0.3f);
+        }
+
+        onFinishDialogue?.Invoke();
     }
 }
