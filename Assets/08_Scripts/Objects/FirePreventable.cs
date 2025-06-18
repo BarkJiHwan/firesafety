@@ -220,18 +220,15 @@ public class FirePreventable : MonoBehaviour
 
     public void EnterPrevention(SelectEnterEventArgs Args)
     {
-        if (_view.IsMine)
+        if (!_isFirePreventable)
         {
-            if (!_isFirePreventable)
-            {
-                ++FireObjMgr.Instance.Count;
-                _isFirePreventable = true;
-                _view.RPC("CompleteFirePrevention", RpcTarget.AllBuffered, _isFirePreventable);
-            }
-            else
-            {
-                return;
-            }
+            ++FireObjMgr.Instance.Count;
+            _isFirePreventable = true;
+            _view.RPC("CompleteFirePrevention", RpcTarget.AllBuffered, _isFirePreventable);
+        }
+        else
+        {
+            return;
         }
     }
 
@@ -439,6 +436,4 @@ public class FirePreventable : MonoBehaviour
         Debug.Log(PhotonNetwork.LocalPlayer + "누가누른건지 확인됨?" + "확인되네?");
         _isFirePreventable = complete;
     }
-
-
 }
