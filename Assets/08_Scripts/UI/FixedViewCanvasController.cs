@@ -23,7 +23,10 @@ public class FixedViewCanvasController : MonoBehaviour
 
     ScoreBoardController scoreBoardCtrl;
     ConversationController conversationCtrl;
-    
+
+    public GameObject ConversationPanel => conversationPanel;
+
+    public TextMeshProUGUI ConversationTxt => conversationTxt;
 
     private void Awake()
     {
@@ -47,10 +50,10 @@ public class FixedViewCanvasController : MonoBehaviour
 
         // 2. 대화창
         // 확인을 위해 잠시 켜기
-        //if(conversationBoard.activeSelf == true)
-        //{
-        //    conversationBoard.SetActive(false);
-        //}
+        if(conversationBoard.activeSelf == true)
+        {
+            conversationBoard.SetActive(false);
+        }
         // 튜토리얼 시작하면 대화창(나레이션) 출력 => narrationPos로 옮기고 PrintNarration() 실행
 
         // 튜토리얼 끝나면 대화창(나레이션) 끄기 => converstaionBoard.SetActive(false);

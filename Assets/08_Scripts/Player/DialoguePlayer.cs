@@ -1,38 +1,49 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(DialogueLoader))]
 public class DialoguePlayer : MonoBehaviour
 {
     public AudioSource audioSource;
     public DialogueLoader dialogueLoader;
+    public FixedViewCanvasController fvCanvasController;
 
-    public event Action onPlayDialogue;
-    public event Action onStopDialogue;
-
-    public string PlayWithText(string dialogueId)
+    private AudioClip _currentClip;
+    public void PlayWithText(string dialogueId)
     {
         PlayAudio(dialogueId);
-        onPlayDialogue?.Invoke();
         StartCoroutine(WaitUntilAudioSourceEnd());
-        return dialogueLoader.GetDialogueText(dialogueId);
+
+        string text = dialogueLoader.GetDialogueText(dialogueId);
+        // 대화창 켜주기
+        fvCanvasController.ConversationTxt.text = text;
+        fvCanvasController.ConversationPanel.SetActive(true);
     }
+
+    public void PlayWithTexts(string[] dialogueId)
+    {
+
+    }
+
 
     public void Stop()
     {
         StopAudio();
-        onStopDialogue?.Invoke();
+
+        // 오디오 끄고 대화창 꺼주기
+        fvCanvasController.ConversationPanel.SetActive(false);
     }
 
     /* 사운드 재생 */
     private void PlayAudio(string dialogueId)
     {
-        AudioClip clip = dialogueLoader.GetAudioClip(dialogueId);
+        _currentClip = dialogueLoader.GetAudioClip(dialogueId);
 
-        if (clip != null)
+        if (_currentClip != null)
         {
-            audioSource.clip = clip;
+            audioSource.clip = _currentClip;
             audioSource.Play();
         }
     }
