@@ -169,6 +169,12 @@ public class DialogueLoader : MonoBehaviour
             return null;
         }
 
+        if (AudioDict[dialogueId] == null)
+        {
+            Debug.LogWarning("오디오 소스가 널입니다");
+            return null;
+        }
+
         return AudioDict[dialogueId];
     }
 

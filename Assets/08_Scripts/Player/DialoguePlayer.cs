@@ -8,13 +8,13 @@ public class DialoguePlayer : MonoBehaviour
     public AudioSource audioSource;
     public DialogueLoader dialogueLoader;
 
-    public event Action onPlayDialougue;
+    public event Action onPlayDialogue;
     public event Action onStopDialogue;
 
     public string PlayWithText(string dialogueId)
     {
         PlayAudio(dialogueId);
-        onPlayDialougue?.Invoke();
+        onPlayDialogue?.Invoke();
         StartCoroutine(WaitUntilAudioSourceEnd());
         return dialogueLoader.GetDialogueText(dialogueId);
     }
@@ -29,9 +29,12 @@ public class DialoguePlayer : MonoBehaviour
     private void PlayAudio(string dialogueId)
     {
         AudioClip clip = dialogueLoader.GetAudioClip(dialogueId);
-        Debug.Log("clip : " + clip.name);
-        audioSource.clip = clip;
-        audioSource.Play();
+
+        if (clip != null)
+        {
+            audioSource.clip = clip;
+            audioSource.Play();
+        }
     }
 
     /* 사운드 재생 중지 */
