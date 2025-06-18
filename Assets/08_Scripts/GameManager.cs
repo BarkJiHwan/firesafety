@@ -112,7 +112,10 @@ public class GameManager : MonoBehaviour
                     _phases[i].OnEnterPhase?.Invoke();
 
                     if (CurrentPhase == GamePhase.LeaveDangerArea)
+                    {
                         OnGameEnd?.Invoke();
+                        GameOver();
+                    }
                 }
                 break;
             }
@@ -127,8 +130,10 @@ public class GameManager : MonoBehaviour
     {
         IsGameStart = true;
     }
-    public void GmaeOver()
+    public void GameOver()
     {
+        GameTimer = 0;
+        CurrentPhase = GamePhase.Waiting;
         IsGameStart = false;
     }
     public void ResetGameTimer()

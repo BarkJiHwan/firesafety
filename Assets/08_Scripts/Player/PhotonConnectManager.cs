@@ -86,7 +86,7 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
 
     private void JoinRandomRoomOrCreatRoom()
     {
-        RoomOptions options = new RoomOptions { MaxPlayers = 6, IsOpen = true };
+        RoomOptions options = new RoomOptions { MaxPlayers = 6, IsOpen = true, PlayerTtl = 0 };
         PhotonNetwork.JoinRandomOrCreateRoom(
             null, // 랜덤 조건: 아무 조건 없음
             6, // 최대 인원 수 (RoomOptions에도 지정해두면 안전)
