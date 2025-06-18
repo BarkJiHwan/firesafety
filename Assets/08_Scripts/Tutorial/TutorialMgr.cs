@@ -16,7 +16,7 @@ public class TutorialMgr : MonoBehaviourPun
     private GameObject _zone;
     private GameObject _currentMonster;
     private GameObject _extinguisher;
-
+    private FirePreventable _preventable;
     private Coroutine _countdownCoroutine;
 
     void Start()
@@ -38,11 +38,17 @@ public class TutorialMgr : MonoBehaviourPun
         _currentMonster = Instantiate(_myData.teawooriPrefab, obj.TaewooriPos(), obj.TaewooriRotation());
         _extinguisher = Instantiate(_myData.supplyPrefab, _myData.supplyOffset, _myData.supplyRotation);
     }
-    public void ObjectActiveFalse()
+    private void ObjectActiveFalse()
     {
         _zone.SetActive(false);
         _currentMonster.SetActive(false);
         _extinguisher.SetActive(false);
+    }
+    private void DestroyTutorialObject()
+    {
+        Destroy(_zone);
+        Destroy(_currentMonster);
+        Destroy(_extinguisher);
     }
     private IEnumerator CountdownRoutine()
     {
@@ -140,7 +146,7 @@ public class TutorialMgr : MonoBehaviourPun
 
         yield return new WaitUntil(() => completed);
         interactable.selectEntered.RemoveAllListeners();
-        preventable.SetActiveOut();
+        _preventable.SetActiveOut();
     }
 
     IEnumerator MakeMaterialMoreBright()
@@ -199,7 +205,7 @@ public class TutorialMgr : MonoBehaviourPun
         //준비 완료
         Debug.Log("모든 튜토리얼 완료");
         TutorialDataMgr.Instance.StopTutorialRoutine();
-        Debug.Log("방장님 저 준비완료 상태 입니다");
+        Debug.Log("방장님 저 튜토리얼 끝났습니다.");
         Hashtable props = new Hashtable() { { "IsReady", true } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
@@ -210,9 +216,11 @@ public class TutorialMgr : MonoBehaviourPun
             Debug.Log("다른 사람이 튜토리얼 진행중 입니다. 기다리세요");
         }
         //Tutorial_NAR_010번 나레이션 실행 : 이제 게임 할거니까 잠깐 기다려~
-        Debug.Log("곧 게임 시작합니다.");
         yield return new WaitUntil(() => GameManager.Instance.IsGameStart);
+        Debug.Log("곧 게임 시작합니다.");
         ObjectActiveFalse(); //모든 튜토리얼 오브젝트 끄기
+        DestroyTutorialObject();
+        StopAllCoroutines();
     }
 
     private IEnumerator StopTutoria()
@@ -220,6 +228,11 @@ public class TutorialMgr : MonoBehaviourPun
         yield return new WaitUntil(() => TutorialDataMgr.Instance.IsTutorialFailed);
         StopCoroutine(_countdownCoroutine);
         ObjectActiveFalse();
+        DestroyTutorialObject();
+        if (_preventable != null)
+        {
+            _preventable.SetActiveOut();
+        }
         Debug.Log("으휴! 이것도 못해?!");
         Hashtable props = new Hashtable() { { "IsReady", true } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
@@ -231,5 +244,7 @@ public class TutorialMgr : MonoBehaviourPun
         preventable.TriggerPreventObejct(false);
 
         //11번 나레이션 실행 : 아쉽지만 어쩌구...
+        //나레이션 종료 후 실행하기.
+        StopAllCoroutines();
     }
 }
