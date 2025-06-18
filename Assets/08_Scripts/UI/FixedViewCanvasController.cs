@@ -36,10 +36,12 @@ public class FixedViewCanvasController : MonoBehaviour
 
         // 1. 점수판
         // 화재 페이즈가 끝나면 점수판 출력 (GameManager.Instance.CurrentPhase == leaveDangerArea)
-
-        // ScoreBoardController.ChangeBoardStandard(sceneType);
-        //GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
         GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
+
+        // 2. 대화창
+        // 튜토리얼일때 나레이션으로 출력
+
+        // 예방 전/화재 전에 대화창 출력
     }
 
     void Update()

@@ -7,7 +7,7 @@ public class ChooseCharacterManager : MonoBehaviour
 {
     [SerializeField] CharacterManager characterMgr;
     [SerializeField] CharacterChoose charChoose;
-    [SerializeField] PlayerEnum charType;
+    [SerializeField] PlayerCharacterSo charInfo;
     [SerializeField] Material doNotChooseMat;
 
     SkinnedMeshRenderer skinnedMesh;
@@ -41,7 +41,7 @@ public class ChooseCharacterManager : MonoBehaviour
     void OnSelected(SelectEnterEventArgs args)
     {
         //SceneController.Instance.GetChooseCharacterType(charType);
-        charChoose.SetActiveButton(charType);
+        charChoose.SetActiveButton(charInfo.characterType);
         characterMgr.selectCharacter = gameObject;
         //skinnedMesh.materials = mats;
         characterMgr.MakeChooseCharacter();

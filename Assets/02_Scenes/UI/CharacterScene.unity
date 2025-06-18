@@ -629,7 +629,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterMgr: {fileID: 1001687398}
   charChoose: {fileID: 1979662999}
-  charType: 0
+  charInfo: {fileID: 11400000, guid: 1abbb176cb1d34574a2d9dabeec2ecad, type: 2}
   doNotChooseMat: {fileID: 2100000, guid: 67c9e99dec89cf54cb343f4940ed897b, type: 2}
 --- !u!1 &250068908
 GameObject:
@@ -2977,7 +2977,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterMgr: {fileID: 1001687398}
   charChoose: {fileID: 1979662999}
-  charType: 1
+  charInfo: {fileID: 11400000, guid: 55a1744f391f440de8ccb145dcd51f80, type: 2}
   doNotChooseMat: {fileID: 2100000, guid: 67c9e99dec89cf54cb343f4940ed897b, type: 2}
 --- !u!1 &1001687395
 GameObject:
@@ -3786,7 +3786,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterMgr: {fileID: 1001687398}
   charChoose: {fileID: 1979662999}
-  charType: 2
+  charInfo: {fileID: 11400000, guid: 9dbe13c7cc5604afbba8d3d140791cf0, type: 2}
   doNotChooseMat: {fileID: 2100000, guid: 67c9e99dec89cf54cb343f4940ed897b, type: 2}
 --- !u!1 &1341977673
 GameObject:
@@ -4082,7 +4082,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterMgr: {fileID: 1001687398}
   charChoose: {fileID: 1979662999}
-  charType: 3
+  charInfo: {fileID: 11400000, guid: 564f31e086054466e8c3da242d0f28f8, type: 2}
   doNotChooseMat: {fileID: 2100000, guid: 67c9e99dec89cf54cb343f4940ed897b, type: 2}
 --- !u!1 &1825955724
 GameObject:
@@ -4489,16 +4489,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkButtonList:
-  - charType: 2
+  - charInfo: {fileID: 11400000, guid: 9dbe13c7cc5604afbba8d3d140791cf0, type: 2}
     applyButton: {fileID: 757331658}
     characterObject: {fileID: 1335980286}
-  - charType: 1
+  - charInfo: {fileID: 11400000, guid: 55a1744f391f440de8ccb145dcd51f80, type: 2}
     applyButton: {fileID: 1341977677}
     characterObject: {fileID: 557604809}
-  - charType: 3
+  - charInfo: {fileID: 11400000, guid: 564f31e086054466e8c3da242d0f28f8, type: 2}
     applyButton: {fileID: 253268655}
     characterObject: {fileID: 336349608}
-  - charType: 0
+  - charInfo: {fileID: 11400000, guid: 1abbb176cb1d34574a2d9dabeec2ecad, type: 2}
     applyButton: {fileID: 250068912}
     characterObject: {fileID: 219978452}
 --- !u!1 &1996755397

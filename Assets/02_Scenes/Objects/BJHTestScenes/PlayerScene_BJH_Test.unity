@@ -969,8 +969,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ecd853c2bad54ebca8f5d315bb6ec74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _testRoomName: MyTestRoom111111
-  _testLobbyName: scTestLobby
   _playerSpawner: {fileID: 1184504947}
 --- !u!4 &1184504946
 Transform:
@@ -1227,6 +1225,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FixedViewCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 4060705981842663253, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e8817f6f572b7146bdae7d547c81463, type: 3}
@@ -2489,6 +2492,7 @@ MonoBehaviour:
   - Phase: 4
     StartTime: 250
   <GameTimer>k__BackingField: 0
+  _currentPhase: 0
 --- !u!4 &1824487200
 Transform:
   m_ObjectHideFlags: 0
