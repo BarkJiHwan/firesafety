@@ -8,11 +8,6 @@ public class CustomTunnelingVignette : MonoBehaviour, ITunnelingVignetteProvider
 {
     [SerializeField] private TunnelingVignetteController _tunnelingVignetteController;
 
-    private void Start()
-    {
-        Debug.Log("hihi");
-    }
-
     /* 까매지는 효과 시작 */
     public void FadeOut()
     {
