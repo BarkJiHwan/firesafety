@@ -1,5 +1,6 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PhotonConnectManager : MonoBehaviourPunCallbacks
@@ -40,23 +41,14 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         {
             if (!PhotonNetwork.InRoom)
             {
-                PhotonNetwork.JoinRandomRoom();
+                JoinRandomRoomOrCreatRoom();
             }
         }
     }
 
     public override void OnConnectedToMaster()
     {
-        RoomOptions options = new RoomOptions { MaxPlayers = 6, IsOpen = true };
-        PhotonNetwork.JoinRandomOrCreateRoom(
-            null, // 랜덤 조건: 아무 조건 없음
-            6, // 최대 인원 수 (RoomOptions에도 지정해두면 안전)
-            MatchmakingMode.FillRoom, // 기존 방을 최대한 채우는 방식
-            null, // 로비 타입 (null: 기본)
-            null, // 추가 필터 (없음)
-            null, // 방 이름 (null: 자동 생성)
-            options // 방 옵션
-        );
+        JoinRandomRoomOrCreatRoom();
     }
 
     // 테스트용, 이럴 일 없겠지만 누군가 방에 참가했을 때
@@ -77,6 +69,7 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         {
             ((GameObject)otherPlayer.TagObject).SetActive(false);
             Destroy((GameObject)otherPlayer.TagObject);
+            PhotonNetwork.Disconnect();
         }
     }
 
@@ -91,10 +84,20 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         TutorialDataMgr.Instance.StartTutorial();
     }
 
-    public override void OnJoinedLobby()
+    private void JoinRandomRoomOrCreatRoom()
     {
-        Debug.Log("Lobby : " + PhotonNetwork.CurrentLobby.Name);
+        RoomOptions options = new RoomOptions { MaxPlayers = 6, IsOpen = true };
+        PhotonNetwork.JoinRandomOrCreateRoom(
+            null, // 랜덤 조건: 아무 조건 없음
+            6, // 최대 인원 수 (RoomOptions에도 지정해두면 안전)
+            MatchmakingMode.FillRoom, // 기존 방을 최대한 채우는 방식
+            null, // 로비 타입 (null: 기본)
+            null, // 추가 필터 (없음)
+            null, // 방 이름 (null: 자동 생성)
+            options // 방 옵션
+        );
     }
+
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         switch (returnCode)
