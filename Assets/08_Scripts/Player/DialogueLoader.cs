@@ -35,14 +35,21 @@ public class DialogueData
 
 public class DialogueLoader : MonoBehaviour
 {
-    private readonly string audioFileRoot = "";
-    private readonly string audioMetaDataFolder = "AudioFileData/";
+    private readonly string _audioMetaDataFolder = "AudioFileData/";
 
-    private readonly string metaFileSuffix = ".csv";
-    private readonly string audioFileSuffix = ".wav";
-
+    private DialogueType _currentDialogueType;
     private List<DialogueData> _dialogueList;
     private Dictionary<string, DialogueData> _dialogueDict;
+    private Dictionary<string, AudioSource> _audioDict;
+
+    public DialogueType CurrentDialogueType => _currentDialogueType;
+    public List<DialogueData> DialogueList => _dialogueList;
+    public Dictionary<string, DialogueData> DialogueDict => _dialogueDict;
+    public Dictionary<string, AudioSource> AudioDict
+    {
+        get => _audioDict;
+        set => _audioDict = value;
+    }
 
     private void Awake()
     {
@@ -50,21 +57,24 @@ public class DialogueLoader : MonoBehaviour
         _dialogueDict = new Dictionary<string, DialogueData>();
     }
 
-    // Start is called before the first frame update
+    // 처음은 튜토리얼 대화 흐름 읽어오기
     private void Start()
     {
         ReadTutorialData();
-        Debug.Log(_dialogueDict.Count);
     }
 
     public void ReadTutorialData() => ReadDialogue(DialogueType.Tutorial);
-
     public void ReadSobaekData() => ReadDialogue(DialogueType.Sobaek);
 
     public void ReadDialogue(DialogueType type)
     {
         string fileName = "";
-        List<DialogueData> dialogueList = new ();
+
+        if (fileName == String.Empty)
+        {
+            Debug.LogWarning("데이터가 없습니다, 확인해주세요");
+            return;
+        }
 
         if (type == DialogueType.Tutorial)
         {
@@ -76,45 +86,47 @@ public class DialogueLoader : MonoBehaviour
             fileName = DialogueType.Sobaek.ToString();
         }
 
-        if (fileName == String.Empty)
+        _currentDialogueType = type;
+
+        TextAsset textAsset = Resources.Load<TextAsset>(_audioMetaDataFolder + fileName);
+        string[] allLines = textAsset.text.Split('\n');
+
+        // 로드할떄 기존 데이터가 있었다면 삭제
+        if (DialogueList.Count > 0)
         {
-            Debug.LogWarning("데이터가 없습니다, 확인해주세요");
+            DialogueList.Clear();
         }
 
-        // #if UNITY_EDITOR
-        // Debug.Log("path : " + "Assets/Resources" + audioMetaDataFolder + fileName);
-        // string[] allLines = File.ReadAllLines("Assets/Resources" + audioMetaDataFolder + fileName);
-        // #endif
-
-        Debug.Log("path : " + audioMetaDataFolder + fileName);
-
-        TextAsset textAsset = Resources.Load<TextAsset>(audioMetaDataFolder + fileName);
-        Debug.Log("TextAsset : " + textAsset.text.Length);
-
-        if (_dialogueList.Count > 0)
+        if (DialogueDict.Count > 0)
         {
-            _dialogueList.Clear();
-        }
-
-        if (_dialogueDict.Count > 0)
-        {
-            _dialogueDict.Clear();
+            DialogueDict.Clear();
         }
 
         // 첫 번째 라인은 헤더이므로 건너뛰기
-        // for (int i = 1; i < allLines.Length; i++)
-        // {
-        //     string[] row = allLines[i].Split(',');
-        //
-        //     if (row.Length < 3)
-        //     {
-        //         Debug.LogWarning(fileName + "파일의 데이터가 없습니다, "  + i + "번쨰 라인이 이상합니다" + " 확인해주세요");
-        //     }
-        //
-        //     DialogueData dialogueData = new DialogueData(type, row[0], row[1], row[2]);
-        //
-        //     _dialogueList.Add(dialogueData);
-        //     _dialogueDict.Add(row[0], dialogueData);
-        // }
+        for (int i = 1; i < allLines.Length; i++)
+        {
+            string[] row = allLines[i].Split(',');
+
+            if (row.Length != 3)
+            {
+                Debug.LogWarning(fileName + "파일의 데이터가 없습니다, "  + i + "번쨰 라인이 이상합니다" + " 확인해주세요");
+            }
+
+            DialogueData dialogueData = new DialogueData(type, row[0], row[1], row[2]);
+
+            DialogueList.Add(dialogueData);
+            DialogueDict.Add(row[0], dialogueData);
+        }
+    }
+
+    public DialogueData GetDialogue(string dialogueId)
+    {
+        if (DialogueDict == null || !DialogueDict.ContainsKey(dialogueId))
+        {
+            Debug.LogWarning("대화 데이터의 아이디가 없습니다");
+            return null;
+        }
+
+        return DialogueDict[dialogueId];
     }
 }

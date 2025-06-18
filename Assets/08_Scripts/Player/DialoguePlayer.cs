@@ -1,20 +1,47 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
+[RequireComponent(typeof(DialogueLoader))]
 public class DialoguePlayer : MonoBehaviour
 {
-    public AudioListener AudioListener;
+    private AudioListener _audioListener;
 
-    // Start is called before the first frame update
-    void Start()
+    public DialogueLoader dialogueLoader;
+
+    public UnityAction OnPlayDialougue;
+    public UnityAction OnStopDialogue;
+
+    public AudioListener AudioListener
+    {
+        get => _audioListener;
+        set => _audioListener = value;
+    }
+
+    public void Play()
+    {
+        PlayAudio();
+        OnPlayDialougue.Invoke();
+    }
+
+    public void Stop()
+    {
+        StopAudio();
+        OnStopDialogue.Invoke();
+    }
+
+    /* 사운드 재생 */
+    private void PlayAudio()
     {
 
     }
 
-    // Update is called once per frame
-    void Update()
+    /* 사운드 재생 중지 */
+    private void StopAudio()
     {
 
     }
+
 }
