@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public partial class FirePreventable : MonoBehaviour
@@ -10,6 +11,8 @@ public partial class FirePreventable : MonoBehaviour
 
     public event Action OnAlreadyPrevented;
     public event Action OnHaveToPrevented;
+
+    public bool isAlreadyOn { get; set; } = false;
 
     void SetMaterial()
     {

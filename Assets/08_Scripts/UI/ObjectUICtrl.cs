@@ -123,7 +123,6 @@ public class ObjectUICtrl : MonoBehaviour
 
         if (currentPrevent.MyType == PreventType.ElectricKettle || currentPrevent.MyType == PreventType.PowerBank)
         {
-            Debug.Log("PowerBank");
             transform.position = originPosition + basicPos;
             transform.Rotate(0, 0, 0);
         }
@@ -135,6 +134,7 @@ public class ObjectUICtrl : MonoBehaviour
 
         else if (IsUIBlocked())
         {
+            Debug.Log("위치 수정");
             MoveUIPosition(originPosition);
         }
 

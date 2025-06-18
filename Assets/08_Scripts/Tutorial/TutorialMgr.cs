@@ -22,6 +22,8 @@ public class TutorialMgr : MonoBehaviourPun
     DialogueLoader dialogueLoader;
     DialoguePlayer dialoguePlayer;
 
+    bool isMaterialOn = false;
+
     void Start()
     {
         if (!photonView.IsMine)
@@ -155,6 +157,7 @@ public class TutorialMgr : MonoBehaviourPun
             // 이벤트 실행
             _preventable.OnAlreadyPrevented += _preventable.OnSetPreventMaterialsOff;
             _preventable.TriggerPreventObejct(false);
+            isMaterialOn = true;
         });
         StartCoroutine(MakeMaterialMoreBright());
 
@@ -253,9 +256,11 @@ public class TutorialMgr : MonoBehaviourPun
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
         // 메테리얼 끄기
-        var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
-        _preventable.OnAlreadyPrevented += _preventable.OnSetPreventMaterialsOff;
-        _preventable.TriggerPreventObejct(false);
+        if(isMaterialOn == true)
+        {
+            _preventable.OnAlreadyPrevented += _preventable.OnSetPreventMaterialsOff;
+            _preventable.TriggerPreventObejct(false);
+        }
 
         //11번 나레이션 실행 : 아쉽지만 어쩌구...
         //나레이션 종료 후 실행하기.
