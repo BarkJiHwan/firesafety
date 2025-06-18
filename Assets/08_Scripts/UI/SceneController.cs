@@ -9,7 +9,6 @@ public enum SceneType
     MainScene,
     SceneChooseScene,
     SelectCharacterScene,
-    Tutorial,
     IngameScene_Fire,
     IngameScene_Evacuation
 }
@@ -62,11 +61,23 @@ public class SceneController : MonoBehaviour
         LoadScene((int)SceneType.MainScene);
     }
 
+    public void MoveToPreventionFireScene()
+    {
+        LoadScene((int)SceneType.IngameScene_Fire);
+    }
 
+    public void MoveToEvacuationScene()
+    {
+        LoadScene((int)SceneType.IngameScene_Evacuation);
+    }
 
-    public void GetChooseCharacterType(PlayerEnum type)
+    public void SetChooseCharacterType(PlayerEnum type)
     {
         charType = type;
-        Debug.Log(charType);
+    }
+
+    public PlayerEnum GetChooseCharacterType()
+    {
+        return charType;
     }
 }

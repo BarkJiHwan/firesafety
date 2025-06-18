@@ -63,7 +63,6 @@ public class PlayerInteractor : MonoBehaviour
 
         // 플레이어가 가까워질수록 내 Material _RimPower -시켜야 함 2->-0.2
         float distance = Vector3.Distance(other.transform.position, transform.position);
-
         // 빛을 더 밝게 빛나기 위해서 * 2 했음
         float t = (1 - Mathf.Clamp01(distance / 2f)) * 2;
 

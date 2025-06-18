@@ -12,6 +12,9 @@ public class FixedViewCanvasController : MonoBehaviour
     [SerializeField] float showScoreTime;
     [SerializeField] TextMeshProUGUI restSecondText;
 
+    [Header("대화창")]
+    [SerializeField] GameObject conversationPanel;
+
     ScoreBoardController scoreBoardCtrl;
     
 
@@ -35,6 +38,7 @@ public class FixedViewCanvasController : MonoBehaviour
         // 화재 페이즈가 끝나면 점수판 출력 (GameManager.Instance.CurrentPhase == leaveDangerArea)
 
         // ScoreBoardController.ChangeBoardStandard(sceneType);
+        //GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
         GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
     }
 
@@ -46,7 +50,13 @@ public class FixedViewCanvasController : MonoBehaviour
     void TurnOnScoreBoard()
     {
         scorePanel.SetActive(true);
-        if(scorePanel.activeSelf == true)
+        StartCoroutine(UpdateBoard());
+    }
+
+    IEnumerator UpdateBoard()
+    {
+        yield return new WaitForEndOfFrame();
+        if (scorePanel.activeSelf == true)
         {
             SceneType sceneType = SceneController.Instance.chooseSceneType;
             scoreBoardCtrl?.ChangeBoardStandard(sceneType);
@@ -70,19 +80,19 @@ public class FixedViewCanvasController : MonoBehaviour
         scoreBoardCtrl.InitateScoreBoard();
 
         // 예방/화재에서는 초가 끝나면 방을 나가서 씬 선택 창으로 이동
-        //if(SceneController.Instance.chooseSceneType == SceneType.IngameScene_Fire)
-        //{
-        //    // 현재 접속되어 있는 방 탈출
+        if (SceneController.Instance.chooseSceneType == SceneType.IngameScene_Fire)
+        {
+            // 현재 접속되어 있는 방 탈출
 
-        //    // 씬 선택창으로 이동
-        //    SceneController.Instance.MoveToSceneChoose();
-        //}
-        //// 대피에서는 초가 끝나면
-        //if(SceneController.Instance.chooseSceneType == SceneType.IngameScene_Evacuation)
-        //{
-        //    // MainScene으로 이동
-        //    SceneController.Instance.MoveToMainScene();
-        //}
+            // 씬 선택창으로 이동
+            SceneController.Instance.MoveToSceneChoose();
+        }
+        // 대피에서는 초가 끝나면
+        if (SceneController.Instance.chooseSceneType == SceneType.IngameScene_Evacuation)
+        {
+            // MainScene으로 이동
+            SceneController.Instance.MoveToMainScene();
+        }
     }
 
     private void OnDestroy()

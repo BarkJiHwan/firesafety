@@ -6,6 +6,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 using System.Linq;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Photon.Realtime;
+using System;
 
 public class TutorialMgr : MonoBehaviourPun
 {
@@ -121,8 +122,12 @@ public class TutorialMgr : MonoBehaviourPun
         //Tutorial_NAR_004번 나레이션 실행
         Debug.Log("화재예방 튜토리얼 시작");
         var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
-        _preventable = interactObj.GetComponent<FirePreventable>();
-        _preventable.SetFirePreventionPending();
+        var preventable = interactObj.GetComponent<FirePreventable>();
+        // 이벤트 실행
+        preventable.OnHaveToPrevented += preventable.OnSetPreventMaterialsOn;
+        preventable.TriggerPreventObejct(true);
+        
+        preventable.SetFirePreventionPending();
         var interactable = interactObj.GetComponent<XRSimpleInteractable>();
         bool completed = false;
         interactable.selectEntered.AddListener(tutorialSelect =>
@@ -132,11 +137,37 @@ public class TutorialMgr : MonoBehaviourPun
             completed = true;
             Debug.Log("화재예방 튜토리얼 완료");
             //Tutorial_NAR_005번 나레이션 실행 : 멋져요!
-            _preventable.OnFirePreventionComplete();
+            preventable.OnFirePreventionComplete();
+            // 이벤트 실행
+            preventable.OnAlreadyPrevented += preventable.OnSetPreventMaterialsOff;
+            preventable.TriggerPreventObejct(false);
         });
+        StartCoroutine(MakeMaterialMoreBright());
+
         yield return new WaitUntil(() => completed);
         interactable.selectEntered.RemoveAllListeners();
         _preventable.SetActiveOut();
+    }
+
+    IEnumerator MakeMaterialMoreBright()
+    {
+        var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
+        var preventable = interactObj.GetComponent<FirePreventable>();
+
+        GameObject player = FindObjectOfType<PlayerComponents>().gameObject;
+        player = player.GetComponentInChildren<PlayerInteractor>().gameObject;
+        Debug.Log(player.name);
+
+        while (_currentPhase == 2)
+        {
+            Debug.Log("실행 중");
+            // 플레이어가 가까워질수록 내 Material _RimPower -시켜야 함 2->-0.2
+            float distance = Vector3.Distance(preventable.transform.position, player.transform.position);
+            // 빛을 더 밝게 빛나기 위해서 * 2 했음
+            float t = (1 - Mathf.Clamp01(distance / 2f)) * 2;
+            preventable.SetHighlight(t);
+            yield return null;
+        }
     }
 
     // 3. 전투 페이즈
@@ -205,6 +236,12 @@ public class TutorialMgr : MonoBehaviourPun
         Debug.Log("으휴! 이것도 못해?!");
         Hashtable props = new Hashtable() { { "IsReady", true } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+
+        // 메테리얼 끄기
+        var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
+        var preventable = interactObj.GetComponent<FirePreventable>();
+        preventable.OnAlreadyPrevented += preventable.OnSetPreventMaterialsOff;
+        preventable.TriggerPreventObejct(false);
 
         //11번 나레이션 실행 : 아쉽지만 어쩌구...
         //나레이션 종료 후 실행하기.
