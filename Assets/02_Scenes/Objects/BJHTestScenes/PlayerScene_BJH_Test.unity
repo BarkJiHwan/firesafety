@@ -1226,6 +1226,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: FixedViewCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 4060705981842663253, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7640460939075141454, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: narrationPos.x
+      value: -3.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 7640460939075141454, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: narrationPos.y
+      value: -230
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e8817f6f572b7146bdae7d547c81463, type: 3}
 --- !u!1 &1338789930 stripped
