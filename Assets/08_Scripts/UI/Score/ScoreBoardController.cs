@@ -41,24 +41,9 @@ public class ScoreBoardController : MonoBehaviour
 
     void Start()
     {
-        // 임시
-        //SceneController.Instance.chooseSceneType = SceneType.IngameScene_Fire;
-        //ChangeBoardStandard(SceneController.Instance.chooseSceneType);
         InitateScoreBoard();
         // 선택한 캐릭터 이미지로 변경
         charcaterImage.sprite = SceneController.Instance.GetChooseCharacterType().characterImage;
-
-        // 테스트
-        //SceneType type = SceneType.IngameScene_Evacuation;
-        //scoreMgr.SetScore(ScoreType.Prevention_Count, 19);
-        //scoreMgr.SetScore(ScoreType.Prevention_Time, 25);
-        //scoreMgr.SetScore(ScoreType.Fire_Count, 20);
-        //scoreMgr.SetScore(ScoreType.Fire_Time, 5);
-        //scoreMgr.SetScore(ScoreType.Elevator, 15);
-        //scoreMgr.SetScore(ScoreType.Smoke, 10);
-        //scoreMgr.SetScore(ScoreType.Taewoori_Count, 25);
-        //scoreMgr.SetScore(ScoreType.DaTaewoori, 17);
-        //ChangeBoardStandard(type);
     }
 
     void Update()
@@ -134,19 +119,5 @@ public class ScoreBoardController : MonoBehaviour
                 return stampTypes[1];
         }
         return null;
-    }
-
-    private void OnEnable()
-    {
-        //if(hasAlreadyUpdated == false)
-        //{
-        //    ChangeBoardStandard(SceneController.Instance.chooseSceneType);
-        //    hasAlreadyUpdated = true;
-        //}
-    }
-
-    private void OnDisable()
-    {
-        
     }
 }

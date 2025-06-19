@@ -19,6 +19,9 @@ public class TutorialMgr : MonoBehaviourPun
     private FirePreventable _preventable;
     private Coroutine _countdownCoroutine;
 
+    DialogueLoader dialogueLoader;
+    DialoguePlayer dialoguePlayer;
+
     void Start()
     {
         if (!photonView.IsMine)
@@ -29,6 +32,17 @@ public class TutorialMgr : MonoBehaviourPun
         SetTutorialPhase();
         ObjectActiveFalse();
         _countdownCoroutine = StartCoroutine(CountdownRoutine());
+
+        GameObject dialogue = null;
+        if(dialogueLoader == null)
+        {
+            dialogueLoader = FindObjectOfType<DialogueLoader>();
+            dialogue = dialogueLoader.gameObject;
+        }
+        if(dialoguePlayer == null)
+        {
+            dialoguePlayer = dialogue.GetComponent<DialoguePlayer>();
+        }
     }
     public void SetTutorialPhase()
     {
@@ -159,7 +173,6 @@ public class TutorialMgr : MonoBehaviourPun
 
         while (_currentPhase == 2)
         {
-            Debug.Log("실행 중");
             // 플레이어가 가까워질수록 내 Material _RimPower -시켜야 함 2->-0.2
             float distance = Vector3.Distance(_preventable.transform.position, player.transform.position);
             // 빛을 더 밝게 빛나기 위해서 * 2 했음
@@ -211,7 +224,7 @@ public class TutorialMgr : MonoBehaviourPun
         Hashtable props = new Hashtable() { { "IsReady", true } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
-        //8번 나레이션이 종료 될때 까지 잠깐 대기        
+        //8번 나레이션이 종료 될때 까지 잠깐 대기
         if (PhotonNetwork.PlayerList.Count() > 1)
         {
             //8번 나래이션 끝나면 9번 나래이션 실행 : 아직 안끝난 친구를 기다려!
