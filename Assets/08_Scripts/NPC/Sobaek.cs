@@ -84,6 +84,9 @@ public class Sobaek : MonoBehaviour
 
         InitializeComponents();
 
+        // VR 전용 업데이트 이벤트 등록
+        Camera.onPreRender += OnCameraPreRender;
+
         // 플레이어가 설정되어 있는지 확인 후 홈 포지션 설정
         if (player != null)
         {
@@ -118,9 +121,27 @@ public class Sobaek : MonoBehaviour
             ActivateSobaekCar();
         }
 
-        UpdatePosition();
-        UpdateFloatingEffect();
-        UpdateAnimations();
+        // VR이 아닌 경우에만 실행
+        if (!UnityEngine.XR.XRSettings.enabled)
+        {
+            UpdatePosition();
+            UpdateFloatingEffect();
+            UpdateAnimations();
+        }
+    }
+
+    /// <summary>
+    /// VR 카메라 렌더링 직전 업데이트 (90fps 동기화)
+    /// </summary>
+    void OnCameraPreRender(Camera cam)
+    {
+        // VR 카메라에서만 실행 (스테레오 렌더링 체크)
+        if (UnityEngine.XR.XRSettings.enabled && cam.stereoTargetEye != StereoTargetEyeMask.None)
+        {
+            UpdatePosition();
+            UpdateFloatingEffect();
+            UpdateAnimations();
+        }
     }
 
     void OnDestroy()
@@ -129,6 +150,9 @@ public class Sobaek : MonoBehaviour
         {
             Instance = null;
         }
+
+        // VR 이벤트 해제
+        Camera.onPreRender -= OnCameraPreRender;
     }
     #endregion
 
@@ -243,7 +267,7 @@ public class Sobaek : MonoBehaviour
         }
         else if (isMovingToHome)
         {
-            // 홈으로 이동 - 부드러운 보간
+            // 홈으로 이동 - moveSpeed와 같은 속도로 복귀
             basePosition = Vector3.Slerp(basePosition, homePosition, moveSpeed * Time.deltaTime);
 
             // 도착 체크
@@ -323,6 +347,9 @@ public class Sobaek : MonoBehaviour
 
         targetPosition = target.position + directionFromTarget * 0.5f;
 
+        // 현재 위치를 basePosition으로 동기화 (끊김 방지)
+        basePosition = transform.position;
+
         isMovingToTarget = true;
         isMovingToHome = false;
         isTalking = false;
@@ -337,7 +364,12 @@ public class Sobaek : MonoBehaviour
         isMovingToTarget = false;
         isMovingToHome = true;
         currentTarget = null;
+
+        // 현재 플레이어 위치 기준으로 홈 포지션 업데이트
         SetHomePosition();
+
+        // 현재 위치를 basePosition으로 동기화 (끊김 방지)
+        basePosition = transform.position;
     }
 
     /// <summary>

@@ -661,15 +661,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  offsetX: 0.3
+  offsetX: 0.2
   offsetY: 0
-  offsetZ: 0.7
+  offsetZ: 0.8
   stayOnRightSide: 1
   floatAmplitude: 0.1
   floatSpeed: 2
   lookAtSpeed: 5
-  moveSpeed: 5
-  followSpeed: 10
+  moveSpeed: 3
+  followSpeed: 15
   arrivalDistance: 0.5
   sobaekCar: {fileID: 0}
   testActivateCar: 0
