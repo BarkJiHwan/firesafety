@@ -625,6 +625,7 @@ GameObject:
   - component: {fileID: 545725605}
   - component: {fileID: 545725604}
   - component: {fileID: 545725607}
+  - component: {fileID: 545725608}
   m_Layer: 0
   m_Name: DialogueManager
   m_TagString: Untagged
@@ -770,6 +771,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &545725608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545725603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6ae497145c7777469837a4e8edd5835, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tutoAudio: {fileID: 545725607}
+  _dialogueLoader: {fileID: 545725605}
+  _fvCanvasController: {fileID: 1338789932}
+  _istutoAudioPlay: 0
 --- !u!1 &604351822
 GameObject:
   m_ObjectHideFlags: 0

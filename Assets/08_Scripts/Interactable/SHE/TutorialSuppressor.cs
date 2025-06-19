@@ -216,6 +216,7 @@ public class TutorialSuppressor : MonoBehaviourPunCallbacks
         var hand = GetHand(type);
         if (_currentAmount <= 0)
         {
+            Debug.Log("여길 안오는데??");
             TutorialDataMgr.Instance.IsTriggerSupply = true;
         }
         if (!rightHand.enabled && !leftHand.enabled)
