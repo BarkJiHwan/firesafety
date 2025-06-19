@@ -197,7 +197,7 @@ PrefabInstance:
     - target: {fileID: 4475486153958860787, guid: 8c557239dc3323e42a0bb6401677f15b,
         type: 3}
       propertyPath: offsetX
-      value: 0.4
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 4475486153958860787, guid: 8c557239dc3323e42a0bb6401677f15b,
         type: 3}
@@ -212,12 +212,12 @@ PrefabInstance:
     - target: {fileID: 4475486153958860787, guid: 8c557239dc3323e42a0bb6401677f15b,
         type: 3}
       propertyPath: floatSpeed
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4475486153958860787, guid: 8c557239dc3323e42a0bb6401677f15b,
         type: 3}
       propertyPath: followSpeed
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4475486153958860787, guid: 8c557239dc3323e42a0bb6401677f15b,
         type: 3}
@@ -461,7 +461,7 @@ PrefabInstance:
     - target: {fileID: 6967486779600238715, guid: b3252782f80ba5549ac048497e3080f3,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3252782f80ba5549ac048497e3080f3, type: 3}

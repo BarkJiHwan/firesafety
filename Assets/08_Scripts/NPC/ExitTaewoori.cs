@@ -148,7 +148,8 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     /// </summary>
     void OnClicked(ActivateEventArgs args)
     {
-        TakeDamage(25f); // 클릭하면 25 데미지
+        TakeDamage(50f); // 클릭하면 25 데미지
+        //args.interactorObject.transform.position = transform.position;//무기 트랜스폼
     }
 
     /// <summary>
