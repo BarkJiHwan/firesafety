@@ -36,6 +36,8 @@ public class FixedViewCanvasController : MonoBehaviour
     ScoreBoardController scoreBoardCtrl;
     ConversationController conversationCtrl;
 
+    TutorialMgr tutorialMgr;
+
     public GameObject ConversationPanel => conversationPanel;
 
     public TextMeshProUGUI ConversationTxt => conversationTxt;
@@ -136,5 +138,20 @@ public class FixedViewCanvasController : MonoBehaviour
         }
         conversationBoard.GetComponent<RectTransform>().anchoredPosition = pos;
         conversationPanel.SetActive(true);
+    }
+
+    public bool IsWarningSignActive()
+    {
+        return warningPanel.activeSelf;
+    }
+
+    public void TurnWarningSign(bool isActive)
+    {
+        warningPanel.SetActive(isActive);
+    }
+
+    public void ChangeScoreBoardPlayerColor(int index)
+    {
+        scoreBoardCtrl.SetPlayerImageBack(index);
     }
 }

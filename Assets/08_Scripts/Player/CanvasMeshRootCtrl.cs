@@ -103,7 +103,7 @@ public class CanvasMeshRootCtrl : MonoBehaviour
 
         Vector3 pos = xrCam.position + new Vector3(rotatedOffset.x, 0, rotatedOffset.z);
 
-        pos.y = 0;
+        pos.y = -0.5f;
 
         transform.position = pos;
         transform.rotation = rot;
