@@ -56,7 +56,6 @@ public class FireObjMgr : MonoBehaviour
             return;
         }
         _instance = this;
-        DontDestroyOnLoad(gameObject);
         RefreshZoneDictionary();
     }
     private void Start()

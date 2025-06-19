@@ -32,31 +32,65 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private bool _isGameStart = false;
     [SerializeField] private List<GamePhaseInfo> _phases;
-    private int _currentPhaseIndex = -1;
     private Coroutine _gameTimerCoroutine;
 
     [field: SerializeField]
     public float GameTimer { get; private set; } = 0f;
+
     public GamePhase CurrentPhase { get; set; } = GamePhase.Waiting;
+
+    // 차연우 수정
+    public GamePhase _currentPhase;
+    public GamePhase NowPhase
+    {
+        get => _currentPhase;
+        set
+        {
+            if (_currentPhase != value)
+            {
+                Debug.Log("_currentPhase : " + _currentPhase);
+                _currentPhase = value;
+                OnPhaseChanged?.Invoke(_currentPhase);
+            }
+        }
+    }
+
     public bool IsGameStart { get => _isGameStart; set => _isGameStart = value; }
 
     public event Action OnGameEnd;
+    public event Action<GamePhase> OnPhaseChanged;
+
+    private GamePhaseInfo waiting;
+    private GamePhaseInfo prevention;
+    private GamePhaseInfo fire;
+    private GamePhaseInfo fever;
+    private GamePhaseInfo leaveDangerArea;
+
+    private DialogueLoader _dialogueLoader;
+    private DialoguePlayer _dialoguePlayer;
+
+    /* 일시정지 할때 추가 */
+    private bool _isPausing;
+
+    public event Action onGamePause;
+    public event Action onGameResume;
+
     private void Awake()
     {
+        _dialoguePlayer = FindObjectOfType<DialoguePlayer>();
+        _dialogueLoader = _dialoguePlayer.GetComponent<DialogueLoader>();
+
         if (_instance != null && _instance != this)
         {
             Destroy(gameObject);
             return;
         }
         _instance = this;
-        DontDestroyOnLoad(gameObject);
     }
     private void Start()
     {
-        StopGame();
-        GameTimer = 0f;
-        _currentPhaseIndex = -1;
-        _gameTimerCoroutine = StartCoroutine(GameTimerRoutine());
+        CachingPhaseList();
+        GameStart();
     }
 
     private IEnumerator GameTimerRoutine()
@@ -64,8 +98,11 @@ public class GameManager : MonoBehaviour
         yield return new WaitUntil(() => IsGameStart);
         while (IsGameStart)
         {
-            GameTimer += Time.deltaTime;
-            UpdateGamePhaseCor();
+            if (!_isPausing)
+            {
+                GameTimer += Time.deltaTime;
+            }
+            UpdateGamePhaseCor(GameTimer);
             yield return null;
         }
     }
@@ -78,22 +115,26 @@ public class GameManager : MonoBehaviour
             _gameTimerCoroutine = null;
         }
     }
-    private void UpdateGamePhaseCor()
+    private void UpdateGamePhaseCor(float timer)
     {
-        for (int i = _phases.Count - 1; i >= 0; i--)
-        {
-            if (GameTimer >= _phases[i].StartTime)
-            {
-                if (_currentPhaseIndex != i)
-                {
-                    _currentPhaseIndex = i;
-                    CurrentPhase = _phases[i].Phase;
-                    _phases[i].OnEnterPhase?.Invoke();
+        GamePhaseInfo now = GetPhase(timer);
 
-                    if (CurrentPhase == GamePhase.LeaveDangerArea)
-                        OnGameEnd?.Invoke();
-                }
-                break;
+        if (now.Phase != CurrentPhase)
+        {
+            CurrentPhase = now.Phase;
+            _currentPhase = now.Phase;
+            NowPhase = now.Phase;
+
+            if (CurrentPhase == GamePhase.Fire)
+            {
+                PauseGameTimer();
+                _dialoguePlayer.onFinishDialogue += ResumeGameTimer;
+                _dialoguePlayer.PlayWithTexts(new []{"Sobak_009", "Sobak_010"});
+            }
+
+            if (CurrentPhase == GamePhase.LeaveDangerArea)
+            {
+                OnGameEnd?.Invoke();
             }
         }
     }
@@ -101,57 +142,36 @@ public class GameManager : MonoBehaviour
     {
         GameTimer = time;
     }
-    //사용 하지 않을 수 있음 리팩터링중
-    private void UpdateGamePhase()
-    {
-        // 시간에 따라 페이즈 자동 전환
-        if (GameTimer < 10f)
-        {
-            CurrentPhase = GamePhase.Waiting;
-        }
-        else if (GameTimer < 70f)
-        {
-            if (CurrentPhase != GamePhase.Prevention)
-            {
-                CurrentPhase = GamePhase.Prevention;
-            }
-        }
-        else if (GameTimer < 190f)
-        {
-            if (CurrentPhase != GamePhase.Fire)
-            {
-                CurrentPhase = GamePhase.Fire;
-                //CHM 태우리 생존시간 추적
-                TaewooriPoolManager.Instance?.StartSurvivalTracking();
-            }
-        }
-        else if(GameTimer < 250f)
-        {
-            if (CurrentPhase != GamePhase.Fever)
-            {
-                CurrentPhase = GamePhase.Fever;
-            }
-        }
-        else
-        {
-            if(CurrentPhase != GamePhase.LeaveDangerArea)
-            {
-                //CHM 태우리 생존시간 끝내고 점수 판정함 
-                TaewooriPoolManager.Instance?.EndSurvivalTracking();
-                CurrentPhase = GamePhase.LeaveDangerArea;
-                IsGameStart = false; //스타트 멈춤
-                Debug.Log("일단 게임종료 임");
-            }
-        }
-    }
 
-    public void GameStartBtn()
+    /* 모두 레디 후 시작, 대화창 끝나면 게임 진짜 시작 하도록 이벤트 전달 */
+    public void GameStartWhenAllReady()
     {
         IsGameStart = true;
+        PauseGameTimer();
+        _dialogueLoader.LoadSobaekData();
+        _dialoguePlayer.onFinishDialogue += ResumeGameTimer;
+        _dialoguePlayer.PlayWithTexts(new []{"Sobak_001", "Sobak_002", "Sobak_003", "Sobak_004"});
     }
-    public void GmaeOver()
+
+    private void PauseGameTimer()
     {
-        IsGameStart = false;
+        _isPausing = true;
+        onGamePause?.Invoke();
+    }
+
+    private void ResumeGameTimer()
+    {
+        _isPausing = false;
+        _dialoguePlayer.onFinishDialogue -= ResumeGameTimer;
+        onGameResume?.Invoke();
+    }
+
+    public void GameStart()
+    {
+        _currentPhase = GamePhase.Waiting;
+        StopGame();
+        GameTimer = 0f;
+        _gameTimerCoroutine = StartCoroutine(GameTimerRoutine());
     }
     public void ResetGameTimer()
     {
@@ -161,11 +181,65 @@ public class GameManager : MonoBehaviour
         TaewooriPoolManager.Instance?.ResetSurvivalTracking();
     }
 
+    private void CachingPhaseList()
+    {
+        foreach (GamePhaseInfo phaseInfo in _phases)
+        {
+            if (phaseInfo.Phase == GamePhase.Waiting)
+            {
+                waiting = phaseInfo;
+            }
+            else if (phaseInfo.Phase == GamePhase.Prevention)
+            {
+                prevention = phaseInfo;
+            }
+            else if (phaseInfo.Phase == GamePhase.Fire)
+            {
+                fire = phaseInfo;
+            }
+            else if (phaseInfo.Phase == GamePhase.Fever)
+            {
+                fever = phaseInfo;
+            }
+            else if (phaseInfo.Phase == GamePhase.LeaveDangerArea)
+            {
+                leaveDangerArea = phaseInfo;
+            }
+        }
+    }
+
+    private GamePhaseInfo GetPhase(float gameTimer)
+    {
+        GamePhaseInfo now;
+
+        if (gameTimer >= leaveDangerArea.StartTime)
+        {
+            now = leaveDangerArea;
+        }
+        else if (gameTimer >= fever.StartTime)
+        {
+            now =  fever;
+        }
+        else if (gameTimer >= fire.StartTime)
+        {
+            now =  fire;
+        }
+        else if (gameTimer >= prevention.StartTime)
+        {
+            now =  prevention;
+        }
+        else
+        {
+            now = waiting;
+        }
+
+        return now;
+    }
+
     [Serializable]
     public class GamePhaseInfo
     {
         public GamePhase Phase;
         public float StartTime;
-        public Action OnEnterPhase;
     }
 }

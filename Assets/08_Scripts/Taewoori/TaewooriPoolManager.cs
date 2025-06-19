@@ -154,8 +154,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
 
         _instance = this;
-        DontDestroyOnLoad(gameObject);
-
         InitializePools();
 
         // ScoreManager 자동 찾기
@@ -383,6 +381,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             {
                 int playerID = PhotonNetwork.LocalPlayer.ActorNumber;
                 int killScore = GetPlayerKillScore(playerID);
+                Debug.Log("스코어 넘버 전달");
                 scoreManager.SetScore(ScoreType.Fire_Count, killScore);
             }
         }

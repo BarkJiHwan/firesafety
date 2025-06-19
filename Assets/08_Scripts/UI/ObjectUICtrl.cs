@@ -58,7 +58,7 @@ public class ObjectUICtrl : MonoBehaviour
     {
         if(GameManager.Instance.CurrentPhase != GamePhase.Prevention)
         {
-            if(backImage.gameObject.activeSelf == true)
+            if(backImage.gameObject.activeSelf == true || iconImg.gameObject.activeSelf == true)
             {
                 backImage.gameObject.SetActive(false);
                 iconImg.gameObject.SetActive(false);
@@ -90,19 +90,24 @@ public class ObjectUICtrl : MonoBehaviour
         transform.position = originPosition + basicPos;
 
         Vector3 targetForward = target.transform.forward;
-        targetForward.y = 0;
-        targetForward.Normalize();
+        if(targetForward != Vector3.zero)
+        {
+            targetForward.y = 0;
+            targetForward.Normalize();
+        }
 
         Vector3 camDir = Camera.main.transform.position - target.transform.position;
-        //camDir.y = 0;
-        //camDir.Normalize();
+        if(camDir != Vector3.zero)
+        {
+            camDir.Normalize();
+        }
 
         float dot = Vector3.Dot(targetForward, camDir);
         if (dot > 0)
         {
             transform.forward = -targetForward;
         }
-        else
+        else if (targetForward != Vector3.zero)
         {
             transform.forward = targetForward;
         }
@@ -116,8 +121,9 @@ public class ObjectUICtrl : MonoBehaviour
             transform.Rotate(0, 180, 0);
         }
 
-        if (currentPrevent.MyType == PreventType.ElectricKettle)
+        if (currentPrevent.MyType == PreventType.ElectricKettle || currentPrevent.MyType == PreventType.PowerBank)
         {
+            Debug.Log("PowerBank");
             transform.position = originPosition + basicPos;
             transform.Rotate(0, 0, 0);
         }
@@ -155,7 +161,6 @@ public class ObjectUICtrl : MonoBehaviour
         Vector3[] worldCorners = new Vector3[4];
         rect = GetComponent<RectTransform>();
         rect.GetWorldCorners(worldCorners);
-
         List<Vector3> rayPoints = new List<Vector3>
         {
             rect.position,
@@ -168,7 +173,7 @@ public class ObjectUICtrl : MonoBehaviour
 
         foreach(var point in rayPoints)
         {
-            float distance = 1.0f;
+            float distance = 0.7f;
 
             if (Physics.Raycast(point, transform.forward, out RaycastHit hit, distance))
             {
