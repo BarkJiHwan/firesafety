@@ -5,11 +5,12 @@ using UnityEngine;
 
 public enum GamePhase
 {
-    Waiting,      // 0~10초
-    Prevention,   // 10~70초
-    Fire,         // 70~190초
-    Fever,       // 190초~
-    LeaveDangerArea
+    Waiting,      // 1초
+    Prevention,   // 1~61초
+    FireWaiting,      // 61~62초
+    Fire,         // 62~182초
+    Fever,       // 182 ~ 242초
+    LeaveDangerArea //242초 게임 끝
 }
 public class GameManager : MonoBehaviour
 {
@@ -62,6 +63,7 @@ public class GameManager : MonoBehaviour
 
     private GamePhaseInfo waiting;
     private GamePhaseInfo prevention;
+    private GamePhaseInfo fireWaiting;
     private GamePhaseInfo fire;
     private GamePhaseInfo fever;
     private GamePhaseInfo leaveDangerArea;
@@ -125,7 +127,7 @@ public class GameManager : MonoBehaviour
             _currentPhase = now.Phase;
             NowPhase = now.Phase;
 
-            if (CurrentPhase == GamePhase.Fire)
+            if (CurrentPhase == GamePhase.FireWaiting)
             {
                 PauseGameTimer();
                 _dialoguePlayer.onFinishDialogue += ResumeGameTimer;
@@ -193,6 +195,10 @@ public class GameManager : MonoBehaviour
             {
                 prevention = phaseInfo;
             }
+            else if (phaseInfo.Phase == GamePhase.FireWaiting)
+            {
+                fireWaiting = phaseInfo;
+            }
             else if (phaseInfo.Phase == GamePhase.Fire)
             {
                 fire = phaseInfo;
@@ -223,6 +229,10 @@ public class GameManager : MonoBehaviour
         else if (gameTimer >= fire.StartTime)
         {
             now =  fire;
+        }
+        else if (gameTimer >= fireWaiting.StartTime)
+        {
+            now = fireWaiting;
         }
         else if (gameTimer >= prevention.StartTime)
         {
