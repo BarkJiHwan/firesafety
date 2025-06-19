@@ -7,6 +7,10 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class RoomMgr : MonoBehaviourPunCallbacks
 {
+    private DialogueLoader _dialogueLoader;
+    private DialoguePlayer _dialoguePlayer;
+
+
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
         if (PhotonNetwork.IsMasterClient && changedProps.ContainsKey("IsReady"))
@@ -14,18 +18,28 @@ public class RoomMgr : MonoBehaviourPunCallbacks
             CheckAllPlayersReady();
         }
     }
-    public void CheckAllPlayersReady()
+    private void CheckAllPlayersReady()
+    {
+        if (isAllPlayersReady())
+        {
+            Debug.Log("모두 준비 됐으니 게임 시작합니다");
+            _dialoguePlayer.PlayWithText("TUT_010", UIType.Narration);
+            photonView.RPC("StartGameCountdown", RpcTarget.All);
+        }
+    }
+
+    public bool isAllPlayersReady()
     {
         foreach (Player player in PhotonNetwork.PlayerList)
         {
             if (!player.CustomProperties.ContainsKey("IsReady") ||
                 !(bool)player.CustomProperties["IsReady"])
-                return;
+                return false;
         }
-        Debug.Log("모두 준비 됐으니 게임 시작합니다");
-        // 모든 플레이어 준비 완료 → 3초 카운트다운 시작
-        photonView.RPC("StartGameCountdown", RpcTarget.All);
+
+        return true;
     }
+
     [PunRPC]
     private IEnumerator StartGameCountdown()
     {
@@ -41,11 +55,10 @@ public class RoomMgr : MonoBehaviourPunCallbacks
             timer -= Time.deltaTime;
             yield return null;
         }
-        photonView.RPC("StartGame", RpcTarget.All);
+        StartGame();
     }
 
-    [PunRPC]
-    void StartGame()
+    private void StartGame()
     {
         // 게임 시작 시 룸 영구 잠금
         if (PhotonNetwork.IsMasterClient)
