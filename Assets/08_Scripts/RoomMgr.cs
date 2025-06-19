@@ -18,6 +18,26 @@ public class RoomMgr : MonoBehaviourPunCallbacks
             CheckAllPlayersReady();
         }
     }
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (!GameManager.Instance.IsGameStart)
+            {
+                CheckAllPlayersReady();
+            }
+            else
+            {
+                return;
+            }
+        }
+        else if (otherPlayer.TagObject != null)
+        {
+            ((GameObject)otherPlayer.TagObject).SetActive(false);
+            Destroy((GameObject)otherPlayer.TagObject);
+            PhotonNetwork.Disconnect();
+        }
+    }
     private void CheckAllPlayersReady()
     {
         if (isAllPlayersReady())
