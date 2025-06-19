@@ -14,7 +14,7 @@ public class RoomMgr : MonoBehaviourPunCallbacks
             CheckAllPlayersReady();
         }
     }
-    private void CheckAllPlayersReady()
+    public void CheckAllPlayersReady()
     {
         foreach (Player player in PhotonNetwork.PlayerList)
         {
