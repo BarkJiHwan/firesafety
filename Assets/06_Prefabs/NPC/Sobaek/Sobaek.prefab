@@ -604,7 +604,7 @@ GameObject:
   - component: {fileID: 9137445655480841037}
   - component: {fileID: 4475486153958860787}
   m_Layer: 0
-  m_Name: Sobaek.Fire
+  m_Name: Sobaek
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -661,21 +661,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  offsetX: 0.5
+  offsetX: 0.2
   offsetY: 0
-  offsetZ: 0.7
+  offsetZ: 0.8
   stayOnRightSide: 1
   floatAmplitude: 0.1
   floatSpeed: 2
-  lookAtSpeed: 10
-  moveSpeed: 10
-  followSpeed: 5
-  arrivalDistance: 0.3
-  animator: {fileID: 9137445655480841037}
+  lookAtSpeed: 5
+  moveSpeed: 3
+  followSpeed: 15
+  arrivalDistance: 0.5
   sobaekCar: {fileID: 0}
-  useGameManager: 0
-  usePhysicsMovement: 0
-  followCameraSpeed: 10
   testActivateCar: 0
 --- !u!1 &2632856105434143133
 GameObject:

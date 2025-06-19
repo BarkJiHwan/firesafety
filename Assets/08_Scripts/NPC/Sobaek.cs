@@ -5,7 +5,7 @@ public class Sobaek : MonoBehaviour
 {
     #region 인스펙터 설정
     [Header("기본 위치 설정")]
-    [SerializeField] private Transform player;
+    [SerializeField] private Transform player; // 플레이어 프리팹 직접 할당
     [SerializeField] private float offsetX = 1.5f;
     [SerializeField] private float offsetY = 0.5f;
     [SerializeField] private float offsetZ = 0.5f;
@@ -17,20 +17,12 @@ public class Sobaek : MonoBehaviour
     [SerializeField] private float lookAtSpeed = 2f;
 
     [Header("이동 설정")]
-    [SerializeField] private float moveSpeed = 8f; // VR 최적화를 위해 증가
-    [SerializeField] private float followSpeed = 5f; // 플레이어 따라다니기 속도
-    [SerializeField] private float arrivalDistance = 0.5f; // VR 최적화를 위해 증가
+    [SerializeField] private float moveSpeed = 8f;
+    [SerializeField] private float followSpeed = 5f; // 카메라 따라다니기 속도
+    [SerializeField] private float arrivalDistance = 0.5f;
 
-    [Header("애니메이션 설정")]
-    [SerializeField] private Animator animator;
+    [Header("소백카 설정")]
     [SerializeField] private GameObject sobaekCar;
-
-    [Header("대피씬에서 체크 해제")]
-    [SerializeField] private bool useGameManager = true; // 게임매니저 사용 여부
-
-    [Header("VR 최적화 설정")]
-    [SerializeField] private bool usePhysicsMovement = false; // 물리 기반 이동 사용 여부
-    [SerializeField] private float followCameraSpeed = 10f; // 물리 이동 시 힘
 
     [Header("테스트용 설정")]
     [SerializeField] private bool testActivateCar = false;
@@ -49,12 +41,11 @@ public class Sobaek : MonoBehaviour
             sobaekInteractionEnabled = value;
             if (!value)
             {
-                // 비활성화 시 홈으로 복귀
                 StopTalkingAndReturnHome();
             }
         }
     }
-    public bool UseGameManager { get => useGameManager; set => useGameManager = value; }
+    public bool UseGameManager { get; private set; }
     #endregion
 
     #region 변수 선언
@@ -62,15 +53,15 @@ public class Sobaek : MonoBehaviour
     private Vector3 basePosition;
     private Vector3 targetPosition;
     private Transform currentTarget;
-    private Rigidbody rb;
+    private Animator animator;
 
     private bool isMovingToTarget = false;
     private bool isMovingToHome = false;
     private bool isTalking = false;
-    private bool sobaekInteractionEnabled = true; // 소백이 상호작용 활성화 여부
+    private bool sobaekInteractionEnabled = true;
 
     private float floatTimer = 0f;
-    private GamePhase lastPhase; // 이전 페이즈 저장용
+    private GamePhase lastPhase;
 
     // 애니메이션 해시
     private readonly int hashIsFlying = Animator.StringToHash("isFlying");
@@ -91,10 +82,21 @@ public class Sobaek : MonoBehaviour
             return;
         }
 
-        InitializeReferences();
-        InitializePhysics();
-        SetHomePosition();
-        basePosition = homePosition;
+        InitializeComponents();
+
+        // 플레이어가 설정되어 있는지 확인 후 홈 포지션 설정
+        if (player != null)
+        {
+            SetHomePosition();
+            basePosition = homePosition;
+            transform.position = homePosition;
+        }
+        else
+        {
+            Debug.LogWarning("Sobaek: Player가 설정되지 않았습니다. 인스펙터에서 Player 필드를 설정해주세요.");
+            // 플레이어가 없으면 현재 위치를 홈으로 설정
+            basePosition = transform.position;
+        }
 
         // 소백카 초기 비활성화
         if (sobaekCar != null)
@@ -103,9 +105,9 @@ public class Sobaek : MonoBehaviour
         }
     }
 
-    void LateUpdate() // VR 최적화를 위해 LateUpdate 사용
+    void LateUpdate()
     {
-        if (useGameManager)
+        if (UseGameManager)
         {
             CheckGamePhase();
         }
@@ -116,21 +118,9 @@ public class Sobaek : MonoBehaviour
             ActivateSobaekCar();
         }
 
-        if (!usePhysicsMovement)
-        {
-            UpdatePosition();
-        }
-
+        UpdatePosition();
         UpdateFloatingEffect();
         UpdateAnimations();
-    }
-
-    void FixedUpdate()
-    {
-        if (usePhysicsMovement)
-        {
-            UpdatePhysicsPosition();
-        }
     }
 
     void OnDestroy()
@@ -143,60 +133,43 @@ public class Sobaek : MonoBehaviour
     #endregion
 
     #region 초기화
-    void InitializeReferences()
+    /// <summary>
+    /// 모든 컴포넌트 자동 초기화
+    /// </summary>
+    void InitializeComponents()
     {
+        // 애니메이터 자동 찾기
+        animator = GetComponent<Animator>();
         if (animator == null)
         {
-            animator = GetComponent<Animator>();
-            if (animator == null)
-            {
-                animator = GetComponentInChildren<Animator>();
-            }
+            animator = GetComponentInChildren<Animator>();
         }
 
-        if (player == null)
-        {
-            // 1. MainCamera 태그로 찾기
-            Camera mainCam = Camera.main;
-            if (mainCam != null)
-            {
-                player = mainCam.transform;
-            }
-            else
-            {
-                // 2. CenterEyeAnchor 이름으로 찾기 (VR)
-                GameObject centerEye = GameObject.Find("CenterEyeAnchor");
-                if (centerEye != null)
-                {
-                    player = centerEye.transform;
-                }
-                else
-                {
-                    // 3. Player 태그로 찾기
-                    GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-                    if (playerObj != null)
-                    {
-                        player = playerObj.transform;
-                    }
-                }
-            }
-        }
+        // 게임매니저 사용 여부 자동 감지
+        DetectGameManagerUsage();
     }
 
-    void InitializePhysics()
+    /// <summary>
+    /// 게임매니저 사용 여부 자동 감지
+    /// </summary>
+    void DetectGameManagerUsage()
     {
-        if (usePhysicsMovement)
-        {
-            rb = GetComponent<Rigidbody>();
-            if (rb == null)
-            {
-                rb = gameObject.AddComponent<Rigidbody>();
-            }
+        // GameManager가 씬에 있는지 확인
+        UseGameManager = GameManager.Instance != null;
 
-            rb.useGravity = false;
-            rb.drag = 5f;
-            rb.angularDrag = 5f;
-            rb.constraints = RigidbodyConstraints.FreezeRotation;
+        if (!UseGameManager)
+        {
+            // 게임매니저 없는 씬에서는 상호작용 비활성화
+            sobaekInteractionEnabled = false;
+            isMovingToTarget = false;
+            isMovingToHome = false;
+            currentTarget = null;
+
+            Debug.Log("Sobaek: 게임매니저가 없는 씬으로 감지되었습니다. 상호작용이 비활성화됩니다.");
+        }
+        else
+        {
+            Debug.Log("Sobaek: 게임매니저가 있는 씬으로 감지되었습니다.");
         }
     }
     #endregion
@@ -207,11 +180,10 @@ public class Sobaek : MonoBehaviour
     /// </summary>
     void CheckGamePhase()
     {
-        // GameManager.Instance 접근 전에 null 체크
+        // GameManager 재확인 (씬 전환 등으로 사라질 수 있음)
         if (GameManager.Instance == null)
         {
-            // GameManager가 없으면 useGameManager를 false로 설정
-            useGameManager = false;
+            UseGameManager = false;
             return;
         }
 
@@ -237,11 +209,14 @@ public class Sobaek : MonoBehaviour
     }
     #endregion
 
-    #region 위치 및 이동 (Transform 기반)
+    #region 위치 및 이동
     void SetHomePosition()
     {
         if (player == null)
+        {
+            Debug.LogWarning("Sobaek: Player가 null입니다. 홈 포지션을 설정할 수 없습니다.");
             return;
+        }
 
         Vector3 rightDirection = player.right * (stayOnRightSide ? offsetX : -offsetX);
         Vector3 forwardDirection = player.forward * offsetZ;
@@ -261,80 +236,29 @@ public class Sobaek : MonoBehaviour
             // 도착 체크
             if (Vector3.Distance(basePosition, targetPosition) <= arrivalDistance)
             {
-                basePosition = targetPosition; // 정확한 위치로
+                basePosition = targetPosition;
                 isMovingToTarget = false;
-                isTalking = true; // 도착하면 자동으로 토킹 시작
+                isTalking = true;
             }
         }
         else if (isMovingToHome)
         {
-            // 홈으로 이동 - 부드러운 보간
+            // 홈으로 이동 - moveSpeed와 같은 속도로 복귀
             basePosition = Vector3.Slerp(basePosition, homePosition, moveSpeed * Time.deltaTime);
 
             // 도착 체크
             if (Vector3.Distance(basePosition, homePosition) <= arrivalDistance)
             {
-                basePosition = homePosition; // 정확한 위치로
+                basePosition = homePosition;
                 isMovingToHome = false;
             }
         }
         else if (!isMovingToTarget && !isMovingToHome && !isTalking)
         {
-            // 평상시 플레이어 따라다니기 - 조절 가능한 속도
+            // 평상시 플레이어 따라다니기 - followSpeed로 조절
             SetHomePosition();
             basePosition = Vector3.Slerp(basePosition, homePosition, followSpeed * Time.deltaTime);
         }
-    }
-    #endregion
-
-    #region 물리 기반 이동 (Rigidbody 사용)
-    void UpdatePhysicsPosition()
-    {
-        if (player == null || rb == null)
-            return;
-
-        Vector3 targetPos = homePosition;
-
-        if (isMovingToTarget)
-        {
-            targetPos = targetPosition;
-
-            // 도착 체크
-            if (Vector3.Distance(transform.position, targetPosition) <= arrivalDistance)
-            {
-                rb.velocity = Vector3.zero;
-                isMovingToTarget = false;
-                isTalking = true;
-                return;
-            }
-        }
-        else if (isMovingToHome)
-        {
-            targetPos = homePosition;
-
-            // 도착 체크
-            if (Vector3.Distance(transform.position, homePosition) <= arrivalDistance)
-            {
-                rb.velocity = Vector3.zero;
-                isMovingToHome = false;
-                return;
-            }
-        }
-        else if (!isTalking)
-        {
-            // 평상시 플레이어 따라다니기
-            SetHomePosition();
-            targetPos = homePosition;
-        }
-
-        // 물리 기반 이동
-        Vector3 direction = (targetPos - transform.position).normalized;
-        float currentSpeed = isMovingToTarget || isMovingToHome ? moveSpeed : followSpeed;
-
-        rb.velocity = Vector3.Lerp(rb.velocity, direction * currentSpeed, followCameraSpeed * Time.fixedDeltaTime);
-
-        // basePosition 업데이트 (떠다니기 효과용)
-        basePosition = transform.position;
     }
     #endregion
 
@@ -343,19 +267,7 @@ public class Sobaek : MonoBehaviour
     {
         floatTimer += Time.deltaTime * floatSpeed;
         float floatY = Mathf.Sin(floatTimer) * floatAmplitude;
-
-        if (usePhysicsMovement)
-        {
-            // 물리 기반일 때는 Y축만 조정
-            Vector3 currentPos = transform.position;
-            currentPos.y = basePosition.y + floatY;
-            transform.position = currentPos;
-        }
-        else
-        {
-            // Transform 기반일 때는 전체 위치 설정
-            transform.position = basePosition + Vector3.up * floatY;
-        }
+        transform.position = basePosition + Vector3.up * floatY;
 
         UpdateLookDirection();
     }
@@ -397,17 +309,11 @@ public class Sobaek : MonoBehaviour
 
     #region 플레이어가 호출할 간단한 함수들
     /// <summary>
-    /// 타겟으로 이동 (플레이어 호출용) - 상호작용 활성화 상태에서만 작동
+    /// 타겟으로 이동 (플레이어 호출용)
     /// </summary>
     public void MoveToTarget(Transform target)
     {
-        // 상호작용이 비활성화되어 있으면 무시
-        if (!sobaekInteractionEnabled)
-        {
-            return;
-        }
-
-        if (target == null)
+        if (!sobaekInteractionEnabled || target == null)
             return;
 
         currentTarget = target;
@@ -417,13 +323,16 @@ public class Sobaek : MonoBehaviour
 
         targetPosition = target.position + directionFromTarget * 0.5f;
 
+        // 현재 위치를 basePosition으로 동기화 (끊김 방지)
+        basePosition = transform.position;
+
         isMovingToTarget = true;
         isMovingToHome = false;
-        isTalking = false; // 이동 시작하면 토킹 중단
+        isTalking = false;
     }
 
     /// <summary>
-    /// 토킹 중단하고 홈으로 복귀 (플레이어 호출용)
+    /// 토킹 중단하고 홈으로 복귀
     /// </summary>
     public void StopTalkingAndReturnHome()
     {
@@ -432,19 +341,22 @@ public class Sobaek : MonoBehaviour
         isMovingToHome = true;
         currentTarget = null;
 
-        // 홈 위치 미리 계산
+        // 현재 플레이어 위치 기준으로 홈 포지션 업데이트
         SetHomePosition();
+
+        // 현재 위치를 basePosition으로 동기화 (끊김 방지)
+        basePosition = transform.position;
     }
 
     /// <summary>
-    /// 토킹 애니매이션 실행 UI 관련할때 쓰면됨
+    /// 토킹 애니매이션 실행
     /// </summary>
     public void StartTalking()
     {
-        if (!sobaekInteractionEnabled)
-            return;
-
-        isTalking = true;
+        if (!UseGameManager || sobaekInteractionEnabled)
+        {
+            isTalking = true;
+        }
     }
 
     /// <summary>
@@ -467,13 +379,37 @@ public class Sobaek : MonoBehaviour
     }
     #endregion
 
+    #region 게임매니저 없는 씬 전용 메서드
+    /// <summary>
+    /// 토킹 애니메이션만 실행 (게임매니저 없는 씬용)
+    /// </summary>
+    public void PlayTalkingAnimation()
+    {
+        if (!UseGameManager)
+        {
+            isTalking = true;
+        }
+    }
+
+    /// <summary>
+    /// 토킹 애니메이션 중단 (게임매니저 없는 씬용)
+    /// </summary>
+    public void StopTalkingAnimation()
+    {
+        if (!UseGameManager)
+        {
+            isTalking = false;
+        }
+    }
+    #endregion
+
     #region 런타임 설정 변경
     /// <summary>
     /// 플레이어 따라다니기 속도 런타임 변경
     /// </summary>
     public void SetFollowSpeed(float speed)
     {
-        followSpeed = Mathf.Max(0.1f, speed); // 최소값 제한
+        followSpeed = Mathf.Max(0.1f, speed);
     }
 
     /// <summary>
@@ -481,23 +417,19 @@ public class Sobaek : MonoBehaviour
     /// </summary>
     public void SetMoveSpeed(float speed)
     {
-        moveSpeed = Mathf.Max(0.1f, speed); // 최소값 제한
+        moveSpeed = Mathf.Max(0.1f, speed);
     }
 
     /// <summary>
-    /// 물리 기반 이동 토글
+    /// 플레이어 설정 후 홈 포지션 재설정
     /// </summary>
-    public void SetPhysicsMovement(bool enabled)
+    public void RefreshHomePosition()
     {
-        usePhysicsMovement = enabled;
-
-        if (enabled && rb == null)
+        if (player != null)
         {
-            InitializePhysics();
-        }
-        else if (!enabled && rb != null)
-        {
-            rb.velocity = Vector3.zero;
+            SetHomePosition();
+            basePosition = homePosition;
+            transform.position = homePosition;
         }
     }
     #endregion
@@ -533,50 +465,10 @@ public class Sobaek : MonoBehaviour
     }
     #endregion
 
-    #region 게임매니저 없는 씬 전용 메서드
-    /// <summary>
-    /// 토킹 애니메이션만 실행 (게임매니저 없는 씬용 - UI 설명시 사용)
-    /// </summary>
-    public void PlayTalkingAnimation()
-    {
-        if (!useGameManager)
-        {
-            isTalking = true;
-        }
-    }
-
-    /// <summary>
-    /// 토킹 애니메이션 중단 (게임매니저 없는 씬용)
-    /// </summary>
-    public void StopTalkingAnimation()
-    {
-        if (!useGameManager)
-        {
-            isTalking = false;
-        }
-    }
-
-    /// <summary>
-    /// 게임매니저 사용 여부 설정
-    /// </summary>
-    public void SetUseGameManager(bool use)
-    {
-        useGameManager = use;
-
-        if (!use)
-        {
-            // 게임매니저 없는 씬에서는 상호작용 비활성화
-            sobaekInteractionEnabled = false;
-            isMovingToTarget = false;
-            isMovingToHome = false;
-            currentTarget = null;
-        }
-    }
-    #endregion
-
     #region 소백카 관련 메서드
     /// <summary>
     /// 수건 입에 닿았을때 호출하면된다 한얼아
+    /// 또는 테스트용 설정으로 활성화 가능
     /// </summary>
     public void ActivateSobaekCar()
     {
