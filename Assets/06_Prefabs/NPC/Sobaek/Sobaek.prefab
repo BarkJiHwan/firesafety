@@ -604,7 +604,7 @@ GameObject:
   - component: {fileID: 9137445655480841037}
   - component: {fileID: 4475486153958860787}
   m_Layer: 0
-  m_Name: Sobaek.Exit
+  m_Name: Sobaek
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -671,11 +671,9 @@ MonoBehaviour:
   moveSpeed: 10
   followSpeed: 5
   arrivalDistance: 0
-  animator: {fileID: 9137445655480841037}
-  sobaekCar: {fileID: 0}
-  useGameManager: 1
   usePhysicsMovement: 1
   followCameraSpeed: 10
+  sobaekCar: {fileID: 0}
   testActivateCar: 0
 --- !u!1 &2632856105434143133
 GameObject:
