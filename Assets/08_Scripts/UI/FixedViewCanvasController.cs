@@ -28,6 +28,9 @@ public class FixedViewCanvasController : MonoBehaviour
     [SerializeField] Vector3 conversationPos;
     [SerializeField] TextMeshProUGUI conversationTxt;
 
+    [Header("경고창")]
+    [SerializeField] GameObject warningPanel;
+
     UIType pastDiaType = UIType.None;
 
     ScoreBoardController scoreBoardCtrl;
