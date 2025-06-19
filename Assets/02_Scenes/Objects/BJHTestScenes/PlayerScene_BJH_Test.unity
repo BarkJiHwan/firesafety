@@ -646,6 +646,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSource: {fileID: 545725607}
   dialogueLoader: {fileID: 545725605}
+  fvCanvasController: {fileID: 0}
 --- !u!114 &545725605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1111,6 +1112,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 161484697419214853, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 161484697419214853, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 75
+      objectReference: {fileID: 0}
     - target: {fileID: 4060705980712908544, guid: 7e8817f6f572b7146bdae7d547c81463,
         type: 3}
       propertyPath: m_IsActive
@@ -1235,6 +1246,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5880633998026765801, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -257
       objectReference: {fileID: 0}
     - target: {fileID: 7640460939075141454, guid: 7e8817f6f572b7146bdae7d547c81463,
         type: 3}
