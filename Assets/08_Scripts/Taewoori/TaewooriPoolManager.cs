@@ -810,7 +810,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     }
 
     /// <summary>
-    /// 외부에서 씬 전환 시 호출할 메서드
+    /// 외부에서 씬 전환 시 호출할 메서드 싹다 정리해주는 함수 인스턴스 없어도 호출가능함
     /// </summary>
     public static void PrepareForSceneTransition()
     {

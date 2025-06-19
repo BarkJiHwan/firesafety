@@ -258,7 +258,6 @@ public class Taewoori : BaseTaewoori
             if (manager != null && killerID != -1)
             {
                 ((TaewooriPoolManager)manager).UpdateSurvivalTimeAndRecordKill(networkID, killerID);
-                
             }
 
             // 3. 네트워크로 파괴 알림
