@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class Phase2InteractManager : MonoBehaviour
 {
@@ -13,7 +15,9 @@ public class Phase2InteractManager : MonoBehaviour
         public GameObject wetPrefab;
         public bool isWet;
         public bool isEnabled = false;
+        public XRRayInteractor interactor;
     }
+    [SerializeField] private DaTaewoori _daTaewoori;
     [SerializeField] private GameObject _checkingWearing; //수건 입에 가져다 댄 건가요?
     [SerializeField] private bool _isWear;//가져다 댄 거 맞지요?
     [Header("양손 수건 데이터")]
@@ -24,21 +28,20 @@ public class Phase2InteractManager : MonoBehaviour
     [SerializeField] private LayerMask _waterMask;
     [SerializeField] private float _towelInteractWater;
     [SerializeField] private float _towelInteractRadius;
-    private int _towelHitNums;
     private float _triggerValue;
-    private Collider[] _towelHitCols;
-    private Collider[] _tapHitCols;
-    private int _tapHitNums;
     private bool _gotTowel = false;
     private bool _gotWet = false;
     [Header("수도")]
     [SerializeField] private float _tapInteractRadius;
     [SerializeField] private LayerMask _tapMask;
     [SerializeField, Tooltip("배치 필쑤!!")] private TapWater _tapWater;
+    [SerializeField] private bool _tapEnable = false;
     [Header("물대포")]
     [SerializeField] private int _damage = 1;
     [SerializeField] private GameObject _waterShooterPrefab;
     [SerializeField] private float _fireDelay = 0.5f;
+    [SerializeField] private LayerMask _weaponLayer;
+    private RaycastHit hit;
     private void Awake()
     {
         if (GameManager.Instance != null && GameManager.Instance.CurrentPhase != GamePhase.LeaveDangerArea)
@@ -55,28 +58,28 @@ public class Phase2InteractManager : MonoBehaviour
     private void CheckCols(TowelHandData hand)
     {
         _triggerValue = hand.triggerAction.action.ReadValue<float>();
-        if (!_gotTowel && _triggerValue > 0.1f)//수건 가져오기
-        {
-            _towelHitNums = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _towelInteractRadius, _towelHitCols, _towelMask);
-            if (_towelHitNums > 0)
-            {
-                TowelSupply(hand);
-                _towelHitNums = 0;
-            }
-        }
-        if (_gotTowel)//물에 적시기
-        {
-            _towelHitNums = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _towelInteractWater, _towelHitCols, _waterMask);
-            if (_towelHitNums > 0)
-            {
-                WettingTowel(hand);
-            }
-        }
-        _tapHitNums = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _tapInteractRadius, _tapHitCols, _tapMask);
-        if (_tapHitNums > 0 && _triggerValue > 0.1f)//수도 상호작용
-        {
-            _tapWater.InteractTapWater();
-        }
+        //if (hand.interactor.TryGetCurrent3DRaycastHit(out hit) && !_gotTowel)//수건 가져오기
+        //{
+        //    if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _towelMask))
+        //    {
+        //        TowelSupply(hand);
+        //    }
+        //}
+        //if (_gotTowel && hand.interactor.TryGetCurrent3DRaycastHit(out hit) && _tapEnable)//물에 적시기
+        //{
+        //    if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _waterMask))
+        //    {
+        //        WettingTowel(hand);
+        //    }
+        //}
+        //if (hand.interactor.TryGetCurrent3DRaycastHit(out hit) && _gotTowel)//수도꼭지 활성화
+        //{
+        //    if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _tapMask))
+        //    {
+        //        _tapWater.InteractTapWater();
+        //        _tapEnable = true;
+        //    }
+        //}
     }
     private void TowelSupply(TowelHandData hand)
     {
@@ -85,6 +88,7 @@ public class Phase2InteractManager : MonoBehaviour
             hand.isEnabled = true;
             _gotTowel = true;
             hand.modelPrefab = Instantiate(hand.modelPrefab, hand.grabSpot.position, Quaternion.identity);
+            //생성 -> 활성화 비활성화로 ㅇ
         }
     }
     private void WettingTowel(TowelHandData hand)
@@ -94,6 +98,7 @@ public class Phase2InteractManager : MonoBehaviour
             hand.isWet = true;
             hand.modelPrefab.SetActive(false);
             hand.wetPrefab = Instantiate(hand.wetPrefab, hand.grabSpot.position, Quaternion.identity);
+            //생성 -> 활성화 비활성화로 ㅇ
             _gotWet = true;
         }
     }

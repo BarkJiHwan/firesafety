@@ -4,61 +4,6 @@ using Photon.Pun;
 using UnityEngine;
 
 /// <summary>
-/// 인스펙터에서 보여줄 플레이어 처치 정보
-/// </summary>
-[System.Serializable]
-public class PlayerKillInfo
-{
-    public int playerID;
-    public string playerName;
-    public int killCount;
-    public int killScore;
-
-    public PlayerKillInfo(int id, string name, int kills, int score)
-    {
-        playerID = id;
-        playerName = name;
-        killCount = kills;
-        killScore = score;
-    }
-}
-
-/// <summary>
-/// 인스펙터에서 보여줄 게임 점수 통합 정보
-/// </summary>
-[System.Serializable]
-public class GameScoreInfo
-{
-    [Header("생존시간 점수")]
-    public float maxSurvivalTime = 0f;
-    public int survivalScore = 0;
-
-    [Header("처치 통계")]
-    public int totalKills = 0;
-    public string topKiller = "없음";
-    public int topKillerCount = 0;
-
-    [Header("게임 상태")]
-    public bool isTracking = false;
-    public int playerCount = 0;
-    public string gamePhase = "대기중";
-
-    public void UpdateInfo(float survivalTime, int survivalPoints, int totalKillCount,
-                          string topPlayer, int topCount, bool tracking, int players, string phase)
-    {
-        maxSurvivalTime = survivalTime;
-        survivalScore = survivalPoints;
-        totalKills = totalKillCount;
-        topKiller = topPlayer;
-        topKillerCount = topCount;
-        isTracking = tracking;
-        playerCount = players;
-        gamePhase = phase;
-
-    }
-}
-
-/// <summary>
 /// 태우리 오브젝트 풀링 및 네트워크 동기화를 관리하는 매니저
 /// 마스터 클라이언트가 모든 태우리 로직을 처리하고, 다른 클라이언트들은 시각적 동기화만 받음
 /// </summary>
@@ -75,12 +20,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
 
     [Header("===== 리스폰 설정 =====")]
     [SerializeField] private float baseRespawnTime = 10f;
-    [SerializeField] private float feverTimecCoolTime = 0.5f;
-
-    [Header("===== 생존시간 점수 시스템 =====")]
-    [SerializeField] private bool isSurvivalTracking = false;
-    [SerializeField] private float maxSurvivalTime = 0f;
-    [SerializeField] private int calculatedScore = 0;
+    [SerializeField] private float feverTimeCoolTime = 0.5f;
 
     [Header("===== 스코어 매니저 연결 =====")]
     [SerializeField] private ScoreManager scoreManager;
@@ -92,6 +32,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     private Queue<GameObject> smallTaewooriPool = new Queue<GameObject>();
     private Queue<GameObject> fireParticlePool = new Queue<GameObject>();
 
+    // 스몰태우리 개수 관리
     private Dictionary<Taewoori, int> smallTaewooriCountByTaewoori = new Dictionary<Taewoori, int>();
 
     // 네트워크 동기화용 추적
@@ -100,21 +41,8 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     private int nextTaewooriID = 0;
     private int nextSmallTaewooriID = 0;
 
-    // 생존시간 추적용
-    private Dictionary<int, float> taewooriSpawnTimes = new Dictionary<int, float>();
-    // 플레이어에게 잡힌 태우리 추적
-    private Dictionary<int, int> playerTaewooriKills = new Dictionary<int, int>();
-    private Dictionary<int, int> playerKillScores = new Dictionary<int, int>();
-
-    [SerializeField] private int totalTaewooriKilled = 0;
-    [SerializeField] private List<PlayerKillInfo> playerKillInfos = new List<PlayerKillInfo>();
-    [SerializeField] private GameScoreInfo gameScoreInfo = new GameScoreInfo();
-
-    /// <summary>
-    /// 현재 피버타임 상태 확인
-    /// </summary>
-    private bool IsFeverTime => GameManager.Instance != null &&
-                              GameManager.Instance.CurrentPhase == GamePhase.Fever;
+    // 점수 시스템
+    private SurvivalTracker survivalTracker;
 
     // 리스폰 관리
     private class RespawnEntry
@@ -131,17 +59,20 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     private List<RespawnEntry> respawnQueue = new List<RespawnEntry>();
 
     private static TaewooriPoolManager _instance;
-    public static TaewooriPoolManager Instance
-    {
-        get { return _instance; }
-    }
+    public static TaewooriPoolManager Instance => _instance;
     #endregion
 
     #region 프로퍼티
     /// <summary>
+    /// 현재 피버타임 상태 확인
+    /// </summary>
+    private bool IsFeverTime => GameManager.Instance != null &&
+                              GameManager.Instance.CurrentPhase == GamePhase.Fever;
+
+    /// <summary>
     /// 생존시간 추적 중인지 여부
     /// </summary>
-    public bool IsSurvivalTracking => isSurvivalTracking;
+    public bool IsSurvivalTracking => survivalTracker?.IsTracking ?? false;
     #endregion
 
     #region 유니티 라이프사이클
@@ -154,7 +85,38 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
 
         _instance = this;
+        InitializeComponents();
+    }
+
+    private void Start()
+    {
+        Taewoori.OnTaewooriDestroyed += HandleTaewooriDestroyed;
+    }
+
+    private void OnDestroy()
+    {
+        Taewoori.OnTaewooriDestroyed -= HandleTaewooriDestroyed;
+        CleanupAllResources();
+    }
+
+    private void Update()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            ProcessRespawnQueue();
+        }
+    }
+    #endregion
+
+    #region 초기화
+    /// <summary>
+    /// 컴포넌트 초기화
+    /// </summary>
+    private void InitializeComponents()
+    {
         InitializePools();
+
+        survivalTracker = new SurvivalTracker();
 
         // ScoreManager 자동 찾기
         if (scoreManager == null)
@@ -163,38 +125,8 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
-    private void Start()
-    {
-        // 태우리 이벤트 구독
-        Taewoori.OnTaewooriDestroyed += HandleTaewooriDestroyed;
-    }
-
-    private void OnDestroy()
-    {
-        Taewoori.OnTaewooriDestroyed -= HandleTaewooriDestroyed;
-    }
-
-    private void Update()
-    {
-        // 마스터 클라이언트만 리스폰 큐 처리
-        if (PhotonNetwork.IsMasterClient)
-        {
-            ProcessRespawnQueue();
-        }
-    }
-    #endregion
-
-    #region 스코어 매니저 연동
-
     /// <summary>
-    /// 플레이어별 태우리 처치 점수 조회 (내부용)
-    /// </summary>
-    private int GetPlayerKillScore(int playerID) => playerKillScores.GetValueOrDefault(playerID, 0);
-    #endregion
-
-    #region 기본 풀링 시스템
-    /// <summary>
-    /// 오브젝트 풀 초기화 - 지정된 개수만큼 미리 생성
+    /// 오브젝트 풀 초기화
     /// </summary>
     private void InitializePools()
     {
@@ -218,7 +150,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     }
 
     /// <summary>
-    /// 풀에서 오브젝트 가져오기 - 부족하면 새로 생성
+    /// 풀에서 오브젝트 가져오기
     /// </summary>
     private GameObject GetFromPool(Queue<GameObject> pool, GameObject prefab)
     {
@@ -237,258 +169,79 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     }
     #endregion
 
-    #region 통합 생존시간 점수 시스템
+    #region 생존시간 점수 시스템
     /// <summary>
-    /// 생존시간별 점수 계산
-    /// </summary>
-    private int CalculateSurvivalScore(int playerCount, float survivalTime)
-    {
-        // 인원수별 기준시간 설정
-        float maxTime, midTime;
-
-        switch (playerCount)
-        {
-            case 1:
-            {
-                maxTime = 40f;
-                midTime = 60f;
-                break;
-            }
-            case 2:
-            {
-                maxTime = 30f;
-                midTime = 45f;
-                break;
-            }
-            case 3:
-            {
-                maxTime = 24f;
-                midTime = 36f;
-                break;
-            }
-            case 4:
-            {
-                maxTime = 20f;
-                midTime = 30f;
-                break;
-            }
-            case 5:
-            {
-                maxTime = 17f;
-                midTime = 26f;
-                break;
-            }
-            case 6:
-            {
-                maxTime = 15f;
-                midTime = 23f;
-                break;
-            }
-            default:
-            {
-                maxTime = 20f;
-                midTime = 30f;
-                break;
-            }
-        }
-
-        if (survivalTime <= maxTime)
-            return 25;
-        else if (survivalTime <= midTime)
-            return 20;
-        else
-            return 15;
-    }
-
-    /// <summary>
-    /// 플레이어 태우리 처치 기록 및 점수 계산 (Fire + Fever 기간)
-    /// </summary>
-    public void RecordPlayerTaewooriKill(int killerPlayerID)
-    {
-        if (!PhotonNetwork.IsMasterClient || !isSurvivalTracking)
-            return;
-
-        // 처치 횟수 증가
-        if (!playerTaewooriKills.ContainsKey(killerPlayerID))
-            playerTaewooriKills[killerPlayerID] = 0;
-        playerTaewooriKills[killerPlayerID]++;
-
-        // 전체 처치 수 증가
-        totalTaewooriKilled++;
-
-        // 실시간 처치 점수 계산
-        int killCount = playerTaewooriKills[killerPlayerID];
-        int killScore;
-        if (killCount >= 30)
-            killScore = 25;      // 30마리 이상
-        else if (killCount >= 24)
-            killScore = 20;      // 24마리 이상
-        else
-            killScore = 15;      // 24마리 미만
-
-        playerKillScores[killerPlayerID] = killScore;
-
-        // 인스펙터 표시용 업데이트
-        UpdateInspectorKillInfo();
-
-    }
-
-    /// <summary>
-    /// Fire 페이즈 시작 시 호출 - 생존시간 추적 및 처치 기록 시작
+    /// Fire 페이즈 시작 시 호출
     /// </summary>
     public void StartSurvivalTracking()
     {
         if (!PhotonNetwork.IsMasterClient)
             return;
 
-        isSurvivalTracking = true;
-        maxSurvivalTime = 0f;
-        calculatedScore = 0;
-        totalTaewooriKilled = 0;
-        taewooriSpawnTimes.Clear();
-
-        // 처치 데이터 초기화
-        playerTaewooriKills.Clear();
-        playerKillScores.Clear();
-        playerKillInfos.Clear();
-
-        // 인스펙터 표시용 업데이트
-        UpdateInspectorKillInfo();
+        survivalTracker.StartTracking();
     }
 
     /// <summary>
-    /// 피버타임 종료 시 호출 - 최종 생존시간 점수 계산 및 처치 점수 확정
+    /// 피버타임 종료 시 호출
     /// </summary>
     public void EndSurvivalTracking()
     {
-        if (!PhotonNetwork.IsMasterClient || !isSurvivalTracking)
+        if (!PhotonNetwork.IsMasterClient || !survivalTracker.IsTracking)
             return;
 
-        isSurvivalTracking = false;
+        var scores = survivalTracker.EndTracking(PhotonNetwork.CurrentRoom.PlayerCount);
 
-        // 생존시간 점수 계산
-        int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-        calculatedScore = CalculateSurvivalScore(playerCount, maxSurvivalTime);
-
-        // 최종 게임 점수 정보 업데이트
-        UpdateInspectorKillInfo();
-
-        // ScoreManager에 최종 점수 전달
+        // ScoreManager에 점수 전달
         if (scoreManager != null)
         {
-            scoreManager.SetScore(ScoreType.Fire_Time, calculatedScore);
+            scoreManager.SetScore(ScoreType.Fire_Time, scores.survivalScore);
+
             if (PhotonNetwork.LocalPlayer != null)
             {
                 int playerID = PhotonNetwork.LocalPlayer.ActorNumber;
-                int killScore = GetPlayerKillScore(playerID);
-                Debug.Log("스코어 넘버 전달");
+                int killScore = scores.GetPlayerKillScore(playerID);
                 scoreManager.SetScore(ScoreType.Fire_Count, killScore);
             }
         }
-
-        // 추적 데이터 정리
-        taewooriSpawnTimes.Clear();
     }
 
     /// <summary>
-    /// 태우리 스폰 시 시작시간 기록
+    /// 태우리 스폰 시 시간 기록
     /// </summary>
     private void RecordTaewooriSpawnTime(int taewooriID)
     {
-        if (!PhotonNetwork.IsMasterClient || !isSurvivalTracking)
-            return;
-
-        taewooriSpawnTimes[taewooriID] = Time.time;
+        if (PhotonNetwork.IsMasterClient && survivalTracker.IsTracking)
+        {
+            survivalTracker.RecordSpawnTime(taewooriID);
+        }
     }
 
     /// <summary>
-    /// 태우리 사망 시 생존시간 계산 및 처치자 기록 (모든 태우리는 플레이어가 처치)
+    /// 태우리 사망 시 생존시간 계산 및 처치자 기록
     /// </summary>
     public void UpdateSurvivalTimeAndRecordKill(int taewooriID, int killerPlayerID)
     {
-        if (!PhotonNetwork.IsMasterClient || !isSurvivalTracking)
-            return;
-
-        // 생존시간 계산
-        if (taewooriSpawnTimes.ContainsKey(taewooriID))
+        if (PhotonNetwork.IsMasterClient && survivalTracker.IsTracking)
         {
-            float spawnTime = taewooriSpawnTimes[taewooriID];
-            float survivalTime = Time.time - spawnTime;
-
-            // 최대 생존시간 업데이트 (모든 죽은 태우리 중에서)
-            if (survivalTime > maxSurvivalTime)
-            {
-                maxSurvivalTime = survivalTime;
-
-                // 실시간으로 생존시간 점수 업데이트 및 전달
-                int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-                int newSurvivalScore = CalculateSurvivalScore(playerCount, maxSurvivalTime);
-                if (newSurvivalScore != calculatedScore)
-                {
-                    calculatedScore = newSurvivalScore;
-                }
-            }
-
-            // 스폰시간 기록 제거 (죽었으므로)
-            taewooriSpawnTimes.Remove(taewooriID);
+            survivalTracker.UpdateSurvivalTimeAndRecordKill(taewooriID, killerPlayerID);
         }
-
-        // 처치자 기록 (모든 태우리는 반드시 처치자가 있음)
-        RecordPlayerTaewooriKill(killerPlayerID);
     }
 
     /// <summary>
-    /// 게임 리셋 시 호출 - 모든 추적 데이터 초기화
+    /// 게임 리셋 시 호출
     /// </summary>
     public void ResetSurvivalTracking()
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-
-        isSurvivalTracking = false;
-        maxSurvivalTime = 0f;
-        calculatedScore = 0;
-        totalTaewooriKilled = 0;
-        taewooriSpawnTimes.Clear();
-
-        // 처치 데이터 초기화
-        playerTaewooriKills.Clear();
-        playerKillScores.Clear();
-        playerKillInfos.Clear();
-    }
-
-    /// <summary>
-    /// 인스펙터 표시용 플레이어 처치 정보 업데이트
-    /// </summary>
-    private void UpdateInspectorKillInfo()
-    {
-        playerKillInfos.Clear();
-
-        foreach (var kvp in playerTaewooriKills)
+        if (PhotonNetwork.IsMasterClient)
         {
-            int playerID = kvp.Key;
-            int killCount = kvp.Value;
-            int killScore = playerKillScores.GetValueOrDefault(playerID, 0);
-
-            // 플레이어 이름 가져오기 (Photon에서)
-            string playerName = "Unknown";
-            var player = PhotonNetwork.CurrentRoom?.Players?.Values?.FirstOrDefault(p => p.ActorNumber == playerID);
-            if (player != null)
-            {
-                playerName = player.NickName ?? $"Player{playerID}";
-            }
-
-            playerKillInfos.Add(new PlayerKillInfo(playerID, playerName, killCount, killScore));
+            survivalTracker.Reset();
         }
-
-        // 처치 수 내림차순 정렬
-        playerKillInfos.Sort((a, b) => b.killCount.CompareTo(a.killCount));
     }
     #endregion
 
     #region 리스폰 시스템
     /// <summary>
-    /// 태우리 파괴 이벤트 - 마스터만 처리
+    /// 태우리 파괴 이벤트 처리
     /// </summary>
     private void HandleTaewooriDestroyed(Taewoori taewoori, FireObjScript fireObj)
     {
@@ -510,29 +263,25 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.IsMasterClient || fireObj == null || !fireObj.IsBurning)
             return;
 
-        foreach (var entry in respawnQueue)
-        {
-            if (entry.FireObj == fireObj)
-                return;
-        }
+        // 중복 체크
+        if (respawnQueue.Any(entry => entry.FireObj == fireObj))
+            return;
 
         respawnQueue.Add(new RespawnEntry(fireObj));
     }
 
     /// <summary>
-    /// 리스폰 큐 처리 - 시간 경과 후 태우리 재생성
+    /// 리스폰 큐 처리
     /// </summary>
     private void ProcessRespawnQueue()
     {
         if (!PhotonNetwork.IsMasterClient)
             return;
 
-        float respawnTime = IsFeverTime ? baseRespawnTime * feverTimecCoolTime : baseRespawnTime;
+        float respawnTime = IsFeverTime ? baseRespawnTime * feverTimeCoolTime : baseRespawnTime;
+        var completedEntries = new List<RespawnEntry>();
 
-        RespawnEntry[] entries = respawnQueue.ToArray();
-        List<RespawnEntry> completedEntries = new List<RespawnEntry>();
-
-        foreach (var entry in entries)
+        foreach (var entry in respawnQueue)
         {
             if (entry.FireObj == null || !entry.FireObj.IsBurning)
             {
@@ -548,6 +297,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
                 completedEntries.Add(entry);
             }
         }
+
         foreach (var entry in completedEntries)
         {
             respawnQueue.Remove(entry);
@@ -555,94 +305,99 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     }
     #endregion
 
-    #region 네트워크 스폰 함수들
+    #region 스폰 함수들
     /// <summary>
-    /// 태우리 생성 (마스터만 생성) - 각 태우리에게 네트워크 ID 할당 후 클라이언트에 동기화
+    /// 태우리 생성 (마스터만)
     /// </summary>
     public GameObject SpawnTaewooriAtPosition(Vector3 position, FireObjScript fireObj)
     {
-        if (!PhotonNetwork.IsMasterClient || fireObj == null || !fireObj.IsBurning)
-            return null;
-
-        if (fireObj.HasActiveTaewoori())
-            return null;
-
-        FirePreventable preventable = fireObj.GetComponent<FirePreventable>();
-        if (preventable != null && preventable.IsFirePreventable)
+        if (!PhotonNetwork.IsMasterClient || !CanSpawnTaewoori(fireObj))
             return null;
 
         GameObject taewooriObj = GetFromPool(taewooriPool, taewooriPrefab);
+        if (taewooriObj == null)
+            return null;
 
-        if (taewooriObj != null)
-        {
-            Vector3 spawnPosition = fireObj.TaewooriPos();
-            Quaternion spawnRotation = fireObj.TaewooriRotation();
+        SetupTaewoori(taewooriObj, fireObj);
+        photonView.RPC("NetworkSpawnTaewoori", RpcTarget.Others,
+            taewooriObj.GetComponent<Taewoori>().NetworkID,
+            fireObj.TaewooriPos(),
+            fireObj.TaewooriRotation());
 
-            taewooriObj.transform.position = spawnPosition;
-            taewooriObj.transform.rotation = spawnRotation;
-
-            Taewoori taewooriComponent = taewooriObj.GetComponent<Taewoori>();
-            if (taewooriComponent != null)
-            {
-                int taewooriID = nextTaewooriID++;
-                taewooriComponent.Initialize(this, fireObj, taewooriID);
-                smallTaewooriCountByTaewoori[taewooriComponent] = 0;
-                networkTaewooriDict[taewooriID] = taewooriObj;
-
-                RecordTaewooriSpawnTime(taewooriID);
-            }
-
-            taewooriObj.SetActive(true);
-
-            // 네트워크로 태우리 생성 알림
-            photonView.RPC("NetworkSpawnTaewoori", RpcTarget.Others,
-                taewooriComponent.NetworkID, spawnPosition, spawnRotation);
-            return taewooriObj;
-        }
-
-        return null;
+        return taewooriObj;
     }
 
     /// <summary>
-    /// 발사체 생성 (마스터만 생성) - 스몰태우리 생성 제한 체크 후 생성
+    /// 태우리 스폰 가능 여부 확인
+    /// </summary>
+    private bool CanSpawnTaewoori(FireObjScript fireObj)
+    {
+        if (fireObj == null || !fireObj.IsBurning || fireObj.HasActiveTaewoori())
+            return false;
+
+        var preventable = fireObj.GetComponent<FirePreventable>();
+        return preventable == null || !preventable.IsFirePreventable;
+    }
+
+    /// <summary>
+    /// 태우리 설정
+    /// </summary>
+    private void SetupTaewoori(GameObject taewooriObj, FireObjScript fireObj)
+    {
+        taewooriObj.transform.position = fireObj.TaewooriPos();
+        taewooriObj.transform.rotation = fireObj.TaewooriRotation();
+
+        var taewooriComponent = taewooriObj.GetComponent<Taewoori>();
+        if (taewooriComponent != null)
+        {
+            int taewooriID = nextTaewooriID++;
+            taewooriComponent.Initialize(this, fireObj, taewooriID);
+            smallTaewooriCountByTaewoori[taewooriComponent] = 0;
+            networkTaewooriDict[taewooriID] = taewooriObj;
+            RecordTaewooriSpawnTime(taewooriID);
+        }
+
+        taewooriObj.SetActive(true);
+    }
+
+    /// <summary>
+    /// 발사체 생성 (마스터만)
     /// </summary>
     public GameObject PoolSpawnFireParticle(Vector3 position, Quaternion rotation, Taewoori taewoori)
     {
-        if (!PhotonNetwork.IsMasterClient)
+        if (!PhotonNetwork.IsMasterClient || !CanLaunchProjectile(taewoori, taewoori.MaxSmallTaewooriCount))
             return null;
-
-        int currentCount = GetSmallTaewooriCount(taewoori);
-        if (currentCount >= taewoori.MaxSmallTaewooriCount)
-        {
-            return null;
-        }
 
         GameObject particle = GetFromPool(fireParticlePool, fireParticlePrefab);
+        if (particle == null)
+            return null;
 
-        if (particle != null)
-        {
-            particle.transform.position = position;
-            particle.transform.rotation = rotation;
-            particle.SetActive(true);
-
-            FireParticles particleComponent = particle.GetComponent<FireParticles>();
-            if (particleComponent != null)
-            {
-                particleComponent.SetOriginTaewoori(taewoori);
-            }
-
-            IncrementSmallTaewooriCount(taewoori);
-
-            // 네트워크로 발사체 생성 알림
-            photonView.RPC("NetworkSpawnFireParticle", RpcTarget.Others,
-                taewoori.NetworkID, position, rotation);
-        }
+        SetupFireParticle(particle, position, rotation, taewoori);
+        photonView.RPC("NetworkSpawnFireParticle", RpcTarget.Others, taewoori.NetworkID, position, rotation);
 
         return particle;
     }
 
     /// <summary>
-    /// 스몰태우리 생성 (마스터만 생성) - 각 스몰태우리에게 네트워크 ID 할당 후 클라이언트에 동기화
+    /// 발사체 설정
+    /// </summary>
+    private void SetupFireParticle(GameObject particle, Vector3 position, Quaternion rotation, Taewoori taewoori)
+    {
+        particle.transform.position = position;
+        particle.transform.rotation = rotation;
+        particle.SetActive(true);
+
+        var particleComponent = particle.GetComponent<FireParticles>();
+        if (particleComponent != null)
+        {
+            particleComponent.SetOriginTaewoori(taewoori);
+        }
+
+        IncrementSmallTaewooriCount(taewoori);
+    }
+
+    /// <summary>
+    /// 스몰태우리 생성 (마스터만)
     /// </summary>
     public GameObject PoolSpawnSmallTaewoori(Vector3 position, Taewoori originTaewoori)
     {
@@ -650,33 +405,36 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             return null;
 
         GameObject smallTaewoori = GetFromPool(smallTaewooriPool, smallTaewooriPrefab);
+        if (smallTaewoori == null)
+            return null;
 
-        if (smallTaewoori != null)
-        {
-            smallTaewoori.transform.position = position;
-            smallTaewoori.SetActive(true);
-
-            SmallTaewoori smallTaewooriComponent = smallTaewoori.GetComponent<SmallTaewoori>();
-            if (smallTaewooriComponent != null)
-            {
-                int smallTaewooriID = nextSmallTaewooriID++;
-                smallTaewooriComponent.InitializeWithoutCountIncrement(this, originTaewoori, smallTaewooriID);
-                networkSmallTaewooriDict[smallTaewooriID] = smallTaewoori;
-            }
-
-            // 네트워크로 스몰 태우리 생성 알림
-            photonView.RPC("NetworkSpawnSmallTaewoori", RpcTarget.Others,
-                originTaewoori.NetworkID, position, smallTaewooriComponent.NetworkID);
-        }
+        SetupSmallTaewoori(smallTaewoori, position, originTaewoori);
+        photonView.RPC("NetworkSpawnSmallTaewoori", RpcTarget.Others,
+            originTaewoori.NetworkID, position,
+            smallTaewoori.GetComponent<SmallTaewoori>().NetworkID);
 
         return smallTaewoori;
     }
+
+    /// <summary>
+    /// 스몰태우리 설정
+    /// </summary>
+    private void SetupSmallTaewoori(GameObject smallTaewoori, Vector3 position, Taewoori originTaewoori)
+    {
+        smallTaewoori.transform.position = position;
+        smallTaewoori.SetActive(true);
+
+        var smallTaewooriComponent = smallTaewoori.GetComponent<SmallTaewoori>();
+        if (smallTaewooriComponent != null)
+        {
+            int smallTaewooriID = nextSmallTaewooriID++;
+            smallTaewooriComponent.InitializeWithoutCountIncrement(this, originTaewoori, smallTaewooriID);
+            networkSmallTaewooriDict[smallTaewooriID] = smallTaewoori;
+        }
+    }
     #endregion
 
-    #region 네트워크 RPC 수신 함수들
-    /// <summary>
-    /// 클라이언트용 태우리 생성 RPC - 마스터에서 보낸 데이터로 시각적 생성만
-    /// </summary>
+    #region 네트워크 RPC
     [PunRPC]
     void NetworkSpawnTaewoori(int taewooriID, Vector3 position, Quaternion rotation)
     {
@@ -689,7 +447,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             taewooriObj.transform.position = position;
             taewooriObj.transform.rotation = rotation;
 
-            Taewoori taewooriComponent = taewooriObj.GetComponent<Taewoori>();
+            var taewooriComponent = taewooriObj.GetComponent<Taewoori>();
             if (taewooriComponent != null)
             {
                 taewooriComponent.InitializeAsClient(taewooriID);
@@ -700,9 +458,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
-    /// <summary>
-    /// 클라이언트용 발사체 생성 RPC - 시각적 효과만 생성
-    /// </summary>
     [PunRPC]
     void NetworkSpawnFireParticle(int taewooriID, Vector3 position, Quaternion rotation)
     {
@@ -718,8 +473,8 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
                 particle.transform.rotation = rotation;
                 particle.SetActive(true);
 
-                Taewoori taewoori = taewooriObj.GetComponent<Taewoori>();
-                FireParticles particleComponent = particle.GetComponent<FireParticles>();
+                var taewoori = taewooriObj.GetComponent<Taewoori>();
+                var particleComponent = particle.GetComponent<FireParticles>();
                 if (particleComponent != null)
                 {
                     particleComponent.SetOriginTaewoori(taewoori);
@@ -728,9 +483,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
-    /// <summary>
-    /// 클라이언트용 스몰태우리 생성 RPC - 시각적 생성만
-    /// </summary>
     [PunRPC]
     void NetworkSpawnSmallTaewoori(int originTaewooriID, Vector3 position, int smallTaewooriID)
     {
@@ -745,8 +497,8 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
                 smallTaewoori.transform.position = position;
                 smallTaewoori.SetActive(true);
 
-                Taewoori originTaewoori = originTaewooriObj.GetComponent<Taewoori>();
-                SmallTaewoori smallTaewooriComponent = smallTaewoori.GetComponent<SmallTaewoori>();
+                var originTaewoori = originTaewooriObj.GetComponent<Taewoori>();
+                var smallTaewooriComponent = smallTaewoori.GetComponent<SmallTaewoori>();
                 if (smallTaewooriComponent != null)
                 {
                     smallTaewooriComponent.InitializeAsClient(originTaewoori, smallTaewooriID);
@@ -756,9 +508,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
-    /// <summary>
-    /// 클라이언트용 태우리 데미지 동기화 RPC - 체력 정보로 색상 변경
-    /// </summary>
     [PunRPC]
     void NetworkTaewooriDamage(int taewooriID, float currentHealth, float maxHealth)
     {
@@ -767,7 +516,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
 
         if (networkTaewooriDict.TryGetValue(taewooriID, out GameObject taewooriObj))
         {
-            Taewoori taewoori = taewooriObj.GetComponent<Taewoori>();
+            var taewoori = taewooriObj.GetComponent<Taewoori>();
             if (taewoori != null)
             {
                 taewoori.SyncHealthFromNetwork(currentHealth, maxHealth);
@@ -775,9 +524,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
-    /// <summary>
-    /// 클라이언트용 스몰태우리 데미지 동기화 RPC - 체력 정보로 색상 변경
-    /// </summary>
     [PunRPC]
     void NetworkSmallTaewooriDamage(int smallTaewooriID, float currentHealth, float maxHealth)
     {
@@ -786,7 +532,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
 
         if (networkSmallTaewooriDict.TryGetValue(smallTaewooriID, out GameObject smallTaewooriObj))
         {
-            SmallTaewoori smallTaewoori = smallTaewooriObj.GetComponent<SmallTaewoori>();
+            var smallTaewoori = smallTaewooriObj.GetComponent<SmallTaewoori>();
             if (smallTaewoori != null)
             {
                 smallTaewoori.SyncHealthFromNetwork(currentHealth, maxHealth);
@@ -794,9 +540,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
-    /// <summary>
-    /// 클라이언트용 태우리 파괴 동기화 RPC - 시각적 제거
-    /// </summary>
     [PunRPC]
     void NetworkTaewooriDestroy(int taewooriID)
     {
@@ -805,7 +548,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
 
         if (networkTaewooriDict.TryGetValue(taewooriID, out GameObject taewooriObj))
         {
-            Taewoori taewoori = taewooriObj.GetComponent<Taewoori>();
+            var taewoori = taewooriObj.GetComponent<Taewoori>();
             if (taewoori != null)
             {
                 taewoori.DieAsClient();
@@ -814,9 +557,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
-    /// <summary>
-    /// 클라이언트용 스몰태우리 파괴 동기화 RPC - 시각적 제거
-    /// </summary>
     [PunRPC]
     void NetworkSmallTaewooriDestroy(int smallTaewooriID)
     {
@@ -825,7 +565,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
 
         if (networkSmallTaewooriDict.TryGetValue(smallTaewooriID, out GameObject smallTaewooriObj))
         {
-            SmallTaewoori smallTaewoori = smallTaewooriObj.GetComponent<SmallTaewoori>();
+            var smallTaewoori = smallTaewooriObj.GetComponent<SmallTaewoori>();
             if (smallTaewoori != null)
             {
                 smallTaewoori.DieAsClient();
@@ -834,9 +574,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
-    /// <summary>
-    /// 마스터용 태우리 데미지 요청 RPC - 클라이언트의 공격을 마스터가 처리
-    /// </summary>
     [PunRPC]
     void RequestTaewooriDamage(int taewooriID, float damage, int senderID)
     {
@@ -845,7 +582,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
 
         if (networkTaewooriDict.TryGetValue(taewooriID, out GameObject taewooriObj))
         {
-            Taewoori taewoori = taewooriObj.GetComponent<Taewoori>();
+            var taewoori = taewooriObj.GetComponent<Taewoori>();
             if (taewoori != null && !taewoori.IsDead)
             {
                 taewoori.TakeDamage(damage);
@@ -853,9 +590,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
-    /// <summary>
-    /// 마스터용 스몰태우리 데미지 요청 RPC - 클라이언트의 공격을 마스터가 처리
-    /// </summary>
     [PunRPC]
     void RequestSmallTaewooriDamage(int smallTaewooriID, float damage, int senderID)
     {
@@ -864,7 +598,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
 
         if (networkSmallTaewooriDict.TryGetValue(smallTaewooriID, out GameObject smallTaewooriObj))
         {
-            SmallTaewoori smallTaewoori = smallTaewooriObj.GetComponent<SmallTaewoori>();
+            var smallTaewoori = smallTaewooriObj.GetComponent<SmallTaewoori>();
             if (smallTaewoori != null && !smallTaewoori.IsDead)
             {
                 smallTaewoori.TakeDamage(damage);
@@ -873,199 +607,113 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     }
     #endregion
 
-    #region 네트워크 동기화 헬퍼 함수들
-    /// <summary>
-    /// 태우리 데미지를 모든 클라이언트에 동기화
-    /// </summary>
+    #region 네트워크 동기화 헬퍼
     public void SyncTaewooriDamage(int taewooriID, float currentHealth, float maxHealth)
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-
-        photonView.RPC("NetworkTaewooriDamage", RpcTarget.Others, taewooriID, currentHealth, maxHealth);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("NetworkTaewooriDamage", RpcTarget.Others, taewooriID, currentHealth, maxHealth);
+        }
     }
 
-    /// <summary>
-    /// 스몰태우리 데미지를 모든 클라이언트에 동기화
-    /// </summary>
     public void SyncSmallTaewooriDamage(int smallTaewooriID, float currentHealth, float maxHealth)
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-
-        photonView.RPC("NetworkSmallTaewooriDamage", RpcTarget.Others, smallTaewooriID, currentHealth, maxHealth);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("NetworkSmallTaewooriDamage", RpcTarget.Others, smallTaewooriID, currentHealth, maxHealth);
+        }
     }
 
-    /// <summary>
-    /// 태우리 파괴를 모든 클라이언트에 동기화
-    /// </summary>
     public void SyncTaewooriDestroy(int taewooriID)
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-
-        photonView.RPC("NetworkTaewooriDestroy", RpcTarget.Others, taewooriID);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("NetworkTaewooriDestroy", RpcTarget.Others, taewooriID);
+        }
     }
 
-    /// <summary>
-    /// 스몰태우리 파괴를 모든 클라이언트에 동기화
-    /// </summary>
     public void SyncSmallTaewooriDestroy(int smallTaewooriID)
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-
-        photonView.RPC("NetworkSmallTaewooriDestroy", RpcTarget.Others, smallTaewooriID);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("NetworkSmallTaewooriDestroy", RpcTarget.Others, smallTaewooriID);
+        }
     }
     #endregion
 
     #region 스몰태우리 카운트 관리
-    /// <summary>
-    /// 특정 태우리의 스몰태우리 개수 증가
-    /// </summary>
     public void IncrementSmallTaewooriCount(Taewoori originTaewoori)
     {
-        if (!PhotonNetwork.IsMasterClient || originTaewoori == null)
-            return;
-
-        if (!smallTaewooriCountByTaewoori.ContainsKey(originTaewoori))
+        if (PhotonNetwork.IsMasterClient && originTaewoori != null)
         {
-            smallTaewooriCountByTaewoori[originTaewoori] = 0;
+            if (!smallTaewooriCountByTaewoori.ContainsKey(originTaewoori))
+            {
+                smallTaewooriCountByTaewoori[originTaewoori] = 0;
+            }
+            smallTaewooriCountByTaewoori[originTaewoori]++;
         }
-
-        smallTaewooriCountByTaewoori[originTaewoori]++;
     }
 
-    /// <summary>
-    /// 특정 태우리의 스몰태우리 개수 감소
-    /// </summary>
     public void DecrementSmallTaewooriCount(Taewoori originTaewoori)
     {
-        if (!PhotonNetwork.IsMasterClient || originTaewoori == null)
-            return;
-
-        if (smallTaewooriCountByTaewoori.ContainsKey(originTaewoori) && smallTaewooriCountByTaewoori[originTaewoori] > 0)
+        if (PhotonNetwork.IsMasterClient && originTaewoori != null)
         {
-            smallTaewooriCountByTaewoori[originTaewoori]--;
+            if (smallTaewooriCountByTaewoori.ContainsKey(originTaewoori) &&
+                smallTaewooriCountByTaewoori[originTaewoori] > 0)
+            {
+                smallTaewooriCountByTaewoori[originTaewoori]--;
+            }
         }
     }
 
-    /// <summary>
-    /// 특정 태우리의 현재 스몰태우리 개수 반환
-    /// </summary>
     public int GetSmallTaewooriCount(Taewoori originTaewoori)
     {
         if (originTaewoori == null)
             return 0;
-
         return smallTaewooriCountByTaewoori.TryGetValue(originTaewoori, out int count) ? count : 0;
     }
 
-    /// <summary>
-    /// 발사체 생성 가능 여부 확인 (스몰태우리 최대 개수 체크)
-    /// </summary>
     public bool CanLaunchProjectile(Taewoori taewoori, int maxSmallTaewooriCount)
     {
         if (!PhotonNetwork.IsMasterClient || taewoori == null)
             return false;
-
-        int currentCount = GetSmallTaewooriCount(taewoori);
-        return currentCount < maxSmallTaewooriCount;
+        return GetSmallTaewooriCount(taewoori) < maxSmallTaewooriCount;
     }
     #endregion
 
-    #region 풀 반환 함수들
-    /// <summary>
-    /// 태우리를 풀로 반환 - 네트워크 딕셔너리에서도 제거
-    /// </summary>
+    #region 풀 반환
     public void ReturnTaewooriToPool(GameObject taewooriObj)
     {
         if (taewooriObj == null)
             return;
 
-        Taewoori taewoori = taewooriObj.GetComponent<Taewoori>();
+        var taewoori = taewooriObj.GetComponent<Taewoori>();
         if (taewoori != null)
         {
-            // 네트워크 딕셔너리에서 제거
-            if (networkTaewooriDict.ContainsValue(taewooriObj))
-            {
-                var keyToRemove = -1;
-                foreach (var kvp in networkTaewooriDict)
-                {
-                    if (kvp.Value == taewooriObj)
-                    {
-                        keyToRemove = kvp.Key;
-                        break;
-                    }
-                }
-                if (keyToRemove != -1)
-                {
-                    networkTaewooriDict.Remove(keyToRemove);
-                }
-            }
-
-            if (smallTaewooriCountByTaewoori.ContainsKey(taewoori))
-            {
-                smallTaewooriCountByTaewoori.Remove(taewoori);
-            }
+            RemoveFromNetworkDict(taewooriObj, networkTaewooriDict);
+            smallTaewooriCountByTaewoori.Remove(taewoori);
         }
 
-        taewooriObj.SetActive(false);
-        taewooriObj.transform.SetParent(transform);
-        taewooriPool.Enqueue(taewooriObj);
+        ReturnToPool(taewooriObj, taewooriPool);
     }
 
-    /// <summary>
-    /// 스몰태우리를 풀로 반환 - 네트워크 딕셔너리에서도 제거
-    /// </summary>
     public void ReturnSmallTaewooriToPool(GameObject smallTaewooriObj)
     {
         if (smallTaewooriObj == null)
             return;
 
-        SmallTaewoori smallTaewoori = smallTaewooriObj.GetComponent<SmallTaewoori>();
-        if (smallTaewoori != null)
-        {
-            // 네트워크 딕셔너리에서 제거
-            if (networkSmallTaewooriDict.ContainsValue(smallTaewooriObj))
-            {
-                var keyToRemove = -1;
-                foreach (var kvp in networkSmallTaewooriDict)
-                {
-                    if (kvp.Value == smallTaewooriObj)
-                    {
-                        keyToRemove = kvp.Key;
-                        break;
-                    }
-                }
-                if (keyToRemove != -1)
-                {
-                    networkSmallTaewooriDict.Remove(keyToRemove);
-                }
-            }
-        }
-
-        smallTaewooriObj.SetActive(false);
-        smallTaewooriObj.transform.SetParent(transform);
-        smallTaewooriPool.Enqueue(smallTaewooriObj);
+        RemoveFromNetworkDict(smallTaewooriObj, networkSmallTaewooriDict);
+        ReturnToPool(smallTaewooriObj, smallTaewooriPool);
     }
 
-    /// <summary>
-    /// 발사체를 풀로 반환
-    /// </summary>
     public void ReturnFireParticleToPool(GameObject particleObj)
     {
         if (particleObj != null)
         {
-            particleObj.SetActive(false);
-            particleObj.transform.SetParent(transform);
-            fireParticlePool.Enqueue(particleObj);
+            ReturnToPool(particleObj, fireParticlePool);
         }
     }
 
-    /// <summary>
-    /// 발사체를 스몰태우리 생성 없이 풀로 반환 (Shield 충돌 등)
-    /// </summary>
     public void ReturnFireParticleToPoolWithoutSpawn(GameObject particleObj, Taewoori originTaewoori)
     {
         if (particleObj != null)
@@ -1074,11 +722,272 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             {
                 DecrementSmallTaewooriCount(originTaewoori);
             }
+            ReturnToPool(particleObj, fireParticlePool);
+        }
+    }
 
-            particleObj.SetActive(false);
-            particleObj.transform.SetParent(transform);
-            fireParticlePool.Enqueue(particleObj);
+    private void ReturnToPool(GameObject obj, Queue<GameObject> pool)
+    {
+        obj.SetActive(false);
+        obj.transform.SetParent(transform);
+        pool.Enqueue(obj);
+    }
+
+    private void RemoveFromNetworkDict(GameObject obj, Dictionary<int, GameObject> dict)
+    {
+        var keyToRemove = dict.FirstOrDefault(kvp => kvp.Value == obj).Key;
+        if (keyToRemove != 0)
+        {
+            dict.Remove(keyToRemove);
+        }
+    }
+    #endregion
+
+    #region 씬 전환 시 정리
+    /// <summary>
+    /// 씬 전환 시 모든 리소스 정리
+    /// </summary>
+    public void CleanupAllResources()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            CleanupAllActiveObjects();
+        }
+
+        ClearAllData();
+    }
+
+    /// <summary>
+    /// 활성화된 모든 오브젝트 정리
+    /// </summary>
+    private void CleanupAllActiveObjects()
+    {
+        // 태우리 정리
+        foreach (var kvp in networkTaewooriDict.ToArray())
+        {
+            if (kvp.Value != null)
+            {
+                kvp.Value.SetActive(false);
+                ReturnTaewooriToPool(kvp.Value);
+            }
+        }
+
+        // 스몰태우리 정리
+        foreach (var kvp in networkSmallTaewooriDict.ToArray())
+        {
+            if (kvp.Value != null)
+            {
+                kvp.Value.SetActive(false);
+                ReturnSmallTaewooriToPool(kvp.Value);
+            }
+        }
+
+        // 발사체 정리
+        var allParticles = FindObjectsOfType<FireParticles>();
+        foreach (var particle in allParticles)
+        {
+            if (particle.gameObject.activeInHierarchy)
+            {
+                ReturnFireParticleToPool(particle.gameObject);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 모든 데이터 정리
+    /// </summary>
+    private void ClearAllData()
+    {
+        networkTaewooriDict.Clear();
+        networkSmallTaewooriDict.Clear();
+        smallTaewooriCountByTaewoori.Clear();
+        respawnQueue.Clear();
+
+        survivalTracker?.Reset();
+
+        nextTaewooriID = 0;
+        nextSmallTaewooriID = 0;
+    }
+
+    /// <summary>
+    /// 외부에서 씬 전환 시 호출할 메서드 싹다 정리해주는 함수 인스턴스 없어도 호출가능함
+    /// </summary>
+    public static void PrepareForSceneTransition()
+    {
+        if (Instance != null)
+        {
+            Instance.CleanupAllResources();
         }
     }
     #endregion
 }
+
+#region 생존시간 추적 클래스
+/// <summary>
+/// 생존시간 및 처치 점수를 관리하는 별도 클래스
+/// </summary>
+public class SurvivalTracker
+{
+    private bool isTracking = false;
+    private float maxSurvivalTime = 0f;
+    private Dictionary<int, float> taewooriSpawnTimes = new Dictionary<int, float>();
+    private Dictionary<int, int> playerTaewooriKills = new Dictionary<int, int>();
+    private Dictionary<int, int> playerKillScores = new Dictionary<int, int>();
+
+    public bool IsTracking => isTracking;
+
+    /// <summary>
+    /// 추적 시작
+    /// </summary>
+    public void StartTracking()
+    {
+        isTracking = true;
+        maxSurvivalTime = 0f;
+        taewooriSpawnTimes.Clear();
+        playerTaewooriKills.Clear();
+        playerKillScores.Clear();
+    }
+
+    /// <summary>
+    /// 추적 종료 및 최종 점수 계산
+    /// </summary>
+    public SurvivalScoreResult EndTracking(int playerCount)
+    {
+        isTracking = false;
+
+        int survivalScore = CalculateSurvivalScore(playerCount, maxSurvivalTime);
+
+        var result = new SurvivalScoreResult
+        {
+            survivalScore = survivalScore,
+            maxSurvivalTime = maxSurvivalTime,
+            playerKillScores = new Dictionary<int, int>(playerKillScores)
+        };
+
+        return result;
+    }
+
+    /// <summary>
+    /// 리셋
+    /// </summary>
+    public void Reset()
+    {
+        isTracking = false;
+        maxSurvivalTime = 0f;
+        taewooriSpawnTimes.Clear();
+        playerTaewooriKills.Clear();
+        playerKillScores.Clear();
+    }
+
+    /// <summary>
+    /// 태우리 스폰 시간 기록
+    /// </summary>
+    public void RecordSpawnTime(int taewooriID)
+    {
+        if (isTracking)
+        {
+            taewooriSpawnTimes[taewooriID] = Time.time;
+        }
+    }
+
+    /// <summary>
+    /// 생존시간 업데이트 및 처치 기록
+    /// </summary>
+    public void UpdateSurvivalTimeAndRecordKill(int taewooriID, int killerPlayerID)
+    {
+        if (!isTracking)
+            return;
+
+        // 생존시간 계산
+        if (taewooriSpawnTimes.TryGetValue(taewooriID, out float spawnTime))
+        {
+            float survivalTime = Time.time - spawnTime;
+            if (survivalTime > maxSurvivalTime)
+            {
+                maxSurvivalTime = survivalTime;
+            }
+            taewooriSpawnTimes.Remove(taewooriID);
+        }
+
+        // 처치 기록
+        RecordPlayerKill(killerPlayerID);
+    }
+
+    /// <summary>
+    /// 플레이어 처치 기록
+    /// </summary>
+    private void RecordPlayerKill(int killerPlayerID)
+    {
+        if (!playerTaewooriKills.ContainsKey(killerPlayerID))
+        {
+            playerTaewooriKills[killerPlayerID] = 0;
+        }
+
+        playerTaewooriKills[killerPlayerID]++;
+
+        // 처치 점수 계산
+        int killCount = playerTaewooriKills[killerPlayerID];
+        int killScore = CalculateKillScore(killCount);
+        playerKillScores[killerPlayerID] = killScore;
+    }
+
+    /// <summary>
+    /// 생존시간별 점수 계산
+    /// </summary>
+    private int CalculateSurvivalScore(int playerCount, float survivalTime)
+    {
+        var thresholds = GetSurvivalThresholds(playerCount);
+
+        if (survivalTime <= thresholds.maxTime)
+            return 25;
+        else if (survivalTime <= thresholds.midTime)
+            return 20;
+        else
+            return 15;
+    }
+
+    /// <summary>
+    /// 인원수별 생존시간 임계값 가져오기
+    /// </summary>
+    private (float maxTime, float midTime) GetSurvivalThresholds(int playerCount)
+    {
+        return playerCount switch
+        {
+            1 => (40f, 60f),
+            2 => (30f, 45f),
+            3 => (24f, 36f),
+            4 => (20f, 30f),
+            5 => (17f, 26f),
+            6 => (15f, 23f),
+            _ => (20f, 30f)
+        };
+    }
+
+    /// <summary>
+    /// 처치 수별 점수 계산
+    /// </summary>
+    private int CalculateKillScore(int killCount)
+    {
+        if (killCount >= 30)
+            return 25;
+        if (killCount >= 24)
+            return 20;
+        return 15;
+    }
+}
+
+/// <summary>
+/// 생존 점수 결과 클래스
+/// </summary>
+public class SurvivalScoreResult
+{
+    public int survivalScore;
+    public float maxSurvivalTime;
+    public Dictionary<int, int> playerKillScores;
+
+    public int GetPlayerKillScore(int playerID)
+    {
+        return playerKillScores.TryGetValue(playerID, out int score) ? score : 0;
+    }
+}
+#endregion

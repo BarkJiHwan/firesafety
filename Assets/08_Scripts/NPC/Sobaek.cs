@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class Sobaek : MonoBehaviour
 {
-   
-    
-
     #region 인스펙터 설정
     [Header("기본 위치 설정")]
     [SerializeField] private Transform player;
@@ -20,8 +17,9 @@ public class Sobaek : MonoBehaviour
     [SerializeField] private float lookAtSpeed = 2f;
 
     [Header("이동 설정")]
-    [SerializeField] private float moveSpeed = 4f;
-    [SerializeField] private float arrivalDistance = 0.3f; // 도착 판정 거리
+    [SerializeField] private float moveSpeed = 8f; // VR 최적화를 위해 증가
+    [SerializeField] private float followSpeed = 5f; // 플레이어 따라다니기 속도
+    [SerializeField] private float arrivalDistance = 0.5f; // VR 최적화를 위해 증가
 
     [Header("애니메이션 설정")]
     [SerializeField] private Animator animator;
@@ -29,6 +27,10 @@ public class Sobaek : MonoBehaviour
 
     [Header("대피씬에서 체크 해제")]
     [SerializeField] private bool useGameManager = true; // 게임매니저 사용 여부
+
+    [Header("VR 최적화 설정")]
+    [SerializeField] private bool usePhysicsMovement = false; // 물리 기반 이동 사용 여부
+    [SerializeField] private float followCameraSpeed = 10f; // 물리 이동 시 힘
 
     [Header("테스트용 설정")]
     [SerializeField] private bool testActivateCar = false;
@@ -60,6 +62,7 @@ public class Sobaek : MonoBehaviour
     private Vector3 basePosition;
     private Vector3 targetPosition;
     private Transform currentTarget;
+    private Rigidbody rb;
 
     private bool isMovingToTarget = false;
     private bool isMovingToHome = false;
@@ -89,6 +92,7 @@ public class Sobaek : MonoBehaviour
         }
 
         InitializeReferences();
+        InitializePhysics();
         SetHomePosition();
         basePosition = homePosition;
 
@@ -99,7 +103,7 @@ public class Sobaek : MonoBehaviour
         }
     }
 
-    void Update()
+    void LateUpdate() // VR 최적화를 위해 LateUpdate 사용
     {
         if (useGameManager)
         {
@@ -112,9 +116,21 @@ public class Sobaek : MonoBehaviour
             ActivateSobaekCar();
         }
 
-        UpdatePosition();
+        if (!usePhysicsMovement)
+        {
+            UpdatePosition();
+        }
+
         UpdateFloatingEffect();
         UpdateAnimations();
+    }
+
+    void FixedUpdate()
+    {
+        if (usePhysicsMovement)
+        {
+            UpdatePhysicsPosition();
+        }
     }
 
     void OnDestroy()
@@ -166,6 +182,23 @@ public class Sobaek : MonoBehaviour
             }
         }
     }
+
+    void InitializePhysics()
+    {
+        if (usePhysicsMovement)
+        {
+            rb = GetComponent<Rigidbody>();
+            if (rb == null)
+            {
+                rb = gameObject.AddComponent<Rigidbody>();
+            }
+
+            rb.useGravity = false;
+            rb.drag = 5f;
+            rb.angularDrag = 5f;
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+        }
+    }
     #endregion
 
     #region 게임 페이즈 감지
@@ -187,7 +220,6 @@ public class Sobaek : MonoBehaviour
         // 페이즈가 변경되었을 때만 처리
         if (currentPhase != lastPhase)
         {
-
             if (currentPhase == GamePhase.Fire)
             {
                 // 화재 페이즈: 상호작용 비활성화, 홈으로 복귀
@@ -205,7 +237,7 @@ public class Sobaek : MonoBehaviour
     }
     #endregion
 
-    #region 위치 및 이동
+    #region 위치 및 이동 (Transform 기반)
     void SetHomePosition()
     {
         if (player == null)
@@ -223,40 +255,107 @@ public class Sobaek : MonoBehaviour
 
         if (isMovingToTarget)
         {
-            // 타겟으로 이동
-            basePosition = Vector3.MoveTowards(basePosition, targetPosition, moveSpeed * Time.deltaTime);
+            // 타겟으로 이동 - 부드러운 보간
+            basePosition = Vector3.Slerp(basePosition, targetPosition, moveSpeed * Time.deltaTime);
 
             // 도착 체크
             if (Vector3.Distance(basePosition, targetPosition) <= arrivalDistance)
             {
+                basePosition = targetPosition; // 정확한 위치로
                 isMovingToTarget = false;
                 isTalking = true; // 도착하면 자동으로 토킹 시작
             }
         }
         else if (isMovingToHome)
         {
-            // 홈으로 이동 (홈 위치는 한 번만 계산)
-            basePosition = Vector3.MoveTowards(basePosition, homePosition, moveSpeed * Time.deltaTime);
+            // 홈으로 이동 - 부드러운 보간
+            basePosition = Vector3.Slerp(basePosition, homePosition, moveSpeed * Time.deltaTime);
 
             // 도착 체크
             if (Vector3.Distance(basePosition, homePosition) <= arrivalDistance)
             {
+                basePosition = homePosition; // 정확한 위치로
                 isMovingToHome = false;
             }
         }
         else if (!isMovingToTarget && !isMovingToHome && !isTalking)
         {
-            // 평상시에만 홈 위치 추적 (이동 중도 토킹 중도 아닐 때만)
+            // 평상시 플레이어 따라다니기 - 조절 가능한 속도
             SetHomePosition();
-            basePosition = Vector3.Lerp(basePosition, homePosition, 3f * Time.deltaTime);
+            basePosition = Vector3.Slerp(basePosition, homePosition, followSpeed * Time.deltaTime);
         }
     }
+    #endregion
 
+    #region 물리 기반 이동 (Rigidbody 사용)
+    void UpdatePhysicsPosition()
+    {
+        if (player == null || rb == null)
+            return;
+
+        Vector3 targetPos = homePosition;
+
+        if (isMovingToTarget)
+        {
+            targetPos = targetPosition;
+
+            // 도착 체크
+            if (Vector3.Distance(transform.position, targetPosition) <= arrivalDistance)
+            {
+                rb.velocity = Vector3.zero;
+                isMovingToTarget = false;
+                isTalking = true;
+                return;
+            }
+        }
+        else if (isMovingToHome)
+        {
+            targetPos = homePosition;
+
+            // 도착 체크
+            if (Vector3.Distance(transform.position, homePosition) <= arrivalDistance)
+            {
+                rb.velocity = Vector3.zero;
+                isMovingToHome = false;
+                return;
+            }
+        }
+        else if (!isTalking)
+        {
+            // 평상시 플레이어 따라다니기
+            SetHomePosition();
+            targetPos = homePosition;
+        }
+
+        // 물리 기반 이동
+        Vector3 direction = (targetPos - transform.position).normalized;
+        float currentSpeed = isMovingToTarget || isMovingToHome ? moveSpeed : followSpeed;
+
+        rb.velocity = Vector3.Lerp(rb.velocity, direction * currentSpeed, followCameraSpeed * Time.fixedDeltaTime);
+
+        // basePosition 업데이트 (떠다니기 효과용)
+        basePosition = transform.position;
+    }
+    #endregion
+
+    #region 떠다니기 효과 및 회전
     void UpdateFloatingEffect()
     {
         floatTimer += Time.deltaTime * floatSpeed;
         float floatY = Mathf.Sin(floatTimer) * floatAmplitude;
-        transform.position = basePosition + Vector3.up * floatY;
+
+        if (usePhysicsMovement)
+        {
+            // 물리 기반일 때는 Y축만 조정
+            Vector3 currentPos = transform.position;
+            currentPos.y = basePosition.y + floatY;
+            transform.position = currentPos;
+        }
+        else
+        {
+            // Transform 기반일 때는 전체 위치 설정
+            transform.position = basePosition + Vector3.up * floatY;
+        }
 
         UpdateLookDirection();
     }
@@ -321,7 +420,6 @@ public class Sobaek : MonoBehaviour
         isMovingToTarget = true;
         isMovingToHome = false;
         isTalking = false; // 이동 시작하면 토킹 중단
-
     }
 
     /// <summary>
@@ -366,7 +464,41 @@ public class Sobaek : MonoBehaviour
         isMovingToHome = true;
         isTalking = false;
         currentTarget = null;
+    }
+    #endregion
 
+    #region 런타임 설정 변경
+    /// <summary>
+    /// 플레이어 따라다니기 속도 런타임 변경
+    /// </summary>
+    public void SetFollowSpeed(float speed)
+    {
+        followSpeed = Mathf.Max(0.1f, speed); // 최소값 제한
+    }
+
+    /// <summary>
+    /// 이동 속도 런타임 변경
+    /// </summary>
+    public void SetMoveSpeed(float speed)
+    {
+        moveSpeed = Mathf.Max(0.1f, speed); // 최소값 제한
+    }
+
+    /// <summary>
+    /// 물리 기반 이동 토글
+    /// </summary>
+    public void SetPhysicsMovement(bool enabled)
+    {
+        usePhysicsMovement = enabled;
+
+        if (enabled && rb == null)
+        {
+            InitializePhysics();
+        }
+        else if (!enabled && rb != null)
+        {
+            rb.velocity = Vector3.zero;
+        }
     }
     #endregion
 
@@ -457,6 +589,5 @@ public class Sobaek : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
-
     #endregion
 }
