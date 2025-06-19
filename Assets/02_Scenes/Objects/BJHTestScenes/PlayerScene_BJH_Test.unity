@@ -1232,11 +1232,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4060705981305032297, guid: 7e8817f6f572b7146bdae7d547c81463,
-        type: 3}
-      propertyPath: conversationTxt
-      value: 
-      objectReference: {fileID: 1766812982}
     - target: {fileID: 4060705981305032300, guid: 7e8817f6f572b7146bdae7d547c81463,
         type: 3}
       propertyPath: m_Name
@@ -1246,6 +1241,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4060705981842663254, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -460
+      objectReference: {fileID: 0}
+    - target: {fileID: 5880633998026765800, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5880633998026765801, guid: 7e8817f6f572b7146bdae7d547c81463,
         type: 3}
@@ -2289,22 +2294,8 @@ MonoBehaviour:
     type: 3}
   initialPoolSize: 30
   baseRespawnTime: 20
-  feverTimecCoolTime: 0.5
-  isSurvivalTracking: 0
-  maxSurvivalTime: 0
-  calculatedScore: 0
+  feverTimeCoolTime: 0.5
   scoreManager: {fileID: 1058851943}
-  totalTaewooriKilled: 0
-  playerKillInfos: []
-  gameScoreInfo:
-    maxSurvivalTime: 0
-    survivalScore: 0
-    totalKills: 0
-    topKiller: "\uC5C6\uC74C"
-    topKillerCount: 0
-    isTracking: 0
-    playerCount: 0
-    gamePhase: "\uB300\uAE30\uC911"
 --- !u!4 &1701025121
 Transform:
   m_ObjectHideFlags: 0
@@ -2342,18 +2333,6 @@ MonoBehaviour:
   sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &1766812982 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 161484697419214853, guid: 7e8817f6f572b7146bdae7d547c81463,
-    type: 3}
-  m_PrefabInstance: {fileID: 1338789929}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1775266232
 GameObject:
   m_ObjectHideFlags: 0

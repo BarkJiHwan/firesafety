@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour
 
                 PauseGameTimer();
                 _dialoguePlayer.onFinishDialogue += ResumeGameTimer;
-                _dialoguePlayer.PlayWithTexts(new []{"Sobak_009", "Sobak_010"});
+                _dialoguePlayer.PlayWithTexts(new []{"Sobak_009", "Sobak_011"}, UIType.Sobaek);
             }
 
             if (CurrentPhase == GamePhase.LeaveDangerArea)
@@ -159,7 +159,7 @@ public class GameManager : MonoBehaviour
         PauseGameTimer();
         _dialogueLoader.LoadSobaekData();
         _dialoguePlayer.onFinishDialogue += ResumeGameTimer;
-        _dialoguePlayer.PlayWithTexts(new []{"Sobak_001", "Sobak_002", "Sobak_003", "Sobak_004"});
+        _dialoguePlayer.PlayWithTexts(new []{"Sobak_001", "Sobak_002", "Sobak_003", "Sobak_004"}, UIType.Sobaek);
     }
 
     private void PauseGameTimer()
