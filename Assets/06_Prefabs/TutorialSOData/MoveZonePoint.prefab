@@ -4881,8 +4881,8 @@ GameObject:
   - component: {fileID: 8018544367182198704}
   - component: {fileID: 6268015907080569892}
   - component: {fileID: 981487570016302648}
-  - component: {fileID: 1267765402909202986}
   - component: {fileID: -3567535068216147773}
+  - component: {fileID: 1481690114157839498}
   m_Layer: 0
   m_Name: MoveZonePoint
   m_TagString: Untagged
@@ -9743,19 +9743,6 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!135 &1267765402909202986
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7934197288599102981}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 3.95
-  m_Center: {x: 0, y: 0.005049944, z: 0}
 --- !u!114 &-3567535068216147773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9768,3 +9755,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b03b5322efe3e494285630a7d43c22b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &1481690114157839498
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7934197288599102981}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 8, y: 8, z: 8}
+  m_Center: {x: 0, y: 2, z: 0}
