@@ -5,10 +5,6 @@ using UnityEngine;
 public class PhotonConnectManager : MonoBehaviourPunCallbacks
 {
     private string _gameVersion = "1";
-
-    [SerializeField] private string _testRoomName = "testtest123";
-    [SerializeField] private string _testLobbyName = "scTestLobby";
-
     [SerializeField] private PlayerSpawner _playerSpawner;
 
     private void Start()
@@ -26,7 +22,6 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
                 pool.ResourceCache.Add(soCharacter.characterName, soCharacter.characterPrefab);
             }
         }
-
         TestConnectPhotonServer();
     }
 
@@ -44,25 +39,14 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         {
             if (!PhotonNetwork.InRoom)
             {
-                PhotonNetwork.JoinOrCreateRoom(
-                    _testRoomName,
-                    new RoomOptions { MaxPlayers = 6 },
-                    new TypedLobby(_testLobbyName, LobbyType.Default)
-                );
+                JoinRandomRoomOrCreatRoom();
             }
         }
     }
 
     public override void OnConnectedToMaster()
     {
-        if (!PhotonNetwork.InRoom)
-        {
-            PhotonNetwork.JoinOrCreateRoom(
-                _testRoomName,
-                new RoomOptions { MaxPlayers = 6 },
-                new TypedLobby(_testLobbyName, LobbyType.Default)
-            );
-        }
+        JoinRandomRoomOrCreatRoom();
     }
 
     // 테스트용, 이럴 일 없겠지만 누군가 방에 참가했을 때
@@ -79,25 +63,17 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Debug.Log("플레이어 나감 : " + otherPlayer.NickName);
-        Debug.Log(otherPlayer.TagObject);
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            // _gameManager.RemoveReadyPlayer(otherPlayer);
-        }
-
         if (otherPlayer.TagObject != null)
         {
             ((GameObject)otherPlayer.TagObject).SetActive(false);
             Destroy((GameObject)otherPlayer.TagObject);
+            PhotonNetwork.Disconnect();
         }
     }
 
     /* 테스트용 방 곧바로 입장시, 바로 플레이어 생성이후 XR 컴포넌트 켜줌. */
     public override void OnJoinedRoom()
     {
-        // 초
         GameObject player = _playerSpawner.NetworkInstantiate(PlayerEnum.Jennie);
         player.GetComponent<PlayerComponents>().xRComponents.SetActive(true);
 
@@ -106,15 +82,48 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         TutorialDataMgr.Instance.StartTutorial();
     }
 
-
-
-    public override void OnJoinedLobby()
-    {
-        Debug.Log("Lobby : " + PhotonNetwork.CurrentLobby.Name);
+    private void JoinRandomRoomOrCreatRoom()
+    {/*, PlayerTtl = 0*/
+        RoomOptions options = new RoomOptions { MaxPlayers = 6, IsOpen = true };
+        PhotonNetwork.JoinRandomOrCreateRoom(
+            null, // 랜덤 조건: 아무 조건 없음
+            6, // 최대 인원 수 (RoomOptions에도 지정해두면 안전)
+            MatchmakingMode.FillRoom, // 기존 방을 최대한 채우는 방식
+            null, // 로비 타입 (null: 기본)
+            null, // 추가 필터 (없음)
+            null, // 방 이름 (null: 자동 생성)
+            options // 방 옵션
+        );
     }
 
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        switch (returnCode)
+        {
+            case 32765:
+                Debug.Log("방이 꽉 찼습니다.");
+                break;
+            case 32764:
+                Debug.Log("방이 닫혔습니다.");
+                break;
+            default:
+                Debug.Log("방 참여 실패, code : " + returnCode + " msg : " + message);
+                break;
+        }
+    }
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        Debug.Log("방 참여 실패, code : " + returnCode + " msg : " + message);
+        switch (returnCode)
+        {
+            case 32765:
+                Debug.Log("방이 꽉 찼습니다.");
+                break;
+            case 32764:
+                Debug.Log("방이 닫혔습니다.");
+                break;
+            default:
+                Debug.Log("방 참여 실패, code : " + returnCode + " msg : " + message);
+                break;
+        }
     }
 }

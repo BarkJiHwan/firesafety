@@ -4,7 +4,18 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour, IScorable
 {
+    [SerializeField] int basicScore = 15;
+
     Dictionary<ScoreType, int> dicScore = new Dictionary<ScoreType, int>();
+
+    void Start()
+    {
+        for(int i=0; i<(int)ScoreType.Taewoori_Count; i++)
+        {
+            ScoreType type = (ScoreType)i;
+            dicScore.Add(type, basicScore);
+        }
+    }
 
     public int GetScore(ScoreType scoreType)
     {
@@ -13,16 +24,22 @@ public class ScoreManager : MonoBehaviour, IScorable
 
     public void SetScore(ScoreType scoreType, int score)
     {
-        dicScore.Add(scoreType, score);
+        dicScore[scoreType] = score;
     }
 
     public bool IsScorePerfect(ScoreType scoreType)
     {
-        return dicScore[scoreType] >= 15;
+        return dicScore[scoreType] >= 20;
     }
 
     public int SetScoreStep(ScoreType type)
     {
         return dicScore[type];
+    }
+
+    // 임시
+    public int GetDictionaryCount()
+    {
+        return dicScore.Count;
     }
 }

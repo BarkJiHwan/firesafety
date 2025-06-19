@@ -23,7 +23,6 @@ public class FloorManager : MonoBehaviour
     [Header("층 기본 설정")]
     [SerializeField] private int floorNumber = 4; // 4,3,2,1층
     [SerializeField] private FloorEventType floorEventType = FloorEventType.Normal;
-    [SerializeField] private string playerTag = "Player";
 
     [Header("웨이포인트 설정 (자식 오브젝트)")]
     [SerializeField] private GameObject startWaypoint; // 시작점 웨이포인트

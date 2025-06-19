@@ -73,7 +73,7 @@ public class RoomMgr : MonoBehaviourPunCallbacks
         }
 
         // 게임 시작
-        GameManager.Instance.GameStartBtn();
+        GameManager.Instance.GameStartWhenAllReady();
     }
 
     // 타이머 동기화 (마스터 클라이언트만)
@@ -99,8 +99,11 @@ public class RoomMgr : MonoBehaviourPunCallbacks
     private void OnGameEndHandler()
     {
         Debug.Log("게임이 종료되었습니다.");
+        if (PhotonNetwork.IsMasterClient)
+        {
+            GameManager.Instance.OnGameEnd -= OnGameEndHandler;
+        }
         //모든 코루틴 종료
         StopAllCoroutines();
-
     }
 }

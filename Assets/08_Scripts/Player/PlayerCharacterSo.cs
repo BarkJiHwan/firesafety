@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "CharacterData", menuName= "Scriptable Object/Character Data")]
@@ -12,4 +12,5 @@ public class PlayerCharacterSo : ScriptableObject
     public string characterKrName;
 
     public Sprite characterImage;
+    public PlayerEnum characterType;
 }

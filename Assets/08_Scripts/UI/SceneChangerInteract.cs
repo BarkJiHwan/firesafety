@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class SceneChangerInteract : MonoBehaviour
 {
     [SerializeField] Button firePhase;
     [SerializeField] Button evacuationPhase;
-
     void Start()
     {
         firePhase.onClick.AddListener(() =>
@@ -22,10 +22,5 @@ public class SceneChangerInteract : MonoBehaviour
             Debug.Log("SceneType : " + SceneController.Instance.chooseSceneType);
             SceneController.Instance.MoveToCharacterScene();
         });
-    }
-
-    void Update()
-    {
-        
     }
 }

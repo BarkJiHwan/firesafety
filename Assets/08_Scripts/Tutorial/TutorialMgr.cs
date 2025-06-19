@@ -6,6 +6,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 using System.Linq;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Photon.Realtime;
+using System;
 
 public class TutorialMgr : MonoBehaviourPun
 {
@@ -15,8 +16,11 @@ public class TutorialMgr : MonoBehaviourPun
     private GameObject _zone;
     private GameObject _currentMonster;
     private GameObject _extinguisher;
-
+    private FirePreventable _preventable;
     private Coroutine _countdownCoroutine;
+
+    DialogueLoader dialogueLoader;
+    DialoguePlayer dialoguePlayer;
 
     void Start()
     {
@@ -28,6 +32,17 @@ public class TutorialMgr : MonoBehaviourPun
         SetTutorialPhase();
         ObjectActiveFalse();
         _countdownCoroutine = StartCoroutine(CountdownRoutine());
+
+        GameObject dialogue = null;
+        if(dialogueLoader == null)
+        {
+            dialogueLoader = FindObjectOfType<DialogueLoader>();
+            dialogue = dialogueLoader.gameObject;
+        }
+        if(dialoguePlayer == null)
+        {
+            dialoguePlayer = dialogue.GetComponent<DialoguePlayer>();
+        }
     }
     public void SetTutorialPhase()
     {
@@ -37,11 +52,17 @@ public class TutorialMgr : MonoBehaviourPun
         _currentMonster = Instantiate(_myData.teawooriPrefab, obj.TaewooriPos(), obj.TaewooriRotation());
         _extinguisher = Instantiate(_myData.supplyPrefab, _myData.supplyOffset, _myData.supplyRotation);
     }
-    public void ObjectActiveFalse()
+    private void ObjectActiveFalse()
     {
         _zone.SetActive(false);
         _currentMonster.SetActive(false);
         _extinguisher.SetActive(false);
+    }
+    private void DestroyTutorialObject()
+    {
+        Destroy(_zone);
+        Destroy(_currentMonster);
+        Destroy(_extinguisher);
     }
     private IEnumerator CountdownRoutine()
     {
@@ -115,8 +136,12 @@ public class TutorialMgr : MonoBehaviourPun
         //Tutorial_NAR_004번 나레이션 실행
         Debug.Log("화재예방 튜토리얼 시작");
         var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
-        var preventable = interactObj.GetComponent<FirePreventable>();
-        preventable.SetFirePreventionPending();
+        _preventable = interactObj.GetComponent<FirePreventable>();
+        // 이벤트 실행
+        _preventable.OnHaveToPrevented += _preventable.OnSetPreventMaterialsOn;
+        _preventable.TriggerPreventObejct(true);
+
+        _preventable.SetFirePreventionPending();
         var interactable = interactObj.GetComponent<XRSimpleInteractable>();
         bool completed = false;
         interactable.selectEntered.AddListener(tutorialSelect =>
@@ -126,11 +151,38 @@ public class TutorialMgr : MonoBehaviourPun
             completed = true;
             Debug.Log("화재예방 튜토리얼 완료");
             //Tutorial_NAR_005번 나레이션 실행 : 멋져요!
-            preventable.OnFirePreventionComplete();
+            _preventable.OnFirePreventionComplete();
+            // 이벤트 실행
+            _preventable.OnAlreadyPrevented += _preventable.OnSetPreventMaterialsOff;
+            _preventable.TriggerPreventObejct(false);
         });
+        StartCoroutine(MakeMaterialMoreBright());
+
         yield return new WaitUntil(() => completed);
         interactable.selectEntered.RemoveAllListeners();
-        preventable.SetActiveOut();
+        _preventable.SetActiveOut();
+    }
+
+    IEnumerator MakeMaterialMoreBright()
+    {
+        var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
+
+        GameObject player = FindObjectOfType<PlayerComponents>().gameObject;
+        player = player.GetComponentInChildren<PlayerInteractor>().gameObject;
+        Debug.Log(player.name);
+
+        while (_currentPhase == 2)
+        {
+            // 플레이어가 가까워질수록 내 Material _RimPower -시켜야 함 2->-0.2
+            float distance = Vector3.Distance(_preventable.transform.position, player.transform.position);
+            // 빛을 더 밝게 빛나기 위해서 * 2 했음
+            float t = (1 - Mathf.Clamp01(distance / 2f)) * 2;
+            if(_preventable.GetHighlightProperty() == true)
+            {
+                _preventable.SetHighlight(t);
+            }
+            yield return null;
+        }
     }
 
     // 3. 전투 페이즈
@@ -168,20 +220,22 @@ public class TutorialMgr : MonoBehaviourPun
         //준비 완료
         Debug.Log("모든 튜토리얼 완료");
         TutorialDataMgr.Instance.StopTutorialRoutine();
-        Debug.Log("방장님 저 준비완료 상태 입니다");
+        Debug.Log("방장님 저 튜토리얼 끝났습니다.");
         Hashtable props = new Hashtable() { { "IsReady", true } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
-        //8번 나레이션이 종료 될때 까지 잠깐 대기        
+        //8번 나레이션이 종료 될때 까지 잠깐 대기
         if (PhotonNetwork.PlayerList.Count() > 1)
         {
             //8번 나래이션 끝나면 9번 나래이션 실행 : 아직 안끝난 친구를 기다려!
             Debug.Log("다른 사람이 튜토리얼 진행중 입니다. 기다리세요");
         }
         //Tutorial_NAR_010번 나레이션 실행 : 이제 게임 할거니까 잠깐 기다려~
-        Debug.Log("곧 게임 시작합니다.");
         yield return new WaitUntil(() => GameManager.Instance.IsGameStart);
+        Debug.Log("곧 게임 시작합니다.");
         ObjectActiveFalse(); //모든 튜토리얼 오브젝트 끄기
+        DestroyTutorialObject();
+        StopAllCoroutines();
     }
 
     private IEnumerator StopTutoria()
@@ -189,10 +243,22 @@ public class TutorialMgr : MonoBehaviourPun
         yield return new WaitUntil(() => TutorialDataMgr.Instance.IsTutorialFailed);
         StopCoroutine(_countdownCoroutine);
         ObjectActiveFalse();
+        DestroyTutorialObject();
+        if (_preventable != null)
+        {
+            _preventable.SetActiveOut();
+        }
         Debug.Log("으휴! 이것도 못해?!");
         Hashtable props = new Hashtable() { { "IsReady", true } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
+        // 메테리얼 끄기
+        var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
+        _preventable.OnAlreadyPrevented += _preventable.OnSetPreventMaterialsOff;
+        _preventable.TriggerPreventObejct(false);
+
         //11번 나레이션 실행 : 아쉽지만 어쩌구...
+        //나레이션 종료 후 실행하기.
+        StopAllCoroutines();
     }
 }
