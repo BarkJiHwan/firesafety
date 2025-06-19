@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,22 +11,23 @@ public class DialoguePlayer : MonoBehaviour
 
     [SerializeField]
     private FixedViewCanvasController _fvCanvasController;
+    private bool _isDialoguePlaying;
 
     public event Action onFinishDialogue;
 
-    public void PlayWithText(string dialogueId)
+    public void PlayWithText(string dialogueId, UIType type)
     {
         StartCoroutine(PlayUntilAudioSourceEnd(dialogueId));
 
         // 텍스트 바꾸고 대화창 켜주기
         string text = dialogueLoader.GetDialogueText(dialogueId);
         _fvCanvasController.ConversationTxt.text = text;
-        _fvCanvasController.ConversationPanel.SetActive(true);
+        _fvCanvasController.SwitchConverstaionPanel(type);
     }
 
-    public void PlayWithTexts(string[] dialogueIds)
+    public void PlayWithTexts(string[] dialogueIds, UIType type)
     {
-        StartCoroutine(PlayTextsUntilAudioSourceEnd(dialogueIds));
+        StartCoroutine(PlayTextsUntilAudioSourceEnd(dialogueIds, type));
     }
 
     // 오디오 끄고 대화창 꺼주기
@@ -64,28 +65,47 @@ public class DialoguePlayer : MonoBehaviour
     /* 종료까지 기다림 */
     private IEnumerator PlayUntilAudioSourceEnd(string dialogueId)
     {
+        // 다른것 실행중일경우 대기
+        yield return new WaitWhile(() => _isDialoguePlaying);
+        _isDialoguePlaying = true;
+
+        // 재생
         PlayAudio(dialogueId);
+
+        // 오디오소스 끝날때까지 대기
         yield return new WaitWhile(() => audioSource.isPlaying);
+
+        // 정지
         Stop();
         onFinishDialogue?.Invoke();
+
+        _isDialoguePlaying = false;
     }
 
     /* 여러개 대화 재생, 오디오 끝날때까지 대기 후 0.3초 더 대기 */
-    private IEnumerator PlayTextsUntilAudioSourceEnd(string[] dialogueIds)
+    private IEnumerator PlayTextsUntilAudioSourceEnd(string[] dialogueIds, UIType type)
     {
+        // 다른것 실행중일경우 대기
+        yield return new WaitWhile(() => _isDialoguePlaying);
+        _isDialoguePlaying = true;
+
+        // 재생
         foreach (string dialogueId in dialogueIds)
         {
             PlayAudio(dialogueId);
+
             // 텍스트 바꾸고 대화창 켜주기
             string text = dialogueLoader.GetDialogueText(dialogueId);
             _fvCanvasController.ConversationTxt.text = text;
-            _fvCanvasController.ConversationPanel.SetActive(true);
+            _fvCanvasController.SwitchConverstaionPanel(type);
 
+            // 오디오소스 끝날때까지 대기
             yield return new WaitWhile(() => audioSource.isPlaying);
             Stop();
             yield return new WaitForSeconds(0.3f);
         }
 
         onFinishDialogue?.Invoke();
+        _isDialoguePlaying = false;
     }
 }

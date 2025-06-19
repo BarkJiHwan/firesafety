@@ -182,7 +182,7 @@ PrefabInstance:
     - target: {fileID: 165025958483616543, guid: 07539a97c06a6364eb13fa6468c0f92c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5
+      value: -8
       objectReference: {fileID: 0}
     - target: {fileID: 165025958483616543, guid: 07539a97c06a6364eb13fa6468c0f92c,
         type: 3}
@@ -192,7 +192,7 @@ PrefabInstance:
     - target: {fileID: 165025958483616543, guid: 07539a97c06a6364eb13fa6468c0f92c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.4
+      value: -1.3
       objectReference: {fileID: 0}
     - target: {fileID: 165025958483616543, guid: 07539a97c06a6364eb13fa6468c0f92c,
         type: 3}
@@ -260,9 +260,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f4e787717cae9746ad9d22ee71c3e1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exitTaewooriPrefab: {fileID: 0}
-  playerCamera: {fileID: 0}
-  autoAssignPosition: 1
+  exitTaewooriPrefab: {fileID: 5755754473064602975, guid: 90691631894a7ad47b4b383dfd5555a5,
+    type: 3}
+  spawnOffset: {x: 0, y: 2, z: 0}
   taewooliPositionTag: TaewooliPosition
 --- !u!1001 &5340362505188927014
 PrefabInstance:
@@ -279,7 +279,7 @@ PrefabInstance:
     - target: {fileID: 165025958483616543, guid: 07539a97c06a6364eb13fa6468c0f92c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11
+      value: -12
       objectReference: {fileID: 0}
     - target: {fileID: 165025958483616543, guid: 07539a97c06a6364eb13fa6468c0f92c,
         type: 3}
@@ -289,7 +289,7 @@ PrefabInstance:
     - target: {fileID: 165025958483616543, guid: 07539a97c06a6364eb13fa6468c0f92c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.4
+      value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: 165025958483616543, guid: 07539a97c06a6364eb13fa6468c0f92c,
         type: 3}
@@ -351,9 +351,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f4e787717cae9746ad9d22ee71c3e1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exitTaewooriPrefab: {fileID: 0}
-  playerCamera: {fileID: 0}
-  autoAssignPosition: 1
+  exitTaewooriPrefab: {fileID: 5755754473064602975, guid: 90691631894a7ad47b4b383dfd5555a5,
+    type: 3}
+  spawnOffset: {x: 0, y: 2, z: 0}
   taewooliPositionTag: TaewooliPosition
 --- !u!4 &5212509042047157561 stripped
 Transform:
@@ -376,7 +376,7 @@ PrefabInstance:
     - target: {fileID: 165025958483616543, guid: 07539a97c06a6364eb13fa6468c0f92c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -16
+      value: -15
       objectReference: {fileID: 0}
     - target: {fileID: 165025958483616543, guid: 07539a97c06a6364eb13fa6468c0f92c,
         type: 3}
@@ -386,7 +386,7 @@ PrefabInstance:
     - target: {fileID: 165025958483616543, guid: 07539a97c06a6364eb13fa6468c0f92c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.4
+      value: -1.3
       objectReference: {fileID: 0}
     - target: {fileID: 165025958483616543, guid: 07539a97c06a6364eb13fa6468c0f92c,
         type: 3}
@@ -448,9 +448,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f4e787717cae9746ad9d22ee71c3e1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exitTaewooriPrefab: {fileID: 0}
-  playerCamera: {fileID: 0}
-  autoAssignPosition: 1
+  exitTaewooriPrefab: {fileID: 5755754473064602975, guid: 90691631894a7ad47b4b383dfd5555a5,
+    type: 3}
+  spawnOffset: {x: 0, y: 2, z: 0}
   taewooliPositionTag: TaewooliPosition
 --- !u!4 &5201164799073626602 stripped
 Transform:
@@ -473,7 +473,7 @@ PrefabInstance:
     - target: {fileID: 165025958483616543, guid: 07539a97c06a6364eb13fa6468c0f92c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.8
+      value: -4.38
       objectReference: {fileID: 0}
     - target: {fileID: 165025958483616543, guid: 07539a97c06a6364eb13fa6468c0f92c,
         type: 3}
@@ -483,7 +483,7 @@ PrefabInstance:
     - target: {fileID: 165025958483616543, guid: 07539a97c06a6364eb13fa6468c0f92c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.4
+      value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: 165025958483616543, guid: 07539a97c06a6364eb13fa6468c0f92c,
         type: 3}
@@ -545,9 +545,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f4e787717cae9746ad9d22ee71c3e1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exitTaewooriPrefab: {fileID: 0}
-  playerCamera: {fileID: 0}
-  autoAssignPosition: 1
+  exitTaewooriPrefab: {fileID: 5755754473064602975, guid: 90691631894a7ad47b4b383dfd5555a5,
+    type: 3}
+  spawnOffset: {x: 0, y: 2, z: 0}
   taewooliPositionTag: TaewooliPosition
 --- !u!4 &6418294925927960021 stripped
 Transform:

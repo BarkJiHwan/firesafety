@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -7,6 +6,24 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class RoomMgr : MonoBehaviourPunCallbacks
 {
+    private DialogueLoader _dialogueLoader;
+    private DialoguePlayer _dialoguePlayer;
+
+    private void Start()
+    {
+        GameObject dialogue = null;
+        if(_dialogueLoader == null)
+        {
+            _dialogueLoader = FindObjectOfType<DialogueLoader>();
+            dialogue = _dialogueLoader.gameObject;
+        }
+
+        if(_dialoguePlayer == null)
+        {
+            _dialoguePlayer = dialogue.GetComponent<DialoguePlayer>();
+        }
+    }
+
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
         if (PhotonNetwork.IsMasterClient && changedProps.ContainsKey("IsReady"))
@@ -16,16 +33,26 @@ public class RoomMgr : MonoBehaviourPunCallbacks
     }
     private void CheckAllPlayersReady()
     {
+        if (isAllPlayersReady())
+        {
+            //Tutorial_NAR_010번 나레이션 실행 : 이제 게임 할거니까 잠깐 기다려~
+            _dialoguePlayer.PlayWithText("TUT_010", UIType.Narration);
+            photonView.RPC("StartGameCountdown", RpcTarget.All);
+        }
+    }
+
+    public bool isAllPlayersReady()
+    {
         foreach (Player player in PhotonNetwork.PlayerList)
         {
             if (!player.CustomProperties.ContainsKey("IsReady") ||
                 !(bool)player.CustomProperties["IsReady"])
-                return;
+                return false;
         }
-        Debug.Log("모두 준비 됐으니 게임 시작합니다");
-        // 모든 플레이어 준비 완료 → 3초 카운트다운 시작
-        photonView.RPC("StartGameCountdown", RpcTarget.All);
+
+        return true;
     }
+
     [PunRPC]
     private IEnumerator StartGameCountdown()
     {
@@ -36,24 +63,15 @@ public class RoomMgr : MonoBehaviourPunCallbacks
             int currentCount = Mathf.CeilToInt(timer);
             if (currentCount != prevCount)
             {
-                photonView.RPC("UpdateCountdownUI", RpcTarget.All, currentCount);
                 prevCount = currentCount;
             }
             timer -= Time.deltaTime;
             yield return null;
         }
-        photonView.RPC("StartGame", RpcTarget.All);
+        StartGame();
     }
 
-    [PunRPC]
-    void UpdateCountdownUI(int time)
-    {
-        // UI 업데이트 - 카운트다운 표시
-        Debug.Log($"게임 시작까지: {time:F1}초");
-    }
-
-    [PunRPC]
-    void StartGame()
+    private void StartGame()
     {
         // 게임 시작 시 룸 영구 잠금
         if (PhotonNetwork.IsMasterClient)

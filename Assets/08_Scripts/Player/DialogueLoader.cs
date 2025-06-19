@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -60,7 +60,6 @@ public class DialogueLoader : MonoBehaviour
     // 처음은 튜토리얼 대화 흐름 읽어오기
     private void Start()
     {
-
         LoadTutorialData();
     }
 
@@ -158,6 +157,7 @@ public class DialogueLoader : MonoBehaviour
     {
         if (AudioDict == null || !AudioDict.ContainsKey(dialogueId))
         {
+            Debug.Log("dialogueId : " + dialogueId);
             Debug.LogWarning("오디오 소스의 아이디가 없습니다");
             return null;
         }

@@ -37,8 +37,15 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
         {
             if (player.pView.IsMine)
             {
-                var tuto = player.gameObject.GetComponent<TutorialSuppressor>();
-                tuto.SetAmountZero();
+                var tuto = player.tutoSuppressor;
+                if (tuto != null)
+                {
+                    tuto.SetAmountZero();
+                }
+                else
+                {
+                    Debug.Log("tuto 스크립트 못찾았엉");
+                }
             }
         }
 

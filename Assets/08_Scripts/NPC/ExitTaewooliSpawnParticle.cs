@@ -10,15 +10,9 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
     #region 인스펙터 설정
     [Header("태우리 생성 설정")]
     [SerializeField] private GameObject exitTaewooriPrefab;
-    [SerializeField] private Camera playerCamera;
-
-    [Header("생성 위치 설정")]
-    [SerializeField] private bool useCustomPosition = false; // 커스텀 위치 사용 여부
     [SerializeField] private Vector3 spawnOffset = Vector3.zero; // 현재 오브젝트 기준 오프셋
-    [SerializeField] private bool lookAtPlayer = true; // 플레이어를 바라보도록 설정
 
     [Header("자동 배정 설정")]
-    [SerializeField] private bool autoAssignPosition = true; // 자동으로 위치 배정
     [SerializeField] private string taewooliPositionTag = "TaewooliPosition"; // 태우리 위치 태그
 
     #endregion
@@ -28,6 +22,7 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
     private bool hasSpawned = false; // 한 번만 생성
     private Transform assignedPosition; // 배정된 위치
     private ExitTaewoori spawnedTaewoori; // 생성된 태우리 참조
+    private Camera playerCamera; // 자동으로 찾은 플레이어 카메라
     private static Transform[] allTaewooliPositions; // 모든 태우리 위치들
     private static bool[] positionOccupied; // 위치 점유 상태
     private static bool positionsInitialized = false; // 위치 초기화 여부
@@ -44,29 +39,18 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
     {
         get
         {
-            if (useCustomPosition)
-            {
-                return transform.position + spawnOffset;
-            }
-            else if (assignedPosition != null)
-            {
-                return assignedPosition.position;
-            }
-            else
-            {
-                return transform.position;
-            }
+            return transform.position + spawnOffset;
         }
     }
 
     /// <summary>
-    /// 최종 생성 회전값 계산
+    /// 최종 생성 회전값 계산 (항상 플레이어를 바라봄)
     /// </summary>
     private Quaternion FinalSpawnRotation
     {
         get
         {
-            if (lookAtPlayer && playerCamera != null)
+            if (playerCamera != null)
             {
                 Vector3 spawnPos = FinalSpawnPosition;
                 Vector3 directionToPlayer = (playerCamera.transform.position - spawnPos).normalized;
@@ -78,15 +62,8 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
                 }
             }
 
-            // 플레이어를 바라보지 않는 경우 기존 로직
-            if (assignedPosition != null && !useCustomPosition)
-            {
-                return assignedPosition.rotation;
-            }
-            else
-            {
-                return transform.rotation;
-            }
+            // 카메라가 없는 경우 기본 회전
+            return transform.rotation;
         }
     }
     #endregion
@@ -120,26 +97,23 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
             SetActiveComplete(false);
         }
     }
-
     /// <summary>
     /// 태우리 위치들 초기화 및 자동 배정
     /// </summary>
     private void InitializeTaewooliPositions()
     {
-        if (autoAssignPosition)
+        // 태그로 모든 태우리 위치 찾기
+        GameObject[] positionObjects = GameObject.FindGameObjectsWithTag(taewooliPositionTag);
+        allTaewooliPositions = new Transform[positionObjects.Length];
+
+        for (int i = 0; i < positionObjects.Length; i++)
         {
-            // 태그로 모든 태우리 위치 찾기
-            GameObject[] positionObjects = GameObject.FindGameObjectsWithTag(taewooliPositionTag);
-            allTaewooliPositions = new Transform[positionObjects.Length];
-
-            for (int i = 0; i < positionObjects.Length; i++)
-            {
-                allTaewooliPositions[i] = positionObjects[i].transform;
-            }
-
-            positionOccupied = new bool[allTaewooliPositions.Length];
-            positionsInitialized = true;
+            allTaewooliPositions[i] = positionObjects[i].transform;
         }
+
+        positionOccupied = new bool[allTaewooliPositions.Length];
+        positionsInitialized = true;
+
     }
     #endregion
 
@@ -149,12 +123,6 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
     /// </summary>
     public void ActivateImmediately()
     {
-        // 커스텀 위치를 사용하지 않을 때만 자동 배정
-        if (!useCustomPosition && autoAssignPosition)
-        {
-            AssignPosition();
-        }
-
         // 전체 오브젝트 활성화 (부모와 자식 모두)
         SetActiveComplete(true);
 
@@ -182,11 +150,8 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
 
         if (!active)
         {
-            // 비활성화 시 위치 해제 (커스텀 위치 사용 시에는 해제하지 않음)
-            if (!useCustomPosition)
-            {
-                ReleaseAssignedPosition();
-            }
+            // 비활성화 시 위치 해제
+            ReleaseAssignedPosition();
         }
     }
 
@@ -283,17 +248,8 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
 
         if (taewoori != null)
         {
-            // 커스텀 위치 사용 시에는 이동하지 않도록 설정
-            if (useCustomPosition)
-            {
-                // 커스텀 위치에서 생성하고 이동하지 않음
-                taewoori.Initialize(this, null); // null로 전달하여 이동 방지
-            }
-            else
-            {
-                // 기존 방식: 배정된 위치로 이동
-                taewoori.Initialize(this, assignedPosition);
-            }
+            // 현재 위치에서 생성하고 이동하지 않음
+            taewoori.Initialize(this, null); // null로 전달하여 이동 방지
 
             spawnedTaewoori = taewoori; // 생성된 태우리 참조 저장
 
@@ -316,21 +272,6 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
         spawnOffset = offset;
     }
 
-    /// <summary>
-    /// 커스텀 위치 사용 여부 토글
-    /// </summary>
-    public void SetUseCustomPosition(bool useCustom)
-    {
-        useCustomPosition = useCustom;
-    }
-
-    /// <summary>
-    /// 플레이어 바라보기 기능 토글
-    /// </summary>
-    public void SetLookAtPlayer(bool lookAt)
-    {
-        lookAtPlayer = lookAt;
-    }
 
     /// <summary>
     /// 현재 설정된 생성 위치 반환
