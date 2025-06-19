@@ -36,20 +36,12 @@ public class RoomMgr : MonoBehaviourPunCallbacks
             int currentCount = Mathf.CeilToInt(timer);
             if (currentCount != prevCount)
             {
-                photonView.RPC("UpdateCountdownUI", RpcTarget.All, currentCount);
                 prevCount = currentCount;
             }
             timer -= Time.deltaTime;
             yield return null;
         }
         photonView.RPC("StartGame", RpcTarget.All);
-    }
-
-    [PunRPC]
-    void UpdateCountdownUI(int time)
-    {
-        // UI 업데이트 - 카운트다운 표시
-        Debug.Log($"게임 시작까지: {time:F1}초");
     }
 
     [PunRPC]
