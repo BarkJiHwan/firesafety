@@ -84,9 +84,6 @@ public class Sobaek : MonoBehaviour
 
         InitializeComponents();
 
-        // VR 전용 업데이트 이벤트 등록
-        Camera.onPreRender += OnCameraPreRender;
-
         // 플레이어가 설정되어 있는지 확인 후 홈 포지션 설정
         if (player != null)
         {
@@ -121,27 +118,9 @@ public class Sobaek : MonoBehaviour
             ActivateSobaekCar();
         }
 
-        // VR이 아닌 경우에만 실행
-        if (!UnityEngine.XR.XRSettings.enabled)
-        {
-            UpdatePosition();
-            UpdateFloatingEffect();
-            UpdateAnimations();
-        }
-    }
-
-    /// <summary>
-    /// VR 카메라 렌더링 직전 업데이트 (90fps 동기화)
-    /// </summary>
-    void OnCameraPreRender(Camera cam)
-    {
-        // VR 카메라에서만 실행 (스테레오 렌더링 체크)
-        if (UnityEngine.XR.XRSettings.enabled && cam.stereoTargetEye != StereoTargetEyeMask.None)
-        {
-            UpdatePosition();
-            UpdateFloatingEffect();
-            UpdateAnimations();
-        }
+        UpdatePosition();
+        UpdateFloatingEffect();
+        UpdateAnimations();
     }
 
     void OnDestroy()
@@ -150,9 +129,6 @@ public class Sobaek : MonoBehaviour
         {
             Instance = null;
         }
-
-        // VR 이벤트 해제
-        Camera.onPreRender -= OnCameraPreRender;
     }
     #endregion
 
