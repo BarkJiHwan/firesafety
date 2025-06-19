@@ -252,7 +252,6 @@ public class Taewoori : BaseTaewoori
         // 마스터만 실제 로직 처리
         if (PhotonNetwork.IsMasterClient && !isClientOnly)
         {
-            // 1. 처치자 ID 가져오기
             int killerID = GetLastAttackerID();
 
             // 2. 생존시간 및 처치 기록 (매니저에 직접 기록)
@@ -260,10 +259,6 @@ public class Taewoori : BaseTaewoori
             {
                 ((TaewooriPoolManager)manager).UpdateSurvivalTimeAndRecordKill(networkID, killerID);
                 
-            }
-            else if (killerID == -1)
-            {
-                Debug.LogWarning($"[마스터] 태우리 {networkID} 처치자 정보 없음!");
             }
 
             // 3. 네트워크로 파괴 알림
@@ -313,10 +308,6 @@ public class Taewoori : BaseTaewoori
     /// </summary>
     private int GetLastAttackerID()
     {
-        // BaseTaewoori에 lastAttackerID 변수가 있다면 사용
-        // return lastAttackerID;
-
-        // 임시: 랜덤 플레이어 ID 반환 (테스트용)
         if (PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.PlayerCount > 0)
         {
             var players = PhotonNetwork.CurrentRoom.Players;

@@ -6,11 +6,10 @@ using UnityEngine;
 /// </summary>
 public enum FloorEventType
 {
-    Normal,            // 일반 (아무것도 안함)
+    Nohting,            // 아무것도 안함
     TaewooliWithFire,  // 태우리 + 불 (4,2층)
     SmokeOnly,         // 연기만 (3층)
     FireOnly,          // 불만 (1층)
-    SafeArea          // 안전 구역
 }
 
 /// <summary>
@@ -22,8 +21,7 @@ public class FloorManager : MonoBehaviour
     #region 인스펙터 설정
     [Header("층 기본 설정")]
     [SerializeField] private int floorNumber = 4; // 4,3,2,1층
-    [SerializeField] private FloorEventType floorEventType = FloorEventType.Normal;
-    [SerializeField] private string playerTag = "Player";
+    [SerializeField] private FloorEventType floorEventType = FloorEventType.Nohting;
 
     [Header("웨이포인트 설정 (자식 오브젝트)")]
     [SerializeField] private GameObject startWaypoint; // 시작점 웨이포인트
@@ -160,7 +158,7 @@ public class FloorManager : MonoBehaviour
         isActive = false;
         floorCompleted = true;
 
-        // 스폰 시퀀스 중단
+        // 스폰 중단
         if (spawnSequenceCoroutine != null)
         {
             StopCoroutine(spawnSequenceCoroutine);
@@ -212,7 +210,7 @@ public class FloorManager : MonoBehaviour
         endTriggered = true;
         floorCompleted = true;
 
-        // 즉시 스폰 시퀀스 중단
+        // 즉시 스폰 중단
         if (spawnSequenceCoroutine != null)
         {
             StopCoroutine(spawnSequenceCoroutine);
@@ -280,38 +278,15 @@ public class FloorManager : MonoBehaviour
             return 15;      // 4마리 미만
     }
 
-    /// <summary>
-    /// 현재 층 태우리 처치 수 반환
-    /// </summary>
-    public int GetTaewooliKillCount()
-    {
-        return taewooliKillCount;
-    }
-
-    /// <summary>
-    /// 전체 태우리 처치 수 반환
-    /// </summary>
-    public static int GetTotalTaewooliKills()
-    {
-        return totalTaewooliKills;
-    }
-
-    /// <summary>
-    /// 전체 태우리 처치 수 초기화 (게임 시작 시)
-    /// </summary>
-    public static void ResetTotalTaewooliKills()
-    {
-        totalTaewooliKills = 0;
-    }
     #endregion
 
-    #region 중앙집중식 스폰 시퀀스
+    #region 스폰
     /// <summary>
     /// 층 이벤트 시퀀스 실행 - 매니저가 모든 타이밍 관리
     /// </summary>
     private IEnumerator ExecuteFloorEventSequence()
     {
-        // 파티클 딜레이 후 활성화 2층에선 좀 늦게 생성되야함
+        // 파티클 딜레이 후 태우리 생성 2층에선 좀 늦게 생성되야함
         if (particleStartDelay > 0)
         {
             yield return new WaitForSeconds(particleStartDelay);
@@ -423,38 +398,6 @@ public class FloorManager : MonoBehaviour
             {
                 Destroy(taewoori.gameObject);
             }
-        }
-    }
-    #endregion
-
-    #region 퍼블릭 메서드
-    /// <summary>
-    /// 강제 활성화 (테스트용)
-    /// </summary>
-    [ContextMenu("층 강제 활성화")]
-    public void ForceActivate()
-    {
-        ActivateFloor();
-    }
-
-    /// <summary>
-    /// 강제 비활성화 (테스트용)
-    /// </summary>
-    [ContextMenu("층 강제 비활성화")]
-    public void ForceDeactivate()
-    {
-        DeactivateFloor();
-    }
-
-    /// <summary>
-    /// 시퀀스 강제 시작 (테스트용)
-    /// </summary>
-    [ContextMenu("시퀀스 강제 시작")]
-    public void ForceStartSequence()
-    {
-        if (isActive)
-        {
-            spawnSequenceCoroutine = StartCoroutine(ExecuteFloorEventSequence());
         }
     }
     #endregion

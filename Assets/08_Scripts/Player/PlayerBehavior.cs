@@ -74,11 +74,11 @@ public class PlayerBehavior : MonoBehaviour
 
         hasSubscribedToGameManager = true;
 
-        // 게임 상태 주기적으로 체크 (임시 방법)
+        // 게임 상태 주기적으로 체크
         StartCoroutine(CheckGameStartPeriodically());
     }
 
-    //CHM - 게임 시작 상태 주기적 체크 (임시 방법)
+    //CHM - 게임 시작 상태 주기적 체크
     private IEnumerator CheckGameStartPeriodically()
     {
         bool lastGameStartState = false;
