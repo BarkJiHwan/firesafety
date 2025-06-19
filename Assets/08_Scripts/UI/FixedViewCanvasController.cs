@@ -5,6 +5,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum UIType
+{
+    Narration,
+    Sobaek,
+    None
+}
+
 public class FixedViewCanvasController : MonoBehaviour
 {
     [Header("점수판")]
@@ -20,6 +27,8 @@ public class FixedViewCanvasController : MonoBehaviour
     // 예방/화재 페이즈 전 소백이 대화 위치
     [SerializeField] Vector3 conversationPos;
     [SerializeField] TextMeshProUGUI conversationTxt;
+
+    UIType pastDiaType = UIType.None;
 
     ScoreBoardController scoreBoardCtrl;
     ConversationController conversationCtrl;
@@ -49,24 +58,11 @@ public class FixedViewCanvasController : MonoBehaviour
         GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
 
         // 2. 대화창
-        // 확인을 위해 잠시 켜기
-        if(conversationBoard.activeSelf == true)
+        // 튜토리얼 설정
+        if (conversationBoard.activeSelf == true)
         {
             conversationBoard.SetActive(false);
         }
-        // 튜토리얼 시작하면 대화창(나레이션) 출력 => narrationPos로 옮기고 PrintNarration() 실행
-
-        // 튜토리얼 끝나면 대화창(나레이션) 끄기 => converstaionBoard.SetActive(false);
-        // ▲ TutorialMgr에서 실행
-        // ==============================================================================
-
-        // 예방 페이즈 시작하기 전에 대화창(소백이) 출력 => conversationPos로 옮기고 PrintConversation() 실행
-
-        // 예방 페이즈 시작하면 대화창(소백이) 끄기 => converstaionBoard.SetActive(false);
-
-        // 화재 페이즈 시작하기 전에 대화창(소백이) 출력 => conversationPos로 옮기고 PrintConversation() 실행
-
-        // 화재 페이즈 시작하면 대화창(소백이) 끄기 => converstaionBoard.SetActive(false);
     }
 
     void TurnOnScoreBoard()
@@ -97,7 +93,6 @@ public class FixedViewCanvasController : MonoBehaviour
             restSecondText.text = restSecond.ToString();
             yield return null;
         }
-        Debug.Log("끝남");
         scorePanel.SetActive(false);
         scoreBoardCtrl.InitateScoreBoard();
 
@@ -120,5 +115,23 @@ public class FixedViewCanvasController : MonoBehaviour
     private void OnDestroy()
     {
         GameManager.Instance.OnGameEnd -= TurnOnScoreBoard;
+    }
+
+    public void SwitchConverstaionPanel(UIType type)
+    {
+        Vector3 pos = narrationPos;
+        switch (type)
+        {
+            case UIType.Narration:
+                pos = narrationPos;
+                conversationCtrl.PrintNarration();
+                break;
+            case UIType.Sobaek:
+                pos = conversationPos;
+                conversationCtrl.PrintConversation();
+                break;
+        }
+        conversationBoard.GetComponent<RectTransform>().anchoredPosition = pos;
+        conversationPanel.SetActive(true);
     }
 }
