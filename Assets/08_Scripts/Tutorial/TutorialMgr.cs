@@ -174,9 +174,10 @@ public class TutorialMgr : MonoBehaviourPun
         var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
 
         GameObject player = FindObjectOfType<PlayerComponents>().gameObject;
-        player = player.GetComponentInChildren<PlayerInteractor>().gameObject;
-        Debug.Log(player.name);
-
+        if(player != null)
+        {
+            player = player.GetComponentInChildren<PlayerInteractor>().gameObject;
+        }
         while (_currentPhase == 2)
         {
             // 플레이어가 가까워질수록 내 Material _RimPower -시켜야 함 2->-0.2
