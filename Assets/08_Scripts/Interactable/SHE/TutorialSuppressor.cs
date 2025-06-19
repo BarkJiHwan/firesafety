@@ -8,8 +8,8 @@ using UnityEngine.XR;
 public class TutorialSuppressor : MonoBehaviourPunCallbacks
 {
     [Header("참조할 포톤 뷰")] public PhotonView pView;
-    [SerializeField] private HandData _leftHand;
-    [SerializeField] private HandData _rightHand;
+    public HandData leftHand;
+    public HandData rightHand;
     [SerializeField] private float _sprayLength = 2.5f;
     [SerializeField] private float _sprayRadius = 1;
     [SerializeField] private int _damage = 1;
@@ -53,10 +53,10 @@ public class TutorialSuppressor : MonoBehaviourPunCallbacks
 
         if (pView != null && pView.IsMine)
         {
-            _hands[EHandType.LeftHand] = _leftHand;
-            _hands[EHandType.RightHand] = _rightHand;
-            SupplyManager.Instance.RegisterHand(EHandType.LeftHand, _leftHand, true);
-            SupplyManager.Instance.RegisterHand(EHandType.RightHand, _rightHand, true);
+            _hands[EHandType.LeftHand] = leftHand;
+            _hands[EHandType.RightHand] = rightHand;
+            SupplyManager.Instance.RegisterHand(EHandType.LeftHand, leftHand, true);
+            SupplyManager.Instance.RegisterHand(EHandType.RightHand, rightHand, true);
             SupplyManager.Instance.tutorialSuppressor = this;
             UnityEngine.Debug.Log("등록 완료 튜토리얼");
         }
@@ -68,8 +68,8 @@ public class TutorialSuppressor : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
-        ProcessHand(_leftHand);
-        ProcessHand(_rightHand);
+        ProcessHand(leftHand);
+        ProcessHand(rightHand);
         if (GameManager.Instance.IsGameStart)
         {
             DetachSuppressor();
@@ -194,15 +194,15 @@ public class TutorialSuppressor : MonoBehaviourPunCallbacks
     //}
   public void DetachSuppressor()
     {
-        if (_rightHand.enabled)
+        if (rightHand.enabled)
         {
-            _rightHand.modelPrefab.SetActive(false);
-            _rightHand.enabled = false;
+            rightHand.modelPrefab.SetActive(false);
+            rightHand.enabled = false;
         }
-        if (_leftHand.enabled)
+        if (leftHand.enabled)
         {
-            _leftHand.modelPrefab.SetActive(false);
-            _leftHand.enabled = false;
+            leftHand.modelPrefab.SetActive(false);
+            leftHand.enabled = false;
         }
         _currentAmount = _maxAmount;
     }
@@ -216,9 +216,10 @@ public class TutorialSuppressor : MonoBehaviourPunCallbacks
         var hand = GetHand(type);
         if (_currentAmount <= 0)
         {
+            Debug.Log("여길 안오는데??");
             TutorialDataMgr.Instance.IsTriggerSupply = true;
         }
-        if (!_rightHand.enabled && !_leftHand.enabled)
+        if (!rightHand.enabled && !leftHand.enabled)
         {
             hand.modelPrefab.SetActive(true);
             hand.enabled = true;
@@ -226,10 +227,10 @@ public class TutorialSuppressor : MonoBehaviourPunCallbacks
         }
         else if (!hand.enabled)
         {
-            _rightHand.modelPrefab.SetActive(false);
-            _leftHand.modelPrefab.SetActive(false);
-            _rightHand.enabled = false;
-            _leftHand.enabled = false;
+            rightHand.modelPrefab.SetActive(false);
+            leftHand.modelPrefab.SetActive(false);
+            rightHand.enabled = false;
+            leftHand.enabled = false;
             hand.modelPrefab.SetActive(true);
             hand.enabled = true;
         }
