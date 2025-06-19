@@ -14,19 +14,20 @@ public class DialoguePlayer : MonoBehaviour
 
     public event Action onFinishDialogue;
 
-    public void PlayWithText(string dialogueId)
+    public void PlayWithText(string dialogueId, UIType type)
     {
         StartCoroutine(PlayUntilAudioSourceEnd(dialogueId));
 
         // 텍스트 바꾸고 대화창 켜주기
         string text = dialogueLoader.GetDialogueText(dialogueId);
         _fvCanvasController.ConversationTxt.text = text;
-        _fvCanvasController.ConversationPanel.SetActive(true);
+        //_fvCanvasController.ConversationPanel.SetActive(true);
+        _fvCanvasController.SwitchConverstaionPanel(type);
     }
 
-    public void PlayWithTexts(string[] dialogueIds)
+    public void PlayWithTexts(string[] dialogueIds, UIType type)
     {
-        StartCoroutine(PlayTextsUntilAudioSourceEnd(dialogueIds));
+        StartCoroutine(PlayTextsUntilAudioSourceEnd(dialogueIds, type));
     }
 
     // 오디오 끄고 대화창 꺼주기
@@ -71,7 +72,7 @@ public class DialoguePlayer : MonoBehaviour
     }
 
     /* 여러개 대화 재생, 오디오 끝날때까지 대기 후 0.3초 더 대기 */
-    private IEnumerator PlayTextsUntilAudioSourceEnd(string[] dialogueIds)
+    private IEnumerator PlayTextsUntilAudioSourceEnd(string[] dialogueIds, UIType type)
     {
         foreach (string dialogueId in dialogueIds)
         {
@@ -79,7 +80,8 @@ public class DialoguePlayer : MonoBehaviour
             // 텍스트 바꾸고 대화창 켜주기
             string text = dialogueLoader.GetDialogueText(dialogueId);
             _fvCanvasController.ConversationTxt.text = text;
-            _fvCanvasController.ConversationPanel.SetActive(true);
+            //_fvCanvasController.ConversationPanel.SetActive(true);
+            _fvCanvasController.SwitchConverstaionPanel(type);
 
             yield return new WaitWhile(() => audioSource.isPlaying);
             Stop();

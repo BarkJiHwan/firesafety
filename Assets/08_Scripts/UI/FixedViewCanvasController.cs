@@ -63,7 +63,6 @@ public class FixedViewCanvasController : MonoBehaviour
         {
             conversationBoard.SetActive(false);
         }
-        SwitchConverstaionPanel(UIType.Narration);
     }
 
     void TurnOnScoreBoard()
@@ -138,5 +137,6 @@ public class FixedViewCanvasController : MonoBehaviour
                 break;
         }
         conversationBoard.GetComponent<RectTransform>().anchoredPosition = pos;
+        conversationPanel.SetActive(true);
     }
 }
