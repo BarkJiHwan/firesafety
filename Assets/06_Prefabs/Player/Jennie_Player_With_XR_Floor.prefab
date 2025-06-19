@@ -1246,6 +1246,7 @@ GameObject:
   - component: {fileID: 3982813158359188708}
   - component: {fileID: 3982813158359188707}
   - component: {fileID: 279911241}
+  - component: {fileID: 4448916723498568869}
   m_Layer: 9
   m_Name: XR Components
   m_TagString: Untagged
@@ -1345,6 +1346,82 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tunnelingVignetteController: {fileID: 3536408121795485991}
+--- !u!114 &4448916723498568869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3982813158359188633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1034d0d80e10b2347b842fd286f27385, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pView: {fileID: 9126010614857539734}
+  leftHand:
+    triggerAction:
+      m_UseReference: 1
+      m_Action:
+        m_Name: Trigger
+        m_Type: 0
+        m_ExpectedControlType: 
+        m_Id: b7323c10-d06e-407d-bed6-5b56df5768f9
+        m_Processors: 
+        m_Interactions: 
+        m_SingletonActionBindings: []
+        m_Flags: 0
+      m_Reference: {fileID: -4289430672226363583, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
+    grabSpot: {fileID: 4996293829280483297}
+    normalFireFX: {fileID: 4908559985704679128}
+    zeroAmountFireFX: {fileID: 5320407620259194035}
+    initialFireFX: {fileID: 7650560071794036321}
+    modelPrefab: {fileID: 986663467785439156}
+    initialFire: 0
+    enabled: 0
+    isSpraying: 0
+    handType: 1
+    interator: {fileID: 5824476054311924299}
+  rightHand:
+    triggerAction:
+      m_UseReference: 1
+      m_Action:
+        m_Name: Trigger
+        m_Type: 0
+        m_ExpectedControlType: 
+        m_Id: 4a5216ef-a31e-4a09-aa5d-783058d12a23
+        m_Processors: 
+        m_Interactions: 
+        m_SingletonActionBindings: []
+        m_Flags: 0
+      m_Reference: {fileID: 7904272356298805229, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
+    grabSpot: {fileID: 319183547958956573}
+    normalFireFX: {fileID: 370742359631437733}
+    zeroAmountFireFX: {fileID: 643579273039220174}
+    initialFireFX: {fileID: 3105142483458729756}
+    modelPrefab: {fileID: 5515436509830770377}
+    initialFire: 0
+    enabled: 0
+    isSpraying: 0
+    handType: 0
+    interator: {fileID: 5824476054950819554}
+  _sprayLength: 2.5
+  _sprayRadius: 1
+  _damage: 1
+  _maxAmount: 100
+  _decreaseAmount: 1
+  _fireMask:
+    serializedVersion: 2
+    m_Bits: 128
+  _refillCooldown: 3
+  _supplyMask:
+    serializedVersion: 2
+    m_Bits: 64
+  _supplyDetectRange: 0.8
+  _sprayOrigin: {fileID: 0}
+  _currentAmount: 100
 --- !u!1 &3982813158503462678
 GameObject:
   m_ObjectHideFlags: 0
@@ -2046,7 +2123,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3982813159479471952}
   - component: {fileID: 86827973367261954}
-  - component: {fileID: 1466659817661255614}
   - component: {fileID: 5791505963034804109}
   m_Layer: 9
   m_Name: Jennie_Player_With_XR_Floor
@@ -2087,82 +2163,6 @@ MonoBehaviour:
   xRComponents: {fileID: 3982813158359188633}
   model: {fileID: 4288731581212114719}
   customTunnelingVignette: {fileID: 279911241}
---- !u!114 &1466659817661255614
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3982813159479471955}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1034d0d80e10b2347b842fd286f27385, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pView: {fileID: 9126010614857539734}
-  leftHand:
-    triggerAction:
-      m_UseReference: 1
-      m_Action:
-        m_Name: Trigger
-        m_Type: 0
-        m_ExpectedControlType: 
-        m_Id: 7893db98-3600-42c0-839f-fbdbc40c1260
-        m_Processors: 
-        m_Interactions: 
-        m_SingletonActionBindings: []
-        m_Flags: 0
-      m_Reference: {fileID: -4289430672226363583, guid: c348712bda248c246b8c49b3db54643f,
-        type: 3}
-    grabSpot: {fileID: 4996293829280483297}
-    normalFireFX: {fileID: 4908559985704679128}
-    zeroAmountFireFX: {fileID: 5320407620259194035}
-    initialFireFX: {fileID: 7650560071794036321}
-    modelPrefab: {fileID: 986663467785439156}
-    initialFire: 0
-    enabled: 0
-    isSpraying: 0
-    handType: 1
-    interator: {fileID: 5824476054311924299}
-  rightHand:
-    triggerAction:
-      m_UseReference: 1
-      m_Action:
-        m_Name: Trigger
-        m_Type: 0
-        m_ExpectedControlType: 
-        m_Id: 81ffdb0b-3aa4-4a31-a299-2e4b6fd3a2ca
-        m_Processors: 
-        m_Interactions: 
-        m_SingletonActionBindings: []
-        m_Flags: 0
-      m_Reference: {fileID: 7904272356298805229, guid: c348712bda248c246b8c49b3db54643f,
-        type: 3}
-    grabSpot: {fileID: 319183547958956573}
-    normalFireFX: {fileID: 370742359631437733}
-    zeroAmountFireFX: {fileID: 643579273039220174}
-    initialFireFX: {fileID: 3105142483458729756}
-    modelPrefab: {fileID: 5515436509830770377}
-    initialFire: 0
-    enabled: 0
-    isSpraying: 0
-    handType: 0
-    interator: {fileID: 5824476054950819554}
-  _sprayLength: 2.5
-  _sprayRadius: 1
-  _damage: 1
-  _maxAmount: 100
-  _decreaseAmount: 1
-  _fireMask:
-    serializedVersion: 2
-    m_Bits: 128
-  _refillCooldown: 3
-  _supplyMask:
-    serializedVersion: 2
-    m_Bits: 64
-  _supplyDetectRange: 0.8
-  _sprayOrigin: {fileID: 0}
-  _currentAmount: 100
 --- !u!114 &5791505963034804109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2176,7 +2176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   suppressantManager: {fileID: 913257576719292443}
-  tutorialSuppressor: {fileID: 1466659817661255614}
+  tutorialSuppressor: {fileID: 4448916723498568869}
   pView: {fileID: 9126010614857539734}
 --- !u!1 &4732652309742583553
 GameObject:
@@ -5154,7 +5154,7 @@ PrefabInstance:
         type: 3}
       propertyPath: tutoSuppressor
       value: 
-      objectReference: {fileID: 1466659817661255614}
+      objectReference: {fileID: 4448916723498568869}
     - target: {fileID: 8293184646112605833, guid: 4ab117ceceedc456bb94c4bffc46ce07,
         type: 3}
       propertyPath: m_IsActive

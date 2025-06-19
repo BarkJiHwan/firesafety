@@ -108,6 +108,10 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
+        if (!pView.IsMine)
+        {
+            return;
+        }
         if (!GameManager.Instance.IsGameStart)
         {
             return;
