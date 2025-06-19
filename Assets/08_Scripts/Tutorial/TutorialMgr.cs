@@ -227,7 +227,7 @@ public class TutorialMgr : MonoBehaviourPun
         Hashtable props = new Hashtable() { { "IsReady", true } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
-        //8번 나레이션이 종료 될때 까지 잠깐 대기        
+        //8번 나레이션이 종료 될때 까지 잠깐 대기
         if (PhotonNetwork.PlayerList.Count() > 1)
         {
             //8번 나래이션 끝나면 9번 나래이션 실행 : 아직 안끝난 친구를 기다려!

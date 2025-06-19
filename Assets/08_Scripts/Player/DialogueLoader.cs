@@ -188,6 +188,8 @@ public class DialogueLoader : MonoBehaviour
             return "";
         }
 
-        return dialogue.Text;
+        string text = dialogue.Text.Replace("\\n", "\n");
+
+        return text;
     }
 }
