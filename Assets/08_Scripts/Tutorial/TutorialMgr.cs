@@ -105,6 +105,7 @@ public class TutorialMgr : MonoBehaviourPun
     {
         //사운드가 끝나면 시작합니다.
         //이 부분에 Tutorial_NAR_001이 종료 될 때 까지 기다렸다 시작하면 됨
+        dialoguePlayer.PlayWithTexts(new[] { "TUT_001", "TUT_002" });
         Debug.Log("이동 튜토리얼 시작");
         //튜토리얼 시작 트리거
         TutorialDataMgr.Instance.IsStartTutorial = true;
@@ -122,6 +123,7 @@ public class TutorialMgr : MonoBehaviourPun
         {
             //TUT_SND_001 미션 클리어 사운드 실행
             //Tutorial_NAR_002번 나레이션 종료
+            dialoguePlayer.Stop();
             completed = true;
             _zone.SetActive(false);
             Debug.Log("이동 튜토리얼 완료");
@@ -135,7 +137,8 @@ public class TutorialMgr : MonoBehaviourPun
     private IEnumerator HandleInteractionPhase()
     {
         //Tutorial_NAR_003번 나레이션이 끝난 것을 확인하고
-        //Tutorial_NAR_004번 나레이션 실행
+        //Tutorial_NAR_004번 나레이션 실행 
+        dialoguePlayer.PlayWithTexts(new[] { "TUT_003", "TUT_004" });
         Debug.Log("화재예방 튜토리얼 시작");
         var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
         _preventable = interactObj.GetComponent<FirePreventable>();
@@ -149,6 +152,7 @@ public class TutorialMgr : MonoBehaviourPun
         interactable.selectEntered.AddListener(tutorialSelect =>
         {
             //Tutorial_NAR_004번 나레이션 종료
+            dialoguePlayer.Stop();
             //TUT_SND_001 미션 클리어 사운드 실행
             completed = true;
             Debug.Log("화재예방 튜토리얼 완료");
@@ -193,6 +197,8 @@ public class TutorialMgr : MonoBehaviourPun
     {
         //Tutorial_NAR_005번 나레이션이 끝난 것을 확인하고
         //Tutorial_NAR_006번 나레이션 실행 : 마지막으로 소화기를 사용해보세요 어쩌구....
+        dialoguePlayer.PlayWithText("TUT_005");
+        //dialoguePlayer.onFinishDialogue += ;
         Debug.Log("전투 튜토리얼 시작");
         _currentMonster.SetActive(true);
         _extinguisher.SetActive(true);
@@ -209,7 +215,9 @@ public class TutorialMgr : MonoBehaviourPun
         Debug.Log("태우리 죽임");
         _currentMonster.SetActive(false); //태우리 끄기
         //Tutorial_NAR_006번 나레이션이 켜져 있으면 종료
+        dialoguePlayer.Stop();
         //Tutorial_NAR_007번 나레이션 실행 : 소화기를 다쓰면 바꿔라
+        dialoguePlayer.PlayWithText("TUT_007");
         //태우리 처치 완료
         //Tutorial_NAR_007번 나레이션 종료
 
@@ -217,6 +225,7 @@ public class TutorialMgr : MonoBehaviourPun
         //소화기 상호작용 완료까지 대기하기.
         yield return new WaitUntil(() => TutorialDataMgr.Instance.IsTriggerSupply);
         //Tutorial_NAR_008번 나레이션 실행 : 잘했다 모두 끝났다.
+        dialoguePlayer.PlayWithTexts(new[] { "TUT_008", "TUT_009", "TUT_010" });
         //TUT_SND_001 미션 클리어 사운드 실행
         Debug.Log("소화기 상호작용 완료");
 
@@ -263,6 +272,7 @@ public class TutorialMgr : MonoBehaviourPun
         }
 
         //11번 나레이션 실행 : 아쉽지만 어쩌구...
+        dialoguePlayer.PlayWithText("TUT_011");
         //나레이션 종료 후 실행하기.
         StopAllCoroutines();
     }
