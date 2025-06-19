@@ -19,7 +19,7 @@ public class TutorialMgr : MonoBehaviourPun
 
     private DialogueLoader _dialogueLoader;
     private TutorialAudioPlayer _tutorialAudioPlayer;
-    private List<AudioClip> _audioClipList = new();
+
     bool isMaterialOn = false;
     private RoomMgr _roomMgr;
     void Start()
@@ -45,11 +45,6 @@ public class TutorialMgr : MonoBehaviourPun
         }
 
         _roomMgr = FindObjectOfType<RoomMgr>();
-         //AudioDict
-        foreach(var audio in _dialogueLoader.AudioDict.Values)
-        {
-            _audioClipList.Add(audio);
-        }
     }
     public void SetTutorialPhase()
     {
