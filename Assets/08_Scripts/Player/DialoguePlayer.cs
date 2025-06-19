@@ -21,7 +21,6 @@ public class DialoguePlayer : MonoBehaviour
         // 텍스트 바꾸고 대화창 켜주기
         string text = dialogueLoader.GetDialogueText(dialogueId);
         _fvCanvasController.ConversationTxt.text = text;
-        //_fvCanvasController.ConversationPanel.SetActive(true);
         _fvCanvasController.SwitchConverstaionPanel(type);
     }
 
@@ -80,7 +79,6 @@ public class DialoguePlayer : MonoBehaviour
             // 텍스트 바꾸고 대화창 켜주기
             string text = dialogueLoader.GetDialogueText(dialogueId);
             _fvCanvasController.ConversationTxt.text = text;
-            //_fvCanvasController.ConversationPanel.SetActive(true);
             _fvCanvasController.SwitchConverstaionPanel(type);
 
             yield return new WaitWhile(() => audioSource.isPlaying);

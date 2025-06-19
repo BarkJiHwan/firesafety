@@ -119,11 +119,6 @@ public class FixedViewCanvasController : MonoBehaviour
 
     public void SwitchConverstaionPanel(UIType type)
     {
-        if(pastDiaType == type)
-        {
-            return;
-        }
-        pastDiaType = type;
         Vector3 pos = narrationPos;
         switch (type)
         {
