@@ -4784,7 +4784,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_RenderMode: 4
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -4843,10 +4843,6 @@ MonoBehaviour:
   maxHealth: 100
   currentHealth: 0
   feverTimeExtraHealth: 50
-  targetParticleSystems:
-  - {fileID: 8105492470307074259}
-  - {fileID: 4874837769892211196}
-  maxGreenBoost: 1
 --- !u!1 &5089247338686599476
 GameObject:
   m_ObjectHideFlags: 0
@@ -9628,7 +9624,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_RenderMode: 4
   m_MeshDistribution: 0
   m_SortMode: 0

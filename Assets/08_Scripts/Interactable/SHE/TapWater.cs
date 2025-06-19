@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TapWater : MonoBehaviour
 {
-    [SerializeField] private Animation _waterAnimation; //수도꼭지 움직임
     [SerializeField] private ParticleSystem _waterFX;
     public void InteractTapWater()
     {
