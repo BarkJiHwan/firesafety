@@ -20,20 +20,14 @@ public class ConversationController : MonoBehaviour
     // 튜토리얼일때 나레이션으로 출력
     public void PrintNarration()
     {
-        if (speakerImg.enabled == true || speakerName.enabled == true)
-        {
-            speakerImg.enabled = false;
-            speakerName.enabled = false;
-        }
+        speakerImg.enabled = false;
+        speakerName.gameObject.SetActive(false);
     }
     // 예방 전/화재 전에 대화창 출력
     public void PrintConversation()
     {
-        if (speakerImg.enabled == false || speakerName.enabled == false)
-        {
-            speakerImg.enabled = true;
-            speakerName.enabled = true;
-        }
+        speakerImg.enabled = true;
+        speakerName.gameObject.SetActive(true);
     }
 
     // 내용 바꾸기
