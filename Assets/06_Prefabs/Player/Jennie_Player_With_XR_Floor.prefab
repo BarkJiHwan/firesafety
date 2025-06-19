@@ -2046,7 +2046,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3982813159479471952}
   - component: {fileID: 86827973367261954}
-  - component: {fileID: 8725233738671289010}
   - component: {fileID: 1466659817661255614}
   - component: {fileID: 5791505963034804109}
   m_Layer: 9
@@ -2088,84 +2087,6 @@ MonoBehaviour:
   xRComponents: {fileID: 3982813158359188633}
   model: {fileID: 4288731581212114719}
   customTunnelingVignette: {fileID: 279911241}
---- !u!114 &8725233738671289010
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3982813159479471955}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7831cc6ba61ab540866892822bb1692, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pView: {fileID: 9126010614857539734}
-  _leftHand:
-    triggerAction:
-      m_UseReference: 1
-      m_Action:
-        m_Name: Trigger
-        m_Type: 0
-        m_ExpectedControlType: 
-        m_Id: f2ce8184-2ec5-442a-b783-ecbcddc07ca5
-        m_Processors: 
-        m_Interactions: 
-        m_SingletonActionBindings: []
-        m_Flags: 0
-      m_Reference: {fileID: -4289430672226363583, guid: c348712bda248c246b8c49b3db54643f,
-        type: 3}
-    grabSpot: {fileID: 4996293829280483297}
-    normalFireFX: {fileID: 4908559985704679128}
-    zeroAmountFireFX: {fileID: 5320407620259194035}
-    initialFireFX: {fileID: 7650560071794036321}
-    modelPrefab: {fileID: 986663467785439156}
-    initialFire: 0
-    enabled: 0
-    isSpraying: 0
-    handType: 1
-    interator: {fileID: 5824476054311924299}
-  _rightHand:
-    triggerAction:
-      m_UseReference: 1
-      m_Action:
-        m_Name: Trigger
-        m_Type: 0
-        m_ExpectedControlType: 
-        m_Id: 636cd920-e4e0-4877-827e-4bb9b7eef8ed
-        m_Processors: 
-        m_Interactions: 
-        m_SingletonActionBindings: []
-        m_Flags: 0
-      m_Reference: {fileID: 7904272356298805229, guid: c348712bda248c246b8c49b3db54643f,
-        type: 3}
-    grabSpot: {fileID: 319183547958956573}
-    normalFireFX: {fileID: 370742359631437733}
-    zeroAmountFireFX: {fileID: 643579273039220174}
-    initialFireFX: {fileID: 3105142483458729756}
-    modelPrefab: {fileID: 5515436509830770377}
-    initialFire: 0
-    enabled: 0
-    isSpraying: 0
-    handType: 0
-    interator: {fileID: 5824476054950819554}
-  _sprayLength: 2.5
-  _sprayRadius: 1
-  _damage: 1
-  _maxAmount: 100
-  _decreaseAmount: 1
-  _fireMask:
-    serializedVersion: 2
-    m_Bits: 128
-  _refillCooldown: 3
-  _supplyMask:
-    serializedVersion: 2
-    m_Bits: 64
-  _supplyDetectRange: 0.8
-  _supplyCooldown: 0
-  _sprayOrigin: {fileID: 0}
-  _currentAmount: 100
-  _isPressed: 0
 --- !u!114 &1466659817661255614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2179,14 +2100,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pView: {fileID: 9126010614857539734}
-  _leftHand:
+  leftHand:
     triggerAction:
       m_UseReference: 1
       m_Action:
         m_Name: Trigger
         m_Type: 0
         m_ExpectedControlType: 
-        m_Id: af11560e-a32c-43de-b647-2b25093f66c6
+        m_Id: 7893db98-3600-42c0-839f-fbdbc40c1260
         m_Processors: 
         m_Interactions: 
         m_SingletonActionBindings: []
@@ -2203,14 +2124,14 @@ MonoBehaviour:
     isSpraying: 0
     handType: 1
     interator: {fileID: 5824476054311924299}
-  _rightHand:
+  rightHand:
     triggerAction:
       m_UseReference: 1
       m_Action:
         m_Name: Trigger
         m_Type: 0
         m_ExpectedControlType: 
-        m_Id: db7c1f3a-2134-47d4-bad5-e8589346680d
+        m_Id: 81ffdb0b-3aa4-4a31-a299-2e4b6fd3a2ca
         m_Processors: 
         m_Interactions: 
         m_SingletonActionBindings: []
@@ -2254,7 +2175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c62f9763388cec44d8e24341d73cd58f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  suppressantManager: {fileID: 8725233738671289010}
+  suppressantManager: {fileID: 913257576719292443}
   tutorialSuppressor: {fileID: 1466659817661255614}
   pView: {fileID: 9126010614857539734}
 --- !u!1 &4732652309742583553
@@ -5229,6 +5150,11 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0.6875272
       objectReference: {fileID: 0}
+    - target: {fileID: 8217539487878523174, guid: 4ab117ceceedc456bb94c4bffc46ce07,
+        type: 3}
+      propertyPath: tutoSuppressor
+      value: 
+      objectReference: {fileID: 1466659817661255614}
     - target: {fileID: 8293184646112605833, guid: 4ab117ceceedc456bb94c4bffc46ce07,
         type: 3}
       propertyPath: m_IsActive
@@ -5329,6 +5255,18 @@ ParticleSystem:
     type: 3}
   m_PrefabInstance: {fileID: 9126010614512562493}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &913257576719292443 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8217539487878523174, guid: 4ab117ceceedc456bb94c4bffc46ce07,
+    type: 3}
+  m_PrefabInstance: {fileID: 9126010614512562493}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4288731581212114719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7831cc6ba61ab540866892822bb1692, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &986663467785439156 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8293184646112605833, guid: 4ab117ceceedc456bb94c4bffc46ce07,

@@ -1249,6 +1249,7 @@ GameObject:
   - component: {fileID: 762319275}
   - component: {fileID: 762319276}
   - component: {fileID: 454540275180752925}
+  - component: {fileID: 8217539487878523174}
   m_Layer: 9
   m_Name: Jennie_Scaled_Model
   m_TagString: Untagged
@@ -1486,6 +1487,85 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69b0932f20b768946a953a91e08d68e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8217539487878523174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4981747460995190306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7831cc6ba61ab540866892822bb1692, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pView: {fileID: 762319275}
+  tutoSuppressor: {fileID: 0}
+  _leftHand:
+    triggerAction:
+      m_UseReference: 1
+      m_Action:
+        m_Name: Trigger
+        m_Type: 0
+        m_ExpectedControlType: 
+        m_Id: 6b3b2bbe-2807-4634-9218-75dd14f9614b
+        m_Processors: 
+        m_Interactions: 
+        m_SingletonActionBindings: []
+        m_Flags: 0
+      m_Reference: {fileID: -4289430672226363583, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
+    grabSpot: {fileID: 4319088972543981276}
+    normalFireFX: {fileID: 4231324271913764837}
+    zeroAmountFireFX: {fileID: 3995810831876199822}
+    initialFireFX: {fileID: 1480036747451907932}
+    modelPrefab: {fileID: 8293184646112605833}
+    initialFire: 0
+    enabled: 0
+    isSpraying: 0
+    handType: 1
+    interator: {fileID: 0}
+  _rightHand:
+    triggerAction:
+      m_UseReference: 1
+      m_Action:
+        m_Name: Trigger
+        m_Type: 0
+        m_ExpectedControlType: 
+        m_Id: a1f08849-00c1-4218-8a08-f2a9e044f4e0
+        m_Processors: 
+        m_Interactions: 
+        m_SingletonActionBindings: []
+        m_Flags: 0
+      m_Reference: {fileID: 7904272356298805229, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
+    grabSpot: {fileID: 8848427523856999200}
+    normalFireFX: {fileID: 8900025988351700632}
+    zeroAmountFireFX: {fileID: 8523178556278815987}
+    initialFireFX: {fileID: 6174915499772548641}
+    modelPrefab: {fileID: 3615508717213704180}
+    initialFire: 0
+    enabled: 0
+    isSpraying: 0
+    handType: 0
+    interator: {fileID: 0}
+  _sprayLength: 2.5
+  _sprayRadius: 1
+  _damage: 1
+  _maxAmount: 100
+  _decreaseAmount: 1
+  _fireMask:
+    serializedVersion: 2
+    m_Bits: 128
+  _refillCooldown: 3
+  _supplyMask:
+    serializedVersion: 2
+    m_Bits: 64
+  _supplyDetectRange: 0.8
+  _supplyCooldown: 0
+  _sprayOrigin: {fileID: 0}
+  _currentAmount: 100
+  _isPressed: 0
 --- !u!1 &5079816538120435796
 GameObject:
   m_ObjectHideFlags: 0
@@ -2467,9 +2547,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a330881bfa5b91c45a1cf20344b488d0, type: 3}
+--- !u!198 &1480036747451907932 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4188863828560851291, guid: a330881bfa5b91c45a1cf20344b488d0,
+    type: 3}
+  m_PrefabInstance: {fileID: 3363046399875681799}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &3995810831876199822 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 1862247405422680969, guid: a330881bfa5b91c45a1cf20344b488d0,
+    type: 3}
+  m_PrefabInstance: {fileID: 3363046399875681799}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &4231324271913764837 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 1446605322458728930, guid: a330881bfa5b91c45a1cf20344b488d0,
+    type: 3}
+  m_PrefabInstance: {fileID: 3363046399875681799}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4319088972543981276 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1538978078438815963, guid: a330881bfa5b91c45a1cf20344b488d0,
+    type: 3}
+  m_PrefabInstance: {fileID: 3363046399875681799}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8293184646112605833 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6754484230568081550, guid: a330881bfa5b91c45a1cf20344b488d0,
     type: 3}
   m_PrefabInstance: {fileID: 3363046399875681799}
   m_PrefabAsset: {fileID: 0}
@@ -2557,9 +2661,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b60394ed3c0e7d240a8d5113d9e2c8ee, type: 3}
+--- !u!1 &3615508717213704180 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5198551456879595217, guid: b60394ed3c0e7d240a8d5113d9e2c8ee,
+    type: 3}
+  m_PrefabInstance: {fileID: 8793323369702101285}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &6174915499772548641 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 3438953420294391556, guid: b60394ed3c0e7d240a8d5113d9e2c8ee,
+    type: 3}
+  m_PrefabInstance: {fileID: 8793323369702101285}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &8523178556278815987 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 882776691251195350, guid: b60394ed3c0e7d240a8d5113d9e2c8ee,
+    type: 3}
+  m_PrefabInstance: {fileID: 8793323369702101285}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8848427523856999200 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 55104188588569093, guid: b60394ed3c0e7d240a8d5113d9e2c8ee,
+    type: 3}
+  m_PrefabInstance: {fileID: 8793323369702101285}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &8900025988351700632 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 111208451661545405, guid: b60394ed3c0e7d240a8d5113d9e2c8ee,
     type: 3}
   m_PrefabInstance: {fileID: 8793323369702101285}
   m_PrefabAsset: {fileID: 0}
