@@ -2289,22 +2289,8 @@ MonoBehaviour:
     type: 3}
   initialPoolSize: 30
   baseRespawnTime: 20
-  feverTimecCoolTime: 0.5
-  isSurvivalTracking: 0
-  maxSurvivalTime: 0
-  calculatedScore: 0
+  feverTimeCoolTime: 0.5
   scoreManager: {fileID: 1058851943}
-  totalTaewooriKilled: 0
-  playerKillInfos: []
-  gameScoreInfo:
-    maxSurvivalTime: 0
-    survivalScore: 0
-    totalKills: 0
-    topKiller: "\uC5C6\uC74C"
-    topKillerCount: 0
-    isTracking: 0
-    playerCount: 0
-    gamePhase: "\uB300\uAE30\uC911"
 --- !u!4 &1701025121
 Transform:
   m_ObjectHideFlags: 0
