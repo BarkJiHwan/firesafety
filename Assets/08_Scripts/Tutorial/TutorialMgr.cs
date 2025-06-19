@@ -167,7 +167,6 @@ public class TutorialMgr : MonoBehaviourPun
 
         yield return new WaitUntil(() => completed);
         interactable.selectEntered.RemoveAllListeners();
-        _preventable.SetActiveOut();
     }
 
     IEnumerator MakeMaterialMoreBright()
@@ -175,9 +174,10 @@ public class TutorialMgr : MonoBehaviourPun
         var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
 
         GameObject player = FindObjectOfType<PlayerComponents>().gameObject;
-        player = player.GetComponentInChildren<PlayerInteractor>().gameObject;
-        Debug.Log(player.name);
-
+        if(player != null)
+        {
+            player = player.GetComponentInChildren<PlayerInteractor>().gameObject;
+        }
         while (_currentPhase == 2)
         {
             // 플레이어가 가까워질수록 내 Material _RimPower -시켜야 함 2->-0.2
@@ -200,9 +200,6 @@ public class TutorialMgr : MonoBehaviourPun
         dialoguePlayer.PlayWithText("TUT_005", UIType.Narration);
         dialoguePlayer.onFinishDialogue += TaewooriTutorialMethod;
 
-        //TUT_SND_001 미션 클리어 사운드 실행
-        Debug.Log("소화기 상호작용 완료");
-
         yield return new WaitUntil(() => GameManager.Instance.IsGameStart);
         Debug.Log("곧 게임 시작합니다.");
         ObjectActiveFalse(); //모든 튜토리얼 오브젝트 끄기
@@ -213,6 +210,9 @@ public class TutorialMgr : MonoBehaviourPun
     private IEnumerator StopTutoria()
     {
         yield return new WaitUntil(() => TutorialDataMgr.Instance.IsTutorialFailed);
+        //11번 나레이션 실행 : 아쉽지만 어쩌구...
+        dialoguePlayer.PlayWithText("TUT_011", UIType.Narration);
+        dialoguePlayer.onFinishDialogue += StopAllCoroutinesInTutorial;
         StopCoroutine(_countdownCoroutine);
         ObjectActiveFalse();
         DestroyTutorialObject();
@@ -231,9 +231,11 @@ public class TutorialMgr : MonoBehaviourPun
             _preventable.TriggerPreventObejct(false);
         }
 
-        //11번 나레이션 실행 : 아쉽지만 어쩌구...
-        dialoguePlayer.PlayWithText("TUT_011", UIType.Narration);
-        //나레이션 종료 후 실행하기.
+    }
+
+    private void StopAllCoroutinesInTutorial()
+    {
+        dialoguePlayer.onFinishDialogue -= StopAllCoroutinesInTutorial;
         StopAllCoroutines();
     }
 
@@ -241,6 +243,7 @@ public class TutorialMgr : MonoBehaviourPun
     {
         Debug.Log("전투 튜토리얼 시작");
         dialoguePlayer.onFinishDialogue -= TaewooriTutorialMethod;
+        _preventable.SetActiveOut();
         StartCoroutine(TaewooriCorutine());
     }
 
@@ -276,13 +279,17 @@ public class TutorialMgr : MonoBehaviourPun
         //소화기 상호작용 완료까지 대기하기.
         yield return new WaitUntil(() => TutorialDataMgr.Instance.IsTriggerSupply);
 
+        //TUT_SND_001 미션 클리어 사운드 실행
+        Debug.Log("소화기 상호작용 완료");
+
         //Tutorial_NAR_008번 나레이션 실행 : 잘했다 모두 끝났다.
         dialoguePlayer.PlayWithTexts(new[] { "TUT_008", "TUT_009", "TUT_010" }, UIType.Narration);
-        StartCoroutine(EndToturial());
+        dialoguePlayer.onFinishDialogue += EndToturial;
     }
 
-    private IEnumerator EndToturial()
+    private void EndToturial()
     {
+        dialoguePlayer.onFinishDialogue -= EndToturial;
         //준비 완료
         Debug.Log("모든 튜토리얼 완료");
         TutorialDataMgr.Instance.StopTutorialRoutine();
@@ -296,7 +303,5 @@ public class TutorialMgr : MonoBehaviourPun
             //8번 나래이션 끝나면 9번 나래이션 실행 : 아직 안끝난 친구를 기다려!
             Debug.Log("다른 사람이 튜토리얼 진행중 입니다. 기다리세요");
         }
-
-        yield return null;
     }
 }
