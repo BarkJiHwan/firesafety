@@ -229,7 +229,7 @@ public partial class FirePreventable : MonoBehaviour
         }
 
         // 예방 페이즈가 아닐때 Material이 켜져 있으면 끄기
-        else if(phase == GamePhase.Fire)
+        else if(phase == GamePhase.FireWaiting)
         {
             if (isActiveOnMaterials())
             {

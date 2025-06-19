@@ -123,7 +123,7 @@ public class GameManager : MonoBehaviour
         if (now.Phase != CurrentPhase)
         {
             CurrentPhase = now.Phase;
-            _currentPhase = now.Phase;
+            //_currentPhase = now.Phase;
             NowPhase = now.Phase;
 
             if (CurrentPhase == GamePhase.FireWaiting)
