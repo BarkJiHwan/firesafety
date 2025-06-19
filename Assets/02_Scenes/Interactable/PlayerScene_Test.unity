@@ -282,6 +282,80 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &808824647
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3982813159479471952, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3982813159479471952, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3982813159479471952, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.327
+      objectReference: {fileID: 0}
+    - target: {fileID: 3982813159479471952, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3982813159479471952, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3982813159479471952, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3982813159479471952, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3982813159479471952, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3982813159479471952, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3982813159479471952, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3982813159479471952, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3982813159479471955, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: m_Name
+      value: Jennie_Player_With_XR_Floor
+      objectReference: {fileID: 0}
+    - target: {fileID: 9126010614857539734, guid: 2afdc61cd17554d7a8912d1bb60f7b06,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 9
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2afdc61cd17554d7a8912d1bb60f7b06, type: 3}
 --- !u!1001 &819457092
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -623,8 +697,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ecd853c2bad54ebca8f5d315bb6ec74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _testRoomName: MyTestRoomRoom
-  _testLobbyName: scTestLobby
   _playerSpawner: {fileID: 1184504947}
 --- !u!4 &1184504946
 Transform:
@@ -781,22 +853,8 @@ MonoBehaviour:
     type: 3}
   initialPoolSize: 10
   baseRespawnTime: 20
-  feverTimecCoolTime: 0.5
-  isSurvivalTracking: 0
-  maxSurvivalTime: 0
-  calculatedScore: 0
+  feverTimeCoolTime: 0.5
   scoreManager: {fileID: 0}
-  totalTaewooriKilled: 0
-  playerKillInfos: []
-  gameScoreInfo:
-    maxSurvivalTime: 0
-    survivalScore: 0
-    totalKills: 0
-    topKiller: "\uC5C6\uC74C"
-    topKillerCount: 0
-    isTracking: 0
-    playerCount: 0
-    gamePhase: "\uB300\uAE30\uC911"
 --- !u!4 &1701025121
 Transform:
   m_ObjectHideFlags: 0
@@ -1060,7 +1118,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   suppressantManager: {fileID: 0}
-  tutoSuppressor: {fileID: 0}
+  tutorialSuppressor: {fileID: 0}
+  pView: {fileID: 0}
 --- !u!4 &1822862512
 Transform:
   m_ObjectHideFlags: 0
@@ -1116,6 +1175,7 @@ MonoBehaviour:
   - Phase: 3
     StartTime: 40
   <GameTimer>k__BackingField: 0
+  _currentPhase: 0
 --- !u!4 &1824487200
 Transform:
   m_ObjectHideFlags: 0
