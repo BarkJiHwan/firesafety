@@ -4,55 +4,63 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.XR;
 
-public class SupplyManager : MonoBehaviour
+public class SupplyManager : MonoBehaviourPunCallbacks
 {
     public static SupplyManager Instance { get; private set; }
 
-    private Dictionary<EHandType, HandData> _hands = new();
+    [SerializeField] private Dictionary<EHandType, HandData> _hands = new();
+    [SerializeField] private Dictionary<EHandType, HandData> _handsTuto = new();
     public FireSuppressantManager suppressantManager;
     public TutorialSuppressor tutorialSuppressor;
+    public PhotonView pView;
 
     private void Awake()
     {
-        // 싱글톤 설정
-        if (Instance != null && Instance != this)
+        if (!pView.IsMine)
+        { Destroy(this); return; }
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
         {
             Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-
-        // PhotonView가 존재하면 내 것만 유지
-        var pv = GetComponent<PhotonView>();
-        if (pv != null && !pv.IsMine)
-        {
-            Destroy(this);
-            return;
         }
     }
-    public void RegisterHand(EHandType type, HandData data)
+    public void RegisterHand(EHandType type, HandData data, bool isTutorial)
     {
-        if (!_hands.ContainsKey(type))
+        if (!_hands.ContainsKey(type) && !isTutorial)
         {
             _hands.Add(type, data);
+            Debug.Log($"손 등록 - 본게임 {type}");
+        }
+        if (!_handsTuto.ContainsKey(type) && isTutorial)
+        {
+            _handsTuto.Add(type, data);
+            Debug.Log($"손 등록 - 튜토리얼 {type}");
         }
     }
     public void Supply(EHandType type)
     {
-        if (!_hands.ContainsKey(type))
+        if (GameManager.Instance.IsGameStart)
         {
-            Debug.LogWarning($"등록되지 않은 손: {type}");
-            return;
+            if (!_hands.ContainsKey(type))
+            {
+                Debug.LogWarning($"등록되지 않은 손: {type}");
+                return;
+            }
+            suppressantManager.Supply(type);
+            Debug.Log("본게임 보급을 불렀다");
         }
-        Debug.Log($"[SupplyManager] {type} 손에 보급");
-
-        if (GameManager.Instance != null && GameManager.Instance.IsGameStart)
+        else if (!GameManager.Instance.IsGameStart)
         {
-            suppressantManager?.Supply(type);
-        }
-        else
-        {
-            tutorialSuppressor?.Supply(type);
+            if (!_handsTuto.ContainsKey(type))
+            {
+                Debug.LogWarning($"등록되지 않은 손: {type}");
+                return;
+            }
+            tutorialSuppressor.Supply(type);
+            Debug.Log("튜토리얼 보급을 불렀다");
         }
     }
 }

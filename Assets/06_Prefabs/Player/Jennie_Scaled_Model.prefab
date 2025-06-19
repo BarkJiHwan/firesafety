@@ -2413,12 +2413,12 @@ PrefabInstance:
     - target: {fileID: 1538978078438815963, guid: a330881bfa5b91c45a1cf20344b488d0,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.01
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1538978078438815963, guid: a330881bfa5b91c45a1cf20344b488d0,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.08
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 1538978078438815963, guid: a330881bfa5b91c45a1cf20344b488d0,
         type: 3}
@@ -2460,6 +2460,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6754484230568081650, guid: a330881bfa5b91c45a1cf20344b488d0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a330881bfa5b91c45a1cf20344b488d0, type: 3}
 --- !u!4 &4319088972543981276 stripped
@@ -2488,12 +2493,12 @@ PrefabInstance:
     - target: {fileID: 55104188588569093, guid: b60394ed3c0e7d240a8d5113d9e2c8ee,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 55104188588569093, guid: b60394ed3c0e7d240a8d5113d9e2c8ee,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.8
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 55104188588569093, guid: b60394ed3c0e7d240a8d5113d9e2c8ee,
         type: 3}
@@ -2533,6 +2538,21 @@ PrefabInstance:
     - target: {fileID: 55104188588569093, guid: b60394ed3c0e7d240a8d5113d9e2c8ee,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5198551456879595181, guid: b60394ed3c0e7d240a8d5113d9e2c8ee,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5198551456879595181, guid: b60394ed3c0e7d240a8d5113d9e2c8ee,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5198551456879595181, guid: b60394ed3c0e7d240a8d5113d9e2c8ee,
+        type: 3}
+      propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

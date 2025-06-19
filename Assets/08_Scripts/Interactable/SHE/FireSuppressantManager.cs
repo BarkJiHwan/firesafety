@@ -31,6 +31,7 @@ public class HandData
 }
 public class FireSuppressantManager : MonoBehaviourPunCallbacks
 {
+    [Header("참조할 포톤 뷰")] public PhotonView pView;
     [Header("양손 소화기 데이터")]
     [SerializeField] public HandData _leftHand;
     [SerializeField] public HandData _rightHand;
@@ -77,13 +78,23 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         }
         return null;
     }
-    private void Awake()
+    private IEnumerator Start()
     {
-        if (photonView != null && photonView.IsMine)
+        while (SupplyManager.Instance == null)
+        {
+            yield return null;
+        }
+
+        if (pView != null && pView.IsMine)
         {
             _hands[EHandType.LeftHand] = _leftHand;
             _hands[EHandType.RightHand] = _rightHand;
+            SupplyManager.Instance.RegisterHand(EHandType.LeftHand, _leftHand, false);
+            SupplyManager.Instance.RegisterHand(EHandType.RightHand, _rightHand, false);
+            SupplyManager.Instance.suppressantManager = this;
+            UnityEngine.Debug.Log("등록 완료 본게임");
         }
+
         if (GameManager.Instance.CurrentPhase == GamePhase.LeaveDangerArea)
         {
             enabled = false;
@@ -105,7 +116,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
 
     private void ProcessHand(EHandType type)
     {
-        if (!photonView.IsMine)
+        if (!pView.IsMine)
         {
             return;
         }
@@ -252,7 +263,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private IEnumerator SuppressingFire(EHandType type)
     {
-        if (!photonView.IsMine)
+        if (!pView.IsMine)
         {
             yield break;
         }
@@ -294,7 +305,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     }
     private void ResetSpray(EHandType type)
     {
-        if (!photonView.IsMine)
+        if (!pView.IsMine)
         {
             return;
         }
@@ -334,7 +345,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         //    Debug.Log("보급: 생성 및 할당");
         //}
         #endregion
-        if (!photonView.IsMine)
+        if (!pView.IsMine)
         {
             return;
         }

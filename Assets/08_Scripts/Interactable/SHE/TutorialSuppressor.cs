@@ -7,6 +7,7 @@ using UnityEngine.XR;
 
 public class TutorialSuppressor : MonoBehaviourPunCallbacks
 {
+    [Header("참조할 포톤 뷰")] public PhotonView pView;
     [SerializeField] private HandData _leftHand;
     [SerializeField] private HandData _rightHand;
     [SerializeField] private float _sprayLength = 2.5f;
@@ -43,12 +44,26 @@ public class TutorialSuppressor : MonoBehaviourPunCallbacks
         }
         return null;
     }
-    private void Awake()
+    private IEnumerator Start()
     {
-        if (photonView != null && photonView.IsMine)
+        while (SupplyManager.Instance == null)
+        {
+            yield return null;
+        }
+
+        if (pView != null && pView.IsMine)
         {
             _hands[EHandType.LeftHand] = _leftHand;
             _hands[EHandType.RightHand] = _rightHand;
+            SupplyManager.Instance.RegisterHand(EHandType.LeftHand, _leftHand, true);
+            SupplyManager.Instance.RegisterHand(EHandType.RightHand, _rightHand, true);
+            SupplyManager.Instance.tutorialSuppressor = this;
+            UnityEngine.Debug.Log("등록 완료 튜토리얼");
+        }
+
+        if (GameManager.Instance.CurrentPhase == GamePhase.LeaveDangerArea)
+        {
+            enabled = false;
         }
     }
     private void Update()
@@ -194,6 +209,10 @@ public class TutorialSuppressor : MonoBehaviourPunCallbacks
     public void SetAmountZero() => _currentAmount = 0;
     public void Supply(EHandType type)
     {
+        if (!pView.IsMine)
+        {
+            return;
+        }
         var hand = GetHand(type);
         if (_currentAmount <= 0)
         {

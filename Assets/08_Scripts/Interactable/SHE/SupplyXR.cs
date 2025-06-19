@@ -40,25 +40,19 @@ public class SupplyXR : MonoBehaviour
             return;
         }
 
-        // 왼손 / 오른손 구분 (이름 또는 태그 등으로 판별)
-        EHandType handType = EHandType.RightHand; // 기본값
-
-        string interactorName = interactor.name.ToLower();
-        if (interactorName.Contains("left"))
+        var type = interactor.GetComponent<HandIdentifier>();
+        if (interactor == null)
         {
-            handType = EHandType.LeftHand;
+            Debug.LogWarning("interactor 없는데용");
+            return;
         }
-        else if (interactorName.Contains("right"))
-        {
-            handType = EHandType.RightHand;
-        }
-
-        Debug.Log($"보급소 눌림: {handType}");
+        EHandType handType = type.handType;
 
         // 매니저에게 전달
         if (SupplyManager.Instance != null)
         {
             SupplyManager.Instance.Supply(handType);
+            Debug.Log("보급을 불러봐");
         }
     }
 }
