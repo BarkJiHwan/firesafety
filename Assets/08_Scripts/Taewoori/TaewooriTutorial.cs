@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TaewooriTutorial : MonoBehaviour, IDamageable
 {
-    [Header("체력 설정")]    
+    [Header("체력 설정")]
     public float currentHealth = 100f;
     private bool isDead = false;
 

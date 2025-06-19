@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour
 
                 PauseGameTimer();
                 _dialoguePlayer.onFinishDialogue += ResumeGameTimer;
-                _dialoguePlayer.PlayWithTexts(new []{"Sobak_009", "Sobak_010"});
+                _dialoguePlayer.PlayWithTexts(new []{"Sobak_009", "Sobak_011"});
             }
 
             if (CurrentPhase == GamePhase.LeaveDangerArea)
