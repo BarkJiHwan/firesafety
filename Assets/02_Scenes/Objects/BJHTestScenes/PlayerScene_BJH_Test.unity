@@ -897,12 +897,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a87b98754d2a1eb409b84aab6138a5ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dataMgr: {fileID: 1308356751}
   radius: 1
   speed: 3
   appearDuration: 7
   heightOffset: 0.7
   rotArrow: {x: 90, y: -90, z: 0}
-  dataMgr: {fileID: 1308356751}
+  flyDuration: 5
 --- !u!1 &604351822
 GameObject:
   m_ObjectHideFlags: 0
@@ -1104,6 +1105,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerSpawner: {fileID: 1184504947}
+  roomName: _releaseHelpMe
+  lobbyName: _testLobbyName
 --- !u!4 &1184504946
 Transform:
   m_ObjectHideFlags: 0
