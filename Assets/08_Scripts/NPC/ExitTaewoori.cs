@@ -20,7 +20,6 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
 
     #region 변수 선언
     private Vector3 basePosition; // 기준 위치 (이동만 담당)
-    private Transform targetTransform; // 플레이어 주변 고정 위치
     private ExitTaewooliSpawnParticle spawnParticle; // 생성한 파티클 스크립트
     private bool isDead = false;
     private float floatTimer = 0f; // 둥둥 효과용 타이머
@@ -39,9 +38,6 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
 
     private void Start()
     {
-        // 시작 위치를 기준 위치로 설정
-        basePosition = transform.position;
-
         // XR 인터랙션 설정
         XRSimpleInteractable interactable = GetComponent<XRSimpleInteractable>();
         if (interactable != null)
@@ -55,19 +51,18 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
         if (!isDead)
         {
             UpdateFloatingEffect(); // basePosition + 둥둥효과로 최종 위치 설정
-            UpdateRotation(); // 회전 처리
+            UpdateRotation(); // 플레이어 바라보기
         }
     }
     #endregion
 
     #region 초기화
     /// <summary>
-    /// 초기화 - 생성 파티클, 고정 위치 설정 (새 구조용)
+    /// 초기화 - 생성 파티클 설정
     /// </summary>
-    public void Initialize(ExitTaewooliSpawnParticle particle, Transform fixedPosition)
+    public void Initialize(ExitTaewooliSpawnParticle particle)
     {
         spawnParticle = particle;
-        targetTransform = fixedPosition; // 고정 위치를 타겟으로 설정
 
         currentHealth = maxHealth;
         isDead = false;
@@ -79,7 +74,6 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     #endregion
 
     #region 이동 시스템
-    
 
     /// <summary>
     /// 둥둥 떠다니는 효과 적용
@@ -98,10 +92,15 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     /// </summary>
     private void UpdateRotation()
     {
-        if (spawnParticle == null)
-            return;
+        // 플레이어 카메라 찾기 (한 번만 실행되도록 최적화 가능)
+        Camera playerCamera = Camera.main;
+        if (playerCamera == null)
+        {
+            GameObject cameraObj = GameObject.FindGameObjectWithTag("MainCamera");
+            if (cameraObj != null)
+                playerCamera = cameraObj.GetComponent<Camera>();
+        }
 
-        Camera playerCamera = spawnParticle.GetPlayerCamera();
         if (playerCamera == null)
             return;
 
@@ -125,7 +124,7 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     /// </summary>
     void OnClicked(ActivateEventArgs args)
     {
-        TakeDamage(50f); // 클릭하면 25 데미지
+        TakeDamage(50f); // 클릭하면 50 데미지
         //args.interactorObject.transform.position = transform.position;//무기 트랜스폼
     }
 
