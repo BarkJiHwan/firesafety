@@ -179,6 +179,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seatPosition: {fileID: 480815317}
   player: {fileID: 0}
+  splineContainer: {fileID: 0}
+  carSpeed: 5
+  useCustomSpeed: 1
 --- !u!114 &511315092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -297,8 +300,8 @@ MonoBehaviour:
   m_PlayOnAwake: 0
   m_LoopMode: 1
   m_Method: 0
-  m_Duration: 10
-  m_MaxSpeed: 1.3361766
+  m_Duration: 120
+  m_MaxSpeed: 120
   m_EasingMode: 0
   m_AlignmentMode: 1
   m_ObjectForwardAxis: 2
