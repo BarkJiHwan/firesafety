@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 335518445}
   m_Layer: 9
   m_Name: TaewooriPos
-  m_TagString: Untagged
+  m_TagString: TaewooliPosition
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23,8 +23,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 335518444}
-  m_LocalRotation: {x: 0.004742495, y: -0.9976861, z: 0.057733085, w: 0.035594173}
-  m_LocalPosition: {x: -0.45, y: 0.73793983, z: 1.1421814}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1, y: 0.7, z: 2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 1062536626}
   m_Layer: 9
   m_Name: TaewooriPos (3)
-  m_TagString: Untagged
+  m_TagString: TaewooliPosition
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -54,8 +54,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1062536625}
-  m_LocalRotation: {x: -0.027721034, y: 0.91922426, z: -0.3883437, w: -0.05871475}
-  m_LocalPosition: {x: 0.603, y: 0.718, z: 0.801}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 0.5, z: 4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 1201314419}
   m_Layer: 9
   m_Name: TaewooriPos (2)
-  m_TagString: Untagged
+  m_TagString: TaewooliPosition
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -85,8 +85,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1201314418}
-  m_LocalRotation: {x: 0.0023247872, y: 0.9709018, z: -0.23857766, w: 0.02061927}
-  m_LocalPosition: {x: -0.376, y: 0.462, z: 0.693}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.3, y: 1, z: 3.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 1274509398}
   m_Layer: 9
   m_Name: TaewooriPos (1)
-  m_TagString: Untagged
+  m_TagString: TaewooliPosition
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -116,8 +116,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1274509397}
-  m_LocalRotation: {x: 0.0035948395, y: -0.99819046, z: 0.057816457, w: 0.016132675}
-  m_LocalPosition: {x: 0.392, y: 0.98, z: 1.2854538}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.6, y: 1.5, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1945,8 +1945,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _daTaewoori: {fileID: 0}
-  _checkingWearing: {fileID: 0}
-  _isWear: 0
   _towelMask:
     serializedVersion: 2
     m_Bits: 0

@@ -74,7 +74,7 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
     /* 테스트용 방 곧바로 입장시, 바로 플레이어 생성이후 XR 컴포넌트 켜줌. */
     public override void OnJoinedRoom()
     {
-        GameObject player = _playerSpawner.NetworkInstantiate(PlayerEnum.Jennie);
+        GameObject player = _playerSpawner.NetworkInstantiate(SceneController.Instance.GetChooseCharacterType().characterType);
         player.GetComponent<PlayerComponents>().xRComponents.SetActive(true);
 
         GameManager.Instance.ResetGameTimer();
