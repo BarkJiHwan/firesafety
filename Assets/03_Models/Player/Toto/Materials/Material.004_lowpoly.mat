@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-3182740236119098999
+--- !u!114 &-1394449969193012090
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Material.003
+  m_Name: Material.004_lowpoly
   m_Shader: {fileID: 4800000, guid: be891319084e9d147b09d89e80ce60e0, type: 3}
   m_ValidKeywords:
   - _EMISSIVE_SIMPLE
@@ -41,11 +41,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _1st_ShadeMap:
-        m_Texture: {fileID: 2800000, guid: 50a79cdee0399443f8ac2f7a81da38ab, type: 3}
+        m_Texture: {fileID: 2800000, guid: d81bcb5addd0a4edf935ae00855590bc, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _2nd_ShadeMap:
-        m_Texture: {fileID: 2800000, guid: c842daabf972e4b88a1f50377133328e, type: 3}
+        m_Texture: {fileID: 2800000, guid: 847857787e6d043c49c29bee7f867cde, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _AngelRing_Sampler:
@@ -137,7 +137,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: fd2c7a81924754fbea0fe6c683a1f393, type: 3}
+        m_Texture: {fileID: 2800000, guid: 97d92102fb58444fb914cd231ce892e8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskMap:
@@ -247,7 +247,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _1st2nd_Shades_Feather: 0.01
-    - _1st_ShadeColor_Feather: 0.3
+    - _1st_ShadeColor_Feather: 0.2
     - _1st_ShadeColor_Step: 0.5
     - _2nd_ShadeColor_Feather: 0.01
     - _2nd_ShadeColor_Step: 0.5
@@ -280,7 +280,7 @@ Material:
     - _BaseColorOverridden: 0
     - _BaseColorVisible: 1
     - _BaseColor_Step: 0.5
-    - _BaseShade_Feather: 0.3
+    - _BaseShade_Feather: 0.2
     - _Base_Speed: 0
     - _Blend: 0
     - _BlendMode: 0
@@ -412,7 +412,7 @@ Material:
     - _Offset_Z: 0
     - _OutlineOverridden: 0
     - _OutlineVisible: 1
-    - _Outline_Width: 0.1
+    - _Outline_Width: 10
     - _PPDLodThreshold: 5
     - _PPDMaxSamples: 15
     - _PPDMinSamples: 5
@@ -541,7 +541,7 @@ Material:
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _MatCapColor: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineMaskColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Outline_Color: {r: 0.2784314, g: 0.45490196, b: 0.85490197, a: 1}
+    - _Outline_Color: {r: 0.99607843, g: 0.64705884, b: 0.007843138, a: 1}
     - _RimLightColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimLightMaskColor: {r: 1, g: 0, b: 1, a: 1}
     - _SecondShadeMaskColor: {r: 0, g: 0, b: 1, a: 1}
