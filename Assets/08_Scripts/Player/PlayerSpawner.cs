@@ -145,7 +145,6 @@ public class PlayerSpawner : MonoBehaviour
     {
         if (sobaekPrefab == null)
         {
-            Debug.LogWarning("소백이 프리팹이 설정되지 않았습니다!");
             return false;
         }
         return true;
@@ -163,7 +162,6 @@ public class PlayerSpawner : MonoBehaviour
         }
         else
         {
-            Debug.LogError("소백이 프리팹에 Sobaek 컴포넌트가 없습니다!");
             Destroy(sobaekObj);
             return null;
         }
@@ -173,7 +171,6 @@ public class PlayerSpawner : MonoBehaviour
     {
         if (sobaekCarPrefab == null)
         {
-            Debug.LogWarning("소백카 프리팹이 설정되지 않았습니다!");
             return;
         }
 
@@ -238,7 +235,6 @@ public class PlayerSpawner : MonoBehaviour
     {
         if (currentSobaekCar == null)
         {
-            Debug.LogWarning("생성된 소백카가 없습니다!");
             return;
         }
 
@@ -247,10 +243,7 @@ public class PlayerSpawner : MonoBehaviour
         {
             carScript.StartTrack();
         }
-        else
-        {
-            Debug.LogWarning("소백카에 SobaekCarScript가 없습니다!");
-        }
+        
     }
     #endregion
 }
