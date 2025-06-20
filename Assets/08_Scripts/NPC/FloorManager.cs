@@ -6,40 +6,36 @@ using UnityEngine;
 /// </summary>
 public enum FloorEventType
 {
-    Nohting,            // 아무것도 안함
+    Nothing,            // 아무것도 안함
     TaewooliWithFire,  // 태우리 + 불 (4,2층)
     SmokeOnly,         // 연기만 (3층)
     FireOnly,          // 불만 (1층)
 }
 
 /// <summary>
-/// 층 전체를 관리하는 매니저 - 부모 오브젝트에 붙임
-/// 모든 스폰을 중앙에서 관리
+/// 층 전체를 관리하는 매니저
 /// </summary>
 public class FloorManager : MonoBehaviour
 {
     #region 인스펙터 설정
     [Header("층 기본 설정")]
-    [SerializeField] private int floorNumber = 4; // 4,3,2,1층
-    [SerializeField] private FloorEventType floorEventType = FloorEventType.Nohting;
+    [SerializeField] private int floorNumber = 4;
+    [SerializeField] private FloorEventType floorEventType = FloorEventType.Nothing;
 
-    [Header("웨이포인트 설정 (자식 오브젝트)")]
-    [SerializeField] private GameObject startWaypoint; // 시작점 웨이포인트
-    [SerializeField] private GameObject endWaypoint;   // 끝점 웨이포인트
+    [Header("웨이포인트 설정")]
+    [SerializeField] private GameObject startWaypoint;
+    [SerializeField] private GameObject endWaypoint;
 
-    [Header("층별 파티클 그룹 (자식 오브젝트)")]
-    [SerializeField] private GameObject allParticleGroup; // 모든 파티클들을 모아둔 빈 오브젝트
+    [Header("파티클 그룹")]
+    [SerializeField] private GameObject allParticleGroup;
 
-    [Header("통합 스폰 관리")]
-    [SerializeField] private float particleStartDelay = 0f; // 파티클 시작 딜레이
-    [SerializeField] private float taewooliStartDelay = 10f; // 태우리 생성 시작 딜레이
-    [SerializeField] private float taewooliSpawnInterval = 3f; // 태우리 생성 간격
+    [Header("스폰 타이밍")]
+    [SerializeField] private float particleStartDelay = 0f;
+    [SerializeField] private float taewooliStartDelay = 10f;
+    [SerializeField] private float taewooliSpawnInterval = 3f;
 
     [Header("다음 층 연결")]
-    [SerializeField] private FloorManager nextFloorManager; // 다음 층 매니저
-
-    [Header("점수 관리")]
-    [SerializeField] private ScoreManager scoreManager; // ScoreManager 참조
+    [SerializeField] private FloorManager nextFloorManager;
     #endregion
 
     #region 변수 선언
@@ -47,19 +43,20 @@ public class FloorManager : MonoBehaviour
     private bool endTriggered = false;
     private bool isActive = false;
     private bool floorCompleted = false;
-    private ExitTaewooliSpawnParticle[] currentTaewooliSpawners;
-    private Coroutine spawnSequenceCoroutine;
+    private ExitTaewooliSpawnParticle[] taewooliSpawners;
+    private Coroutine spawnCoroutine;
     private static bool isInitialized = false;
 
-    // 태우리 처치 카운트 (전체 공유)
+    // 점수 관리
     private int taewooliKillCount = 0;
-    private static int totalTaewooliKills = 0; // 모든 층 공유
+    private static int totalTaewooliKills = 0;
+    private ScoreManager scoreManager;
     #endregion
 
     #region 유니티 라이프사이클
-    private void Start()
+    void Start()
     {
-        // 최초 한 번만 초기화 실행
+        // 최초 한 번만 초기화
         if (!isInitialized)
         {
             InitializeAllFloors();
@@ -67,19 +64,16 @@ public class FloorManager : MonoBehaviour
         }
 
         // ScoreManager 자동 찾기
-        if (scoreManager == null)
-        {
-            scoreManager = FindObjectOfType<ScoreManager>();
-        }
+        scoreManager = FindObjectOfType<ScoreManager>();
 
-        // 웨이포인트 트리거 이벤트 연결
+        // 웨이포인트 설정
         SetupWaypoints();
     }
 
     /// <summary>
     /// 모든 층 초기화 - 4층만 활성화
     /// </summary>
-    private void InitializeAllFloors()
+    void InitializeAllFloors()
     {
         FloorManager[] allFloors = FindObjectsOfType<FloorManager>(true);
 
@@ -99,9 +93,8 @@ public class FloorManager : MonoBehaviour
     /// <summary>
     /// 웨이포인트 트리거 설정
     /// </summary>
-    private void SetupWaypoints()
+    void SetupWaypoints()
     {
-        // 시작점 웨이포인트 트리거 설정
         if (startWaypoint != null)
         {
             WaypointTrigger startTrigger = startWaypoint.GetComponent<WaypointTrigger>();
@@ -112,7 +105,6 @@ public class FloorManager : MonoBehaviour
             startTrigger.Initialize(this, WaypointType.Start);
         }
 
-        // 끝점 웨이포인트 트리거 설정
         if (endWaypoint != null)
         {
             WaypointTrigger endTrigger = endWaypoint.GetComponent<WaypointTrigger>();
@@ -126,23 +118,20 @@ public class FloorManager : MonoBehaviour
     #endregion
 
     #region 층 활성화/비활성화
-    /// <summary>
-    /// 층 활성화
-    /// </summary>
     public void ActivateFloor()
     {
         isActive = true;
         floorCompleted = false;
-        taewooliKillCount = 0; // 개별 층 처치 카운트 초기화
+        taewooliKillCount = 0;
 
-        // 시작점만 활성화, 끝점은 비활성화
+        // 시작점만 활성화
         if (startWaypoint != null)
             startWaypoint.SetActive(true);
 
         if (endWaypoint != null)
             endWaypoint.SetActive(false);
 
-        // 파티클 그룹은 비활성화 상태로 시작
+        // 파티클 그룹 비활성화
         if (allParticleGroup != null)
             allParticleGroup.SetActive(false);
 
@@ -150,22 +139,19 @@ public class FloorManager : MonoBehaviour
         endTriggered = false;
     }
 
-    /// <summary>
-    /// 층 비활성화
-    /// </summary>
     public void DeactivateFloor()
     {
         isActive = false;
         floorCompleted = true;
 
         // 스폰 중단
-        if (spawnSequenceCoroutine != null)
+        if (spawnCoroutine != null)
         {
-            StopCoroutine(spawnSequenceCoroutine);
-            spawnSequenceCoroutine = null;
+            StopCoroutine(spawnCoroutine);
+            spawnCoroutine = null;
         }
 
-        // 웨이포인트들만 비활성화
+        // 웨이포인트 비활성화
         if (startWaypoint != null)
             startWaypoint.SetActive(false);
         if (endWaypoint != null)
@@ -175,13 +161,9 @@ public class FloorManager : MonoBehaviour
         if (allParticleGroup != null)
             allParticleGroup.SetActive(false);
     }
-
     #endregion
 
-    #region 웨이포인트 이벤트 처리
-    /// <summary>
-    /// 시작점 트리거 (WaypointTrigger에서 호출)
-    /// </summary>
+    #region 웨이포인트 이벤트
     public void OnStartWaypointTriggered()
     {
         if (!isActive || startTriggered || floorCompleted)
@@ -189,19 +171,16 @@ public class FloorManager : MonoBehaviour
 
         startTriggered = true;
 
-        // 층 이벤트 실행 (매니저가 모든 타이밍 관리)
-        spawnSequenceCoroutine = StartCoroutine(ExecuteFloorEventSequence());
+        // 스폰 시퀀스 시작
+        spawnCoroutine = StartCoroutine(SpawnSequence());
 
-        // 끝점 웨이포인트 활성화
+        // 끝점 활성화
         if (endWaypoint != null)
         {
             endWaypoint.SetActive(true);
         }
     }
 
-    /// <summary>
-    /// 끝점 트리거 (WaypointTrigger에서 호출)
-    /// </summary>
     public void OnEndWaypointTriggered()
     {
         if (!isActive || endTriggered || floorCompleted)
@@ -210,21 +189,21 @@ public class FloorManager : MonoBehaviour
         endTriggered = true;
         floorCompleted = true;
 
-        // 즉시 스폰 중단
-        if (spawnSequenceCoroutine != null)
+        // 스폰 중단
+        if (spawnCoroutine != null)
         {
-            StopCoroutine(spawnSequenceCoroutine);
-            spawnSequenceCoroutine = null;
+            StopCoroutine(spawnCoroutine);
+            spawnCoroutine = null;
         }
 
-        // 1층에서만 점수 계산 (마지막 층이므로)
+        // 1층에서만 최종 점수 계산
         if (floorNumber == 1)
         {
-            SendTotalTaewooliScoreToManager();
+            SendTotalScore();
         }
 
         // 현재 층 정리
-        CleanupCurrentFloor();
+        CleanupFloor();
 
         // 다음 층 활성화
         if (nextFloorManager != null)
@@ -237,77 +216,53 @@ public class FloorManager : MonoBehaviour
     }
     #endregion
 
-    #region 태우리 처치 점수 관리
-    /// <summary>
-    /// 태우리 처치 카운트 증가 (ExitTaewoori에서 호출)
-    /// </summary>
+    #region 점수 관리
     public void OnTaewooliKilled()
     {
         taewooliKillCount++;
         totalTaewooliKills++;
-
-        Debug.Log($"태우리 킬카운트 현재층: {taewooliKillCount}, 전체: {totalTaewooliKills}");
     }
 
-    /// <summary>
-    /// 전체 태우리 처치 점수 계산 및 ScoreManager 전달 (1층에서만 호출)
-    /// </summary>
-
-    private void SendTotalTaewooliScoreToManager()
+    void SendTotalScore()
     {
         if (scoreManager == null)
             return;
 
-        int killScore = CalculateTotalKillScore(totalTaewooliKills);
-
-        Debug.Log($"대피 최종 점수 계산: 총 {totalTaewooliKills}마리 → {killScore}점");
-
+        int killScore = CalculateKillScore(totalTaewooliKills);
         scoreManager.SetScore(ScoreType.Taewoori_Count, killScore);
     }
 
-    /// <summary>
-    /// 전체 처치 수에 따른 점수 계산 (2층 + 4층 총합, 최대 8마리)
-    /// </summary>
-    private int CalculateTotalKillScore(int totalKillCount)
+    int CalculateKillScore(int totalKills)
     {
-        if (totalKillCount >= 8)
+        if (totalKills >= 8)
             return 25;      // 8마리 (전부)
-        else if (totalKillCount >= 4)
+        else if (totalKills >= 4)
             return 20;      // 4마리 이상
         else
             return 15;      // 4마리 미만
     }
-
     #endregion
 
-    #region 스폰
-    /// <summary>
-    /// 층 이벤트 시퀀스 실행 - 매니저가 모든 타이밍 관리
-    /// </summary>
-    private IEnumerator ExecuteFloorEventSequence()
+    #region 스폰 시퀀스
+    IEnumerator SpawnSequence()
     {
-        // 파티클 딜레이 후 태우리 생성 2층에선 좀 늦게 생성되야함
+        // 1단계: 파티클 딜레이
         if (particleStartDelay > 0)
         {
             yield return new WaitForSeconds(particleStartDelay);
         }
 
-        // 층 완료 체크
         if (floorCompleted)
-        {
             yield break;
-        }
 
-        // 파티클 그룹 활성화
+        // 2단계: 파티클 그룹 활성화
         if (allParticleGroup != null)
         {
             allParticleGroup.SetActive(true);
 
-            // 태우리 생성파티클 찾기 (아직 활성화하지 않음)
-            currentTaewooliSpawners = allParticleGroup.GetComponentsInChildren<ExitTaewooliSpawnParticle>();
-
-            // 각 태우리 생성기에 FloorManager 전달
-            foreach (var spawner in currentTaewooliSpawners)
+            // 태우리 스포너들 찾기 및 FloorManager 연결
+            taewooliSpawners = allParticleGroup.GetComponentsInChildren<ExitTaewooliSpawnParticle>();
+            foreach (var spawner in taewooliSpawners)
             {
                 if (spawner != null)
                 {
@@ -316,48 +271,35 @@ public class FloorManager : MonoBehaviour
             }
         }
 
-        // 2단계: 태우리 시작 딜레이
+        // 3단계: 태우리 시작 딜레이
         if (taewooliStartDelay > 0)
         {
             yield return new WaitForSeconds(taewooliStartDelay);
         }
 
-        // 층 완료 체크
         if (floorCompleted)
-        {
             yield break;
-        }
 
-        // 3단계: 태우리 생성기들 순차적으로 활성화
-        if (currentTaewooliSpawners != null && currentTaewooliSpawners.Length > 0)
+        // 4단계: 태우리 순차 생성
+        if (taewooliSpawners != null && taewooliSpawners.Length > 0)
         {
-            for (int i = 0; i < currentTaewooliSpawners.Length; i++)
+            for (int i = 0; i < taewooliSpawners.Length; i++)
             {
-                // 각 태우리 생성 전 층 완료 체크
                 if (floorCompleted)
-                {
                     yield break;
-                }
 
-                if (currentTaewooliSpawners[i] != null)
+                if (taewooliSpawners[i] != null)
                 {
-                    // 매니저가 직접 즉시 활성화 (딜레이 없음)
-                    currentTaewooliSpawners[i].ActivateImmediately();
+                    taewooliSpawners[i].ActivateImmediately();
 
-                    // 마지막이 아니면 설정된 간격만큼 대기
-                    if (i < currentTaewooliSpawners.Length - 1)
+                    // 마지막이 아니면 간격 대기
+                    if (i < taewooliSpawners.Length - 1)
                     {
-                        // 대기 중에도 층 완료 체크
                         float waitTime = 0f;
                         while (waitTime < taewooliSpawnInterval && !floorCompleted)
                         {
                             waitTime += Time.deltaTime;
                             yield return null;
-                        }
-
-                        if (floorCompleted)
-                        {
-                            yield break;
                         }
                     }
                 }
@@ -365,32 +307,9 @@ public class FloorManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 현재 층 정리
-    /// </summary>
-    private void CleanupCurrentFloor()
+    void CleanupFloor()
     {
-        // 태우리 생성기들 비활성화
-        if (currentTaewooliSpawners != null)
-        {
-            foreach (var spawner in currentTaewooliSpawners)
-            {
-                if (spawner != null)
-                {
-                    spawner.SetActive(false);
-                }
-            }
-        }
-
         // 생성된 태우리들 삭제
-        DestroyAllTaewooliInScene();
-    }
-
-    /// <summary>
-    /// 씬에 있는 모든 태우리 삭제
-    /// </summary>
-    private void DestroyAllTaewooliInScene()
-    {
         ExitTaewoori[] allTaewoori = FindObjectsOfType<ExitTaewoori>();
         foreach (var taewoori in allTaewoori)
         {
@@ -401,52 +320,4 @@ public class FloorManager : MonoBehaviour
         }
     }
     #endregion
-}
-
-/// <summary>
-/// 웨이포인트 타입
-/// </summary>
-public enum WaypointType
-{
-    Start,
-    End
-}
-
-/// <summary>
-/// 웨이포인트 트리거 컴포넌트 - 웨이포인트 오브젝트에 자동으로 추가됨
-/// </summary>
-public class WaypointTrigger : MonoBehaviour
-{
-    private FloorManager floorManager;
-    private WaypointType waypointType;
-    private bool hasTriggered = false;
-
-    public void Initialize(FloorManager manager, WaypointType type)
-    {
-        floorManager = manager;
-        waypointType = type;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!other.CompareTag("Player") || hasTriggered)
-            return;
-
-        hasTriggered = true;
-
-        switch (waypointType)
-        {
-            case WaypointType.Start:
-                floorManager.OnStartWaypointTriggered();
-                break;
-            case WaypointType.End:
-                floorManager.OnEndWaypointTriggered();
-                break;
-        }
-    }
-
-    public void ResetTrigger()
-    {
-        hasTriggered = false;
-    }
 }

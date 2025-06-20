@@ -230,7 +230,7 @@ public class TutorialMgr : MonoBehaviourPun
         }
 
         // 3. 체력 0 될 때까지 폴링
-        yield return new WaitUntil(() => tutorial.currentHealth <= 0);
+        yield return new WaitUntil(() => tutorial.CurrentHealth <= 0);//CHM수정
         Debug.Log("태우리 죽임");
         _currentMonster.SetActive(false); //태우리 끄기
         //Tutorial_NAR_006번 나레이션이 켜져 있으면 종료
@@ -264,9 +264,6 @@ public class TutorialMgr : MonoBehaviourPun
             Debug.Log("다른 사람이 튜토리얼 진행중 입니다. 기다리세요");
         }
         yield return new WaitUntil(() => GameManager.Instance.IsGameStart);
-        Debug.Log("곧 게임 시작합니다.");
-        _tutorialAudioPlayer.PlayVoiceWithText("TUT_010", UIType.Narration);
-        yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
         ObjectActiveFalse(); //모든 튜토리얼 오브젝트 끄기
         DestroyTutorialObject();
         StopAllCoroutines();

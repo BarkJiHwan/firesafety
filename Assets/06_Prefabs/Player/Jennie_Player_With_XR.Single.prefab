@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 335518445}
   m_Layer: 9
   m_Name: TaewooriPos
-  m_TagString: Untagged
+  m_TagString: TaewooliPosition
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23,8 +23,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 335518444}
-  m_LocalRotation: {x: 0.004742495, y: -0.9976861, z: 0.057733085, w: 0.035594173}
-  m_LocalPosition: {x: -0.45, y: 0.73793983, z: 1.1421814}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1, y: 0.7, z: 2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 1062536626}
   m_Layer: 9
   m_Name: TaewooriPos (3)
-  m_TagString: Untagged
+  m_TagString: TaewooliPosition
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -54,8 +54,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1062536625}
-  m_LocalRotation: {x: -0.027721034, y: 0.91922426, z: -0.3883437, w: -0.05871475}
-  m_LocalPosition: {x: 0.603, y: 0.718, z: 0.801}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 0.5, z: 4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 1201314419}
   m_Layer: 9
   m_Name: TaewooriPos (2)
-  m_TagString: Untagged
+  m_TagString: TaewooliPosition
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -85,8 +85,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1201314418}
-  m_LocalRotation: {x: 0.0023247872, y: 0.9709018, z: -0.23857766, w: 0.02061927}
-  m_LocalPosition: {x: -0.376, y: 0.462, z: 0.693}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.3, y: 1, z: 3.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 1274509398}
   m_Layer: 9
   m_Name: TaewooriPos (1)
-  m_TagString: Untagged
+  m_TagString: TaewooliPosition
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -116,8 +116,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1274509397}
-  m_LocalRotation: {x: 0.0035948395, y: -0.99819046, z: 0.057816457, w: 0.016132675}
-  m_LocalPosition: {x: 0.392, y: 0.98, z: 1.2854538}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.6, y: 1.5, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1891,6 +1891,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4261196352205591693}
   - component: {fileID: 960249009715187935}
+  - component: {fileID: 1317797333225106661}
   m_Layer: 9
   m_Name: Jennie_Player_With_XR.Single
   m_TagString: Player
@@ -1912,6 +1913,7 @@ Transform:
   m_Children:
   - {fileID: 4261196351009832763}
   - {fileID: 4370874263259061880}
+  - {fileID: 4282076564017041493}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1930,6 +1932,39 @@ MonoBehaviour:
   xRComponents: {fileID: 4261196351009832772}
   model: {fileID: 4027245356772508866}
   customTunnelingVignette: {fileID: 0}
+--- !u!114 &1317797333225106661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4261196352205591694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9640aa39b29fef448be6838f41b6b4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _daTaewoori: {fileID: 0}
+  _towelMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _waterMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _towelInteractWater: 0
+  _towelInteractRadius: 0
+  _tapInteractRadius: 0
+  _tapMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _tapWater: {fileID: 0}
+  _tapEnable: 0
+  _damage: 1
+  _waterShooterPrefab: {fileID: 0}
+  _fireDelay: 0.5
+  _weaponLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &4261196352316362989
 GameObject:
   m_ObjectHideFlags: 0
@@ -2092,6 +2127,51 @@ MonoBehaviour:
       m_AllowFreeYMovement: 1
       m_AllowFreeZMovement: 1
     m_Variable: {fileID: 0}
+--- !u!1 &5389665424016036026
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4282076564017041493}
+  - component: {fileID: 3770661028599536061}
+  m_Layer: 9
+  m_Name: CheckTowel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4282076564017041493
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5389665424016036026}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.623, z: 0.246}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4261196352205591693}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3770661028599536061
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5389665424016036026}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.3, y: 0.3, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5605511237325718748
 GameObject:
   m_ObjectHideFlags: 0
@@ -3846,6 +3926,11 @@ PrefabInstance:
       objectReference: {fileID: 2550521804121879437, guid: 8c557239dc3323e42a0bb6401677f15b,
         type: 3}
     - target: {fileID: 6284734437639265927, guid: 4ab117ceceedc456bb94c4bffc46ce07,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8217539487878523174, guid: 4ab117ceceedc456bb94c4bffc46ce07,
         type: 3}
       propertyPath: m_Enabled
       value: 0

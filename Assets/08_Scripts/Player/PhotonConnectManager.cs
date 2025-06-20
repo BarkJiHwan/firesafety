@@ -6,6 +6,8 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
 {
     private string _gameVersion = "1";
     [SerializeField] private PlayerSpawner _playerSpawner;
+    [SerializeField] private string roomName = "_releaseHelpMe";
+    [SerializeField] private string lobbyName = "_testLobbyName";
 
     private void Start()
     {
@@ -39,7 +41,11 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         {
             if (!PhotonNetwork.InRoom)
             {
-                JoinRandomRoomOrCreatRoom();
+                PhotonNetwork.JoinOrCreateRoom(
+                    roomName,
+                    new RoomOptions { MaxPlayers = 6 },
+                    new TypedLobby(lobbyName, LobbyType.Default)
+                );
             }
         }
     }
@@ -74,7 +80,7 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
     /* 테스트용 방 곧바로 입장시, 바로 플레이어 생성이후 XR 컴포넌트 켜줌. */
     public override void OnJoinedRoom()
     {
-        GameObject player = _playerSpawner.NetworkInstantiate(PlayerEnum.Jennie);
+        GameObject player = _playerSpawner.NetworkInstantiate(SceneController.Instance.GetChooseCharacterType().characterType);
         player.GetComponent<PlayerComponents>().xRComponents.SetActive(true);
 
         GameManager.Instance.ResetGameTimer();
@@ -85,14 +91,10 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
     private void JoinRandomRoomOrCreatRoom()
     {/*, PlayerTtl = 0*/
         RoomOptions options = new RoomOptions { MaxPlayers = 6, IsOpen = true };
-        PhotonNetwork.JoinRandomOrCreateRoom(
-            null, // 랜덤 조건: 아무 조건 없음
-            6, // 최대 인원 수 (RoomOptions에도 지정해두면 안전)
-            MatchmakingMode.FillRoom, // 기존 방을 최대한 채우는 방식
-            null, // 로비 타입 (null: 기본)
-            null, // 추가 필터 (없음)
-            null, // 방 이름 (null: 자동 생성)
-            options // 방 옵션
+        PhotonNetwork.JoinOrCreateRoom(
+            roomName,
+            new RoomOptions { MaxPlayers = 6 },
+            new TypedLobby(lobbyName, LobbyType.Default)
         );
     }
 

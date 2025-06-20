@@ -1,10 +1,11 @@
 ﻿using Photon.Pun;
 
 /// <summary>
-/// 스몰태우리 클래스 - 파이어파티클이 충돌하여 생성되는 작은 적 유닛
+/// 스몰태우리 클래스 - NetworkTaewoori를 상속받아 네트워크 기능 사용
+/// 파이어파티클이 충돌하여 생성되는 작은 적 유닛
 /// 원본 태우리와 연결되어 개수 제한이 관리됨
 /// </summary>
-public class SmallTaewoori : BaseTaewoori
+public class SmallTaewoori : NetworkTaewoori
 {
     #region 변수 선언
     private Taewoori originTaewoori;
@@ -26,10 +27,8 @@ public class SmallTaewoori : BaseTaewoori
     /// <param name="id">네트워크 고유 ID</param>
     public void Initialize(TaewooriPoolManager taewooriManager, Taewoori taewoori, int id)
     {
-        manager = taewooriManager;
+        SetupNetwork(taewooriManager, id, false);
         originTaewoori = taewoori;
-        networkID = id;
-        isClientOnly = false;
 
         // 마스터만 카운트 증가
         if (PhotonNetwork.IsMasterClient && manager != null && originTaewoori != null)
@@ -39,7 +38,6 @@ public class SmallTaewoori : BaseTaewoori
 
         InitializeHealth();
         ResetState();
-
     }
 
     /// <summary>
@@ -50,10 +48,8 @@ public class SmallTaewoori : BaseTaewoori
     /// <param name="id">네트워크 고유 ID</param>
     public void InitializeWithoutCountIncrement(TaewooriPoolManager taewooriManager, Taewoori taewoori, int id)
     {
-        manager = taewooriManager;
+        SetupNetwork(taewooriManager, id, false);
         originTaewoori = taewoori;
-        networkID = id;
-        isClientOnly = false;
 
         InitializeHealth();
         ResetState();
@@ -66,43 +62,32 @@ public class SmallTaewoori : BaseTaewoori
     /// <param name="id">네트워크 고유 ID</param>
     public void InitializeAsClient(Taewoori taewoori, int id)
     {
+        SetupNetwork(null, id, true);
         originTaewoori = taewoori;
-        networkID = id;
-        isClientOnly = true;
 
         InitializeHealth();
         ResetState();
-
     }
     #endregion
 
-    #region 네트워크 데미지 시스템
+    #region 네트워크 동기화 구현
     /// <summary>
-    /// 마스터용 데미지 처리 - 실제 데미지 적용 후 네트워크 동기화
+    /// 체력 동기화를 위한 네트워크 전송
     /// </summary>
-    /// <param name="damage">적용할 데미지량</param>
-    public override void TakeDamage(float damage)
+    protected override void SyncHealthToNetwork()
     {
-        if (!PhotonNetwork.IsMasterClient || isClientOnly)
-            return;
-
-
-        base.TakeDamage(damage);
-
-        // 네트워크로 체력 동기화
         if (manager != null && networkID != -1)
         {
             ((TaewooriPoolManager)manager).SyncSmallTaewooriDamage(networkID, currentHealth, maxHealth);
-
         }
     }
 
     /// <summary>
-    /// 클라이언트용 체력 동기화 - 마스터에서 받은 체력 정보로 색상 업데이트
+    /// 클라이언트용 체력 동기화 - 마스터에서 받은 체력 정보 업데이트
     /// </summary>
     /// <param name="newCurrentHealth">새로운 현재 체력</param>
     /// <param name="newMaxHealth">새로운 최대 체력</param>
-    public void SyncHealthFromNetwork(float newCurrentHealth, float newMaxHealth)
+    public override void SyncHealthFromNetwork(float newCurrentHealth, float newMaxHealth)
     {
         if (PhotonNetwork.IsMasterClient || !isClientOnly)
             return;
@@ -115,11 +100,10 @@ public class SmallTaewoori : BaseTaewoori
     /// 클라이언트 데미지 요청 함수 - 마스터면 직접 처리, 클라이언트면 RPC 요청
     /// </summary>
     /// <param name="damage">요청할 데미지량</param>
-    public void RequestDamageFromClient(float damage)
+    public override void RequestDamageFromClient(float damage)
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            // 마스터면 직접 처리
             TakeDamage(damage);
         }
         else
@@ -134,7 +118,7 @@ public class SmallTaewoori : BaseTaewoori
     }
     #endregion
 
-    #region 사망 처리
+    #region 사망 처리 (NetworkTaewoori 추상 메서드 구현)
     /// <summary>
     /// 스몰태우리 사망 처리 - 마스터는 카운트 감소 및 네트워크 동기화, 클라이언트는 풀 반환만
     /// </summary>
@@ -144,7 +128,6 @@ public class SmallTaewoori : BaseTaewoori
             return;
 
         isDead = true;
-
 
         // 마스터만 카운트 감소 및 네트워크 동기화
         if (PhotonNetwork.IsMasterClient && !isClientOnly)

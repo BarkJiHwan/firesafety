@@ -355,7 +355,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         //    Debug.Log("보급: 생성 및 할당");
         //}
         #endregion
-        if (!pView.IsMine)
+        if (!pView.IsMine || GameManager.Instance.CurrentPhase != GamePhase.Fire)
         {
             return;
         }
@@ -404,24 +404,40 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPC_PlayInitialFX(EHandType type)
     {
+        if (!pView.IsMine)
+        {
+            return;
+        }
         var hand = GetHand(type);
         hand.initialFireFX.Play();
     }
     [PunRPC]
     private void RPC_PlayNormalFX(EHandType type)
     {
+        if (!pView.IsMine)
+        {
+            return;
+        }
         var hand = GetHand(type);
         hand.normalFireFX.Play();
     }
     [PunRPC]
     private void RPC_PlayZeroAmountFX(EHandType type)
     {
+        if (!pView.IsMine)
+        {
+            return;
+        }
         var hand = GetHand(type);
         hand.zeroAmountFireFX.Play();
     }
     [PunRPC]
     private void RPC_StopPlayFX(EHandType type)
     {
+        if (!pView.IsMine)
+        {
+            return;
+        }
         var hand = GetHand(type);
         if (hand.initialFireFX.isPlaying)
         {
@@ -439,6 +455,10 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPC_SetActiveModel(EHandType type)
     {
+        if (!pView.IsMine)
+        {
+            return;
+        }
         var hand = GetHand(type);
         if (!hand.modelPrefab.activeSelf)
         {
@@ -448,6 +468,10 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPC_SetActiveModelFalse()
     {
+        if (!pView.IsMine)
+        {
+            return;
+        }
         if (!_rightHand.enabled && _rightHand.modelPrefab.activeSelf)
         {
             _rightHand.modelPrefab.SetActive(false);

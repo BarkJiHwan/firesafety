@@ -1,50 +1,43 @@
 ﻿using UnityEngine;
-using Photon.Pun;
 
 /// <summary>
-/// 모든 태우리의 기본 클래스 - 체력 관리, 색상 변화, 네트워크 기본 기능 제공
+/// 모든 태우리의 기본 클래스 - 순수 체력 관리 기능만 제공
 /// IDamageable 인터페이스를 구현하여 데미지 시스템과 연동
 /// </summary>
 public abstract class BaseTaewoori : MonoBehaviour, IDamageable
 {
     #region 인스펙터 설정
     [Header("체력 설정")]
-    [SerializeField] public float maxHealth = 100f;
-    [SerializeField] public float currentHealth;
-    [SerializeField] protected float feverTimeExtraHealth = 50f;
-
+    [SerializeField] protected float maxHealth = 100f;
+    [SerializeField] protected float currentHealth;
     #endregion
 
     #region 변수 선언
-
     protected bool isDead = false;
-    protected TaewooriPoolManager manager;
-    protected bool isFeverMode = false;
-
-    // 네트워크 관련
-    protected int networkID = -1;
-    protected bool isClientOnly = false;
     #endregion
 
     #region 프로퍼티
-    /// <summary>
-    /// 네트워크 고유 ID
-    /// </summary>
-    public int NetworkID => networkID;
-
     /// <summary>
     /// 사망 상태 확인
     /// </summary>
     public bool IsDead => isDead;
 
     /// <summary>
-    /// 피버타임 상태 확인
+    /// 현재 체력
     /// </summary>
-    protected bool IsFeverTime => GameManager.Instance != null &&
-                                GameManager.Instance.CurrentPhase == GamePhase.Fever;
+    public float CurrentHealth => currentHealth;
+
+    /// <summary>
+    /// 최대 체력
+    /// </summary>
+    public float MaxHealth => maxHealth;
     #endregion
 
     #region 유니티 라이프사이클
+    protected virtual void Awake()
+    {
+        InitializeHealth();
+    }
 
     protected virtual void OnEnable()
     {
@@ -54,14 +47,11 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
 
     #region 체력 시스템
     /// <summary>
-    /// 체력 초기화 - 피버타임 여부에 따라 최대 체력 설정
+    /// 체력 초기화
     /// </summary>
-    protected void InitializeHealth()
+    protected virtual void InitializeHealth()
     {
-        isFeverMode = IsFeverTime;
-        maxHealth = isFeverMode ? 100f + feverTimeExtraHealth : 100f;
         currentHealth = maxHealth;
-        
     }
 
     /// <summary>
@@ -71,7 +61,6 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
     {
         currentHealth = maxHealth;
         isDead = false;
-       
     }
 
     /// <summary>
@@ -84,26 +73,35 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
             return;
 
         currentHealth -= damage;
-     
-
 
         if (currentHealth <= 0)
         {
             Die();
         }
     }
-    #endregion
 
-    #region 네트워크 지원 함수
     /// <summary>
-    /// 네트워크용 체력 및 색상 동기화 - 클라이언트에서 마스터 데이터로 업데이트
+    /// 체력을 직접 설정하는 메서드 (특수한 경우에만 사용)
     /// </summary>
-    /// <param name="newCurrentHealth">새로운 현재 체력</param>
-    /// <param name="newMaxHealth">새로운 최대 체력</param>
-    public void SyncHealthAndColor(float newCurrentHealth, float newMaxHealth)
+    /// <param name="newHealth">새로운 체력값</param>
+    protected virtual void SetHealth(float newHealth)
     {
-        currentHealth = newCurrentHealth;
+        currentHealth = Mathf.Clamp(newHealth, 0, maxHealth);
+
+        if (currentHealth <= 0 && !isDead)
+        {
+            Die();
+        }
+    }
+
+    /// <summary>
+    /// 최대 체력을 설정하는 메서드
+    /// </summary>
+    /// <param name="newMaxHealth">새로운 최대 체력값</param>
+    protected virtual void SetMaxHealth(float newMaxHealth)
+    {
         maxHealth = newMaxHealth;
+        currentHealth = Mathf.Min(currentHealth, maxHealth);
     }
     #endregion
 
