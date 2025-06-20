@@ -66,8 +66,7 @@ public class PlayerSpawner : MonoBehaviour
 
     private void SpawnPlayerInTargetScenes()
     {
-        if (!IsTargetScene())
-            return;
+        if (!IsTargetScene()) return;
 
         PlayerEnum selectedChar = GetSelectedCharacter();
         GameObject player = LocalInstantiate(selectedChar);
@@ -80,8 +79,12 @@ public class PlayerSpawner : MonoBehaviour
 
     private bool IsTargetScene()
     {
-        return SceneManager.GetActiveScene().name.Equals("ExitScenes_CHM.Test") ||
-               SceneController.Instance.chooseSceneType == SceneType.IngameScene_Evacuation;
+        if (SceneController.Instance == null && SceneManager.GetActiveScene().name.Equals("ExitScenes_CHM.Test"))
+        {
+            return true;
+        }
+
+        return SceneController.Instance.chooseSceneType == SceneType.IngameScene_Evacuation;
     }
 
     private PlayerEnum GetSelectedCharacter()
@@ -243,7 +246,7 @@ public class PlayerSpawner : MonoBehaviour
         {
             carScript.StartTrack();
         }
-        
+
     }
     #endregion
 }
