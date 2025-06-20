@@ -21,7 +21,7 @@ public class TaewooriTutorial : BaseTaewoori
         DisableAllPlayerSuppressors();
 
         // 오브젝트 제거
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
     /// <summary>
