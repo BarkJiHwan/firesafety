@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -10,6 +9,20 @@ public class RoomMgr : MonoBehaviourPunCallbacks
     private DialogueLoader _dialogueLoader;
     private DialoguePlayer _dialoguePlayer;
 
+    private void Start()
+    {
+        GameObject dialogue = null;
+        if(_dialogueLoader == null)
+        {
+            _dialogueLoader = FindObjectOfType<DialogueLoader>();
+            dialogue = _dialogueLoader.gameObject;
+        }
+
+        if(_dialoguePlayer == null)
+        {
+            _dialoguePlayer = dialogue.GetComponent<DialoguePlayer>();
+        }
+    }
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
@@ -18,34 +31,20 @@ public class RoomMgr : MonoBehaviourPunCallbacks
             CheckAllPlayersReady();
         }
     }
-    public override void OnPlayerLeftRoom(Player otherPlayer)
-    {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            if (!GameManager.Instance.IsGameStart)
-            {
-                CheckAllPlayersReady();
-            }
-            else
-            {
-                return;
-            }
-        }
-        else if (otherPlayer.TagObject != null)
-        {
-            ((GameObject)otherPlayer.TagObject).SetActive(false);
-            Destroy((GameObject)otherPlayer.TagObject);
-            PhotonNetwork.Disconnect();
-        }
-    }
     private void CheckAllPlayersReady()
     {
         if (isAllPlayersReady())
         {
-            Debug.Log("모두 준비 됐으니 게임 시작합니다");
+            //Tutorial_NAR_010번 나레이션 실행 : 이제 게임 할거니까 잠깐 기다려~
             _dialoguePlayer.PlayWithText("TUT_010", UIType.Narration);
-            photonView.RPC("StartGameCountdown", RpcTarget.All);
+            _dialoguePlayer.onFinishDialogue += CallRPCToPlayers;
         }
+    }
+
+    private void CallRPCToPlayers()
+    {
+        _dialoguePlayer.onFinishDialogue -= CallRPCToPlayers;
+        photonView.RPC("StartGameCountdown", RpcTarget.All);
     }
 
     public bool isAllPlayersReady()

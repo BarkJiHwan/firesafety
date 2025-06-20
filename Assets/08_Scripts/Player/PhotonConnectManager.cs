@@ -61,6 +61,16 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         Debug.Log("currentPlayers : " + PhotonNetwork.PlayerList.Length);
     }
 
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (otherPlayer.TagObject != null)
+        {
+            ((GameObject)otherPlayer.TagObject).SetActive(false);
+            Destroy((GameObject)otherPlayer.TagObject);
+            PhotonNetwork.Disconnect();
+        }
+    }
+
     /* 테스트용 방 곧바로 입장시, 바로 플레이어 생성이후 XR 컴포넌트 켜줌. */
     public override void OnJoinedRoom()
     {
