@@ -59,22 +59,26 @@ public class ArrowController : MonoBehaviour
     IEnumerator GuideArrowToTarget(Transform targetPos)
     {
         timeElasped = 0;
-        while(timeElasped < appearDuration)
+        playerPos = turtorialMgr.transform;
+        Vector3 forward = playerPos.forward;
+        Vector3 dirToTarget = (targetPos.position - playerPos.position).normalized;
+
+        Quaternion startRot = Quaternion.LookRotation(forward);
+        Quaternion targetRot = Quaternion.LookRotation(dirToTarget);
+
+        float angle = Vector3.Angle(forward, dirToTarget);
+        float currentAngle = 0;
+        while (currentAngle < angle)
         {
-            timeElasped += Time.deltaTime;
+            float stepAngle = speed * Time.deltaTime;
+            currentAngle += stepAngle;
 
-            float t = Mathf.Clamp01(timeElasped / appearDuration);
-            playerPos = turtorialMgr.transform;
+            float t = Mathf.Clamp01(currentAngle / angle);
 
-            Vector3 forward = playerPos.forward;
-            Vector3 dirToTarget = (targetPos.position - playerPos.position).normalized;
             Vector3 currentDir = Vector3.Slerp(forward, dirToTarget, t);
-
             Vector3 circlePos = playerPos.position + currentDir * radius;
             transform.position = new Vector3(circlePos.x, heightOffset, circlePos.z);
 
-            Quaternion startRot = Quaternion.LookRotation(forward);
-            Quaternion targetRot = Quaternion.LookRotation(dirToTarget);
             Quaternion rot = Quaternion.Slerp(startRot, targetRot, t);
             Quaternion fixedRot = rot * Quaternion.Euler(rotArrow.x, rotArrow.y, rotArrow.z);
             transform.rotation = fixedRot;
@@ -134,7 +138,7 @@ public class ArrowController : MonoBehaviour
 
     private void OnDisable()
     {
-        Debug.Log("꺼짐");
+        StopAllCoroutines();
         turtorialMgr.OnStartArrow -= AppearArrow;
     }
 }
