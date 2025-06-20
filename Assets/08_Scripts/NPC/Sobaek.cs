@@ -93,7 +93,6 @@ public class Sobaek : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Sobaek: Player가 설정되지 않았습니다. 인스펙터에서 Player 필드를 설정해주세요.");
             // 플레이어가 없으면 현재 위치를 홈으로 설정
             basePosition = transform.position;
         }
@@ -164,12 +163,6 @@ public class Sobaek : MonoBehaviour
             isMovingToTarget = false;
             isMovingToHome = false;
             currentTarget = null;
-
-            Debug.Log("Sobaek: 게임매니저가 없는 씬으로 감지되었습니다. 상호작용이 비활성화됩니다.");
-        }
-        else
-        {
-            Debug.Log("Sobaek: 게임매니저가 있는 씬으로 감지되었습니다.");
         }
     }
     #endregion
@@ -214,7 +207,6 @@ public class Sobaek : MonoBehaviour
     {
         if (player == null)
         {
-            Debug.LogWarning("Sobaek: Player가 null입니다. 홈 포지션을 설정할 수 없습니다.");
             return;
         }
 
@@ -376,61 +368,6 @@ public class Sobaek : MonoBehaviour
         isMovingToHome = true;
         isTalking = false;
         currentTarget = null;
-    }
-    #endregion
-
-    #region 게임매니저 없는 씬 전용 메서드
-    /// <summary>
-    /// 토킹 애니메이션만 실행 (게임매니저 없는 씬용)
-    /// </summary>
-    public void PlayTalkingAnimation()
-    {
-        if (!UseGameManager)
-        {
-            isTalking = true;
-        }
-    }
-
-    /// <summary>
-    /// 토킹 애니메이션 중단 (게임매니저 없는 씬용)
-    /// </summary>
-    public void StopTalkingAnimation()
-    {
-        if (!UseGameManager)
-        {
-            isTalking = false;
-        }
-    }
-    #endregion
-
-    #region 런타임 설정 변경
-    /// <summary>
-    /// 플레이어 따라다니기 속도 런타임 변경
-    /// </summary>
-    public void SetFollowSpeed(float speed)
-    {
-        followSpeed = Mathf.Max(0.1f, speed);
-    }
-
-    /// <summary>
-    /// 이동 속도 런타임 변경
-    /// </summary>
-    public void SetMoveSpeed(float speed)
-    {
-        moveSpeed = Mathf.Max(0.1f, speed);
-    }
-
-    /// <summary>
-    /// 플레이어 설정 후 홈 포지션 재설정
-    /// </summary>
-    public void RefreshHomePosition()
-    {
-        if (player != null)
-        {
-            SetHomePosition();
-            basePosition = homePosition;
-            transform.position = homePosition;
-        }
     }
     #endregion
 

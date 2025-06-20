@@ -197,7 +197,7 @@ PrefabInstance:
     - target: {fileID: 4475486153958860787, guid: 8c557239dc3323e42a0bb6401677f15b,
         type: 3}
       propertyPath: offsetX
-      value: 0.4
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 4475486153958860787, guid: 8c557239dc3323e42a0bb6401677f15b,
         type: 3}
@@ -206,18 +206,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4475486153958860787, guid: 8c557239dc3323e42a0bb6401677f15b,
         type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 1764919705}
+    - target: {fileID: 4475486153958860787, guid: 8c557239dc3323e42a0bb6401677f15b,
+        type: 3}
       propertyPath: sobaekCar
       value: 
       objectReference: {fileID: 2016309399}
     - target: {fileID: 4475486153958860787, guid: 8c557239dc3323e42a0bb6401677f15b,
         type: 3}
       propertyPath: floatSpeed
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4475486153958860787, guid: 8c557239dc3323e42a0bb6401677f15b,
         type: 3}
       propertyPath: followSpeed
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4475486153958860787, guid: 8c557239dc3323e42a0bb6401677f15b,
         type: 3}
@@ -1382,6 +1387,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1764919705 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 9137445655480841037, guid: 8c557239dc3323e42a0bb6401677f15b,
+    type: 3}
+  m_PrefabInstance: {fileID: 50193270}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2016309399 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5767023576030062446, guid: 77eb7aff511ea5b41ad004f9fbcddfdd,

@@ -671,7 +671,11 @@ MonoBehaviour:
   moveSpeed: 3
   followSpeed: 15
   arrivalDistance: 0.5
+  animator: {fileID: 0}
   sobaekCar: {fileID: 0}
+  useGameManager: 1
+  usePhysicsMovement: 0
+  followCameraSpeed: 10
   testActivateCar: 0
 --- !u!1 &2632856105434143133
 GameObject:
