@@ -5,11 +5,9 @@ using UnityEngine;
 public class PhotonConnectManager : MonoBehaviourPunCallbacks
 {
     private string _gameVersion = "1";
-
-    [SerializeField] private string _testRoomName = "testtest123";
-    [SerializeField] private string _testLobbyName = "scTestLobby";
-
     [SerializeField] private PlayerSpawner _playerSpawner;
+    [SerializeField] private string roomName = "_releaseHelpMe";
+    [SerializeField] private string lobbyName = "_testLobbyName";
 
     private void Start()
     {
@@ -26,7 +24,6 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
                 pool.ResourceCache.Add(soCharacter.characterName, soCharacter.characterPrefab);
             }
         }
-
         TestConnectPhotonServer();
     }
 
@@ -45,9 +42,9 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
             if (!PhotonNetwork.InRoom)
             {
                 PhotonNetwork.JoinOrCreateRoom(
-                    _testRoomName,
+                    roomName,
                     new RoomOptions { MaxPlayers = 6 },
-                    new TypedLobby(_testLobbyName, LobbyType.Default)
+                    new TypedLobby(lobbyName, LobbyType.Default)
                 );
             }
         }
@@ -55,14 +52,7 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        if (!PhotonNetwork.InRoom)
-        {
-            PhotonNetwork.JoinOrCreateRoom(
-                _testRoomName,
-                new RoomOptions { MaxPlayers = 6 },
-                new TypedLobby(_testLobbyName, LobbyType.Default)
-            );
-        }
+        JoinRandomRoomOrCreatRoom();
     }
 
     // 테스트용, 이럴 일 없겠지만 누군가 방에 참가했을 때
@@ -79,41 +69,63 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Debug.Log("플레이어 나감 : " + otherPlayer.NickName);
-        Debug.Log(otherPlayer.TagObject);
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            // _gameManager.RemoveReadyPlayer(otherPlayer);
-        }
-
         if (otherPlayer.TagObject != null)
         {
             ((GameObject)otherPlayer.TagObject).SetActive(false);
             Destroy((GameObject)otherPlayer.TagObject);
+            PhotonNetwork.Disconnect();
         }
     }
 
     /* 테스트용 방 곧바로 입장시, 바로 플레이어 생성이후 XR 컴포넌트 켜줌. */
     public override void OnJoinedRoom()
     {
-        // 초
-        GameObject player = _playerSpawner.NetworkInstantiate(PlayerEnum.Jennie);
+        GameObject player = _playerSpawner.NetworkInstantiate(SceneController.Instance.GetChooseCharacterType().characterType);
         player.GetComponent<PlayerComponents>().xRComponents.SetActive(true);
 
         GameManager.Instance.ResetGameTimer();
         Debug.Log("나 참가 " + PhotonNetwork.LocalPlayer + "Room : " + PhotonNetwork.CurrentRoom.Name);
+        TutorialDataMgr.Instance.StartTutorial();
     }
 
+    private void JoinRandomRoomOrCreatRoom()
+    {/*, PlayerTtl = 0*/
+        RoomOptions options = new RoomOptions { MaxPlayers = 6, IsOpen = true };
+        PhotonNetwork.JoinOrCreateRoom(
+            roomName,
+            new RoomOptions { MaxPlayers = 6 },
+            new TypedLobby(lobbyName, LobbyType.Default)
+        );
+    }
 
-
-    public override void OnJoinedLobby()
+    public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Debug.Log("Lobby : " + PhotonNetwork.CurrentLobby.Name);
+        switch (returnCode)
+        {
+            case 32765:
+                Debug.Log("방이 꽉 찼습니다.");
+                break;
+            case 32764:
+                Debug.Log("방이 닫혔습니다.");
+                break;
+            default:
+                Debug.Log("방 참여 실패, code : " + returnCode + " msg : " + message);
+                break;
+        }
     }
-
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        Debug.Log("방 참여 실패, code : " + returnCode + " msg : " + message);
+        switch (returnCode)
+        {
+            case 32765:
+                Debug.Log("방이 꽉 찼습니다.");
+                break;
+            case 32764:
+                Debug.Log("방이 닫혔습니다.");
+                break;
+            default:
+                Debug.Log("방 참여 실패, code : " + returnCode + " msg : " + message);
+                break;
+        }
     }
 }

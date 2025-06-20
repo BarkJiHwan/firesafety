@@ -8,15 +8,21 @@ using UnityEngine;
 public class FireParticles : MonoBehaviour
 {
     #region 인스펙터 설정
-    [SerializeField] private LayerMask ignoreCollisionLayers; // 레이어 마스크
-    [SerializeField] private string shieldTag = "Shield"; // Shield 태그는 별도로 유지
-    [SerializeField] private float autoDestroyTime = 5f; // 자동 파괴 시간 (5초로 증가)
+    [Header("충돌 설정")]
+    [SerializeField] private LayerMask ignoreCollisionLayers; // 무시할 레이어 마스크
+    [SerializeField] private string shieldTag = "Shield"; // Shield 태그
+
+    [Header("시간 설정")]
+    [SerializeField] private float autoDestroyTime = 5f; // 자동 파괴 시간
+
+    [Header("지면 감지 설정")] // CHM 추가함: 구체 감지 설정
+    [SerializeField] private float sphereRadius = 0.2f; // 구체 반지름
     #endregion
 
     #region 변수 선언
-    private Taewoori originTaewoori;
-    private bool hasCollided = false;
-    private Coroutine autoDestroyCoroutine;
+    private Taewoori originTaewoori; // 이 발사체를 생성한 원본 태우리
+    private bool hasCollided = false; // 충돌 상태
+    private Coroutine autoDestroyCoroutine; // 자동 파괴 코루틴
     #endregion
 
     #region 프로퍼티
@@ -27,65 +33,70 @@ public class FireParticles : MonoBehaviour
     #endregion
 
     #region 유니티 라이프사이클
-    /// <summary>
-    /// 발사체 초기 설정 - 물리 속성 및 충돌 무시 설정
-    /// </summary>
     private void Start()
+    {
+        SetupPhysics();
+        SetupCollisionIgnoring();
+    }
+
+    private void OnEnable()
+    {
+        ResetState();
+        StartAutoDestroyTimer();
+    }
+
+    private void OnDisable()
+    {
+        StopAutoDestroyTimer();
+    }
+    #endregion
+
+    #region 초기화
+    /// <summary>
+    /// 물리 속성 설정
+    /// </summary>
+    private void SetupPhysics()
     {
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.freezeRotation = true;
         }
+    }
 
+    /// <summary>
+    /// 충돌 무시 설정
+    /// </summary>
+    private void SetupCollisionIgnoring()
+    {
         // 태우리와 물리적 충돌 무시 설정
         if (originTaewoori != null)
         {
-            Collider myCollider = GetComponent<Collider>();
-            Collider taewooriCollider = originTaewoori.GetComponent<Collider>();
-
-            if (myCollider != null && taewooriCollider != null)
-            {
-                Physics.IgnoreCollision(myCollider, taewooriCollider);
-            }
+            IgnoreCollisionWith(originTaewoori.GetComponent<Collider>());
         }
-
-        // 레이어 기반 충돌 무시 설정
-        int myLayer = gameObject.layer;
-        int playerLayer = LayerMask.NameToLayer("Player");
-        int taewooriLayer = LayerMask.NameToLayer("Taewoori");
     }
 
     /// <summary>
-    /// 오브젝트 활성화 시 초기화 - 충돌 상태 리셋 및 자동 파괴 타이머 시작
+    /// 특정 콜라이더와 충돌 무시
     /// </summary>
-    private void OnEnable()
+    /// <param name="otherCollider">무시할 콜라이더</param>
+    private void IgnoreCollisionWith(Collider otherCollider)
+    {
+        Collider myCollider = GetComponent<Collider>();
+        if (myCollider != null && otherCollider != null)
+        {
+            Physics.IgnoreCollision(myCollider, otherCollider);
+        }
+    }
+
+    /// <summary>
+    /// 상태 리셋
+    /// </summary>
+    private void ResetState()
     {
         hasCollided = false;
-
-        // 활성화될 때마다 자동 파괴 타이머 시작
-        if (autoDestroyCoroutine != null)
-        {
-            StopCoroutine(autoDestroyCoroutine);
-        }
-        autoDestroyCoroutine = StartCoroutine(AutoDestroyAfterTime());
     }
 
-    /// <summary>
-    /// 오브젝트 비활성화 시 코루틴 정리
-    /// </summary>
-    private void OnDisable()
-    {
-        // 비활성화될 때 코루틴 정리
-        if (autoDestroyCoroutine != null)
-        {
-            StopCoroutine(autoDestroyCoroutine);
-            autoDestroyCoroutine = null;
-        }
-    }
-    #endregion
-
-    #region 초기화 함수
     /// <summary>
     /// 원본 태우리 설정 및 충돌 무시 처리
     /// </summary>
@@ -97,86 +108,145 @@ public class FireParticles : MonoBehaviour
         // 원본 태우리와 물리적 충돌 무시
         if (originTaewoori != null)
         {
-            Collider myCollider = GetComponent<Collider>();
-            Collider taewooriCollider = originTaewoori.GetComponent<Collider>();
-
-            if (myCollider != null && taewooriCollider != null)
-            {
-                Physics.IgnoreCollision(myCollider, taewooriCollider);
-            }
+            IgnoreCollisionWith(originTaewoori.GetComponent<Collider>());
         }
     }
     #endregion
 
-    #region 충돌 처리 시스템
+    #region 충돌 처리
     /// <summary>
     /// 트리거 충돌 처리 - Shield, 무시 레이어, 일반 지형에 따른 분기 처리
     /// </summary>
     /// <param name="other">충돌한 콜라이더</param>
     private void OnTriggerEnter(Collider other)
     {
-        // 이미 충돌 처리되었으면 무시
         if (hasCollided)
-        {
             return;
-        }
 
-        // Shield 태그 체크 - 이 태그가 있으면 바로 제거
-        if (other.CompareTag(shieldTag))
+        // Shield와 충돌 - 스몰태우리 생성 없이 즉시 제거
+        if (IsShield(other))
         {
-            Debug.Log("Shield와 접촉 - 즉시 파괴");
             HandleShieldCollision();
             return;
         }
 
-        // 레이어 마스크를 사용한 충돌 무시 (Player, Taewoori 등) - 그냥 통과 (제거 안함)
-        int triggerLayer = other.gameObject.layer;
-        if (((1 << triggerLayer) & ignoreCollisionLayers) != 0)
+        // CHM 추가함: 무시할 레이어와 충돌 - 카운트 감소하고 제거
+        if (ShouldIgnoreCollision(other))
         {
-            return; // 파이어 파티클은 계속 날아감
+            HandleIgnoreLayerCollision();
+            return;
         }
 
-        // 일반 트리거 접촉 - 즉시 스몰태우리 생성하고 파괴 (지면, 벽 등)
+        // 일반 지형과 충돌 - 스몰태우리 생성 후 제거
         HandleGroundCollision();
     }
 
     /// <summary>
-    /// Shield와 충돌 시 처리 - 스몰태우리 생성 없이 즉시 제거
+    /// Shield 태그 확인
+    /// </summary>
+    /// <param name="other">확인할 콜라이더</param>
+    /// <returns>Shield 여부</returns>
+    private bool IsShield(Collider other)
+    {
+        return other.CompareTag(shieldTag);
+    }
+
+    /// <summary>
+    /// 무시할 충돌인지 확인
+    /// </summary>
+    /// <param name="other">확인할 콜라이더</param>
+    /// <returns>무시 여부</returns>
+    private bool ShouldIgnoreCollision(Collider other)
+    {
+        int triggerLayer = other.gameObject.layer;
+        return ((1 << triggerLayer) & ignoreCollisionLayers) != 0;
+    }
+
+    /// <summary>
+    /// Shield와 충돌 시 처리
     /// </summary>
     private void HandleShieldCollision()
     {
         hasCollided = true;
         StopAutoDestroyTimer();
 
-        // 스몰 태우리 생성 없이 제거되므로 카운트 감소 필요
-        if (TaewooriPoolManager.Instance != null)
-        {
-            TaewooriPoolManager.Instance.ReturnFireParticleToPoolWithoutSpawn(gameObject, originTaewoori);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        // 스몰태우리 생성 없이 제거되므로 카운트 감소 필요
+        ReturnToPoolWithoutSpawn();
     }
 
     /// <summary>
-    /// 지형과 충돌 시 처리 - 스몰태우리 생성 후 제거
+    /// 무시 레이어(Player 등)와 충돌 시 처리
+    /// </summary>
+    private void HandleIgnoreLayerCollision()
+    {
+        hasCollided = true;
+        StopAutoDestroyTimer();
+
+        // 스몰태우리 생성 없이 제거되므로 카운트 감소 필요
+        ReturnToPoolWithoutSpawn();
+    }
+
+    /// <summary>
+    /// 지형과 충돌 시 처리
     /// </summary>
     private void HandleGroundCollision()
     {
         hasCollided = true;
         StopAutoDestroyTimer();
 
-        Vector3 contactPoint = transform.position; // 트리거는 정확한 충돌점이 없으므로 현재 위치 사용
+        // CHM 추가함: 구체 형태로 닿은 지점에 생성
+        Vector3 spawnPosition = GetGroundPosition();
 
-        // 즉시 스몰태우리 생성
-        if (TaewooriPoolManager.Instance != null && originTaewoori != null)
+        // 스몰태우리 생성
+        SpawnSmallTaewoori(spawnPosition);
+
+        // 파티클 제거
+        ReturnToPool();
+    }
+
+    /// <summary>
+    /// CHM 추가함: 구체 형태로 지면 감지하여 정확한 위치 계산
+    /// </summary>
+    /// <returns>스몰태우리 생성 위치</returns>
+    private Vector3 GetGroundPosition()
+    {
+        RaycastHit hit;
+
+        // 구체 형태로 아래쪽 감지
+        if (Physics.SphereCast(transform.position, sphereRadius, Vector3.down, out hit))
         {
-            GameObject spawnedSmallTaewoori = TaewooriPoolManager.Instance.PoolSpawnSmallTaewoori(contactPoint, originTaewoori);
+            // 닿은 지점에서 0.5만큼 위에 생성
+            return hit.point + Vector3.up * 0.2f;
         }
 
-        // 즉시 파괴
-        DestroyParticle();
+        // 감지 실패시 기존 방식 사용
+        return transform.position + Vector3.up * 0.2f;
+    }
+
+    /// <summary>
+    /// 스몰태우리 생성
+    /// </summary>
+    /// <param name="position">생성 위치</param>
+    private void SpawnSmallTaewoori(Vector3 position)
+    {
+        if (TaewooriPoolManager.Instance != null && originTaewoori != null)
+        {
+            TaewooriPoolManager.Instance.PoolSpawnSmallTaewoori(position, originTaewoori);
+        }
+    }
+    #endregion
+
+    #region 자동 파괴 시스템
+    /// <summary>
+    /// 자동 파괴 타이머 시작
+    /// </summary>
+    private void StartAutoDestroyTimer()
+    {
+        if (autoDestroyCoroutine != null)
+        {
+            StopCoroutine(autoDestroyCoroutine);
+        }
+        autoDestroyCoroutine = StartCoroutine(AutoDestroyCoroutine());
     }
 
     /// <summary>
@@ -190,40 +260,47 @@ public class FireParticles : MonoBehaviour
             autoDestroyCoroutine = null;
         }
     }
-    #endregion
 
-    #region 자동 파괴 시스템
     /// <summary>
-    /// 자동 파괴 코루틴 - 충돌하지 않고 시간이 지났을 때 스몰태우리 생성 없이 제거
+    /// 자동 파괴 코루틴
     /// </summary>
     /// <returns>코루틴</returns>
-    private IEnumerator AutoDestroyAfterTime()
+    private IEnumerator AutoDestroyCoroutine()
     {
         yield return new WaitForSeconds(autoDestroyTime);
 
         if (!hasCollided && gameObject.activeInHierarchy)
         {
-            // 스몰 태우리 생성 없이 제거되므로 카운트 감소 필요
-            if (TaewooriPoolManager.Instance != null)
-            {
-                TaewooriPoolManager.Instance.ReturnFireParticleToPoolWithoutSpawn(gameObject, originTaewoori);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+            // 시간 초과로 제거 - 스몰태우리 생성 없음
+            ReturnToPoolWithoutSpawn();
+        }
+    }
+    #endregion
+
+    #region 풀 반환
+    /// <summary>
+    /// 일반 풀 반환 (스몰태우리 생성 후)
+    /// </summary>
+    private void ReturnToPool()
+    {
+        if (TaewooriPoolManager.Instance != null)
+        {
+            TaewooriPoolManager.Instance.ReturnFireParticleToPool(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
     /// <summary>
-    /// 파티클 일반 파괴 처리 - 스몰태우리 생성 후 풀로 반환
+    /// 스몰태우리 생성 없이 풀 반환
     /// </summary>
-    private void DestroyParticle()
+    private void ReturnToPoolWithoutSpawn()
     {
-        // 풀로 반환
         if (TaewooriPoolManager.Instance != null)
         {
-            TaewooriPoolManager.Instance.ReturnFireParticleToPool(gameObject);
+            TaewooriPoolManager.Instance.ReturnFireParticleToPoolWithoutSpawn(gameObject, originTaewoori);
         }
         else
         {
