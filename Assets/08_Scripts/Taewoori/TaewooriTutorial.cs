@@ -1,59 +1,52 @@
-﻿using System.Collections;
-using Photon.Pun;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class TaewooriTutorial : MonoBehaviour, IDamageable
+/// <summary>
+/// 튜토리얼용 태우리 - BaseTaewoori를 상속받아 체력 관리 기능 사용
+/// 사망 시 플레이어의 소화기를 비활성화하는 특수 기능 포함
+/// </summary>
+public class TaewooriTutorial : BaseTaewoori
 {
-    [Header("체력 설정")]
-    public float currentHealth = 100f;
-    private bool isDead = false;
-
-    void Start()
-    {
-        isDead = false;
-    }
-
-    // IDamageable 구현
-    public virtual void TakeDamage(float damage)
-    {
-        if (isDead)
-            return;
-
-        currentHealth -= damage;
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-    }
-    public void Die()
+    #region 사망 처리 (BaseTaewoori 추상 메서드 구현)
+    /// <summary>
+    /// 튜토리얼 태우리 사망 처리 - 소화기 비활성화
+    /// </summary>
+    public override void Die()
     {
         if (isDead)
             return;
 
         isDead = true;
-        //사망시 소화기 비활성화
+
+        // 사망 시 모든 플레이어의 소화기 비활성화
+        DisableAllPlayerSuppressors();
+
+        // 오브젝트 제거
+        Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// 모든 플레이어의 소화기 비활성화
+    /// </summary>
+    private void DisableAllPlayerSuppressors()
+    {
         var players = FindObjectsOfType<FireSuppressantManager>();
+
         foreach (var player in players)
         {
-            if (player.pView.IsMine)
+            if (player.pView != null && player.pView.IsMine)
             {
-                var tuto = player.tutoSuppressor;
-                if (tuto != null)
+                var tutoSuppressor = player.tutoSuppressor;
+
+                if (tutoSuppressor != null)
                 {
-                    tuto.SetAmountZero();
+                    tutoSuppressor.SetAmountZero();
                 }
                 else
                 {
-                    Debug.Log("tuto 스크립트 못찾았엉");
+                    Debug.LogWarning("TutorialSuppressor를 찾을 수 없습니다.");
                 }
             }
         }
-
-
-        //var playerSuppressor = FindObjectOfType<TutorialSuppressor>();
-        //var playerRPCSuppressor = FindObjectOfType<FireSuppressantManager>();
-        //playerSuppressor.DetachSuppressor();
-        //playerSuppressor.enabled = false;
-        //playerRPCSuppressor.enabled = true;
     }
+    #endregion
 }
