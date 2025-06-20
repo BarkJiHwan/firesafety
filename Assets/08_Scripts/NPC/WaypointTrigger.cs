@@ -1,19 +1,14 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// 웨이포인트 타입
-/// </summary>
 public enum WaypointType
 {
     Start,
     End
 }
 
-/// <summary>
-/// 웨이포인트 트리거 컴포넌트
-/// </summary>
 public class WaypointTrigger : MonoBehaviour
 {
+    private LayerMask playerLayerMask = 1 << 0;
     private FloorManager floorManager;
     private WaypointType waypointType;
     private bool hasTriggered = false;
@@ -24,9 +19,14 @@ public class WaypointTrigger : MonoBehaviour
         waypointType = type;
     }
 
+    public void SetPlayerLayerMask(LayerMask mask)
+    {
+        playerLayerMask = mask;
+    }
+
     void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player") || hasTriggered)
+        if (!IsPlayerLayer(other.gameObject.layer) || hasTriggered)
             return;
 
         hasTriggered = true;
@@ -40,6 +40,11 @@ public class WaypointTrigger : MonoBehaviour
                 floorManager.OnEndWaypointTriggered();
                 break;
         }
+    }
+
+    private bool IsPlayerLayer(int layer)
+    {
+        return (playerLayerMask & (1 << layer)) != 0;
     }
 
     public void ResetTrigger()
