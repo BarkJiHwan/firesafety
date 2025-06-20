@@ -14,6 +14,9 @@ public class FireParticles : MonoBehaviour
 
     [Header("시간 설정")]
     [SerializeField] private float autoDestroyTime = 5f; // 자동 파괴 시간
+
+    [Header("지면 감지 설정")] // CHM 추가함: 구체 감지 설정
+    [SerializeField] private float sphereRadius = 0.2f; // 구체 반지름
     #endregion
 
     #region 변수 선언
@@ -179,13 +182,33 @@ public class FireParticles : MonoBehaviour
         hasCollided = true;
         StopAutoDestroyTimer();
 
-        Vector3 contactPoint = transform.position;
+        // CHM 추가함: 구체 형태로 닿은 지점에 생성
+        Vector3 spawnPosition = GetGroundPosition();
 
         // 스몰태우리 생성
-        SpawnSmallTaewoori(contactPoint);
+        SpawnSmallTaewoori(spawnPosition);
 
         // 파티클 제거
         ReturnToPool();
+    }
+
+    /// <summary>
+    /// CHM 추가함: 구체 형태로 지면 감지하여 정확한 위치 계산
+    /// </summary>
+    /// <returns>스몰태우리 생성 위치</returns>
+    private Vector3 GetGroundPosition()
+    {
+        RaycastHit hit;
+
+        // 구체 형태로 아래쪽 감지
+        if (Physics.SphereCast(transform.position, sphereRadius, Vector3.down, out hit))
+        {
+            // 닿은 지점에서 0.5만큼 위에 생성
+            return hit.point + Vector3.up * 0.2f;
+        }
+
+        // 감지 실패시 기존 방식 사용
+        return transform.position + Vector3.up * 0.2f;
     }
 
     /// <summary>
