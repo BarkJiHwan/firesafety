@@ -24,7 +24,8 @@ public class TutorialMgr : MonoBehaviourPun
     bool isMaterialOn = false;
     private RoomMgr _roomMgr;
 
-    event Action<int> OnStartArrow;
+    public event Action<int> OnStartArrow;
+    public ArrowController arrowCtrl { get; set; }
 
     void Start()
     {
@@ -111,6 +112,7 @@ public class TutorialMgr : MonoBehaviourPun
         //이 부분에 Tutorial_NAR_001이 종료 될 때 까지 기다렸다 시작하면 됨
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_001", UIType.Narration);
         yield return new WaitUntil(()=> !_tutorialAudioPlayer._tutoAudio.isPlaying);
+        OnStartArrow?.Invoke(_playerIndex);
         TutorialDataMgr.Instance.IsStartTutorial = true;
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_002", UIType.Narration);
         Debug.Log("이동 튜토리얼 시작");
@@ -135,6 +137,7 @@ public class TutorialMgr : MonoBehaviourPun
             _tutorialAudioPlayer.TutorialAudioWithTextStop();
             _zone.SetActive(false);
             Debug.Log("이동 튜토리얼 완료");
+            arrowCtrl.gameObject.SetActive(false);
         };
         yield return new WaitUntil(() => completed);
         //Tutorial_NAR_003번 나레이션 실행 : 잘했어요!
@@ -290,6 +293,10 @@ public class TutorialMgr : MonoBehaviourPun
             _preventable.TriggerPreventObejct(false);
         }
 
+        if(arrowCtrl.gameObject.activeSelf == true)
+        {
+            arrowCtrl.gameObject.SetActive(false);
+        }
         //11번 나레이션 실행 : 아쉽지만 어쩌구...
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_011", UIType.Narration);
         yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
