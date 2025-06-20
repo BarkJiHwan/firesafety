@@ -37,8 +37,14 @@ public class RoomMgr : MonoBehaviourPunCallbacks
         {
             //Tutorial_NAR_010번 나레이션 실행 : 이제 게임 할거니까 잠깐 기다려~
             _dialoguePlayer.PlayWithText("TUT_010", UIType.Narration);
-            photonView.RPC("StartGameCountdown", RpcTarget.All);
+            _dialoguePlayer.onFinishDialogue += CallRPCToPlayers;
         }
+    }
+
+    private void CallRPCToPlayers()
+    {
+        _dialoguePlayer.onFinishDialogue -= CallRPCToPlayers;
+        photonView.RPC("StartGameCountdown", RpcTarget.All);
     }
 
     public bool isAllPlayersReady()

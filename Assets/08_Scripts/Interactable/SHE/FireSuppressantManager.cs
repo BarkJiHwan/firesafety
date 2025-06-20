@@ -355,7 +355,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         //    Debug.Log("보급: 생성 및 할당");
         //}
         #endregion
-        if (!pView.IsMine)
+        if (!pView.IsMine || GameManager.Instance.CurrentPhase != GamePhase.Fire)
         {
             return;
         }

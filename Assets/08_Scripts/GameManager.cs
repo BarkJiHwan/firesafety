@@ -73,7 +73,6 @@ public class GameManager : MonoBehaviour
 
     /* 일시정지 할때 추가 */
     private bool _isPausing;
-
     public event Action onGamePause;
     public event Action onGameResume;
 
@@ -164,12 +163,14 @@ public class GameManager : MonoBehaviour
 
     private void PauseGameTimer()
     {
+        Debug.Log("Pausing");
         _isPausing = true;
         onGamePause?.Invoke();
     }
 
     private void ResumeGameTimer()
     {
+        Debug.Log("Resuming");
         _isPausing = false;
         _dialoguePlayer.onFinishDialogue -= ResumeGameTimer;
         onGameResume?.Invoke();

@@ -16,10 +16,13 @@ public class Phase2InteractManager : MonoBehaviour
         public bool isWet;
         public bool isEnabled = false;
         public XRRayInteractor interactor;
+        public EHandType handType;
     }
     [SerializeField] private DaTaewoori _daTaewoori;
-    [SerializeField] private GameObject _checkingWearing; //수건 입에 가져다 댄 건가요?
-    [SerializeField] private bool _isWear;//가져다 댄 거 맞지요?
+    public bool IsWear
+    {
+        get; private set;
+    }
     [Header("양손 수건 데이터")]
     [SerializeField] private TowelHandData _leftHand;
     [SerializeField] private TowelHandData _rightHand;
@@ -41,7 +44,7 @@ public class Phase2InteractManager : MonoBehaviour
     [SerializeField] private GameObject _waterShooterPrefab;
     [SerializeField] private float _fireDelay = 0.5f;
     [SerializeField] private LayerMask _weaponLayer;
-    private RaycastHit hit;
+    private RaycastHit _hit;
     private void Awake()
     {
         if (GameManager.Instance != null && GameManager.Instance.CurrentPhase != GamePhase.LeaveDangerArea)
@@ -54,32 +57,22 @@ public class Phase2InteractManager : MonoBehaviour
         CheckCols(_leftHand);
         CheckCols(_rightHand);
     }
-
+    public void CheckingTowelCol()
+    {
+        IsWear = true;
+        if (_leftHand.isEnabled)
+        {
+            _leftHand.modelPrefab.SetActive(false);
+        }
+        if (_rightHand.isEnabled)
+        {
+            _rightHand.modelPrefab.SetActive(false);
+        }
+    }
     private void CheckCols(TowelHandData hand)
     {
         _triggerValue = hand.triggerAction.action.ReadValue<float>();
-        //if (hand.interactor.TryGetCurrent3DRaycastHit(out hit) && !_gotTowel)//수건 가져오기
-        //{
-        //    if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _towelMask))
-        //    {
-        //        TowelSupply(hand);
-        //    }
-        //}
-        //if (_gotTowel && hand.interactor.TryGetCurrent3DRaycastHit(out hit) && _tapEnable)//물에 적시기
-        //{
-        //    if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _waterMask))
-        //    {
-        //        WettingTowel(hand);
-        //    }
-        //}
-        //if (hand.interactor.TryGetCurrent3DRaycastHit(out hit) && _gotTowel)//수도꼭지 활성화
-        //{
-        //    if (FireSuppressantManager.IsInLayerMask(hit.collider.gameObject, _tapMask))
-        //    {
-        //        _tapWater.InteractTapWater();
-        //        _tapEnable = true;
-        //    }
-        //}
+
     }
     private void TowelSupply(TowelHandData hand)
     {
