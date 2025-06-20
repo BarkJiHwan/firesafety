@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class ArrowController : MonoBehaviour
 {
+    [SerializeField] TutorialDataMgr dataMgr;
+
+    [Header("원 회전")]
     [SerializeField] float radius = 2f;
     [SerializeField] float speed = 5f;
     [SerializeField] float appearDuration = 1f;
     [SerializeField] float heightOffset = 0.7f;
     [SerializeField] Vector3 rotArrow;
-    [SerializeField] TutorialDataMgr dataMgr;
+
+    [Header("날아가기")]
+    [SerializeField] float flyDuration = 1.0f;
 
     Transform playerPos;
     // TutorialDataMgr의 GetInteractObject를 받아야 하는데...
@@ -81,10 +86,6 @@ public class ArrowController : MonoBehaviour
             Vector3 circlePos = playerPos.position + currentDir * radius;
             transform.position = new Vector3(circlePos.x, heightOffset, circlePos.z);
 
-            //Quaternion lookRot = Quaternion.LookRotation(dirToTarget);
-            //Quaternion fixedRot = lookRot * Quaternion.Euler(rotArrow.x, rotArrow.y, rotArrow.z);
-            //transform.rotation = fixedRot;
-
             Quaternion startRot = Quaternion.LookRotation(forward);
             Quaternion targetRot = Quaternion.LookRotation(dirToTarget);
             Quaternion rot = Quaternion.Slerp(startRot, targetRot, t);
@@ -93,7 +94,26 @@ public class ArrowController : MonoBehaviour
 
             yield return null;
         }
-        isGuiding = true;
+
+        Vector3 startPos = transform.position;
+        Vector3 goalPos = targetPos.position + Vector3.up * heightOffset;
+
+        timeElasped = 0;
+        while(timeElasped < flyDuration)
+        {
+            timeElasped += Time.deltaTime;
+            float t = Mathf.Clamp01(timeElasped / flyDuration);
+
+            transform.position = Vector3.Lerp(startPos, goalPos, t);
+
+            Vector3 dir = (goalPos - transform.position).normalized;
+            Quaternion rot = Quaternion.LookRotation(dir);
+            transform.rotation = rot * Quaternion.Euler(rotArrow.x, rotArrow.y, rotArrow.z);
+
+            yield return null;
+        }
+        transform.rotation = Quaternion.Euler(90, 0, 0);
+        isGuiding = false;
     }
 
     void AppearArrow(int playerIndex)
