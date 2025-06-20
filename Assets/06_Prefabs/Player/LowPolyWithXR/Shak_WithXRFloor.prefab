@@ -2421,10 +2421,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1034d0d80e10b2347b842fd286f27385, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pView: {fileID: 0}
+  pView: {fileID: 3759552973863989667}
   leftHand:
     triggerAction:
-      m_UseReference: 0
+      m_UseReference: 1
       m_Action:
         m_Name: Trigger
         m_Type: 0
@@ -2434,20 +2434,21 @@ MonoBehaviour:
         m_Interactions: 
         m_SingletonActionBindings: []
         m_Flags: 0
-      m_Reference: {fileID: 0}
-    grabSpot: {fileID: 0}
-    normalFireFX: {fileID: 0}
-    zeroAmountFireFX: {fileID: 0}
-    initialFireFX: {fileID: 0}
-    modelPrefab: {fileID: 0}
+      m_Reference: {fileID: -4289430672226363583, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
+    grabSpot: {fileID: 1645857568}
+    normalFireFX: {fileID: 3309312957356854625}
+    zeroAmountFireFX: {fileID: 2316641723927846666}
+    initialFireFX: {fileID: 279082494695306712}
+    modelPrefab: {fileID: 7224595031413308429}
     initialFire: 0
     enabled: 0
     isSpraying: 0
-    handType: 0
-    interator: {fileID: 0}
+    handType: 1
+    interator: {fileID: 204756831675855228}
   rightHand:
     triggerAction:
-      m_UseReference: 0
+      m_UseReference: 1
       m_Action:
         m_Name: Trigger
         m_Type: 0
@@ -2457,17 +2458,18 @@ MonoBehaviour:
         m_Interactions: 
         m_SingletonActionBindings: []
         m_Flags: 0
-      m_Reference: {fileID: 0}
-    grabSpot: {fileID: 0}
-    normalFireFX: {fileID: 0}
-    zeroAmountFireFX: {fileID: 0}
-    initialFireFX: {fileID: 0}
-    modelPrefab: {fileID: 0}
+      m_Reference: {fileID: 7904272356298805229, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
+    grabSpot: {fileID: 729683899}
+    normalFireFX: {fileID: 3309312956383273853}
+    zeroAmountFireFX: {fileID: 2316641725035688214}
+    initialFireFX: {fileID: 279082493521370052}
+    modelPrefab: {fileID: 7224595030306574865}
     initialFire: 0
     enabled: 0
     isSpraying: 0
     handType: 0
-    interator: {fileID: 0}
+    interator: {fileID: 204756830080729528}
   _sprayLength: 2.5
   _sprayRadius: 1
   _damage: 1
@@ -2475,11 +2477,11 @@ MonoBehaviour:
   _decreaseAmount: 1
   _fireMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   _refillCooldown: 3
   _supplyMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   _supplyDetectRange: 0.8
   _sprayOrigin: {fileID: 0}
   _currentAmount: 100
@@ -3355,11 +3357,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7831cc6ba61ab540866892822bb1692, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pView: {fileID: 0}
-  tutoSuppressor: {fileID: 0}
+  pView: {fileID: 3759552973863989667}
+  tutoSuppressor: {fileID: 1131083854}
   _leftHand:
     triggerAction:
-      m_UseReference: 0
+      m_UseReference: 1
       m_Action:
         m_Name: Trigger
         m_Type: 0
@@ -3369,22 +3371,23 @@ MonoBehaviour:
         m_Interactions: 
         m_SingletonActionBindings: []
         m_Flags: 0
-      m_Reference: {fileID: 0}
-    grabSpot: {fileID: 0}
-    normalFireFX: {fileID: 0}
-    zeroAmountFireFX: {fileID: 0}
-    initialFireFX: {fileID: 0}
-    modelPrefab: {fileID: 0}
+      m_Reference: {fileID: -4289430672226363583, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
+    grabSpot: {fileID: 1645857568}
+    normalFireFX: {fileID: 3309312957356854625}
+    zeroAmountFireFX: {fileID: 2316641723927846666}
+    initialFireFX: {fileID: 279082494695306712}
+    modelPrefab: {fileID: 7224595031413308429}
     initialFire: 0
     enabled: 0
     isSpraying: 0
-    handType: 0
-    interator: {fileID: 0}
+    handType: 1
+    interator: {fileID: 204756831675855228}
   _rightHand:
     triggerAction:
-      m_UseReference: 0
+      m_UseReference: 1
       m_Action:
-        m_Name: 
+        m_Name: Trigger
         m_Type: 0
         m_ExpectedControlType: 
         m_Id: 2d67c7a2-1e98-48a8-8bda-f9dfa342fe8c
@@ -3392,17 +3395,18 @@ MonoBehaviour:
         m_Interactions: 
         m_SingletonActionBindings: []
         m_Flags: 0
-      m_Reference: {fileID: 0}
-    grabSpot: {fileID: 0}
-    normalFireFX: {fileID: 0}
-    zeroAmountFireFX: {fileID: 0}
-    initialFireFX: {fileID: 0}
-    modelPrefab: {fileID: 0}
+      m_Reference: {fileID: 7904272356298805229, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
+    grabSpot: {fileID: 729683899}
+    normalFireFX: {fileID: 3309312956383273853}
+    zeroAmountFireFX: {fileID: 2316641725035688214}
+    initialFireFX: {fileID: 279082493521370052}
+    modelPrefab: {fileID: 7224595030306574865}
     initialFire: 0
     enabled: 0
     isSpraying: 0
     handType: 0
-    interator: {fileID: 0}
+    interator: {fileID: 204756830080729528}
   _sprayLength: 2.5
   _sprayRadius: 1
   _damage: 1
@@ -3410,11 +3414,11 @@ MonoBehaviour:
   _decreaseAmount: 1
   _fireMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   _refillCooldown: 3
   _supplyMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   _supplyDetectRange: 0.8
   _supplyCooldown: 0
   _sprayOrigin: {fileID: 0}
@@ -4472,6 +4476,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d249244fbef0c1438a57f292567b981, type: 3}
+--- !u!198 &279082493521370052 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7393089967395070981, guid: 8d249244fbef0c1438a57f292567b981,
+    type: 3}
+  m_PrefabInstance: {fileID: 7297529227686543297}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &2316641725035688214 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4999089546824044247, guid: 8d249244fbef0c1438a57f292567b981,
+    type: 3}
+  m_PrefabInstance: {fileID: 7297529227686543297}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &3309312956383273853 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 5236281957517352124, guid: 8d249244fbef0c1438a57f292567b981,
+    type: 3}
+  m_PrefabInstance: {fileID: 7297529227686543297}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7224595030306574865 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 73432860302814672, guid: 8d249244fbef0c1438a57f292567b981,
+    type: 3}
+  m_PrefabInstance: {fileID: 7297529227686543297}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7224595030306574957 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 73432860302814636, guid: 8d249244fbef0c1438a57f292567b981,
@@ -4730,7 +4758,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 7297529227837504083}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 9046577937740560418}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6803edce0201f574f923fd9d10e5b30a, type: 3}
@@ -4742,6 +4770,25 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7297529227837504083}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &9046577937740560418 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1787346994484839025, guid: ad818c36731146e994540a1896ad8f24,
+    type: 3}
+  m_PrefabInstance: {fileID: 7297529227837504083}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2222223999540474144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9046577937740560418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e83795eb420288b4ba12f6297f7f1d10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handType: 1
 --- !u!1001 &7297529227895919548
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5121,7 +5168,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 7297529228325243543}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 9046577939301976294}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6803edce0201f574f923fd9d10e5b30a, type: 3}
@@ -5133,6 +5180,25 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7297529228325243543}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &9046577939301976294 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1787346994484839025, guid: ad818c36731146e994540a1896ad8f24,
+    type: 3}
+  m_PrefabInstance: {fileID: 7297529228325243543}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8197256353107115602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9046577939301976294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e83795eb420288b4ba12f6297f7f1d10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handType: 0
 --- !u!1001 &7297529228793319901
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5227,6 +5293,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d249244fbef0c1438a57f292567b981, type: 3}
+--- !u!198 &279082494695306712 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7393089967395070981, guid: 8d249244fbef0c1438a57f292567b981,
+    type: 3}
+  m_PrefabInstance: {fileID: 7297529228793319901}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &2316641723927846666 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4999089546824044247, guid: 8d249244fbef0c1438a57f292567b981,
+    type: 3}
+  m_PrefabInstance: {fileID: 7297529228793319901}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &3309312957356854625 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 5236281957517352124, guid: 8d249244fbef0c1438a57f292567b981,
+    type: 3}
+  m_PrefabInstance: {fileID: 7297529228793319901}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7224595031413308429 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 73432860302814672, guid: 8d249244fbef0c1438a57f292567b981,
+    type: 3}
+  m_PrefabInstance: {fileID: 7297529228793319901}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7224595031413308529 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 73432860302814636, guid: 8d249244fbef0c1438a57f292567b981,

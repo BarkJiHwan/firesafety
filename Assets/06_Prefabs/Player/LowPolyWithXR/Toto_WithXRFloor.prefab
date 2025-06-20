@@ -2270,10 +2270,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1034d0d80e10b2347b842fd286f27385, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pView: {fileID: 0}
+  pView: {fileID: 4185551109271047766}
   leftHand:
     triggerAction:
-      m_UseReference: 0
+      m_UseReference: 1
       m_Action:
         m_Name: Trigger
         m_Type: 0
@@ -2283,20 +2283,21 @@ MonoBehaviour:
         m_Interactions: 
         m_SingletonActionBindings: []
         m_Flags: 0
-      m_Reference: {fileID: 0}
-    grabSpot: {fileID: 0}
-    normalFireFX: {fileID: 0}
-    zeroAmountFireFX: {fileID: 0}
-    initialFireFX: {fileID: 0}
-    modelPrefab: {fileID: 0}
+      m_Reference: {fileID: -4289430672226363583, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
+    grabSpot: {fileID: 1243605436}
+    normalFireFX: {fileID: 2582681987829884781}
+    zeroAmountFireFX: {fileID: 3322759683469309190}
+    initialFireFX: {fileID: 1001220788544331732}
+    modelPrefab: {fileID: 7671996225059362305}
     initialFire: 0
     enabled: 0
     isSpraying: 0
-    handType: 0
-    interator: {fileID: 0}
+    handType: 1
+    interator: {fileID: 931678104546563556}
   rightHand:
     triggerAction:
-      m_UseReference: 0
+      m_UseReference: 1
       m_Action:
         m_Name: Trigger
         m_Type: 0
@@ -2306,17 +2307,18 @@ MonoBehaviour:
         m_Interactions: 
         m_SingletonActionBindings: []
         m_Flags: 0
-      m_Reference: {fileID: 0}
-    grabSpot: {fileID: 0}
-    normalFireFX: {fileID: 0}
-    zeroAmountFireFX: {fileID: 0}
-    initialFireFX: {fileID: 0}
-    modelPrefab: {fileID: 0}
+      m_Reference: {fileID: 7904272356298805229, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
+    grabSpot: {fileID: 718265471}
+    normalFireFX: {fileID: 2582681988150374709}
+    zeroAmountFireFX: {fileID: 3322759684234650462}
+    initialFireFX: {fileID: 1001220788244515212}
+    modelPrefab: {fileID: 7671996224293814361}
     initialFire: 0
     enabled: 0
     isSpraying: 0
     handType: 0
-    interator: {fileID: 0}
+    interator: {fileID: 931678103967120142}
   _sprayLength: 2.5
   _sprayRadius: 1
   _damage: 1
@@ -2324,11 +2326,11 @@ MonoBehaviour:
   _decreaseAmount: 1
   _fireMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   _refillCooldown: 3
   _supplyMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   _supplyDetectRange: 0.8
   _sprayOrigin: {fileID: 0}
   _currentAmount: 100
@@ -3255,11 +3257,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7831cc6ba61ab540866892822bb1692, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pView: {fileID: 0}
-  tutoSuppressor: {fileID: 0}
+  pView: {fileID: 4185551109271047766}
+  tutoSuppressor: {fileID: 1739876679}
   _leftHand:
     triggerAction:
-      m_UseReference: 0
+      m_UseReference: 1
       m_Action:
         m_Name: Trigger
         m_Type: 0
@@ -3269,22 +3271,23 @@ MonoBehaviour:
         m_Interactions: 
         m_SingletonActionBindings: []
         m_Flags: 0
-      m_Reference: {fileID: 0}
-    grabSpot: {fileID: 0}
-    normalFireFX: {fileID: 0}
-    zeroAmountFireFX: {fileID: 0}
-    initialFireFX: {fileID: 0}
-    modelPrefab: {fileID: 0}
+      m_Reference: {fileID: -4289430672226363583, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
+    grabSpot: {fileID: 1243605436}
+    normalFireFX: {fileID: 2582681987829884781}
+    zeroAmountFireFX: {fileID: 3322759683469309190}
+    initialFireFX: {fileID: 1001220788544331732}
+    modelPrefab: {fileID: 7671996225059362305}
     initialFire: 0
     enabled: 0
     isSpraying: 0
-    handType: 0
-    interator: {fileID: 0}
+    handType: 1
+    interator: {fileID: 931678104546563556}
   _rightHand:
     triggerAction:
-      m_UseReference: 0
+      m_UseReference: 1
       m_Action:
-        m_Name: 
+        m_Name: Trigger
         m_Type: 0
         m_ExpectedControlType: 
         m_Id: a1ab5588-960f-4354-9a3f-49dd14af7a0c
@@ -3292,17 +3295,18 @@ MonoBehaviour:
         m_Interactions: 
         m_SingletonActionBindings: []
         m_Flags: 0
-      m_Reference: {fileID: 0}
-    grabSpot: {fileID: 0}
-    normalFireFX: {fileID: 0}
-    zeroAmountFireFX: {fileID: 0}
-    initialFireFX: {fileID: 0}
-    modelPrefab: {fileID: 0}
+      m_Reference: {fileID: 7904272356298805229, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
+    grabSpot: {fileID: 718265471}
+    normalFireFX: {fileID: 2582681988150374709}
+    zeroAmountFireFX: {fileID: 3322759684234650462}
+    initialFireFX: {fileID: 1001220788244515212}
+    modelPrefab: {fileID: 7671996224293814361}
     initialFire: 0
     enabled: 0
     isSpraying: 0
     handType: 0
-    interator: {fileID: 0}
+    interator: {fileID: 931678103967120142}
   _sprayLength: 2.5
   _sprayRadius: 1
   _damage: 1
@@ -3310,11 +3314,11 @@ MonoBehaviour:
   _decreaseAmount: 1
   _fireMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   _refillCooldown: 3
   _supplyMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   _supplyDetectRange: 0.8
   _supplyCooldown: 0
   _sprayOrigin: {fileID: 0}
@@ -3565,6 +3569,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d249244fbef0c1438a57f292567b981, type: 3}
+--- !u!198 &1001220788544331732 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7393089967395070981, guid: 8d249244fbef0c1438a57f292567b981,
+    type: 3}
+  m_PrefabInstance: {fileID: 7745211862022470609}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &2582681987829884781 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 5236281957517352124, guid: 8d249244fbef0c1438a57f292567b981,
+    type: 3}
+  m_PrefabInstance: {fileID: 7745211862022470609}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &3322759683469309190 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4999089546824044247, guid: 8d249244fbef0c1438a57f292567b981,
+    type: 3}
+  m_PrefabInstance: {fileID: 7745211862022470609}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7671996225059362305 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 73432860302814672, guid: 8d249244fbef0c1438a57f292567b981,
+    type: 3}
+  m_PrefabInstance: {fileID: 7745211862022470609}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7671996225059362429 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 73432860302814636, guid: 8d249244fbef0c1438a57f292567b981,
@@ -3823,7 +3851,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 7745211862133153483}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 8336562824066571450}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6803edce0201f574f923fd9d10e5b30a, type: 3}
@@ -3835,6 +3863,25 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7745211862133153483}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8336562824066571450 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1787346994484839025, guid: ad818c36731146e994540a1896ad8f24,
+    type: 3}
+  m_PrefabInstance: {fileID: 7745211862133153483}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7552452683470086981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8336562824066571450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e83795eb420288b4ba12f6297f7f1d10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handType: 1
 --- !u!1001 &7745211862292852105
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3954,9 +4001,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d249244fbef0c1438a57f292567b981, type: 3}
+--- !u!198 &1001220788244515212 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7393089967395070981, guid: 8d249244fbef0c1438a57f292567b981,
+    type: 3}
+  m_PrefabInstance: {fileID: 7745211862292852105}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &2582681988150374709 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 5236281957517352124, guid: 8d249244fbef0c1438a57f292567b981,
+    type: 3}
+  m_PrefabInstance: {fileID: 7745211862292852105}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &3322759684234650462 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4999089546824044247, guid: 8d249244fbef0c1438a57f292567b981,
+    type: 3}
+  m_PrefabInstance: {fileID: 7745211862292852105}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7671996224293814309 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 73432860302814636, guid: 8d249244fbef0c1438a57f292567b981,
+    type: 3}
+  m_PrefabInstance: {fileID: 7745211862292852105}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7671996224293814361 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 73432860302814672, guid: 8d249244fbef0c1438a57f292567b981,
     type: 3}
   m_PrefabInstance: {fileID: 7745211862292852105}
   m_PrefabAsset: {fileID: 0}
@@ -4273,7 +4344,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 7745211862893948961}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 8336562825091543632}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6803edce0201f574f923fd9d10e5b30a, type: 3}
@@ -4285,6 +4356,25 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7745211862893948961}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8336562825091543632 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1787346994484839025, guid: ad818c36731146e994540a1896ad8f24,
+    type: 3}
+  m_PrefabInstance: {fileID: 7745211862893948961}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &977055655588150061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8336562825091543632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e83795eb420288b4ba12f6297f7f1d10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handType: 0
 --- !u!1001 &7745211863201244856
 PrefabInstance:
   m_ObjectHideFlags: 0
