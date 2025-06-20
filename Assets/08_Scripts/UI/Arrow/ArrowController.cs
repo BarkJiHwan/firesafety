@@ -20,7 +20,6 @@ public class ArrowController : MonoBehaviour
     // TutorialDataMgr의 GetInteractObject를 받아야 하는데...
     Transform targetPos;
     float timeElasped;
-    bool isGuiding = false;
     Vector3 appearStartPos;
     Vector3 appearEndPos;
     Vector3 previousPlayerPos;
@@ -54,18 +53,6 @@ public class ArrowController : MonoBehaviour
             turtorialMgr.arrowCtrl = this;
             turtorialMgr.OnStartArrow += AppearArrow;
             isAlreadyMade = true;
-        }
-        if(isGuiding == false)
-        {
-            return;
-        }
-        Vector3 currentPlayerPos = playerPos.position;
-        float movement = Vector3.Distance(previousPlayerPos, currentPlayerPos);
-
-        if(movement > 0.001f)
-        {
-            FollowCircleToTarget(currentPlayerPos);
-            previousPlayerPos = currentPlayerPos;
         }
     }
 
@@ -112,8 +99,7 @@ public class ArrowController : MonoBehaviour
 
             yield return null;
         }
-        transform.rotation = Quaternion.Euler(90, 0, 0);
-        isGuiding = false;
+        transform.rotation = Quaternion.Euler(0, 0, -90);
     }
 
     void AppearArrow(int playerIndex)
@@ -134,19 +120,6 @@ public class ArrowController : MonoBehaviour
         //transform.rotation = fixedRot;
 
         StartCoroutine(GuideArrowToTarget(targetPos));
-    }
-
-    void FollowCircleToTarget(Vector3 pos)
-    {
-        Vector3 dirToTarget = (targetPos.position - pos).normalized;
-        Vector3 targetPosOnCircle = pos + dirToTarget * radius;
-
-        transform.position = Vector3.Lerp(transform.position, targetPosOnCircle, Time.deltaTime * speed);
-        transform.position = new Vector3(transform.position.x, heightOffset, transform.position.z);
-
-        Quaternion lookRot = Quaternion.LookRotation(dirToTarget);
-        Quaternion fixedRot = lookRot * Quaternion.Euler(rotArrow.x, rotArrow.y, rotArrow.z);
-        transform.rotation = fixedRot;
     }
 
     private void OnEnable()
