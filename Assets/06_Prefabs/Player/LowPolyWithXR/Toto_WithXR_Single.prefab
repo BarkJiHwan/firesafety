@@ -2126,6 +2126,14 @@ PrefabInstance:
       propertyPath: m_Data.m_Target
       value: 
       objectReference: {fileID: 3191566329073391860}
+    - target: {fileID: 1552707886, guid: 4d869752d9324492691f5c6bff191b08, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2138078470, guid: 4d869752d9324492691f5c6bff191b08, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4185551109271047768, guid: 4d869752d9324492691f5c6bff191b08,
         type: 3}
       propertyPath: m_RigLayers.Array.size
@@ -2221,8 +2229,6 @@ PrefabInstance:
     - {fileID: 4185551109271047760, guid: 4d869752d9324492691f5c6bff191b08, type: 3}
     - {fileID: 4185551109271047766, guid: 4d869752d9324492691f5c6bff191b08, type: 3}
     - {fileID: 4185551109271047767, guid: 4d869752d9324492691f5c6bff191b08, type: 3}
-    - {fileID: 2138078470, guid: 4d869752d9324492691f5c6bff191b08, type: 3}
-    - {fileID: 1552707886, guid: 4d869752d9324492691f5c6bff191b08, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 4d869752d9324492691f5c6bff191b08, type: 3}
 --- !u!1 &3191566329073391859 stripped
 GameObject:
