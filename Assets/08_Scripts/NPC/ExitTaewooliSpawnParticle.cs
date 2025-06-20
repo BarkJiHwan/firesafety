@@ -183,28 +183,6 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
     }
 
     /// <summary>
-    /// 빈 위치 자동 배정
-    /// </summary>
-    private void AssignPosition()
-    {
-        if (allTaewooliPositions == null || allTaewooliPositions.Length == 0)
-        {
-            return;
-        }
-
-        // 빈 위치 찾기
-        for (int i = 0; i < allTaewooliPositions.Length; i++)
-        {
-            if (!positionOccupied[i] && allTaewooliPositions[i] != null)
-            {
-                positionOccupied[i] = true;
-                assignedPosition = allTaewooliPositions[i];
-                return;
-            }
-        }
-    }
-
-    /// <summary>
     /// 배정된 위치 해제
     /// </summary>
     private void ReleaseAssignedPosition()
@@ -302,7 +280,6 @@ public class ExitTaewooliSpawnParticle : MonoBehaviour
             floorManager.OnTaewooliKilled();
         }
 
-        // 기존 코드...
         if (spawnedTaewoori == taewoori)
         {
             spawnedTaewoori = null;

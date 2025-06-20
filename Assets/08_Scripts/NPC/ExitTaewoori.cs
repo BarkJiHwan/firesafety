@@ -54,7 +54,6 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     {
         if (!isDead)
         {
-            UpdateMovement(); // basePosition만 업데이트
             UpdateFloatingEffect(); // basePosition + 둥둥효과로 최종 위치 설정
             UpdateRotation(); // 회전 처리
         }
@@ -80,29 +79,7 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     #endregion
 
     #region 이동 시스템
-    /// <summary>
-    /// 기준 위치 업데이트 - 고정 위치로 이동
-    /// </summary>
-    private void UpdateMovement()
-    {
-        if (targetTransform == null)
-            return;
-
-        Vector3 currentPos = basePosition;
-        Vector3 targetPos = targetTransform.position; // 고정 위치
-
-        // 목표 위치까지의 거리 계산
-        float distanceToTarget = Vector3.Distance(currentPos, targetPos);
-
-        // 일정 거리(0.3m) 이상 떨어져 있으면 목표 위치로 이동
-        if (distanceToTarget > 0.3f)
-        {
-            Vector3 moveDirection = (targetPos - currentPos).normalized;
-
-            // basePosition 업데이트 - 고정 위치로 부드럽게 이동
-            basePosition += moveDirection * moveSpeed * Time.deltaTime;
-        }
-    }
+    
 
     /// <summary>
     /// 둥둥 떠다니는 효과 적용
