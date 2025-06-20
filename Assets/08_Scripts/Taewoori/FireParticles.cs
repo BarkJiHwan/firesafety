@@ -130,9 +130,10 @@ public class FireParticles : MonoBehaviour
             return;
         }
 
-        // 무시할 레이어와 충돌 - 그냥 통과
+        // CHM 추가함: 무시할 레이어와 충돌 - 카운트 감소하고 제거
         if (ShouldIgnoreCollision(other))
         {
+            HandleIgnoreLayerCollision();
             return;
         }
 
@@ -166,7 +167,18 @@ public class FireParticles : MonoBehaviour
     /// </summary>
     private void HandleShieldCollision()
     {
-        Debug.Log("Shield와 접촉 - 즉시 파괴");
+        hasCollided = true;
+        StopAutoDestroyTimer();
+
+        // 스몰태우리 생성 없이 제거되므로 카운트 감소 필요
+        ReturnToPoolWithoutSpawn();
+    }
+
+    /// <summary>
+    /// 무시 레이어(Player 등)와 충돌 시 처리
+    /// </summary>
+    private void HandleIgnoreLayerCollision()
+    {
         hasCollided = true;
         StopAutoDestroyTimer();
 
