@@ -563,14 +563,38 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
             return;
 
+        // null 체크 추가
+        if (networkSmallTaewooriDict == null)
+        {
+            Debug.LogWarning("networkSmallTaewooriDict가 null입니다!");
+            return;
+        }
+
         if (networkSmallTaewooriDict.TryGetValue(smallTaewooriID, out GameObject smallTaewooriObj))
         {
+            // GameObject null 체크
+            if (smallTaewooriObj == null)
+            {
+                Debug.LogWarning($"SmallTaewoori GameObject가 null입니다! ID: {smallTaewooriID}");
+                networkSmallTaewooriDict.Remove(smallTaewooriID);
+                return;
+            }
+
             var smallTaewoori = smallTaewooriObj.GetComponent<SmallTaewoori>();
             if (smallTaewoori != null)
             {
                 smallTaewoori.DieAsClient();
             }
+            else
+            {
+                Debug.LogWarning($"SmallTaewoori 컴포넌트를 찾을 수 없습니다! GameObject: {smallTaewooriObj.name}");
+            }
+
             networkSmallTaewooriDict.Remove(smallTaewooriID);
+        }
+        else
+        {
+            Debug.LogWarning($"SmallTaewoori ID {smallTaewooriID}를 Dictionary에서 찾을 수 없습니다!");
         }
     }
 
