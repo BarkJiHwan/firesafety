@@ -1,6 +1,5 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PhotonConnectManager : MonoBehaviourPunCallbacks
@@ -23,7 +22,6 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
                 pool.ResourceCache.Add(soCharacter.characterName, soCharacter.characterPrefab);
             }
         }
-
         TestConnectPhotonServer();
     }
 
@@ -85,7 +83,7 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
     }
 
     private void JoinRandomRoomOrCreatRoom()
-    {
+    {/*, PlayerTtl = 0*/
         RoomOptions options = new RoomOptions { MaxPlayers = 6, IsOpen = true };
         PhotonNetwork.JoinRandomOrCreateRoom(
             null, // 랜덤 조건: 아무 조건 없음

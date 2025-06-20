@@ -1,8 +1,8 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum DialogueType
+public enum DialogueDataType
 {
     Tutorial,
     Sobaek,
@@ -10,12 +10,12 @@ public enum DialogueType
 
 public class DialogueData
 {
-    private DialogueType _type;
+    private DialogueDataType _type;
     private string _id;
     private string _fileName;
     private string _text;
 
-    public DialogueData(DialogueType type, string id, string fileName, string text)
+    public DialogueData(DialogueDataType type, string id, string fileName, string text)
     {
         _type = type;
         _id = id;
@@ -23,7 +23,7 @@ public class DialogueData
         _text = text;
     }
 
-    public DialogueType Type => _type;
+    public DialogueDataType Type => _type;
 
     public string ID => _id;
 
@@ -37,12 +37,12 @@ public class DialogueLoader : MonoBehaviour
 {
     private readonly string _audioMetaDataFolder = "AudioFileData/";
 
-    private DialogueType _currentDialogueType;
+    private DialogueDataType _currentDialogueType;
     private List<DialogueData> _dialogueList;
     private Dictionary<string, DialogueData> _dialogueDict;
     private Dictionary<string, AudioClip> _audioDict;
 
-    public DialogueType CurrentDialogueType => _currentDialogueType;
+    public DialogueDataType CurrentDialogueType => _currentDialogueType;
     public List<DialogueData> DialogueList => _dialogueList;
     public Dictionary<string, DialogueData> DialogueDict => _dialogueDict;
     public Dictionary<string, AudioClip> AudioDict
@@ -60,15 +60,7 @@ public class DialogueLoader : MonoBehaviour
     // 처음은 튜토리얼 대화 흐름 읽어오기
     private void Start()
     {
-        // 데이터에 맞게 바꿔줘야됨
         LoadTutorialData();
-
-        // 아래는 테스트 코드
-        // DialoguePlayer dialoguePlayer = FindObjectOfType<DialoguePlayer>();
-        // string text = dialoguePlayer.PlayWithText("TUT_005");
-        // Debug.Log("대사 : " + text);
-        //
-        // StartCoroutine(WaitForTest(3f));
     }
 
     private IEnumerator WaitForTest(float seconds)
@@ -78,21 +70,21 @@ public class DialogueLoader : MonoBehaviour
         dialoguePlayer.Stop();
     }
 
-    public void LoadTutorialData() => LoadDialogue(DialogueType.Tutorial);
-    public void LoadSobaekData() => LoadDialogue(DialogueType.Sobaek);
+    public void LoadTutorialData() => LoadDialogue(DialogueDataType.Tutorial);
+    public void LoadSobaekData() => LoadDialogue(DialogueDataType.Sobaek);
 
-    public void LoadDialogue(DialogueType type)
+    public void LoadDialogue(DialogueDataType type)
     {
         string fileName = "";
 
-        if (type == DialogueType.Tutorial)
+        if (type == DialogueDataType.Tutorial)
         {
-            fileName = DialogueType.Tutorial.ToString();
+            fileName = DialogueDataType.Tutorial.ToString();
         }
 
-        if (type == DialogueType.Sobaek)
+        if (type == DialogueDataType.Sobaek)
         {
-            fileName = DialogueType.Sobaek.ToString();
+            fileName = DialogueDataType.Sobaek.ToString();
         }
 
         if (fileName == string.Empty)
@@ -126,7 +118,7 @@ public class DialogueLoader : MonoBehaviour
         }
     }
 
-    public void ParseCSV(DialogueType type, string fileName)
+    public void ParseCSV(DialogueDataType type, string fileName)
     {
         TextAsset textAsset = Resources.Load<TextAsset>(_audioMetaDataFolder + fileName);
         string[] allLines = textAsset.text.Split('\n');
@@ -165,6 +157,7 @@ public class DialogueLoader : MonoBehaviour
     {
         if (AudioDict == null || !AudioDict.ContainsKey(dialogueId))
         {
+            Debug.Log("dialogueId : " + dialogueId);
             Debug.LogWarning("오디오 소스의 아이디가 없습니다");
             return null;
         }
@@ -188,6 +181,8 @@ public class DialogueLoader : MonoBehaviour
             return "";
         }
 
-        return dialogue.Text;
+        string text = dialogue.Text.Replace("\\n", "\n");
+
+        return text;
     }
 }

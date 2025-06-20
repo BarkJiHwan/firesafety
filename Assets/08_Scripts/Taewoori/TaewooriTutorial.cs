@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TaewooriTutorial : MonoBehaviour, IDamageable
 {
-    [Header("체력 설정")]    
+    [Header("체력 설정")]
     public float currentHealth = 100f;
     private bool isDead = false;
 
@@ -35,10 +35,17 @@ public class TaewooriTutorial : MonoBehaviour, IDamageable
         var players = FindObjectsOfType<FireSuppressantManager>();
         foreach (var player in players)
         {
-            if (player.photonView.IsMine)
+            if (player.pView.IsMine)
             {
-                var tuto = player.gameObject.GetComponent<TutorialSuppressor>();
-                tuto.SetAmountZero();
+                var tuto = player.tutoSuppressor;
+                if (tuto != null)
+                {
+                    tuto.SetAmountZero();
+                }
+                else
+                {
+                    Debug.Log("tuto 스크립트 못찾았엉");
+                }
             }
         }
 

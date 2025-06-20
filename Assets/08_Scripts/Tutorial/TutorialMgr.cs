@@ -1,11 +1,10 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.XR.Interaction.Toolkit;
 using System.Linq;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
-using Photon.Realtime;
+using System.Collections.Generic;
 
 public class TutorialMgr : MonoBehaviourPun
 {
@@ -18,6 +17,11 @@ public class TutorialMgr : MonoBehaviourPun
     private FirePreventable _preventable;
     private Coroutine _countdownCoroutine;
 
+    private DialogueLoader _dialogueLoader;
+    private TutorialAudioPlayer _tutorialAudioPlayer;
+
+    bool isMaterialOn = false;
+    private RoomMgr _roomMgr;
     void Start()
     {
         if (!photonView.IsMine)
@@ -28,6 +32,19 @@ public class TutorialMgr : MonoBehaviourPun
         SetTutorialPhase();
         ObjectActiveFalse();
         _countdownCoroutine = StartCoroutine(CountdownRoutine());
+
+        GameObject dialogue = null;
+        if(_dialogueLoader == null)
+        {
+            _dialogueLoader = FindObjectOfType<DialogueLoader>();
+            dialogue = _dialogueLoader.gameObject;
+        }
+        if(_tutorialAudioPlayer == null)
+        {
+            _tutorialAudioPlayer = dialogue.GetComponent<TutorialAudioPlayer>();
+        }
+
+        _roomMgr = FindObjectOfType<RoomMgr>();
     }
     public void SetTutorialPhase()
     {
@@ -88,12 +105,17 @@ public class TutorialMgr : MonoBehaviourPun
     {
         //사운드가 끝나면 시작합니다.
         //이 부분에 Tutorial_NAR_001이 종료 될 때 까지 기다렸다 시작하면 됨
+        _tutorialAudioPlayer.PlayVoiceWithText("TUT_001", UIType.Narration);
+        yield return new WaitUntil(()=> !_tutorialAudioPlayer._tutoAudio.isPlaying);
+        TutorialDataMgr.Instance.IsStartTutorial = true;
+        _tutorialAudioPlayer.PlayVoiceWithText("TUT_002", UIType.Narration);
         Debug.Log("이동 튜토리얼 시작");
         //튜토리얼 시작 트리거
-        TutorialDataMgr.Instance.IsStartTutorial = true;
 
         _zone.SetActive(true);
         //이 부분에서 Tutorial_NAR_002 실행하면 됨
+
+        //_tutorialAudioPlayer.PlayWithText("TUT_002", UIType.Narration);
         bool completed = false;
         var trigger = _zone.GetComponent<ZoneTrigger>();
         if (trigger == null)
@@ -106,12 +128,19 @@ public class TutorialMgr : MonoBehaviourPun
             //TUT_SND_001 미션 클리어 사운드 실행
             //Tutorial_NAR_002번 나레이션 종료
             completed = true;
+            _tutorialAudioPlayer.TutorialAudioWithTextStop();
             _zone.SetActive(false);
             Debug.Log("이동 튜토리얼 완료");
         };
-
         yield return new WaitUntil(() => completed);
         //Tutorial_NAR_003번 나레이션 실행 : 잘했어요!
+        _tutorialAudioPlayer.PlayVoiceWithText("TUT_003", UIType.Narration);
+        yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
+    }
+
+    private IEnumerator someCorutine()
+    {
+        yield return null;
     }
 
     // 2. 화재예방 패이즈
@@ -119,31 +148,69 @@ public class TutorialMgr : MonoBehaviourPun
     {
         //Tutorial_NAR_003번 나레이션이 끝난 것을 확인하고
         //Tutorial_NAR_004번 나레이션 실행
+        _tutorialAudioPlayer.PlayVoiceWithText("TUT_004", UIType.Narration);
+
         Debug.Log("화재예방 튜토리얼 시작");
         var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
         _preventable = interactObj.GetComponent<FirePreventable>();
+        // 이벤트 실행
+        _preventable.OnHaveToPrevented += _preventable.OnSetPreventMaterialsOn;
+        _preventable.TriggerPreventObejct(true);
+
         _preventable.SetFirePreventionPending();
         var interactable = interactObj.GetComponent<XRSimpleInteractable>();
         bool completed = false;
         interactable.selectEntered.AddListener(tutorialSelect =>
         {
             //Tutorial_NAR_004번 나레이션 종료
+            _tutorialAudioPlayer.TutorialAudioWithTextStop();
             //TUT_SND_001 미션 클리어 사운드 실행
             completed = true;
             Debug.Log("화재예방 튜토리얼 완료");
             //Tutorial_NAR_005번 나레이션 실행 : 멋져요!
             _preventable.OnFirePreventionComplete();
+            // 이벤트 실행
+            _preventable.OnAlreadyPrevented += _preventable.OnSetPreventMaterialsOff;
+            _preventable.TriggerPreventObejct(false);
+            isMaterialOn = true;
         });
+        StartCoroutine(MakeMaterialMoreBright());
         yield return new WaitUntil(() => completed);
+        _tutorialAudioPlayer.PlayVoiceWithText("TUT_005", UIType.Narration);
+        yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
         interactable.selectEntered.RemoveAllListeners();
-        _preventable.SetActiveOut();
+    }
+
+    IEnumerator MakeMaterialMoreBright()
+    {
+        var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
+
+        GameObject player = FindObjectOfType<PlayerComponents>().gameObject;
+        player = player.GetComponentInChildren<PlayerInteractor>().gameObject;
+        Debug.Log(player.name);
+
+        while (_currentPhase == 2)
+        {
+            // 플레이어가 가까워질수록 내 Material _RimPower -시켜야 함 2->-0.2
+            float distance = Vector3.Distance(_preventable.transform.position, player.transform.position);
+            // 빛을 더 밝게 빛나기 위해서 * 2 했음
+            float t = (1 - Mathf.Clamp01(distance / 2f)) * 2;
+            if(_preventable.GetHighlightProperty() == true)
+            {
+                _preventable.SetHighlight(t);
+            }
+            yield return null;
+        }
     }
 
     // 3. 전투 페이즈
     private IEnumerator HandleCombatPhase()
     {
+        _preventable.SetActiveOut();
         //Tutorial_NAR_005번 나레이션이 끝난 것을 확인하고
         //Tutorial_NAR_006번 나레이션 실행 : 마지막으로 소화기를 사용해보세요 어쩌구....
+        _tutorialAudioPlayer.PlayVoiceWithText("TUT_006", UIType.Narration);
+
         Debug.Log("전투 튜토리얼 시작");
         _currentMonster.SetActive(true);
         _extinguisher.SetActive(true);
@@ -160,7 +227,9 @@ public class TutorialMgr : MonoBehaviourPun
         Debug.Log("태우리 죽임");
         _currentMonster.SetActive(false); //태우리 끄기
         //Tutorial_NAR_006번 나레이션이 켜져 있으면 종료
+        _tutorialAudioPlayer.TutorialAudioWithTextStop();
         //Tutorial_NAR_007번 나레이션 실행 : 소화기를 다쓰면 바꿔라
+        _tutorialAudioPlayer.PlayVoiceWithText("TUT_007", UIType.Narration);
         //태우리 처치 완료
         //Tutorial_NAR_007번 나레이션 종료
 
@@ -168,25 +237,29 @@ public class TutorialMgr : MonoBehaviourPun
         //소화기 상호작용 완료까지 대기하기.
         yield return new WaitUntil(() => TutorialDataMgr.Instance.IsTriggerSupply);
         //Tutorial_NAR_008번 나레이션 실행 : 잘했다 모두 끝났다.
+        _tutorialAudioPlayer.TutorialAudioWithTextStop();
         //TUT_SND_001 미션 클리어 사운드 실행
         Debug.Log("소화기 상호작용 완료");
 
         //준비 완료
         Debug.Log("모든 튜토리얼 완료");
         TutorialDataMgr.Instance.StopTutorialRoutine();
+        _tutorialAudioPlayer.PlayVoiceWithText("TUT_008", UIType.Narration);
+        yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
         Debug.Log("방장님 저 튜토리얼 끝났습니다.");
         Hashtable props = new Hashtable() { { "IsReady", true } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
-
-        //8번 나레이션이 종료 될때 까지 잠깐 대기        
-        if (PhotonNetwork.PlayerList.Count() > 1)
+        //8번 나레이션이 종료 될때 까지 잠깐 대기
+        if (PhotonNetwork.PlayerList.Count() > 1 && !_roomMgr.isAllPlayersReady())
         {
+            _tutorialAudioPlayer.PlayVoiceWithText("TUT_009", UIType.Narration);
             //8번 나래이션 끝나면 9번 나래이션 실행 : 아직 안끝난 친구를 기다려!
             Debug.Log("다른 사람이 튜토리얼 진행중 입니다. 기다리세요");
         }
-        //Tutorial_NAR_010번 나레이션 실행 : 이제 게임 할거니까 잠깐 기다려~
         yield return new WaitUntil(() => GameManager.Instance.IsGameStart);
         Debug.Log("곧 게임 시작합니다.");
+        _tutorialAudioPlayer.PlayVoiceWithText("TUT_010", UIType.Narration);
+        yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
         ObjectActiveFalse(); //모든 튜토리얼 오브젝트 끄기
         DestroyTutorialObject();
         StopAllCoroutines();
@@ -206,7 +279,17 @@ public class TutorialMgr : MonoBehaviourPun
         Hashtable props = new Hashtable() { { "IsReady", true } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
+        // 메테리얼 끄기
+        if(isMaterialOn == true)
+        {
+            _preventable.OnAlreadyPrevented += _preventable.OnSetPreventMaterialsOff;
+            _preventable.TriggerPreventObejct(false);
+        }
+
         //11번 나레이션 실행 : 아쉽지만 어쩌구...
+        _tutorialAudioPlayer.PlayVoiceWithText("TUT_011", UIType.Narration);
+        yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
+
         //나레이션 종료 후 실행하기.
         StopAllCoroutines();
     }

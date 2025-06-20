@@ -1094,10 +1094,6 @@ MonoBehaviour:
   maxHealth: 100
   currentHealth: 0
   feverTimeExtraHealth: 50
-  targetParticleSystems:
-  - {fileID: 6623866343465681098}
-  - {fileID: 7509235829024528869}
-  maxGreenBoost: 1
   throwForce: 1
   upwardForce: 4
   fireRadius: 2
@@ -1619,10 +1615,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4948150450207705061}
     m_Modifications:
+    - target: {fileID: 1445920991416471375, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2010531404510988514, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
         type: 3}
       propertyPath: m_Name
       value: TaewooriFire.Ver2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5598109500445987784, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
         type: 3}
@@ -1681,21 +1687,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 315bb9a38a331ee47af4a02e7ecfb0d8, type: 3}
---- !u!198 &6623866343465681098 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 8105492470307074259, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
-    type: 3}
-  m_PrefabInstance: {fileID: 3139234532489801753}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6830183606197578124 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
-    type: 3}
-  m_PrefabInstance: {fileID: 3139234532489801753}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &7509235829024528869 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 4874837769892211196, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
     type: 3}
   m_PrefabInstance: {fileID: 3139234532489801753}
   m_PrefabAsset: {fileID: 0}

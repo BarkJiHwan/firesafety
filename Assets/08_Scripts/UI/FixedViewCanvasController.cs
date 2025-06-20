@@ -1,8 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+public enum UIType
+{
+    Narration,
+    Sobaek,
+    None
+}
 
 public class FixedViewCanvasController : MonoBehaviour
 {
@@ -12,13 +20,27 @@ public class FixedViewCanvasController : MonoBehaviour
     [SerializeField] float showScoreTime;
     [SerializeField] TextMeshProUGUI restSecondText;
 
+    [Header("대화창")]
+    [SerializeField] GameObject conversationPanel;
+    // 튜토리얼일 경우에 panel을 해당 위치로 변경
+    [SerializeField] Vector3 narrationPos;
+    // 예방/화재 페이즈 전 소백이 대화 위치
+    [SerializeField] Vector3 conversationPos;
+    [SerializeField] TextMeshProUGUI conversationTxt;
+
+    UIType pastDiaType = UIType.None;
+
     ScoreBoardController scoreBoardCtrl;
-    
+    ConversationController conversationCtrl;
+
+    public GameObject ConversationPanel => conversationPanel;
+
+    public TextMeshProUGUI ConversationTxt => conversationTxt;
 
     private void Awake()
     {
         scoreBoardCtrl = scorePanel.GetComponent<ScoreBoardController>();
-
+        conversationCtrl = conversationBoard.GetComponent<ConversationController>();
     }
 
     void Start()
@@ -33,20 +55,26 @@ public class FixedViewCanvasController : MonoBehaviour
 
         // 1. 점수판
         // 화재 페이즈가 끝나면 점수판 출력 (GameManager.Instance.CurrentPhase == leaveDangerArea)
-
-        // ScoreBoardController.ChangeBoardStandard(sceneType);
         GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
-    }
 
-    void Update()
-    {
-        
+        // 2. 대화창
+        // 튜토리얼 설정
+        if (conversationBoard.activeSelf == true)
+        {
+            conversationBoard.SetActive(false);
+        }
     }
 
     void TurnOnScoreBoard()
     {
         scorePanel.SetActive(true);
-        if(scorePanel.activeSelf == true)
+        StartCoroutine(UpdateBoard());
+    }
+
+    IEnumerator UpdateBoard()
+    {
+        yield return new WaitForEndOfFrame();
+        if (scorePanel.activeSelf == true)
         {
             SceneType sceneType = SceneController.Instance.chooseSceneType;
             scoreBoardCtrl?.ChangeBoardStandard(sceneType);
@@ -65,28 +93,45 @@ public class FixedViewCanvasController : MonoBehaviour
             restSecondText.text = restSecond.ToString();
             yield return null;
         }
-        Debug.Log("끝남");
         scorePanel.SetActive(false);
         scoreBoardCtrl.InitateScoreBoard();
 
         // 예방/화재에서는 초가 끝나면 방을 나가서 씬 선택 창으로 이동
-        //if(SceneController.Instance.chooseSceneType == SceneType.IngameScene_Fire)
-        //{
-        //    // 현재 접속되어 있는 방 탈출
-
-        //    // 씬 선택창으로 이동
-        //    SceneController.Instance.MoveToSceneChoose();
-        //}
-        //// 대피에서는 초가 끝나면
-        //if(SceneController.Instance.chooseSceneType == SceneType.IngameScene_Evacuation)
-        //{
-        //    // MainScene으로 이동
-        //    SceneController.Instance.MoveToMainScene();
-        //}
+        if (SceneController.Instance.chooseSceneType == SceneType.IngameScene_Fire)
+        {
+            // 현재 접속되어 있는 방 탈출
+            PhotonNetwork.LeaveRoom();
+            // 씬 선택창으로 이동
+            SceneController.Instance.MoveToSceneChoose();
+        }
+        // 대피에서는 초가 끝나면
+        if (SceneController.Instance.chooseSceneType == SceneType.IngameScene_Evacuation)
+        {
+            // MainScene으로 이동
+            SceneController.Instance.MoveToMainScene();
+        }
     }
 
     private void OnDestroy()
     {
         GameManager.Instance.OnGameEnd -= TurnOnScoreBoard;
+    }
+
+    public void SwitchConverstaionPanel(UIType type)
+    {
+        Vector3 pos = narrationPos;
+        switch (type)
+        {
+            case UIType.Narration:
+                pos = narrationPos;
+                conversationCtrl.PrintNarration();
+                break;
+            case UIType.Sobaek:
+                pos = conversationPos;
+                conversationCtrl.PrintConversation();
+                break;
+        }
+        conversationBoard.GetComponent<RectTransform>().anchoredPosition = pos;
+        conversationPanel.SetActive(true);
     }
 }
