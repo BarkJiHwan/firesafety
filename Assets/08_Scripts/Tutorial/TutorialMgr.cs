@@ -5,6 +5,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 using System.Linq;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using System.Collections.Generic;
+using System;
 
 public class TutorialMgr : MonoBehaviourPun
 {
@@ -22,6 +23,9 @@ public class TutorialMgr : MonoBehaviourPun
 
     bool isMaterialOn = false;
     private RoomMgr _roomMgr;
+
+    event Action<int> OnStartArrow;
+
     void Start()
     {
         if (!photonView.IsMine)
