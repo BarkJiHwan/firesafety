@@ -1,94 +1,72 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// 모든 태우리의 기본 클래스 - 순수 체력 관리 기능만 제공
+/// IDamageable 인터페이스를 구현하여 데미지 시스템과 연동
+/// </summary>
 public abstract class BaseTaewoori : MonoBehaviour, IDamageable
 {
+    #region 인스펙터 설정
     [Header("체력 설정")]
-    [SerializeField] public float maxHealth = 100f;
-    [SerializeField] public float currentHealth;
-    [SerializeField] protected float feverTimeExtraHealth = 50f;
+    [SerializeField] protected float maxHealth = 100f;
+    [SerializeField] protected float currentHealth;
+    #endregion
 
-    [Header("체력별 색상 설정")]
-    [SerializeField] private ParticleSystem[] targetParticleSystems; // 색상 변경할 파티클 시스템들
-    [SerializeField] private float maxGreenBoost = 1.0f; // 최대 G값 증가량 (체력 0%일 때)
-
-    // 원본 그라디언트 저장용 (초기값 보존)
-    private Gradient[] originalGradients;
-
+    #region 변수 선언
     protected bool isDead = false;
-    protected TaewooriPoolManager manager;
-    protected bool isFeverMode = false;
+    #endregion
 
-    // 피버타임 체크 속성 (GameManager 활용)
-    protected bool IsFeverTime => GameManager.Instance != null &&
-                                GameManager.Instance.CurrentPhase == GamePhase.Fever;
+    #region 프로퍼티
+    /// <summary>
+    /// 사망 상태 확인
+    /// </summary>
+    public bool IsDead => isDead;
 
-    // 체력 초기화
-    protected void InitializeHealth()
-    {
-        isFeverMode = IsFeverTime;
-        maxHealth = isFeverMode ? 100f + feverTimeExtraHealth : 100f;
-        currentHealth = maxHealth;
+    /// <summary>
+    /// 현재 체력
+    /// </summary>
+    public float CurrentHealth => currentHealth;
 
-        // 원본 그라디언트가 없으면 저장
-        if (originalGradients == null)
-        {
-            SaveOriginalGradients();
-        }
+    /// <summary>
+    /// 최대 체력
+    /// </summary>
+    public float MaxHealth => maxHealth;
+    #endregion
 
-        // 초기 색상 설정 (최대 체력 - 원본 색상)
-        UpdateHealthColor();
-    }
-
-    // 원본 그라디언트들을 저장
-    private void SaveOriginalGradients()
-    {
-        if (targetParticleSystems == null || targetParticleSystems.Length == 0)
-            return;
-
-        originalGradients = new Gradient[targetParticleSystems.Length];
-
-        for (int i = 0; i < targetParticleSystems.Length; i++)
-        {
-            if (targetParticleSystems[i] != null)
-            {
-                var colorOverLifetime = targetParticleSystems[i].colorOverLifetime;
-                if (colorOverLifetime.enabled)
-                {
-                    // 원본 그라디언트 복사하여 저장
-                    originalGradients[i] = new Gradient();
-                    var original = colorOverLifetime.color.gradient;
-                    originalGradients[i].SetKeys(original.colorKeys, original.alphaKeys);
-                }
-            }
-        }
-    }
-
-    // 상태 리셋
-    protected virtual void ResetState()
-    {
-        currentHealth = maxHealth;
-        isDead = false;
-        UpdateHealthColor();
-    }
-
+    #region 유니티 라이프사이클
     protected virtual void Awake()
     {
-        // 오브젝트 생성 시 원본 그라디언트 저장
-        SaveOriginalGradients();
+        InitializeHealth();
     }
 
     protected virtual void OnEnable()
     {
-        // 원본 그라디언트가 없으면 저장 (풀에서 재사용 시)
-        if (originalGradients == null)
-        {
-            SaveOriginalGradients();
-        }
-
         ResetState();
     }
+    #endregion
 
-    // IDamageable 구현
+    #region 체력 시스템
+    /// <summary>
+    /// 체력 초기화
+    /// </summary>
+    protected virtual void InitializeHealth()
+    {
+        currentHealth = maxHealth;
+    }
+
+    /// <summary>
+    /// 상태 리셋 - 체력과 생존 상태 초기화
+    /// </summary>
+    protected virtual void ResetState()
+    {
+        currentHealth = maxHealth;
+        isDead = false;
+    }
+
+    /// <summary>
+    /// IDamageable 인터페이스 구현 - 데미지 적용 및 체력 감소 처리
+    /// </summary>
+    /// <param name="damage">적용할 데미지량</param>
     public virtual void TakeDamage(float damage)
     {
         if (isDead)
@@ -96,93 +74,41 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
 
         currentHealth -= damage;
 
-        // 데미지 받은 후 색상 업데이트
-        UpdateHealthColor();
-
-        Debug.Log($"{gameObject.name} 데미지: {damage}, 현재 체력: {currentHealth}/{maxHealth}");
-
         if (currentHealth <= 0)
         {
             Die();
         }
     }
 
-    // 체력에 따른 색상 업데이트
-    private void UpdateHealthColor()
+    /// <summary>
+    /// 체력을 직접 설정하는 메서드 (특수한 경우에만 사용)
+    /// </summary>
+    /// <param name="newHealth">새로운 체력값</param>
+    protected virtual void SetHealth(float newHealth)
     {
-        // 지정된 파티클 시스템들만 변경
-        if (targetParticleSystems != null && targetParticleSystems.Length > 0)
+        currentHealth = Mathf.Clamp(newHealth, 0, maxHealth);
+
+        if (currentHealth <= 0 && !isDead)
         {
-            float healthPercentage = maxHealth > 0 ? currentHealth / maxHealth : 0f;
-            UpdateParticleColorValues(healthPercentage);
+            Die();
         }
     }
 
-    private void UpdateParticleColorValues(float healthPercentage)
+    /// <summary>
+    /// 최대 체력을 설정하는 메서드
+    /// </summary>
+    /// <param name="newMaxHealth">새로운 최대 체력값</param>
+    protected virtual void SetMaxHealth(float newMaxHealth)
     {
-        if (targetParticleSystems == null || targetParticleSystems.Length == 0 || originalGradients == null)
-            return;
-
-        // 데미지 비율 계산 (체력이 낮을수록 값이 커짐: 0% = 1.0, 100% = 0.0)
-        float damageRatio = 1f - healthPercentage;
-
-        // G값 증가량 (1배)
-        float greenBoost = damageRatio * maxGreenBoost;
-
-        // B값 증가량 (G값의 30%)
-        float blueBoost = greenBoost * 0.3f;
-
-        for (int psIndex = 0; psIndex < targetParticleSystems.Length; psIndex++)
-        {
-            ParticleSystem ps = targetParticleSystems[psIndex];
-
-            if (ps == null || originalGradients[psIndex] == null)
-                continue;
-
-            var colorOverLifetime = ps.colorOverLifetime;           
-
-            // 원본 그라디언트에서 새로운 그라디언트 생성
-            Gradient originalGradient = originalGradients[psIndex];
-            Gradient newGradient = new Gradient();
-
-            // 원본 Color Key들을 기반으로 새로운 컬러 키 생성
-            GradientColorKey[] originalColorKeys = originalGradient.colorKeys;
-            GradientColorKey[] newColorKeys = new GradientColorKey[originalColorKeys.Length];
-
-            for (int i = 0; i < originalColorKeys.Length; i++)
-            {
-                Color originalColor = originalColorKeys[i].color;
-                float keyTime = originalColorKeys[i].time;
-                Color newColor;
-
-                // 키별 다른 처리 (예시: 첫 번째 키만 변경)
-                if (i == 0) // 첫 번째 키만 색상 변화 적용
-                {
-                    newColor = new Color(
-                        originalColor.r, // R값은 원본 유지
-                        Mathf.Clamp01(originalColor.g + greenBoost), // G값 증가 (1배)
-                        Mathf.Clamp01(originalColor.b + blueBoost),  // B값 증가 (G값의 절반)
-                        originalColor.a  // A값은 원본 유지
-                    );
-                }
-                else // 나머지 키들은 원본 그대로
-                {
-                    newColor = originalColor;
-                }
-
-                newColorKeys[i] = new GradientColorKey(newColor, keyTime);
-            }
-
-            // 기존 Alpha Key들 복사 (알파키 사용하지 않음)
-            GradientAlphaKey[] originalAlphaKeys = originalGradient.alphaKeys;
-
-            // 새 Gradient 설정
-            newGradient.SetKeys(newColorKeys, originalAlphaKeys);
-            colorOverLifetime.color = newGradient;
-           
-        }
+        maxHealth = newMaxHealth;
+        currentHealth = Mathf.Min(currentHealth, maxHealth);
     }
+    #endregion
 
-    // 사망 처리 - 상속받은 클래스에서 구현
+    #region 추상 메서드
+    /// <summary>
+    /// 사망 처리 - 상속받은 클래스에서 구체적인 사망 로직 구현
+    /// </summary>
     public abstract void Die();
+    #endregion
 }

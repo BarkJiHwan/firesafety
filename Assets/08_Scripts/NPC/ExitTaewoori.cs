@@ -1,0 +1,170 @@
+﻿using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+
+/// <summary>
+/// 새 구조용 ExitTaewoori - ExitTaewooliSpawnParticle에서 생성됨
+/// </summary>
+public class ExitTaewoori : MonoBehaviour, IDamageable
+{
+    #region 인스펙터 설정
+    [Header("체력 설정")]
+    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float currentHealth;
+
+    [Header("이동 설정")]
+    [SerializeField] private float floatingSpeed = 1f; // 둥둥 효과 속도
+    [SerializeField] private float floatingHeight = 0.2f; // 둥둥 효과 높이
+    [SerializeField] private float moveSpeed = 1f; // 플레이어 향해 이동 속도
+    [SerializeField] private float rotationSpeed = 2f; // 회전 속도
+    #endregion
+
+    #region 변수 선언
+    private Vector3 basePosition; // 기준 위치 (이동만 담당)
+    private ExitTaewooliSpawnParticle spawnParticle; // 생성한 파티클 스크립트
+    private bool isDead = false;
+    private float floatTimer = 0f; // 둥둥 효과용 타이머
+    #endregion
+
+    #region 프로퍼티
+    public ExitTaewooliSpawnParticle SpawnParticle => spawnParticle;
+    public bool IsDead => isDead;
+    #endregion
+
+    #region 유니티 라이프사이클
+    private void Awake()
+    {
+        currentHealth = maxHealth;
+    }
+
+    private void Start()
+    {
+        // XR 인터랙션 설정
+        XRSimpleInteractable interactable = GetComponent<XRSimpleInteractable>();
+        if (interactable != null)
+        {
+            interactable.activated.AddListener(OnClicked);
+        }
+    }
+
+    private void Update()
+    {
+        if (!isDead)
+        {
+            UpdateFloatingEffect(); // basePosition + 둥둥효과로 최종 위치 설정
+            UpdateRotation(); // 플레이어 바라보기
+        }
+    }
+    #endregion
+
+    #region 초기화
+    /// <summary>
+    /// 초기화 - 생성 파티클 설정
+    /// </summary>
+    public void Initialize(ExitTaewooliSpawnParticle particle)
+    {
+        spawnParticle = particle;
+
+        currentHealth = maxHealth;
+        isDead = false;
+
+        // 현재 위치를 기준 위치로 설정
+        basePosition = transform.position;
+    }
+
+    #endregion
+
+    #region 이동 시스템
+
+    /// <summary>
+    /// 둥둥 떠다니는 효과 적용
+    /// </summary>
+    private void UpdateFloatingEffect()
+    {
+        floatTimer += Time.deltaTime * floatingSpeed;
+        float floatY = Mathf.Sin(floatTimer) * floatingHeight;
+
+        // 최종 위치 = 기준 위치 + 둥둥 효과
+        transform.position = basePosition + Vector3.up * floatY;
+    }
+
+    /// <summary>
+    /// 회전 처리 (플레이어 바라보기)
+    /// </summary>
+    private void UpdateRotation()
+    {
+        // 플레이어 카메라 찾기 (한 번만 실행되도록 최적화 가능)
+        Camera playerCamera = Camera.main;
+        if (playerCamera == null)
+        {
+            GameObject cameraObj = GameObject.FindGameObjectWithTag("MainCamera");
+            if (cameraObj != null)
+                playerCamera = cameraObj.GetComponent<Camera>();
+        }
+
+        if (playerCamera == null)
+            return;
+
+        // 플레이어 카메라 위치를 바라보기
+        Vector3 playerPos = playerCamera.transform.position;
+        Vector3 lookDirection = (playerPos - transform.position);
+        lookDirection.y = 0; // Y축 차이 무시 (수평으로만 회전)
+
+        if (lookDirection != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation,
+                rotationSpeed * Time.deltaTime);
+        }
+    }
+    #endregion
+
+    #region 데미지 시스템 (IDamageable 구현)
+    /// <summary>
+    /// 클릭 공격 
+    /// </summary>
+    void OnClicked(ActivateEventArgs args)
+    {
+        TakeDamage(50f); // 클릭하면 50 데미지
+        //args.interactorObject.transform.position = transform.position;//무기 트랜스폼
+    }
+
+    /// <summary>
+    /// 데미지 처리 - IDamageable 인터페이스 구현
+    /// </summary>
+    public void TakeDamage(float damage)
+    {
+        if (isDead)
+            return;
+
+        currentHealth -= damage;
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+    #endregion
+
+    #region 사망 처리
+    /// <summary>
+    /// 사망 처리
+    /// </summary>
+    public void Die()
+    {
+        if (isDead)
+            return;
+
+        isDead = true;
+
+        // 생성 파티클에 사망 알림
+        if (spawnParticle != null)
+        {
+            spawnParticle.OnTaewooliDestroyed(this);
+        }
+
+        // 즉시 제거
+        Destroy(gameObject);
+    }
+    #endregion
+
+}

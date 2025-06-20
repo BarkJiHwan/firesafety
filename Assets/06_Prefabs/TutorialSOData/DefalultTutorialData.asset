@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 810af1d4beb16334e87724fa8d5df4a6, type: 3}
+  m_Name: DefalultTutorialData
+  m_EditorClassIdentifier: 
+  moveZonePrefab: {fileID: 7934197288599102981, guid: 2db6c96e5d552f64fa2884f3ab439f38,
+    type: 3}
+  moveZoneOffset: {x: -0.679, y: 0.235, z: 4.02}
+  teawooriPrefab: {fileID: 5755754473064602975, guid: 596c7f519f35fb54e9019fb98ace4054,
+    type: 3}
+  teawooriOffset: {x: -0.552, y: 0.963, z: 4.913}
+  teawooriRotation: {x: 0, y: 1, z: 0, w: 0}
+  supplyPrefab: {fileID: 3939700729004705099, guid: b3459886dacf2ad47a92157dde8fdbc8,
+    type: 3}
+  supplyOffset: {x: 0, y: 0.687, z: 4.32}
+  supplyRotation: {x: 0.51608884, y: 0.5174567, z: 0.50657403, w: -0.45746443}
