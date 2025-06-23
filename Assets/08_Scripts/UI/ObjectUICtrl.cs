@@ -33,8 +33,8 @@ public class ObjectUICtrl : MonoBehaviour
     Vector3 basicPos;
     FirePreventable currentPrevent;
     bool isPointing;
-    TutorialMgr[] turtorialMgr;
-    TutorialMgr myTutorialMgr;
+    PlayerTutorial[] turtorialMgr;
+    PlayerTutorial myTutorialMgr;
 
     private void Awake()
     {
@@ -62,7 +62,7 @@ public class ObjectUICtrl : MonoBehaviour
     {
         if (turtorialMgr == null || turtorialMgr.Length == 0)
         {
-            turtorialMgr = FindObjectsOfType<TutorialMgr>();
+            turtorialMgr = FindObjectsOfType<PlayerTutorial>();
         }
         if (turtorialMgr != null && myTutorialMgr == null)
         {
@@ -121,6 +121,9 @@ public class ObjectUICtrl : MonoBehaviour
         {
             originPosition = targetPos.position + new Vector3(0, 0.3f, 0);
             transform.position = originPosition + basicPos;
+            Vector3 cam = Camera.main.transform.position - transform.position;
+            cam.y = 0;
+            transform.rotation = Quaternion.LookRotation(cam);
             return;
         }
         else
