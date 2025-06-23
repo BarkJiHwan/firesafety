@@ -629,6 +629,39 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             }
         }
     }
+    // TaewooriPoolManager.cs에서
+    [PunRPC]
+    void NetworkTaewooriHit(int taewooriID)
+    {
+        if (PhotonNetwork.IsMasterClient)
+            return;
+
+        if (networkTaewooriDict.TryGetValue(taewooriID, out GameObject taewooriObj))
+        {
+            var taewoori = taewooriObj.GetComponent<Taewoori>();
+            if (taewoori != null && taewoori.UseAnimation)
+            {
+                taewoori.PlayHitAnimation();
+            }
+        }
+    }
+
+    [PunRPC]
+    void NetworkTaewooriDie(int taewooriID)
+    {
+        if (PhotonNetwork.IsMasterClient)
+            return;
+
+        if (networkTaewooriDict.TryGetValue(taewooriID, out GameObject taewooriObj))
+        {
+            var taewoori = taewooriObj.GetComponent<Taewoori>();
+            if (taewoori != null && taewoori.UseAnimation)
+            {
+                taewoori.PlayDeathAnimation();
+                taewoori.StartCoroutine(taewoori.HandleDeathSequence());
+            }
+        }
+    }
     #endregion
 
     #region 네트워크 동기화 헬퍼
