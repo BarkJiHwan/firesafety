@@ -14,6 +14,11 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
 
     #region 변수 선언
     protected bool isDead = false;
+    protected Animator animator;
+
+    // 애니메이션 해시
+    private readonly int hashHit = Animator.StringToHash("Hit");
+    private readonly int hashIsDead = Animator.StringToHash("IsDead");
     #endregion
 
     #region 프로퍼티
@@ -36,12 +41,27 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
     #region 유니티 라이프사이클
     protected virtual void Awake()
     {
+        InitializeComponents();
         InitializeHealth();
     }
 
     protected virtual void OnEnable()
     {
         ResetState();
+    }
+    #endregion
+
+    #region 초기화
+    /// <summary>
+    /// 컴포넌트 초기화
+    /// </summary>
+    protected virtual void InitializeComponents()
+    {
+        animator = GetComponent<Animator>();
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>();
+        }
     }
     #endregion
 
@@ -61,6 +81,12 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
     {
         currentHealth = maxHealth;
         isDead = false;
+
+        // 애니메이션 상태 리셋
+        if (animator != null)
+        {
+            animator.SetBool(hashHit, false);
+        }
     }
 
     /// <summary>
@@ -74,9 +100,49 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
 
         currentHealth -= damage;
 
+        // Hit 애니메이션 재생
+        PlayHitAnimation();
+
         if (currentHealth <= 0)
         {
             Die();
+        }
+    }
+    #endregion
+
+    #region 애니메이션
+    /// <summary>
+    /// 맞는 애니메이션 재생
+    /// </summary>
+    protected virtual void PlayHitAnimation()
+    {
+        if (animator != null)
+        {
+            animator.SetBool(hashHit, true);
+            // 짧은 시간 후 Hit 상태를 false로 되돌림
+            Invoke(nameof(ResetHitAnimation), 0.1f);
+        }
+    }
+
+    /// <summary>
+    /// Hit 애니메이션 리셋
+    /// </summary>
+    protected virtual void ResetHitAnimation()
+    {
+        if (animator != null)
+        {
+            animator.SetBool(hashHit, false);
+        }
+    }
+
+    /// <summary>
+    /// 죽는 애니메이션 재생
+    /// </summary>
+    protected virtual void PlayDeathAnimation()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger(hashIsDead);
         }
     }
     #endregion
@@ -85,6 +151,13 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
     /// <summary>
     /// 사망 처리 - 상속받은 클래스에서 구체적인 사망 로직 구현
     /// </summary>
-    public abstract void Die();
+    public virtual void Die()
+    {
+        if (isDead)
+            return;
+
+        isDead = true;
+        PlayDeathAnimation();
+    }
     #endregion
 }
