@@ -31,7 +31,7 @@ public class PlayerTutorial : MonoBehaviourPun
 
     void Start()
     {
-        if (!photonView.IsMine)
+        if (photonView == null || !photonView.IsMine)
             return;
         StartCoroutine(CountdownRoutine());
 

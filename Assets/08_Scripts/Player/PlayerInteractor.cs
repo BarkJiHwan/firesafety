@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerInteractor : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class PlayerInteractor : MonoBehaviour
         {
             return;
         }
+
         Debug.Log("Trigger Enter : " + other);
 
         var preventFire = other.GetComponent<FirePreventable>();

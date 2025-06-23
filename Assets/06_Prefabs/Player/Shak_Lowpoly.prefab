@@ -2237,7 +2237,6 @@ GameObject:
   - component: {fileID: 931875064371940231}
   - component: {fileID: 3759552973863989666}
   - component: {fileID: 3759552973863989664}
-  - component: {fileID: 3759552973863989665}
   - component: {fileID: 3759552973863989667}
   - component: {fileID: 3759552973863989668}
   - component: {fileID: 3759552973863989669}
@@ -2245,6 +2244,7 @@ GameObject:
   - component: {fileID: 3759552973863989671}
   - component: {fileID: 3759552973863989688}
   - component: {fileID: 3759552973863989689}
+  - component: {fileID: 5434359736362806540}
   m_Layer: 9
   m_Name: Shak_Lowpoly
   m_TagString: Untagged
@@ -2321,18 +2321,6 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
---- !u!114 &3759552973863989665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5856178249069136711}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69b0932f20b768946a953a91e08d68e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3759552973863989667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2585,6 +2573,18 @@ MonoBehaviour:
   - m_Rig: {fileID: 790558267}
     m_Active: 1
   m_Effectors: []
+--- !u!114 &5434359736362806540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5856178249069136711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478f13aad4df65b4da8c927338be7d00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5901751887960527131
 GameObject:
   m_ObjectHideFlags: 0
