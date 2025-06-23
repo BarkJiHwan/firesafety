@@ -25,13 +25,18 @@ public class PlayerTutorial : MonoBehaviourPun
     bool isMaterialOn = false;
     private RoomMgr _roomMgr;
 
+    // CYW_이벤트 발생
     public event Action<int> OnStartArrow;
+    public event Action<GameObject> OnObjectUI;
+    public event Action OnCompleteSign;
+    public event Action OnFinishTutorial;
+
     public ArrowController arrowCtrl { get; set; }
 
 
     void Start()
     {
-        if (!photonView.IsMine)
+        if (photonView == null || !photonView.IsMine)
             return;
         StartCoroutine(CountdownRoutine());
 
@@ -155,6 +160,7 @@ public class PlayerTutorial : MonoBehaviourPun
         _preventable = interactObj.GetComponent<FirePreventable>();
         _preventable.OnHaveToPrevented += _preventable.OnSetPreventMaterialsOn;
         _preventable.TriggerPreventObejct(true);
+        OnObjectUI?.Invoke(interactObj);
 
         _preventable.SetFirePreventionPending();
         var interactable = interactObj.GetComponent<XRSimpleInteractable>();
@@ -168,6 +174,8 @@ public class PlayerTutorial : MonoBehaviourPun
             // 이벤트 실행
             _preventable.OnAlreadyPrevented += _preventable.OnSetPreventMaterialsOff;
             _preventable.TriggerPreventObejct(false);
+            // 완료했다는 표시 생성
+            OnCompleteSign?.Invoke();
             isMaterialOn = true;
         });
         StartCoroutine(MakeMaterialMoreBright());
@@ -203,10 +211,15 @@ public class PlayerTutorial : MonoBehaviourPun
     private IEnumerator HandleCombatPhase()
     {
         _preventable.SetActiveOut();
+        // 소화기 메테리얼 수정
+        MakeExtinguisherMaterial(_extinguisher);
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_006", UIType.Narration);
 
         _currentMonster.SetActive(true);
         _extinguisher.SetActive(true);
+
+        // 소화기 위에 UI 나오게 하기
+        OnObjectUI?.Invoke(_extinguisher);
 
         // 2. 몬스터 체력 컴포넌트 참조
         var tutorial = _currentMonster.GetComponent<TaewooriTutorial>();
@@ -223,6 +236,10 @@ public class PlayerTutorial : MonoBehaviourPun
 
         yield return new WaitUntil(() => TutorialDataMgr.Instance.IsTriggerSupply);
         _tutorialAudioPlayer.TutorialAudioWithTextStop();
+
+        // 완료했다는 표시 생성
+        OnCompleteSign?.Invoke();
+
         StopCoroutine(_tutorialTimerCor);
         //준비 완료
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_008", UIType.Narration);
@@ -236,6 +253,8 @@ public class PlayerTutorial : MonoBehaviourPun
         yield return new WaitUntil(() => GameManager.Instance.IsGameStart);
         ObjectActiveFalse(); //모든 튜토리얼 오브젝트 끄기
         DestroyTutorialObject();
+        // 튜토리얼 끝났을때 이벤트 실행
+        OnFinishTutorial?.Invoke();
         StopAllCoroutines();
     }
 
@@ -261,10 +280,26 @@ public class PlayerTutorial : MonoBehaviourPun
         {
             arrowCtrl.gameObject.SetActive(false);
         }
+
+        // 튜토리얼 끝났을때 이벤트 실행
+        OnFinishTutorial?.Invoke();
+
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_011", UIType.Narration);
         yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
         Hashtable props = new Hashtable() { { "IsReady", true } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
         StopAllCoroutines();
+    }
+
+    void MakeExtinguisherMaterial(GameObject obj)
+    {
+        // 소화기 메테리얼 작업
+        Material[] mats = new Material[2];
+        mats[0] = Resources.Load<Material>("Materials/OutlineMat");
+        mats[1] = Resources.Load<Material>("Materials/OriginMat");
+        mats[1].SetTexture("_PreventTexture", Resources.Load<Texture2D>("Materials/ExtinguisherColor"));
+        mats[1].SetFloat("_isNearPlayer", 1f);
+        Renderer rend = obj.GetComponent<Renderer>();
+        rend.materials = mats;
     }
 }

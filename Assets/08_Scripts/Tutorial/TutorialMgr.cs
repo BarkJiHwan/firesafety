@@ -25,6 +25,9 @@ public class TutorialMgr : MonoBehaviourPun
     private RoomMgr _roomMgr;
 
     public event Action<int> OnStartArrow;
+    public event Action<GameObject> OnObjectUI;
+    public event Action OnCompleteSign;
+    public event Action OnFinishTutorial;
     public ArrowController arrowCtrl { get; set; }
 
     void Start()
@@ -163,6 +166,7 @@ public class TutorialMgr : MonoBehaviourPun
         // 이벤트 실행
         _preventable.OnHaveToPrevented += _preventable.OnSetPreventMaterialsOn;
         _preventable.TriggerPreventObejct(true);
+        OnObjectUI?.Invoke(interactObj);
 
         _preventable.SetFirePreventionPending();
         var interactable = interactObj.GetComponent<XRSimpleInteractable>();
@@ -179,6 +183,8 @@ public class TutorialMgr : MonoBehaviourPun
             // 이벤트 실행
             _preventable.OnAlreadyPrevented += _preventable.OnSetPreventMaterialsOff;
             _preventable.TriggerPreventObejct(false);
+            // 완료했다는 표시 생성
+            OnCompleteSign?.Invoke();
             isMaterialOn = true;
         });
         StartCoroutine(MakeMaterialMoreBright());
@@ -192,6 +198,10 @@ public class TutorialMgr : MonoBehaviourPun
     {
         var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
 
+        if(interactObj == null)
+        {
+            yield break;
+        }
         GameObject player = FindObjectOfType<PlayerComponents>().gameObject;
         player = player.GetComponentInChildren<PlayerInteractor>().gameObject;
         Debug.Log(player.name);
@@ -214,6 +224,8 @@ public class TutorialMgr : MonoBehaviourPun
     private IEnumerator HandleCombatPhase()
     {
         _preventable.SetActiveOut();
+        // 소화기 메테리얼 수정
+        MakeExtinguisherMaterial(_extinguisher);
         //Tutorial_NAR_005번 나레이션이 끝난 것을 확인하고
         //Tutorial_NAR_006번 나레이션 실행 : 마지막으로 소화기를 사용해보세요 어쩌구....
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_006", UIType.Narration);
@@ -221,6 +233,9 @@ public class TutorialMgr : MonoBehaviourPun
         Debug.Log("전투 튜토리얼 시작");
         _currentMonster.SetActive(true);
         _extinguisher.SetActive(true);
+
+        // 소화기 위에 UI 나오게 하기
+        OnObjectUI?.Invoke(_extinguisher);
 
         // 2. 몬스터 체력 컴포넌트 참조
         var tutorial = _currentMonster.GetComponent<TaewooriTutorial>();
@@ -230,9 +245,10 @@ public class TutorialMgr : MonoBehaviourPun
         }
 
         // 3. 체력 0 될 때까지 폴링
-        yield return new WaitUntil(() => tutorial.CurrentHealth <= 0);//CHM수정
+        //yield return new WaitUntil(() => tutorial.CurrentHealth <= 0);//CHM수정
+        yield return new WaitUntil(() => tutorial.IsDead);
         Debug.Log("태우리 죽임");
-        _currentMonster.SetActive(false); //태우리 끄기
+        //_currentMonster.SetActive(false); //태우리 끄기
         //Tutorial_NAR_006번 나레이션이 켜져 있으면 종료
         _tutorialAudioPlayer.TutorialAudioWithTextStop();
         //Tutorial_NAR_007번 나레이션 실행 : 소화기를 다쓰면 바꿔라
@@ -247,6 +263,9 @@ public class TutorialMgr : MonoBehaviourPun
         _tutorialAudioPlayer.TutorialAudioWithTextStop();
         //TUT_SND_001 미션 클리어 사운드 실행
         Debug.Log("소화기 상호작용 완료");
+
+        // 완료했다는 표시 생성
+        OnCompleteSign?.Invoke();
 
         //준비 완료
         Debug.Log("모든 튜토리얼 완료");
@@ -266,6 +285,8 @@ public class TutorialMgr : MonoBehaviourPun
         yield return new WaitUntil(() => GameManager.Instance.IsGameStart);
         ObjectActiveFalse(); //모든 튜토리얼 오브젝트 끄기
         DestroyTutorialObject();
+        // 튜토리얼 끝났을때 이벤트 실행
+        OnFinishTutorial?.Invoke();
         StopAllCoroutines();
     }
 
@@ -294,11 +315,26 @@ public class TutorialMgr : MonoBehaviourPun
         {
             arrowCtrl.gameObject.SetActive(false);
         }
+        // 튜토리얼 끝났을때 이벤트 실행
+        OnFinishTutorial?.Invoke();
+
         //11번 나레이션 실행 : 아쉽지만 어쩌구...
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_011", UIType.Narration);
         yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
 
         //나레이션 종료 후 실행하기.
         StopAllCoroutines();
+    }
+
+    void MakeExtinguisherMaterial(GameObject obj)
+    {
+        // 소화기 메테리얼 작업
+        Material[] mats = new Material[2];
+        mats[0] = Resources.Load<Material>("Materials/OutlineMat");
+        mats[1] = Resources.Load<Material>("Materials/OriginMat");
+        mats[1].SetTexture("_PreventTexture", Resources.Load<Texture2D>("Materials/ExtinguisherColor"));
+        mats[1].SetFloat("_isNearPlayer", 1f);
+        Renderer rend = obj.GetComponent<Renderer>();
+        rend.materials = mats;
     }
 }

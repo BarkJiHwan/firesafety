@@ -57,7 +57,7 @@ public class Phase2InteractManager : MonoBehaviour
         CheckCols(_leftHand);
         CheckCols(_rightHand);
     }
-    public void CheckingTowelCol()
+    public void CheckingTowelCol()//가져다 댄 거 맞음??
     {
         IsWear = true;
         if (_leftHand.isEnabled)
