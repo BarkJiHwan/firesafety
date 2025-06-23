@@ -338,14 +338,6 @@ public class Sobaek : MonoBehaviour
         basePosition = transform.position;
     }
 
-    public void StartTalking()
-    {
-        if (!hasGameManager || sobaekInteractionEnabled)
-        {
-            isTalking = true;
-        }
-    }
-
     public void StopTalking()
     {
         isTalking = false;

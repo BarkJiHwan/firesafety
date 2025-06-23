@@ -2240,6 +2240,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7297529227693525647}
     m_Modifications:
+    - target: {fileID: 3759552973863989666, guid: ba5697950f61547dfba6abe8a9aad00c,
+        type: 3}
+      propertyPath: m_Radius
+      value: 2.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3759552973863989671, guid: ba5697950f61547dfba6abe8a9aad00c,
         type: 3}
       propertyPath: playerOrigin
@@ -3501,7 +3506,7 @@ PrefabInstance:
     - target: {fileID: 7462879561657043759, guid: ad818c36731146e994540a1896ad8f24,
         type: 3}
       propertyPath: m_MaxRaycastDistance
-      value: 3
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7462879561657043759, guid: ad818c36731146e994540a1896ad8f24,
         type: 3}
@@ -3916,7 +3921,7 @@ PrefabInstance:
     - target: {fileID: 7462879561657043759, guid: ad818c36731146e994540a1896ad8f24,
         type: 3}
       propertyPath: m_MaxRaycastDistance
-      value: 10
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7462879561657043759, guid: ad818c36731146e994540a1896ad8f24,
         type: 3}

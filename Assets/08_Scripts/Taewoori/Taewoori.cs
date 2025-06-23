@@ -173,6 +173,29 @@ public class Taewoori : NetworkTaewoori
     #endregion
 
     #region 네트워크 동기화 구현
+
+    public override void TakeDamage(float damage)
+    {
+        if (!PhotonNetwork.IsMasterClient || isClientOnly || isDead)
+            return;
+
+        // BaseTaewoori의 로직 활용 (체력 감소 + 히트 애니메이션 + Die 호출)
+        base.TakeDamage(damage);
+
+        // 히트 애니메이션 RPC (아직 살아있을 때만)
+        if (manager != null && networkID != -1 && !isDead)
+        {
+            ((TaewooriPoolManager)manager).photonView.RPC("NetworkTaewooriHit", RpcTarget.Others, networkID);
+        }
+
+        // 체력 동기화 (아직 살아있을 때만)
+        if (!isDead)
+        {
+            SyncHealthToNetwork();
+        }
+    }
+
+    
     /// <summary>
     /// 체력 동기화를 위한 네트워크 전송
     /// </summary>
@@ -221,7 +244,6 @@ public class Taewoori : NetworkTaewoori
     #endregion
 
     #region 사망 처리 (NetworkTaewoori 추상 메서드 구현)
-    #region 사망 처리 (NetworkTaewoori 추상 메서드 구현)
     /// <summary>
     /// 태우리 사망 처리 - 애니메이션 재생 후 네트워크 로직 처리
     /// </summary>
@@ -236,6 +258,12 @@ public class Taewoori : NetworkTaewoori
         // 마스터만 실제 로직 처리
         if (PhotonNetwork.IsMasterClient && !isClientOnly)
         {
+            //사망 애니메이션 RPC
+            if (manager != null && networkID != -1)
+            {
+                ((TaewooriPoolManager)manager).photonView.RPC("NetworkTaewooriDie", RpcTarget.Others, networkID);
+            }
+
             int killerID = GetLastAttackerID();
 
             // 생존시간 및 처치 기록
@@ -288,7 +316,7 @@ public class Taewoori : NetworkTaewoori
         StartCoroutine(HandleDeathSequence());
     }
     #endregion
-    #endregion
+ 
 
     #region 헬퍼 메서드
     /// <summary>

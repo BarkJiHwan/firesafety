@@ -1912,7 +1912,7 @@ GameObject:
   - component: {fileID: 8768484110700811223}
   - component: {fileID: 1811916950}
   m_Layer: 9
-  m_Name: Jennie_Lowpoly_With_XR_Floor
+  m_Name: Jennie_Lowpoly_With_XRFloor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2465,7 +2465,7 @@ PrefabInstance:
     - target: {fileID: 7462879561657043759, guid: ad818c36731146e994540a1896ad8f24,
         type: 3}
       propertyPath: m_MaxRaycastDistance
-      value: 10
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7462879561657043759, guid: ad818c36731146e994540a1896ad8f24,
         type: 3}
@@ -2880,7 +2880,7 @@ PrefabInstance:
     - target: {fileID: 7462879561657043759, guid: ad818c36731146e994540a1896ad8f24,
         type: 3}
       propertyPath: m_MaxRaycastDistance
-      value: 3
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7462879561657043759, guid: ad818c36731146e994540a1896ad8f24,
         type: 3}
@@ -3567,11 +3567,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Jennie_Lowpoly
       objectReference: {fileID: 0}
+    - target: {fileID: 8768484109574292544, guid: 09fc676349e4741ffab20193dedcbd2e,
+        type: 3}
+      propertyPath: m_Radius
+      value: 2.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8768484109574292547, guid: 09fc676349e4741ffab20193dedcbd2e,
         type: 3}
       propertyPath: playerOrigin
       value: 
       objectReference: {fileID: 8768484109542761823}
+    - target: {fileID: 8768484109574292549, guid: 09fc676349e4741ffab20193dedcbd2e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8768484109574292606, guid: 09fc676349e4741ffab20193dedcbd2e,
         type: 3}
       propertyPath: tutoSuppressor
