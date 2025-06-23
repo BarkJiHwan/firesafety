@@ -142,7 +142,7 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
     /// <summary>
     /// 맞는 애니메이션 재생
     /// </summary>
-    protected virtual void PlayHitAnimation()
+    public virtual void PlayHitAnimation()
     {
         if (UseAnimation)
         {
@@ -153,7 +153,7 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
     /// <summary>
     /// 죽는 애니메이션 재생
     /// </summary>
-    protected virtual void PlayDeathAnimation()
+    public virtual void PlayDeathAnimation()
     {
         if (UseAnimation)
         {
@@ -190,7 +190,7 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
     /// <summary>
     /// Death 애니메이션 완료 후 오브젝트 처리
     /// </summary>
-    protected virtual System.Collections.IEnumerator HandleDeathSequence()
+    public virtual IEnumerator HandleDeathSequence()
     {
         // Death 애니메이션 길이만큼 대기
         yield return new WaitForSeconds(3f);
