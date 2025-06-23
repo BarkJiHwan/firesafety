@@ -66,7 +66,8 @@ public class PlayerSpawner : MonoBehaviour
 
     private void SpawnPlayerInTargetScenes()
     {
-        if (!IsTargetScene()) return;
+        if (!IsTargetScene())
+            return;
 
         PlayerEnum selectedChar = GetSelectedCharacter();
         GameObject player = LocalInstantiate(selectedChar);
@@ -81,15 +82,18 @@ public class PlayerSpawner : MonoBehaviour
     {
         if (SceneController.Instance == null && SceneManager.GetActiveScene().name.Equals("ExitScenes_CHM.Test"))
         {
+
             return true;
         }
 
         return SceneController.Instance.chooseSceneType == SceneType.IngameScene_Evacuation;
+
     }
 
     private PlayerEnum GetSelectedCharacter()
     {
         if (SceneController.Instance?.GetChooseCharacterType() != null)
+
         {
             return SceneController.Instance.GetChooseCharacterType().characterType;
         }
@@ -148,6 +152,7 @@ public class PlayerSpawner : MonoBehaviour
     {
         if (sobaekPrefab == null)
         {
+            Debug.LogWarning("소백이 프리팹이 설정되지 않았습니다!");
             return false;
         }
         return true;
@@ -165,6 +170,7 @@ public class PlayerSpawner : MonoBehaviour
         }
         else
         {
+            Debug.LogError("소백이 프리팹에 Sobaek 컴포넌트가 없습니다!");
             Destroy(sobaekObj);
             return null;
         }
@@ -174,6 +180,7 @@ public class PlayerSpawner : MonoBehaviour
     {
         if (sobaekCarPrefab == null)
         {
+            Debug.LogWarning("소백카 프리팹이 설정되지 않았습니다!");
             return;
         }
 
@@ -234,10 +241,12 @@ public class PlayerSpawner : MonoBehaviour
     #endregion
 
     #region 정적 메서드
+    //소화전 클릭시 출발 할 메서드
     public static void StartSobaekCar()
     {
         if (currentSobaekCar == null)
         {
+            Debug.LogWarning("생성된 소백카가 없습니다!");
             return;
         }
 
@@ -246,7 +255,10 @@ public class PlayerSpawner : MonoBehaviour
         {
             carScript.StartTrack();
         }
-
+        else
+        {
+            Debug.LogWarning("소백카에 SobaekCarScript가 없습니다!");
+        }
     }
     #endregion
 }
