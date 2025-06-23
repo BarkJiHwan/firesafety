@@ -6,7 +6,7 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
 {
     private string _gameVersion = "1";
     [SerializeField] private PlayerSpawner _playerSpawner;
-    [SerializeField] private string roomName = "_releaseHelpMe";
+    [SerializeField] private string roomName = "_testRoomName";
     [SerializeField] private string lobbyName = "_testLobbyName";
 
     private void Start()

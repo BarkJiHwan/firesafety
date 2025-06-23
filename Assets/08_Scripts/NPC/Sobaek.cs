@@ -20,8 +20,6 @@ public class Sobaek : MonoBehaviour
     [SerializeField] private float followSpeed = 5f;
     [SerializeField] private float arrivalDistance = 0.5f;
 
-    [Header("테스트용 설정")]
-    [SerializeField] private bool testActivateCar = false;
     #endregion
 
     #region 프로퍼티
@@ -82,7 +80,6 @@ public class Sobaek : MonoBehaviour
     {
         CheckGameManagerStatus();
         HandleGamePhase();
-        HandleTestActivation();
         UpdateMovementAndEffects();
     }
 
@@ -363,34 +360,8 @@ public class Sobaek : MonoBehaviour
     }
     #endregion
 
-    #region 테스트 및 애니메이션 제어
-    private void HandleTestActivation()
-    {
-        if (testActivateCar)
-        {
-            testActivateCar = false;
-            ActivateSobaekCar();
-        }
-    }
-
-    public void PlayTalkingAnimation()
-    {
-        if (!hasGameManager)
-        {
-            isTalking = true;
-        }
-    }
-
-    public void StopTalkingAnimation()
-    {
-        if (!hasGameManager)
-        {
-            isTalking = false;
-        }
-    }
-    #endregion
-
     #region 소백이/소백카 관리
+    //소백이 스태틱이라 이함수 호출하면 소백이 비활성 및 소백카 활성화함 서한얼이 이거 호출하셈
     public void ActivateSobaekCar()
     {
         if (sobaekCarObject != null)
@@ -399,16 +370,6 @@ public class Sobaek : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
-
-    public void StartSobaekCar()
-    {
-        if (sobaekCarObject != null)
-        {
-            SobaekCarScript carScript = sobaekCarObject.GetComponent<SobaekCarScript>();
-            carScript?.StartTrack();
-        }
-    }
-
     public void SetSobaekActive(bool active)
     {
         if (active)

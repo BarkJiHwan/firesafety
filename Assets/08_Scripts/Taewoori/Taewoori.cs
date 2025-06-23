@@ -221,15 +221,17 @@ public class Taewoori : NetworkTaewoori
     #endregion
 
     #region 사망 처리 (NetworkTaewoori 추상 메서드 구현)
+    #region 사망 처리 (NetworkTaewoori 추상 메서드 구현)
     /// <summary>
-    /// 태우리 사망 처리 - 생존시간 기록, 처치 점수, 네트워크 동기화, 리스폰 처리
+    /// 태우리 사망 처리 - 애니메이션 재생 후 네트워크 로직 처리
     /// </summary>
     public override void Die()
     {
         if (isDead)
             return;
 
-        isDead = true;
+        // BaseTaewoori의 애니메이션 로직 호출
+        base.Die();
 
         // 마스터만 실제 로직 처리
         if (PhotonNetwork.IsMasterClient && !isClientOnly)
@@ -251,7 +253,13 @@ public class Taewoori : NetworkTaewoori
             // 이벤트 발생 (리스폰 처리용)
             OnTaewooriDestroyed?.Invoke(this, sourceFireObj);
         }
+    }
 
+    /// <summary>
+    /// Death 애니메이션 완료 후 실제 풀 반환 처리
+    /// </summary>
+    protected override void PerformFinalDeath()
+    {
         // 풀로 반환 (마스터/클라이언트 공통)
         if (manager != null)
         {
@@ -273,16 +281,13 @@ public class Taewoori : NetworkTaewoori
 
         isDead = true;
 
-        // 클라이언트는 풀로만 반환
-        if (manager != null)
-        {
-            manager.ReturnTaewooriToPool(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        // Death 애니메이션 재생
+        PlayDeathAnimation();
+
+        // 애니메이션 완료 후 풀 반환
+        StartCoroutine(HandleDeathSequence());
     }
+    #endregion
     #endregion
 
     #region 헬퍼 메서드

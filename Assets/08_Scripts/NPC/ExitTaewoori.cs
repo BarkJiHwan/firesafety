@@ -2,15 +2,11 @@
 using UnityEngine.XR.Interaction.Toolkit;
 
 /// <summary>
-/// 새 구조용 ExitTaewoori - ExitTaewooliSpawnParticle에서 생성됨
+/// 새 구조용 ExitTaewoori - BaseTaewoori를 상속받아 애니메이션 시스템 활용
 /// </summary>
-public class ExitTaewoori : MonoBehaviour, IDamageable
+public class ExitTaewoori : BaseTaewoori
 {
     #region 인스펙터 설정
-    [Header("체력 설정")]
-    [SerializeField] private float maxHealth = 100f;
-    [SerializeField] private float currentHealth;
-
     [Header("이동 설정")]
     [SerializeField] private float floatingSpeed = 1f; // 둥둥 효과 속도
     [SerializeField] private float floatingHeight = 0.2f; // 둥둥 효과 높이
@@ -21,19 +17,17 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     #region 변수 선언
     private Vector3 basePosition; // 기준 위치 (이동만 담당)
     private ExitTaewooliSpawnParticle spawnParticle; // 생성한 파티클 스크립트
-    private bool isDead = false;
     private float floatTimer = 0f; // 둥둥 효과용 타이머
     #endregion
 
     #region 프로퍼티
     public ExitTaewooliSpawnParticle SpawnParticle => spawnParticle;
-    public bool IsDead => isDead;
     #endregion
 
     #region 유니티 라이프사이클
-    private void Awake()
+    protected override void Awake()
     {
-        currentHealth = maxHealth;
+        base.Awake(); // BaseTaewoori의 초기화 호출
     }
 
     private void Start()
@@ -64,17 +58,15 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     {
         spawnParticle = particle;
 
-        currentHealth = maxHealth;
-        isDead = false;
+        // 기본 상태 리셋
+        ResetState();
 
         // 현재 위치를 기준 위치로 설정
         basePosition = transform.position;
     }
-
     #endregion
 
     #region 이동 시스템
-
     /// <summary>
     /// 둥둥 떠다니는 효과 적용
     /// </summary>
@@ -118,53 +110,42 @@ public class ExitTaewoori : MonoBehaviour, IDamageable
     }
     #endregion
 
-    #region 데미지 시스템 (IDamageable 구현)
+    #region 클릭 이벤트
     /// <summary>
     /// 클릭 공격 
     /// </summary>
     void OnClicked(ActivateEventArgs args)
     {
-        TakeDamage(50f); // 클릭하면 50 데미지
-        //args.interactorObject.transform.position = transform.position;//무기 트랜스폼
-    }
-
-    /// <summary>
-    /// 데미지 처리 - IDamageable 인터페이스 구현
-    /// </summary>
-    public void TakeDamage(float damage)
-    {
-        if (isDead)
-            return;
-
-        currentHealth -= damage;
-
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
+        TakeDamage(50f); // 클릭하면 50 데미지 (BaseTaewoori의 메서드 호출)
     }
     #endregion
 
-    #region 사망 처리
+    #region 사망 처리 오버라이드
     /// <summary>
-    /// 사망 처리
+    /// 사망 처리 - BaseTaewoori의 애니메이션 시스템 활용 후 파티클 알림
     /// </summary>
-    public void Die()
+    public override void Die()
     {
         if (isDead)
             return;
 
-        isDead = true;
+        // BaseTaewoori의 Die() 호출 (애니메이션 재생 포함)
+        base.Die();
 
         // 생성 파티클에 사망 알림
         if (spawnParticle != null)
         {
             spawnParticle.OnTaewooliDestroyed(this);
         }
+    }
 
-        // 즉시 제거
+    /// <summary>
+    /// 최종 사망 처리 오버라이드 - 오브젝트 파괴
+    /// </summary>
+    protected override void PerformFinalDeath()
+    {
+        // ExitTaewoori는 파괴하는 방식 사용
         Destroy(gameObject);
     }
     #endregion
-
 }
