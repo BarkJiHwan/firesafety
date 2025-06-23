@@ -63,13 +63,9 @@ public class ObjectUICtrl : MonoBehaviour
             turtorialMgr = FindObjectOfType<TutorialMgr>();
         }
 
-        if (GameManager.Instance.CurrentPhase >= GamePhase.FireWaiting)
+        if (GameManager.Instance.CurrentPhase == GamePhase.FireWaiting)
         {
-            if(backImage.gameObject.activeSelf == true || iconImg.gameObject.activeSelf == true)
-            {
-                backImage.gameObject.SetActive(false);
-                iconImg.gameObject.SetActive(false);
-            }
+            gameObject.SetActive(false);
         }
 
         if(currentPrevent != null)

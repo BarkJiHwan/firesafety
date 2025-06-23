@@ -194,6 +194,10 @@ public class TutorialMgr : MonoBehaviourPun
     {
         var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
 
+        if(interactObj == null)
+        {
+            yield break;
+        }
         GameObject player = FindObjectOfType<PlayerComponents>().gameObject;
         player = player.GetComponentInChildren<PlayerInteractor>().gameObject;
         Debug.Log(player.name);
