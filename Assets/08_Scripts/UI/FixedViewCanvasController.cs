@@ -28,10 +28,15 @@ public class FixedViewCanvasController : MonoBehaviour
     [SerializeField] Vector3 conversationPos;
     [SerializeField] TextMeshProUGUI conversationTxt;
 
+    [Header("경고창")]
+    [SerializeField] GameObject warningPanel;
+
     UIType pastDiaType = UIType.None;
 
     ScoreBoardController scoreBoardCtrl;
     ConversationController conversationCtrl;
+
+    TutorialMgr tutorialMgr;
 
     public GameObject ConversationPanel => conversationPanel;
 
@@ -133,5 +138,20 @@ public class FixedViewCanvasController : MonoBehaviour
         }
         conversationBoard.GetComponent<RectTransform>().anchoredPosition = pos;
         conversationPanel.SetActive(true);
+    }
+
+    public bool IsWarningSignActive()
+    {
+        return warningPanel.activeSelf;
+    }
+
+    public void TurnWarningSign(bool isActive)
+    {
+        warningPanel.SetActive(isActive);
+    }
+
+    public void ChangeScoreBoardPlayerColor(int index)
+    {
+        scoreBoardCtrl.SetPlayerImageBack(index);
     }
 }

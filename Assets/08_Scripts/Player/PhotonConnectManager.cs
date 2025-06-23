@@ -6,7 +6,7 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
 {
     private string _gameVersion = "1";
     [SerializeField] private PlayerSpawner _playerSpawner;
-    [SerializeField] private string roomName = "_releaseHelpMe";
+    [SerializeField] private string roomName = "_testRoomName";
     [SerializeField] private string lobbyName = "_testLobbyName";
 
     private void Start()
@@ -80,7 +80,14 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
     /* 테스트용 방 곧바로 입장시, 바로 플레이어 생성이후 XR 컴포넌트 켜줌. */
     public override void OnJoinedRoom()
     {
-        GameObject player = _playerSpawner.NetworkInstantiate(SceneController.Instance.GetChooseCharacterType().characterType);
+        PlayerEnum selectedChar = PlayerEnum.Bico;
+
+        if (SceneController.Instance && SceneController.Instance.GetChooseCharacterType() != null)
+        {
+            selectedChar = SceneController.Instance.GetChooseCharacterType().characterType;
+        }
+
+        GameObject player = _playerSpawner.NetworkInstantiate(selectedChar);
         player.GetComponent<PlayerComponents>().xRComponents.SetActive(true);
 
         GameManager.Instance.ResetGameTimer();
