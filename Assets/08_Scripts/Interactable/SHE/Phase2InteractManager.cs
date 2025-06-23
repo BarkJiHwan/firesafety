@@ -23,28 +23,22 @@ public class Phase2InteractManager : MonoBehaviour
     {
         get; private set;
     }
+    [Header("Common")]
+    [SerializeField] private LayerMask _interactMask;
     [Header("양손 수건 데이터")]
     [SerializeField] private TowelHandData _leftHand;
     [SerializeField] private TowelHandData _rightHand;
     [Header("수건")]
-    [SerializeField] private LayerMask _towelMask;
-    [SerializeField] private LayerMask _waterMask;
-    [SerializeField] private float _towelInteractWater;
-    [SerializeField] private float _towelInteractRadius;
     private float _triggerValue;
-    private bool _gotTowel = false;
-    private bool _gotWet = false;
+    [SerializeField] private bool _gotTowel = false;
+    [SerializeField] private bool _gotWet = false;
     [Header("수도")]
     [SerializeField] private float _tapInteractRadius;
-    [SerializeField] private LayerMask _tapMask;
-    [SerializeField, Tooltip("배치 필쑤!!")] private TapWater _tapWater;
     [SerializeField] private bool _tapEnable = false;
-    [Header("물대포")]
+    [Header("물대포")]//일단 다른 것부터 해보자고 ㅇ
     [SerializeField] private int _damage = 1;
     [SerializeField] private GameObject _waterShooterPrefab;
     [SerializeField] private float _fireDelay = 0.5f;
-    [SerializeField] private LayerMask _weaponLayer;
-    private RaycastHit _hit;
     private void Awake()
     {
         if (GameManager.Instance != null && GameManager.Instance.CurrentPhase != GamePhase.LeaveDangerArea)
@@ -72,7 +66,6 @@ public class Phase2InteractManager : MonoBehaviour
     private void CheckCols(TowelHandData hand)
     {
         _triggerValue = hand.triggerAction.action.ReadValue<float>();
-
     }
     private void TowelSupply(TowelHandData hand)
     {

@@ -1,18 +1,34 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+public interface IInteractableInPhase2
+{
+    public void InteractWithXR();
+}
 public class Phase2ObjectManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static Phase2ObjectManager Instance
     {
-        
+        get; private set;
     }
-
-    // Update is called once per frame
-    void Update()
+    public void SupplyTowel(EHandType type)
     {
-        
+
+    }
+    public void TurnOnWater()
+    {
+
+    }
+    public void WettingTowel(EHandType type)
+    {
+
+    }
+    public void FireAlarm()
+    {
+
+    }
+    public void GrabWeapon(EHandType type)
+    {
+
     }
 }
