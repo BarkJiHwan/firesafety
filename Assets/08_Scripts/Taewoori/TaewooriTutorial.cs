@@ -20,7 +20,7 @@ public class TaewooriTutorial : BaseTaewoori
         // 사망 시 모든 플레이어의 소화기 비활성화
         DisableAllPlayerSuppressors();
 
-        // 오브젝트 제거
+        // 오브젝트 제거 하면 튜토리얼 매니저에서 오류냠 셋엑틱브 끄는 코드가 있어서
         //Destroy(gameObject);
     }
 

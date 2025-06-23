@@ -146,6 +146,10 @@ public partial class FirePreventable : MonoBehaviour
             if (_isFirePreventable)
             {
                 OnFirePreventionComplete();
+                // 예방 완료하면 Material 끄기
+                SetActiveOnMaterials(false);
+                // 예외인 애들 추가
+                MakeExceptObjectOff();
             }
             else
             {

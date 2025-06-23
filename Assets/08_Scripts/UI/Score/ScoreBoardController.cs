@@ -10,6 +10,7 @@ public class ScoreBoardController : MonoBehaviour
     [Header("캐릭터 이미지")]
     // 들어온 순서에 따른 색상 변경 => 색상 기억
     [SerializeField] Image outlineImage;
+    [SerializeField] Color[] outlineColor;
     // 고른 캐릭터에 따라 이미지 변경
     [SerializeField] Image charcaterImage;
 
@@ -119,5 +120,10 @@ public class ScoreBoardController : MonoBehaviour
                 return stampTypes[1];
         }
         return null;
+    }
+
+    public void SetPlayerImageBack(int order)
+    {
+        outlineImage.color = outlineColor[order];
     }
 }

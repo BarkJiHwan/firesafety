@@ -2126,6 +2126,14 @@ PrefabInstance:
       propertyPath: m_Data.m_Target
       value: 
       objectReference: {fileID: 4089887408115836342}
+    - target: {fileID: 915058324, guid: ba5697950f61547dfba6abe8a9aad00c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1818334751, guid: ba5697950f61547dfba6abe8a9aad00c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3759552973863989671, guid: ba5697950f61547dfba6abe8a9aad00c,
         type: 3}
       propertyPath: photonView
@@ -2221,8 +2229,6 @@ PrefabInstance:
     - {fileID: 3759552973863989664, guid: ba5697950f61547dfba6abe8a9aad00c, type: 3}
     - {fileID: 3759552973863989667, guid: ba5697950f61547dfba6abe8a9aad00c, type: 3}
     - {fileID: 3759552973863989665, guid: ba5697950f61547dfba6abe8a9aad00c, type: 3}
-    - {fileID: 915058324, guid: ba5697950f61547dfba6abe8a9aad00c, type: 3}
-    - {fileID: 1818334751, guid: ba5697950f61547dfba6abe8a9aad00c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ba5697950f61547dfba6abe8a9aad00c, type: 3}
 --- !u!1 &4089887408115836341 stripped
 GameObject:
