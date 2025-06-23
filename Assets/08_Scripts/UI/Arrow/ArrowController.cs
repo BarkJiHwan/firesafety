@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class ArrowController : MonoBehaviour
@@ -24,7 +25,8 @@ public class ArrowController : MonoBehaviour
     Vector3 appearEndPos;
     Vector3 previousPlayerPos;
 
-    TutorialMgr turtorialMgr;
+    TutorialMgr[] turtorialMgr;
+    TutorialMgr myTutorialMgr;
 
     CreateArrow createArrow;
     bool isAlreadyMade = false;
@@ -44,22 +46,30 @@ public class ArrowController : MonoBehaviour
 
     void Update()
     {
-        if(turtorialMgr == null)
+        if (turtorialMgr == null || turtorialMgr.Length == 0)
         {
-            turtorialMgr = FindObjectOfType<TutorialMgr>();
+            turtorialMgr = FindObjectsOfType<TutorialMgr>();
         }
-        if(turtorialMgr != null && isAlreadyMade == false)
+        if (turtorialMgr != null && isAlreadyMade == false)
         {
-            turtorialMgr.arrowCtrl = this;
-            turtorialMgr.OnStartArrow += AppearArrow;
-            isAlreadyMade = true;
+            foreach(var tutMgr in turtorialMgr)
+            {
+                PhotonView view = tutMgr.gameObject.GetComponent<PhotonView>();
+                if(view != null && view.IsMine)
+                {
+                    myTutorialMgr = tutMgr;
+                    tutMgr.arrowCtrl = this;
+                    tutMgr.OnStartArrow += AppearArrow;
+                    isAlreadyMade = true;
+                }
+            }
         }
     }
 
     IEnumerator GuideArrowToTarget(Transform targetPos)
     {
         timeElasped = 0;
-        playerPos = turtorialMgr.transform;
+        playerPos = myTutorialMgr.transform;
         Vector3 forward = playerPos.forward;
         Vector3 dirToTarget = (targetPos.position - playerPos.position).normalized;
 
@@ -108,9 +118,10 @@ public class ArrowController : MonoBehaviour
 
     void AppearArrow(int playerIndex)
     {
+        Debug.Log("AppearArrow 들어옴");
         // 둘 다 TutorialMgr에 있음
         // playerPos : Player 받아와야 함
-        playerPos = turtorialMgr.transform;
+        playerPos = myTutorialMgr.transform;
         // targetPos : 타겟 받아와야 함
         targetPos = dataMgr.GetInteractObject(playerIndex).transform;
 
@@ -128,17 +139,21 @@ public class ArrowController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (turtorialMgr == null)
-        {
-            return;
-        }
-        turtorialMgr.OnStartArrow += AppearArrow;
-        isAlreadyMade = true;
+        //if (turtorialMgr == null)
+        //{
+        //    return;
+        //}
+        //turtorialMgr.OnStartArrow += AppearArrow;
+        //isAlreadyMade = true;
     }
 
     private void OnDisable()
     {
+        if(myTutorialMgr == null)
+        {
+            return;
+        }
         StopAllCoroutines();
-        turtorialMgr.OnStartArrow -= AppearArrow;
+        myTutorialMgr.OnStartArrow -= AppearArrow;
     }
 }
