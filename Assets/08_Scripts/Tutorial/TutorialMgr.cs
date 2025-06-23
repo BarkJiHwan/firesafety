@@ -25,6 +25,7 @@ public class TutorialMgr : MonoBehaviourPun
     private RoomMgr _roomMgr;
 
     public event Action<int> OnStartArrow;
+    public event Action<GameObject> OnObjectUI;
     public ArrowController arrowCtrl { get; set; }
 
     void Start()
@@ -163,6 +164,7 @@ public class TutorialMgr : MonoBehaviourPun
         // 이벤트 실행
         _preventable.OnHaveToPrevented += _preventable.OnSetPreventMaterialsOn;
         _preventable.TriggerPreventObejct(true);
+        //OnObjectUI?.Invoke(interactObj);
 
         _preventable.SetFirePreventionPending();
         var interactable = interactObj.GetComponent<XRSimpleInteractable>();
@@ -192,6 +194,10 @@ public class TutorialMgr : MonoBehaviourPun
     {
         var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
 
+        if(interactObj == null)
+        {
+            yield break;
+        }
         GameObject player = FindObjectOfType<PlayerComponents>().gameObject;
         player = player.GetComponentInChildren<PlayerInteractor>().gameObject;
         Debug.Log(player.name);
@@ -221,6 +227,8 @@ public class TutorialMgr : MonoBehaviourPun
         Debug.Log("전투 튜토리얼 시작");
         _currentMonster.SetActive(true);
         _extinguisher.SetActive(true);
+
+        // 소화기 위에 UI 나오게 하기
 
         // 2. 몬스터 체력 컴포넌트 참조
         var tutorial = _currentMonster.GetComponent<TaewooriTutorial>();

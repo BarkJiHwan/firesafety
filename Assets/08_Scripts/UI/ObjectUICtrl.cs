@@ -25,12 +25,14 @@ public class ObjectUICtrl : MonoBehaviour
     [SerializeField] Image iconImg;
     [SerializeField] Sprite warningIcon;
     [SerializeField] Sprite completeIcon;
+    [SerializeField] Sprite triggerButtonIcon;
 
     RectTransform rect;
     GameManager gameManager;
     Vector3 basicPos;
     FirePreventable currentPrevent;
     bool isPointing;
+    TutorialMgr turtorialMgr;
 
     private void Awake()
     {
@@ -56,13 +58,14 @@ public class ObjectUICtrl : MonoBehaviour
 
     void Update()
     {
-        if(GameManager.Instance.CurrentPhase != GamePhase.Prevention)
+        if (turtorialMgr == null)
         {
-            if(backImage.gameObject.activeSelf == true || iconImg.gameObject.activeSelf == true)
-            {
-                backImage.gameObject.SetActive(false);
-                iconImg.gameObject.SetActive(false);
-            }
+            turtorialMgr = FindObjectOfType<TutorialMgr>();
+        }
+
+        if (GameManager.Instance.CurrentPhase == GamePhase.FireWaiting)
+        {
+            gameObject.SetActive(false);
         }
 
         if(currentPrevent != null)
@@ -80,24 +83,43 @@ public class ObjectUICtrl : MonoBehaviour
         {
             return;
         }
-        var target = args.interactableObject;
+        var targetObject = args.interactableObject;
+        Transform target = targetObject.transform;
         //FirePreventable prevent = target.transform.GetComponent<FirePreventable>();
-        currentPrevent = target.transform.GetComponent<FirePreventable>();
-        FireObjScript fire = target.transform.GetComponent<FireObjScript>();
 
-        //transform.position = target.transform.position + fire.SpawnOffset;
-        Vector3 originPosition = fire.TaewooriPos();
+        PositionUI(target);
+
+        // ray로 계속 쏘고 있으면
+        isPointing = true;
+        RefreshUI();
+    }
+
+    public void PositionUI(Transform targetPos)
+    {
+        currentPrevent = targetPos.GetComponent<FirePreventable>();
+        Vector3 originPosition = Vector3.zero;
+        if (currentPrevent == null)
+        {
+            originPosition = targetPos.position;
+        }
+        else
+        {
+            FireObjScript fire = targetPos.GetComponent<FireObjScript>();
+
+            //transform.position = target.transform.position + fire.SpawnOffset;
+            originPosition = fire.TaewooriPos();
+        }
         transform.position = originPosition + basicPos;
 
-        Vector3 targetForward = target.transform.forward;
-        if(targetForward != Vector3.zero)
+        Vector3 targetForward = targetPos.forward;
+        if (targetForward != Vector3.zero)
         {
             targetForward.y = 0;
             targetForward.Normalize();
         }
 
-        Vector3 camDir = Camera.main.transform.position - target.transform.position;
-        if(camDir != Vector3.zero)
+        Vector3 camDir = Camera.main.transform.position - targetPos.position;
+        if (camDir != Vector3.zero)
         {
             camDir.Normalize();
         }
@@ -127,7 +149,7 @@ public class ObjectUICtrl : MonoBehaviour
             transform.Rotate(0, 0, 0);
         }
 
-        else if(currentPrevent.MyType == PreventType.OldWire)
+        else if (currentPrevent.MyType == PreventType.OldWire)
         {
             transform.position = originPosition + new Vector3(0, 0, 1);
         }
@@ -137,10 +159,6 @@ public class ObjectUICtrl : MonoBehaviour
             Debug.Log("위치 수정");
             MoveUIPosition(originPosition);
         }
-
-        // ray로 계속 쏘고 있으면
-        isPointing = true;
-        RefreshUI();
     }
 
     public void DisSelectedObject()
@@ -230,5 +248,15 @@ public class ObjectUICtrl : MonoBehaviour
         backImage.gameObject.SetActive(!currentPrevent.IsFirePreventable);
         // 아이콘 활성화
         iconImg.gameObject.SetActive(true);
+    }
+
+    public void TutorialPreventObject(GameObject preventObject)
+    {
+        // 활성화
+        backImage.gameObject.SetActive(true);
+        // 활성화
+        iconImg.gameObject.SetActive(true);
+
+        PositionUI(preventObject.transform);
     }
 }
