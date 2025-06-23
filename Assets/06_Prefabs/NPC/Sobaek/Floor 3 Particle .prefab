@@ -225,26 +225,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7202369927188795177}
     m_Modifications:
-    - target: {fileID: 1050517339058763240, guid: 54492dbfb336e0a48b62e5ed23d88bf1,
-        type: 3}
-      propertyPath: simulationSpeed
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1050517339058763240, guid: 54492dbfb336e0a48b62e5ed23d88bf1,
-        type: 3}
-      propertyPath: ColorModule.enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1050517339058763240, guid: 54492dbfb336e0a48b62e5ed23d88bf1,
-        type: 3}
-      propertyPath: ShapeModule.m_Scale.x
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1050517339058763240, guid: 54492dbfb336e0a48b62e5ed23d88bf1,
-        type: 3}
-      propertyPath: InitialModule.gravityModifier.scalar
-      value: -0.001
-      objectReference: {fileID: 0}
     - target: {fileID: 1050517339058763242, guid: 54492dbfb336e0a48b62e5ed23d88bf1,
         type: 3}
       propertyPath: m_Name
@@ -304,21 +284,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3548506059694899669, guid: 54492dbfb336e0a48b62e5ed23d88bf1,
-        type: 3}
-      propertyPath: simulationSpeed
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3548506059694899669, guid: 54492dbfb336e0a48b62e5ed23d88bf1,
-        type: 3}
-      propertyPath: RotationModule.enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3548506059694899669, guid: 54492dbfb336e0a48b62e5ed23d88bf1,
-        type: 3}
-      propertyPath: InitialModule.gravityModifier.scalar
-      value: -0.001
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54492dbfb336e0a48b62e5ed23d88bf1, type: 3}
