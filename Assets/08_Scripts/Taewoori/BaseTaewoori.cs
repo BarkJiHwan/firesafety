@@ -79,30 +79,6 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
             Die();
         }
     }
-
-    /// <summary>
-    /// 체력을 직접 설정하는 메서드 (특수한 경우에만 사용)
-    /// </summary>
-    /// <param name="newHealth">새로운 체력값</param>
-    protected virtual void SetHealth(float newHealth)
-    {
-        currentHealth = Mathf.Clamp(newHealth, 0, maxHealth);
-
-        if (currentHealth <= 0 && !isDead)
-        {
-            Die();
-        }
-    }
-
-    /// <summary>
-    /// 최대 체력을 설정하는 메서드
-    /// </summary>
-    /// <param name="newMaxHealth">새로운 최대 체력값</param>
-    protected virtual void SetMaxHealth(float newMaxHealth)
-    {
-        maxHealth = newMaxHealth;
-        currentHealth = Mathf.Min(currentHealth, maxHealth);
-    }
     #endregion
 
     #region 추상 메서드

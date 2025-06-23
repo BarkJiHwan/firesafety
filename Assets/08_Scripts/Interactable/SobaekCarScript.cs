@@ -96,6 +96,7 @@ public class SobaekCarScript : MonoBehaviour
         if (TrySetPlayerPosition())
         {
             DisableInteraction();
+            
         }
     }
 
@@ -126,7 +127,6 @@ public class SobaekCarScript : MonoBehaviour
     {
         if (!ValidateComponents())
             return;
-
         splineAnimate.Play();
     }
 
@@ -134,17 +134,18 @@ public class SobaekCarScript : MonoBehaviour
     {
         if (splineAnimate == null)
         {
+            Debug.LogWarning("SplineAnimate 컴포넌트가 없습니다!");
             return false;
         }
 
         if (splineAnimate.Container == null)
         {
+            Debug.LogWarning("SplineContainer가 설정되지 않았습니다!");
             return false;
         }
 
         return true;
     }
-
     #endregion
 
     #region 유틸리티
