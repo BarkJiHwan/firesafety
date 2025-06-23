@@ -89,6 +89,25 @@ public class PlayerSpawner : MonoBehaviour
         return SceneController.Instance.chooseSceneType == SceneType.IngameScene_Evacuation;
 
     }
+    //private bool IsTargetScene()
+    //{
+    //    string currentSceneName = SceneManager.GetActiveScene().name;
+
+    //    // 직접 씬 이름으로 확인
+    //    if (currentSceneName.Equals("ExitScenes_CHM.Test"))
+    //    {
+    //        return true;
+    //    }
+
+    //    // SceneController가 있을 때만 체크
+    //    if (SceneController.Instance != null &&
+    //        SceneController.Instance.chooseSceneType == SceneType.IngameScene_Evacuation)
+    //    {
+    //        return true;
+    //    }
+
+    //    return false;
+    //}
 
     private PlayerEnum GetSelectedCharacter()
     {
@@ -99,9 +118,19 @@ public class PlayerSpawner : MonoBehaviour
         }
         return PlayerEnum.Bico;
     }
+    //private PlayerEnum GetSelectedCharacter()
+    //{
+
+    //    if (SceneController.Instance != null &&
+    //        SceneController.Instance.GetChooseCharacterType() != null)
+    //    {
+    //        return SceneController.Instance.GetChooseCharacterType().characterType;
+    //    }
+    //    return PlayerEnum.Bico;
+    //}
     #endregion
 
-    #region 플레이어 생성
+        #region 플레이어 생성
     public GameObject NetworkInstantiate(PlayerEnum playerEnum)
     {
         return NetworkInstantiate(playerEnum, Vector3.zero, Quaternion.identity);
