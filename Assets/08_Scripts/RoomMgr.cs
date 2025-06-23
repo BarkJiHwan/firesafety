@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Photon.Pun;
 using Photon.Realtime;
+using Unity.XR.OpenVR;
 using UnityEngine;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
@@ -38,6 +39,13 @@ public class RoomMgr : MonoBehaviourPunCallbacks
             //Tutorial_NAR_010번 나레이션 실행 : 이제 게임 할거니까 잠깐 기다려~
             _dialoguePlayer.PlayWithText("TUT_010", UIType.Narration);
             _dialoguePlayer.onFinishDialogue += CallRPCToPlayers;
+        }
+    }
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            CheckAllPlayersReady();
         }
     }
 

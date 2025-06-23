@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +14,7 @@ public class ObjectUICtrl : MonoBehaviour
     [SerializeField] Color backColor;
 
     [Header("대화창 배경")]
-    [SerializeField] Image ConverBackImage;
+    [SerializeField] Image converBackImage;
     [SerializeField] Color converBackColor;
 
     [Header("대화창 대화 Text")]
@@ -32,7 +33,8 @@ public class ObjectUICtrl : MonoBehaviour
     Vector3 basicPos;
     FirePreventable currentPrevent;
     bool isPointing;
-    TutorialMgr turtorialMgr;
+    TutorialMgr[] turtorialMgr;
+    TutorialMgr myTutorialMgr;
 
     private void Awake()
     {
@@ -43,7 +45,7 @@ public class ObjectUICtrl : MonoBehaviour
     {
         // 초기 세팅
         backImage.color = backColor;
-        ConverBackImage.color = converBackColor;
+        converBackImage.color = converBackColor;
         preventWord.fontSize = fontSize;
         preventWord.color = fontColor;
         iconImg.sprite = warningIcon;
@@ -58,14 +60,31 @@ public class ObjectUICtrl : MonoBehaviour
 
     void Update()
     {
-        if (turtorialMgr == null)
+        if (turtorialMgr == null || turtorialMgr.Length == 0)
         {
-            turtorialMgr = FindObjectOfType<TutorialMgr>();
+            turtorialMgr = FindObjectsOfType<TutorialMgr>();
+        }
+        if (turtorialMgr != null && myTutorialMgr == null)
+        {
+            foreach (var tutMgr in turtorialMgr)
+            {
+                PhotonView view = tutMgr.gameObject.GetComponent<PhotonView>();
+                if (view != null && view.IsMine)
+                {
+                    myTutorialMgr = tutMgr;
+                    myTutorialMgr.OnObjectUI += TutorialPreventObject;
+                    myTutorialMgr.OnCompleteSign += ChangeTutorialIcon;
+                    myTutorialMgr.OnFinishTutorial += FinishTutorial;
+                }
+            }
         }
 
         if (GameManager.Instance.CurrentPhase == GamePhase.FireWaiting)
         {
-            gameObject.SetActive(false);
+            if(gameObject.activeSelf == true)
+            {
+                gameObject.SetActive(false);
+            }
         }
 
         if(currentPrevent != null)
@@ -100,7 +119,9 @@ public class ObjectUICtrl : MonoBehaviour
         Vector3 originPosition = Vector3.zero;
         if (currentPrevent == null)
         {
-            originPosition = targetPos.position;
+            originPosition = targetPos.position + new Vector3(0, 0.3f, 0);
+            transform.position = originPosition + basicPos;
+            return;
         }
         else
         {
@@ -156,7 +177,6 @@ public class ObjectUICtrl : MonoBehaviour
 
         else if (IsUIBlocked())
         {
-            Debug.Log("위치 수정");
             MoveUIPosition(originPosition);
         }
     }
@@ -250,13 +270,33 @@ public class ObjectUICtrl : MonoBehaviour
         iconImg.gameObject.SetActive(true);
     }
 
-    public void TutorialPreventObject(GameObject preventObject)
+    void TutorialPreventObject(GameObject preventObject)
     {
+        iconImg.rectTransform.localScale = new Vector3(2f, 2f, 1);
         // 활성화
-        backImage.gameObject.SetActive(true);
+        iconImg.sprite = triggerButtonIcon;
         // 활성화
         iconImg.gameObject.SetActive(true);
 
         PositionUI(preventObject.transform);
+    }
+
+    void ChangeTutorialIcon()
+    {
+        iconImg.rectTransform.localScale = Vector3.one;
+        iconImg.sprite = completeIcon;
+    }
+
+    void FinishTutorial()
+    {
+        iconImg.rectTransform.localScale = Vector3.one;
+        iconImg.gameObject.SetActive(false);
+        myTutorialMgr.OnObjectUI -= TutorialPreventObject;
+        myTutorialMgr.OnCompleteSign -= ChangeTutorialIcon;
+    }
+
+    private void OnDisable()
+    {
+        myTutorialMgr.OnFinishTutorial -= FinishTutorial;
     }
 }

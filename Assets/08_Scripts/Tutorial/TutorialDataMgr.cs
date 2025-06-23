@@ -24,6 +24,9 @@ public class TutorialDataMgr : MonoBehaviourPun
 
     [field: SerializeField, Header("튜토리얼시간은 90초 인스팩터창에서 임시로 노출 시켜 둠")]
     public float Timer { get; private set; } = 90f;
+    public int PlayerNumber { get => _playerNumber; set => _playerNumber = value; }
+
+    private int _playerNumber;
 
     void Awake()
     {
@@ -36,6 +39,12 @@ public class TutorialDataMgr : MonoBehaviourPun
         IsStartTutorial = false;
         IsTutorialFailed = false;
         IsTriggerSupply = false;
+    }
+
+    public void SetNumber(int num)
+    {
+        Debug.Log(num + "내 번호 입니다.");
+        PlayerNumber = num;
     }
 
     // PlayerList 인덱스 기반 데이터 반환
@@ -66,26 +75,4 @@ public class TutorialDataMgr : MonoBehaviourPun
         return InteractObjects[playerListIndex];
 
     }
-    public void StartTutorial()
-    {
-        if (PhotonNetwork.LocalPlayer.IsLocal)
-        {
-            _tutorialRoutine = StartCoroutine(TutorialRoutine());
-        }
-    }
-
-    private IEnumerator TutorialRoutine()
-    {
-        yield return new WaitUntil(() => IsStartTutorial);
-        while (Timer > 0)
-        {
-            Timer -= Time.deltaTime;
-            yield return null;
-        }
-        TutorialFailed();
-    }
-
-    public void TutorialFailed() => IsTutorialFailed = true;
-
-    public void StopTutorialRoutine() => StopCoroutine(_tutorialRoutine);
 }
