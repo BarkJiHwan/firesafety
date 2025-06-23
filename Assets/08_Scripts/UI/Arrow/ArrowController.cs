@@ -21,9 +21,6 @@ public class ArrowController : MonoBehaviour
     // TutorialDataMgr의 GetInteractObject를 받아야 하는데...
     Transform targetPos;
     float timeElasped;
-    Vector3 appearStartPos;
-    Vector3 appearEndPos;
-    Vector3 previousPlayerPos;
 
     TutorialMgr[] turtorialMgr;
     TutorialMgr myTutorialMgr;
