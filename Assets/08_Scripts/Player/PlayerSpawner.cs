@@ -78,59 +78,59 @@ public class PlayerSpawner : MonoBehaviour
         }
     }
 
+    //private bool IsTargetScene()
+    //{
+    //    if (SceneController.Instance == null && SceneManager.GetActiveScene().name.Equals("ExitScenes_CHM.Test"))
+    //    {
+
+    //        return true;
+    //    }
+
+    //    return SceneController.Instance.chooseSceneType == SceneType.IngameScene_Evacuation;
+
+    //}
     private bool IsTargetScene()
     {
-        if (SceneController.Instance == null && SceneManager.GetActiveScene().name.Equals("ExitScenes_CHM.Test"))
-        {
+        string currentSceneName = SceneManager.GetActiveScene().name;
 
+        // 직접 씬 이름으로 확인
+        if (currentSceneName.Equals("ExitScenes_CHM.Test"))
+        {
             return true;
         }
 
-        return SceneController.Instance.chooseSceneType == SceneType.IngameScene_Evacuation;
-
-    }
-    //private bool IsTargetScene()
-    //{
-    //    string currentSceneName = SceneManager.GetActiveScene().name;
-
-    //    // 직접 씬 이름으로 확인
-    //    if (currentSceneName.Equals("ExitScenes_CHM.Test"))
-    //    {
-    //        return true;
-    //    }
-
-    //    // SceneController가 있을 때만 체크
-    //    if (SceneController.Instance != null &&
-    //        SceneController.Instance.chooseSceneType == SceneType.IngameScene_Evacuation)
-    //    {
-    //        return true;
-    //    }
-
-    //    return false;
-    //}
-
-    private PlayerEnum GetSelectedCharacter()
-    {
-        if (SceneController.Instance?.GetChooseCharacterType() != null)
-
+        // SceneController가 있을 때만 체크
+        if (SceneController.Instance != null &&
+            SceneController.Instance.chooseSceneType == SceneType.IngameScene_Evacuation)
         {
-            return SceneController.Instance.GetChooseCharacterType().characterType;
+            return true;
         }
-        return PlayerEnum.Bico;
+
+        return false;
     }
+
     //private PlayerEnum GetSelectedCharacter()
     //{
+    //    if (SceneController.Instance?.GetChooseCharacterType() != null)
 
-    //    if (SceneController.Instance != null &&
-    //        SceneController.Instance.GetChooseCharacterType() != null)
     //    {
     //        return SceneController.Instance.GetChooseCharacterType().characterType;
     //    }
     //    return PlayerEnum.Bico;
     //}
+    private PlayerEnum GetSelectedCharacter()
+    {
+
+        if (SceneController.Instance != null &&
+            SceneController.Instance.GetChooseCharacterType() != null)
+        {
+            return SceneController.Instance.GetChooseCharacterType().characterType;
+        }
+        return PlayerEnum.Bico;
+    }
     #endregion
 
-        #region 플레이어 생성
+    #region 플레이어 생성
     public GameObject NetworkInstantiate(PlayerEnum playerEnum)
     {
         return NetworkInstantiate(playerEnum, Vector3.zero, Quaternion.identity);
