@@ -18,6 +18,17 @@ public class SmallTaewoori : NetworkTaewoori
     public Taewoori OriginTaewoori => originTaewoori;
     #endregion
 
+    #region 유니티 라이프사이클
+    protected override void Awake()
+    {
+        // 스몰태우리는 파티클 기반이므로 애니메이션 사용 안함
+        useAnimation = false;
+
+        // 부모 클래스 초기화 호출
+        base.Awake();
+    }
+    #endregion
+
     #region 초기화 메서드들
     /// <summary>
     /// 마스터용 초기화 (카운트 증가 포함) - 직접 생성 시 사용
@@ -129,6 +140,7 @@ public class SmallTaewoori : NetworkTaewoori
 
         isDead = true;
 
+        // 애니메이션이 없으므로 즉시 사망 처리
         // 마스터만 카운트 감소 및 네트워크 동기화
         if (PhotonNetwork.IsMasterClient && !isClientOnly)
         {
