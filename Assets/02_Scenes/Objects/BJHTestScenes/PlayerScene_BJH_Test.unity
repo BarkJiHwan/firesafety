@@ -899,7 +899,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataMgr: {fileID: 1308356751}
   radius: 1
-  speed: 3
+  speed: 20
   appearDuration: 7
   heightOffset: 0.7
   rotArrow: {x: 90, y: -90, z: 0}
@@ -1135,6 +1135,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCharacterArray: []
+  sobaekPrefab: {fileID: 0}
+  sobaekCarPrefab: {fileID: 0}
+  carTrack: {fileID: 0}
 --- !u!114 &1184504948
 MonoBehaviour:
   m_ObjectHideFlags: 0
