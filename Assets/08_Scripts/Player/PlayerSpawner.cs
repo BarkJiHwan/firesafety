@@ -18,13 +18,14 @@ public class PlayerSpawner : MonoBehaviour
     public PlayerCharacterSo[] playerCharacterArray;
 
     [Header("소백이 & 소백카 설정")]
-    [SerializeField] private GameObject sobaekPrefab;
+    [SerializeField] private GameObject exitSobaekPrefab;
     [SerializeField] private GameObject sobaekCarPrefab;
     [SerializeField] private SplineContainer carTrack;
     #endregion
 
     #region 정적 참조
     private static GameObject currentSobaekCar;
+    private static GameObject currentPlayer; // CHM - 텔레포트에서 사용할 플레이어 참조
     #endregion
 
     #region 유니티 라이프사이클
@@ -48,9 +49,9 @@ public class PlayerSpawner : MonoBehaviour
 
     private void LoadSobaekResources()
     {
-        if (sobaekPrefab == null)
+        if (exitSobaekPrefab == null)
         {
-            sobaekPrefab = Resources.Load<GameObject>("Sobaek");
+            exitSobaekPrefab = Resources.Load<GameObject>("ExitSobaek");
         }
 
         if (sobaekCarPrefab == null)
@@ -71,24 +72,14 @@ public class PlayerSpawner : MonoBehaviour
 
         PlayerEnum selectedChar = GetSelectedCharacter();
         GameObject player = LocalInstantiate(selectedChar);
+        currentPlayer = player;//CHM 추가 
+        player.GetComponent<PlayerComponents>().customTunnelingVignette.SightShrink();
 
         if (player != null)
         {
             AttachSobaekToPlayer(player);
         }
     }
-
-    //private bool IsTargetScene()
-    //{
-    //    if (SceneController.Instance == null && SceneManager.GetActiveScene().name.Equals("ExitScenes_CHM.Test"))
-    //    {
-
-    //        return true;
-    //    }
-
-    //    return SceneController.Instance.chooseSceneType == SceneType.IngameScene_Evacuation;
-
-    //}
     private bool IsTargetScene()
     {
         string currentSceneName = SceneManager.GetActiveScene().name;
@@ -108,16 +99,6 @@ public class PlayerSpawner : MonoBehaviour
 
         return false;
     }
-
-    //private PlayerEnum GetSelectedCharacter()
-    //{
-    //    if (SceneController.Instance?.GetChooseCharacterType() != null)
-
-    //    {
-    //        return SceneController.Instance.GetChooseCharacterType().characterType;
-    //    }
-    //    return PlayerEnum.Bico;
-    //}
     private PlayerEnum GetSelectedCharacter()
     {
 
@@ -173,13 +154,13 @@ public class PlayerSpawner : MonoBehaviour
         GameObject sobaekObj = CreateSobaek(player);
         if (sobaekObj != null)
         {
-            SetupSobaekCar(sobaekObj.GetComponent<Sobaek>(), player);
+            SetupSobaekCar(sobaekObj.GetComponent<ExitSobaek>(), player);
         }
     }
 
     private bool ValidateSobaekSetup()
     {
-        if (sobaekPrefab == null)
+        if (exitSobaekPrefab == null)
         {
             Debug.LogWarning("소백이 프리팹이 설정되지 않았습니다!");
             return false;
@@ -189,8 +170,8 @@ public class PlayerSpawner : MonoBehaviour
 
     private GameObject CreateSobaek(GameObject player)
     {
-        GameObject sobaekObj = Instantiate(sobaekPrefab);
-        Sobaek sobaek = sobaekObj.GetComponent<Sobaek>();
+        GameObject sobaekObj = Instantiate(exitSobaekPrefab);
+        ExitSobaek sobaek = sobaekObj.GetComponent<ExitSobaek>();
 
         if (sobaek != null)
         {
@@ -205,7 +186,7 @@ public class PlayerSpawner : MonoBehaviour
         }
     }
 
-    private void SetupSobaekCar(Sobaek sobaek, GameObject player)
+    private void SetupSobaekCar(ExitSobaek sobaek, GameObject player)
     {
         if (sobaekCarPrefab == null)
         {
@@ -288,6 +269,26 @@ public class PlayerSpawner : MonoBehaviour
         {
             Debug.LogWarning("소백카에 SobaekCarScript가 없습니다!");
         }
+    }
+
+    // CHM 텔레 포트용 생성된 플레이어,소백이카 저장할 메서드
+
+    public static CustomTunnelingVignette GetPlayerVignette()
+    {
+        if (currentPlayer != null)
+        {
+            return currentPlayer.GetComponent<PlayerComponents>().customTunnelingVignette;
+        }
+        return null;
+    }
+
+    public static SplineAnimate GetSobaekCarSpline()
+    {
+        if (currentSobaekCar != null)
+        {
+            return currentSobaekCar.GetComponent<SplineAnimate>();
+        }
+        return null;
     }
     #endregion
 }

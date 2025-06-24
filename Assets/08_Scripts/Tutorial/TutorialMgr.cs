@@ -284,6 +284,7 @@ public class TutorialMgr : MonoBehaviourPun
         yield return new WaitUntil(() => GameManager.Instance.IsGameStart);
         ObjectActiveFalse(); //모든 튜토리얼 오브젝트 끄기
         DestroyTutorialObject();
+        
         // 튜토리얼 끝났을때 이벤트 실행
         OnFinishTutorial?.Invoke();
         StopAllCoroutines();

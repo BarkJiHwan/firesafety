@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class CharacterChoose : MonoBehaviour
 {
+    [SerializeField] FirebaseManager firebaseMgr;
     [SerializeField] List<ButtonInteractor> checkButtonList;
     [SerializeField] GameObject xrRigObject;
 
@@ -24,7 +25,8 @@ public class CharacterChoose : MonoBehaviour
             {
                 xrRigObject.GetComponent<CustomTunnelingVignette>().FadeOut();
                 SceneController.Instance.SetChooseCharacterType(button.charInfo);
-                Debug.Log("캐릭터 종류 : " + SceneController.Instance.GetChooseCharacterType().characterType);
+                Debug.Log("캐릭터 이름 : " + SceneController.Instance.GetChooseCharacterType().characterName);
+                firebaseMgr.SaveCharacterSelection(SceneController.Instance.GetChooseCharacterType().characterName);
                 MoveScene(SceneController.Instance.chooseSceneType);
             });
             button.applyButton.gameObject.SetActive(false);
