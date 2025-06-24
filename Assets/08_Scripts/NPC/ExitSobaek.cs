@@ -73,7 +73,6 @@ public class ExitSobaek : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("ExitSobaek Instance가 이미 존재합니다. 기존 Instance를 유지합니다.");
             Destroy(gameObject);
         }
     }
@@ -140,7 +139,7 @@ public class ExitSobaek : MonoBehaviour
         if (playerCamera == null)
             return;
 
-        // 플레이어 카메라를 바라보기 (카메라 방향이 아니라 카메라 위치를)
+        // 플레이어 카메라를 바라보기
         Vector3 targetDirection = (playerCamera.position - transform.position).normalized;
         targetDirection.y = 0;
 
@@ -165,20 +164,7 @@ public class ExitSobaek : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("ExitSobaek: SobaekCar 오브젝트가 설정되지 않았습니다.");
-        }
-    }
-
-    /// <summary>
-    /// 소백이 활성화/비활성화 설정
-    /// </summary>
-    public void SetSobaekActive(bool active)
-    {
-        gameObject.SetActive(active);
-
-        if (active && sobaekCarObject != null)
-        {
-            sobaekCarObject.SetActive(false);
+            Debug.LogWarning("SobaekCar 오브젝트가 설정되지 않았습니다.");
         }
     }
     #endregion
