@@ -19,6 +19,7 @@ public abstract class NetworkTaewoori : BaseTaewoori
     // 네트워크 관련
     protected int networkID = -1;
     protected bool isClientOnly = false;
+    protected int lastAttackerID = -1;
     #endregion
 
     #region 프로퍼티
@@ -26,7 +27,7 @@ public abstract class NetworkTaewoori : BaseTaewoori
     /// 네트워크 고유 ID
     /// </summary>
     public int NetworkID => networkID;
-
+    
     /// <summary>
     /// 피버타임 상태 확인
     /// </summary>
@@ -170,5 +171,18 @@ public abstract class NetworkTaewoori : BaseTaewoori
     {
         // 하위 클래스에서 구현
     }
+    #endregion
+
+    #region 어떤플레이어가 태우리 처치했는지
+    public void SetLastAttacker(int attackerID)
+    {
+        lastAttackerID = attackerID;
+    }
+    public int GetLastAttackerID()
+    {
+        return lastAttackerID;
+    }
+
+
     #endregion
 }

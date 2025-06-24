@@ -2,7 +2,7 @@
 using UnityEngine.XR.Interaction.Toolkit;
 
 /// <summary>
-/// 새 구조용 ExitTaewoori - BaseTaewoori를 상속받아 애니메이션 시스템 활용
+/// 탈출씩용 ExitTaewoori - BaseTaewoori를 상속받아 애니메이션 시스템 활용
 /// </summary>
 public class ExitTaewoori : BaseTaewoori
 {
