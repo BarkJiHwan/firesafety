@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// 화재/예방 씬 전용 소백이 - GameManager 연동 및 상호작용 시스템
+/// </summary>
 public class Sobaek : MonoBehaviour
 {
     #region 인스펙터 설정
@@ -19,7 +22,6 @@ public class Sobaek : MonoBehaviour
     [SerializeField] private float moveSpeed = 8f;
     [SerializeField] private float followSpeed = 5f;
     [SerializeField] private float arrivalDistance = 0.5f;
-
     #endregion
 
     #region 프로퍼티
@@ -40,12 +42,11 @@ public class Sobaek : MonoBehaviour
             }
         }
     }
-    public bool HasGameManager => hasGameManager;
     #endregion
 
     #region 변수 선언
-    private Transform playerTransform; // 이름 변경
-    private GameObject sobaekCarObject; // 이름 변경
+    private Transform playerTransform;
+    private GameObject sobaekCarObject;
     private Vector3 homePosition;
     private Vector3 basePosition;
     private Vector3 targetPosition;
@@ -56,7 +57,6 @@ public class Sobaek : MonoBehaviour
     private bool isMovingToHome = false;
     private bool isTalking = false;
     private bool sobaekInteractionEnabled = true;
-    private bool hasGameManager = false;
 
     private float floatTimer = 0f;
     private GamePhase lastPhase;
@@ -78,7 +78,6 @@ public class Sobaek : MonoBehaviour
 
     void LateUpdate()
     {
-        CheckGameManagerStatus();
         HandleGamePhase();
         UpdateMovementAndEffects();
     }
@@ -108,7 +107,6 @@ public class Sobaek : MonoBehaviour
     private void InitializeComponents()
     {
         animator = GetComponent<Animator>() ?? GetComponentInChildren<Animator>();
-        CheckGameManagerStatus();
     }
 
     private void SetupInitialPosition()
@@ -128,43 +126,12 @@ public class Sobaek : MonoBehaviour
             sobaekCarObject.SetActive(false);
         }
     }
-
-    private void CheckGameManagerStatus()
-    {
-        bool previousState = hasGameManager;
-        hasGameManager = GameManager.Instance != null;
-
-        if (previousState != hasGameManager)
-        {
-            HandleGameManagerStateChange();
-        }
-    }
-
-    private void HandleGameManagerStateChange()
-    {
-        if (!hasGameManager)
-        {
-            sobaekInteractionEnabled = false;
-            ResetMovementState();
-        }
-        else
-        {
-            sobaekInteractionEnabled = true;
-        }
-    }
-
-    private void ResetMovementState()
-    {
-        isMovingToTarget = false;
-        isMovingToHome = false;
-        currentTarget = null;
-    }
     #endregion
 
     #region 게임 페이즈 관리
     private void HandleGamePhase()
     {
-        if (!hasGameManager)
+        if (GameManager.Instance == null)
             return;
 
         GamePhase currentPhase = GameManager.Instance.CurrentPhase;
@@ -338,6 +305,11 @@ public class Sobaek : MonoBehaviour
         basePosition = transform.position;
     }
 
+    public void StartTalking()
+    {
+        isTalking = true;
+    }
+
     public void StopTalking()
     {
         isTalking = false;
@@ -353,7 +325,9 @@ public class Sobaek : MonoBehaviour
     #endregion
 
     #region 소백이/소백카 관리
-    //소백이 스태틱이라 이함수 호출하면 소백이 비활성 및 소백카 활성화함 서한얼이 이거 호출하셈
+    /// <summary>
+    /// 소백이 비활성화 및 소백카 활성화
+    /// </summary>
     public void ActivateSobaekCar()
     {
         if (sobaekCarObject != null)
@@ -362,6 +336,10 @@ public class Sobaek : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
+
+    /// <summary>
+    /// 소백이 활성화/비활성화 설정
+    /// </summary>
     public void SetSobaekActive(bool active)
     {
         if (active)

@@ -9,6 +9,7 @@ public class RoomMgr : MonoBehaviourPunCallbacks
 {
     private DialogueLoader _dialogueLoader;
     private DialoguePlayer _dialoguePlayer;
+    private Coroutine _timerRoutine;
 
     private void Start()
     {
@@ -45,10 +46,24 @@ public class RoomMgr : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            CheckAllPlayersReady();
+            if (GameManager.Instance.IsGameStart)
+            {
+                StopCoroutine(_timerRoutine);
+            }
+            else
+            {
+                CheckAllPlayersReady();
+            }
         }
     }
-
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            _timerRoutine = StartCoroutine(SyncTimerRoutine());
+            GameManager.Instance.OnGameEnd += OnGameEndHandler;
+        }
+    }
     private void CallRPCToPlayers()
     {
         _dialoguePlayer.onFinishDialogue -= CallRPCToPlayers;
@@ -63,7 +78,6 @@ public class RoomMgr : MonoBehaviourPunCallbacks
                 !(bool)player.CustomProperties["IsReady"])
                 return false;
         }
-
         return true;
     }
 
@@ -98,7 +112,7 @@ public class RoomMgr : MonoBehaviourPunCallbacks
             });
 
             // 타이머 동기화 시작
-            StartCoroutine(SyncTimerRoutine());
+            _timerRoutine = StartCoroutine(SyncTimerRoutine());
 
             // 게임 종료 이벤트 구독
             GameManager.Instance.OnGameEnd += OnGameEndHandler;
@@ -133,6 +147,7 @@ public class RoomMgr : MonoBehaviourPunCallbacks
         Debug.Log("게임이 종료되었습니다.");
         if (PhotonNetwork.IsMasterClient)
         {
+            GameManager.Instance.IsGameStart = false;
             GameManager.Instance.OnGameEnd -= OnGameEndHandler;
         }
         //모든 코루틴 종료

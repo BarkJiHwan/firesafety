@@ -602,9 +602,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2895417352497850679}
   - component: {fileID: 9137445655480841037}
-  - component: {fileID: 4475486153958860787}
+  - component: {fileID: 154358040952283029}
   m_Layer: 8
-  m_Name: Sobaek
+  m_Name: ExitSobaek
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -648,7 +648,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4475486153958860787
+--- !u!114 &154358040952283029
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -657,19 +657,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 2550521804121879437}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 352c22c219c69b94ab38a15e738f49ed, type: 3}
+  m_Script: {fileID: 11500000, guid: 4f3a3f5733a255c4ba42f23231229647, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetX: 1.5
-  offsetY: 0.5
-  offsetZ: 0.5
+  offsetX: 0.2
+  offsetY: 0
+  offsetZ: 0.8
   stayOnRightSide: 1
-  floatAmplitude: 0.3
-  floatSpeed: 1
-  lookAtSpeed: 2
-  moveSpeed: 8
-  followSpeed: 5
-  arrivalDistance: 0.5
+  floatAmplitude: 0.1
+  floatSpeed: 2
+  lookAtSpeed: 5
+  followSpeed: 10
 --- !u!1 &2632856105434143133
 GameObject:
   m_ObjectHideFlags: 0
