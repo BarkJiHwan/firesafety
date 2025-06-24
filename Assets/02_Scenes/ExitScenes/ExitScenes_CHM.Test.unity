@@ -598,26 +598,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: APT
       objectReference: {fileID: 0}
-    - target: {fileID: 3626817536255022010, guid: 89d20f9f903079c44a1d68ef6defda95,
-        type: 3}
-      propertyPath: m_Name
-      value: Floor 1 Particle
-      objectReference: {fileID: 0}
-    - target: {fileID: 3950713269011089755, guid: 89d20f9f903079c44a1d68ef6defda95,
-        type: 3}
-      propertyPath: m_Name
-      value: Floor 4 Particle
-      objectReference: {fileID: 0}
-    - target: {fileID: 4542673334378373194, guid: 89d20f9f903079c44a1d68ef6defda95,
-        type: 3}
-      propertyPath: floorEventType
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7113627053573174751, guid: 89d20f9f903079c44a1d68ef6defda95,
-        type: 3}
-      propertyPath: floorEventType
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 3089198174999848071, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -628,6 +608,16 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 3626817536255022010, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: m_Name
+      value: Floor 1 Particle
+      objectReference: {fileID: 0}
+    - target: {fileID: 3950713269011089755, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: m_Name
+      value: Floor 4 Particle
+      objectReference: {fileID: 0}
     - target: {fileID: 4311658534676064722, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -637,6 +627,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.x
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4542673334378373194, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: floorEventType
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4667597568702736354, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
@@ -656,6 +651,11 @@ PrefabInstance:
     - target: {fileID: 6476669559324982037, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7113627053573174751, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: floorEventType
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7524651344830276143, guid: 89d20f9f903079c44a1d68ef6defda95,
@@ -713,6 +713,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7754116447053449181, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8206963363216045386, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_Name
@@ -722,11 +727,6 @@ PrefabInstance:
         type: 3}
       propertyPath: floorEventType
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7754116447053449181, guid: 89d20f9f903079c44a1d68ef6defda95,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8833027936935332488, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
@@ -2305,6 +2305,16 @@ PrefabInstance:
     - target: {fileID: 2359668730081601939, guid: 20f08222e492640d49724ba125c53069,
         type: 3}
       propertyPath: _sightShrinkParam.m_FeatheringEffect
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6071544528324151668, guid: 20f08222e492640d49724ba125c53069,
+        type: 3}
+      propertyPath: m_DefaultParameters.m_ApertureSize
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6071544528324151668, guid: 20f08222e492640d49724ba125c53069,
+        type: 3}
+      propertyPath: m_DefaultParameters.m_FeatheringEffect
       value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
