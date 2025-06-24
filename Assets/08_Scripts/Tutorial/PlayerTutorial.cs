@@ -230,8 +230,6 @@ public class PlayerTutorial : MonoBehaviourPun
             tutorial = _currentMonster.AddComponent<TaewooriTutorial>();
         }
 
-
-
         yield return new WaitUntil(() => tutorial.IsDead);
         _tutorialAudioPlayer.TutorialAudioWithTextStop();
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_007", UIType.Narration);
