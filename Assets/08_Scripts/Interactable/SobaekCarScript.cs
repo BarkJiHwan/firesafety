@@ -16,9 +16,10 @@ public class SobaekCarScript : MonoBehaviour
     [Header("기본 설정")]
     public GameObject seatPosition;
     public GameObject player;
+    #endregion
 
-    [Header("스플라인 설정")]
-    public SplineContainer splineContainer;
+    #region 내부 변수
+    private SplineContainer splineContainer; // CHM 변경 플레이어 스포너에서 받아옴 파인드 오브젝트 관련 지움
     #endregion
 
     #region 컴포넌트 참조
@@ -30,7 +31,6 @@ public class SobaekCarScript : MonoBehaviour
     private void Awake()
     {
         InitializeComponents();
-        SetupSplineContainer();
         SetupInteraction();
     }
     #endregion
@@ -41,44 +41,10 @@ public class SobaekCarScript : MonoBehaviour
         simpleInteractable = GetComponent<XRSimpleInteractable>();
         splineAnimate = GetComponent<SplineAnimate>();
 
-        // SplineAnimate가 없으면 자동 추가
         if (splineAnimate == null)
         {
             splineAnimate = gameObject.AddComponent<SplineAnimate>();
         }
-    }
-
-    private void SetupSplineContainer()
-    {
-        if (splineAnimate == null)
-            return;
-
-        // 이미 설정되어 있으면 패스
-        if (splineAnimate.Container != null)
-            return;
-
-        // 우선순위: 인스펙터 설정 → 자식 → 씬 전체
-        SplineContainer container = GetSplineContainer();
-        if (container != null)
-        {
-            splineContainer = container;
-            splineAnimate.Container = container;
-        }
-    }
-
-    private SplineContainer GetSplineContainer()
-    {
-        // 1. 인스펙터에서 설정된 경우
-        if (splineContainer != null)
-            return splineContainer;
-
-        // 2. 자식 오브젝트에서 찾기
-        SplineContainer childContainer = GetComponentInChildren<SplineContainer>();
-        if (childContainer != null)
-            return childContainer;
-
-        // 3. 씬에서 찾기
-        return FindObjectOfType<SplineContainer>();
     }
 
     private void SetupInteraction()
@@ -96,7 +62,6 @@ public class SobaekCarScript : MonoBehaviour
         if (TrySetPlayerPosition())
         {
             DisableInteraction();
-            
         }
     }
 
@@ -138,7 +103,7 @@ public class SobaekCarScript : MonoBehaviour
             return false;
         }
 
-        if (splineAnimate.Container == null)
+        if (splineContainer == null)
         {
             Debug.LogWarning("SplineContainer가 설정되지 않았습니다!");
             return false;
