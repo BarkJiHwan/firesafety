@@ -660,15 +660,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 352c22c219c69b94ab38a15e738f49ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetX: 1.5
-  offsetY: 0.5
-  offsetZ: 0.5
+  offsetX: 0.2
+  offsetY: 0
+  offsetZ: 0.8
   stayOnRightSide: 1
-  floatAmplitude: 0.3
-  floatSpeed: 1
-  lookAtSpeed: 2
-  moveSpeed: 8
-  followSpeed: 5
+  floatAmplitude: 0.1
+  floatSpeed: 2
+  lookAtSpeed: 5
+  moveSpeed: 10
+  followSpeed: 10
   arrivalDistance: 0.5
 --- !u!1 &2632856105434143133
 GameObject:
