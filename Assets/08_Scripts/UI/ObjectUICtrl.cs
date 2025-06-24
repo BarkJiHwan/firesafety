@@ -123,7 +123,7 @@ public class ObjectUICtrl : MonoBehaviour
             transform.position = originPosition + basicPos;
             Vector3 cam = Camera.main.transform.position - transform.position;
             cam.y = 0;
-            transform.rotation = Quaternion.LookRotation(cam);
+            transform.rotation = Quaternion.LookRotation(cam) * Quaternion.Euler(0, 180, 0);
             return;
         }
         else
