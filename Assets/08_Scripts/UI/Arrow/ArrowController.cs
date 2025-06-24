@@ -22,8 +22,8 @@ public class ArrowController : MonoBehaviour
     Transform targetPos;
     float timeElasped;
 
-    TutorialMgr[] turtorialMgr;
-    TutorialMgr myTutorialMgr;
+    PlayerTutorial[] turtorialMgr;
+    PlayerTutorial myTutorialMgr;
 
     CreateArrow createArrow;
     bool isAlreadyMade = false;
@@ -45,7 +45,7 @@ public class ArrowController : MonoBehaviour
     {
         if (turtorialMgr == null || turtorialMgr.Length == 0)
         {
-            turtorialMgr = FindObjectsOfType<TutorialMgr>();
+            turtorialMgr = FindObjectsOfType<PlayerTutorial>();
         }
         if (turtorialMgr != null && isAlreadyMade == false)
         {
