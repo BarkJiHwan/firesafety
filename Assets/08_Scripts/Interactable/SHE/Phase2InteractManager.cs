@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.Rendering.UI;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -113,11 +114,6 @@ public class Phase2InteractManager : MonoBehaviour
             {
                 Debug.LogWarning("없다 모델이");
             }
-            //foreach (Transform child in hand.xrController.modelParent)
-            //{
-            //    Destroy(child.gameObject);
-            //}
-            
             var newModel = Instantiate(_weaponPrefab, hand.xrController.modelParent);
             newModel.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             var particle = newModel.GetComponentInChildren<Phase2_WeaponFX>();

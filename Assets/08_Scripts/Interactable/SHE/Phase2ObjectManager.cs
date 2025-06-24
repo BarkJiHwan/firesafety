@@ -27,6 +27,7 @@ public class Phase2ObjectManager : MonoBehaviour
         if (_player != null && !_player.gotWet)
         {
             _player.WettingTowel(type);
+            CarEnable();
         }
     }
     public void GrabWeapon(EHandType type)
@@ -35,7 +36,6 @@ public class Phase2ObjectManager : MonoBehaviour
         {
             SettingPlayer();
             _player.GrabWeapon(type);
-            CarEnable();
         }
     }
     public void CarEnable() => _sobaek.ActivateSobaekCar();
