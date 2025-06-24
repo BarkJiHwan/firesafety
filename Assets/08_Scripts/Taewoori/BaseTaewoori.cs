@@ -85,14 +85,6 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
         }
     }
 
-    /// <summary>
-    /// 애니메이션 사용 설정 변경 (런타임에서 호출 가능)
-    /// </summary>
-    /// <param name="use">애니메이션 사용 여부</param>
-    protected void SetUseAnimation(bool use)
-    {
-        useAnimation = use;
-    }
     #endregion
 
     #region 체력 시스템
