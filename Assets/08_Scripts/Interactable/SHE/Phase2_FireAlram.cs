@@ -7,10 +7,20 @@ public class Phase2_FireAlram : MonoBehaviour
 {
     public void OnSelectEntered(SelectEnterEventArgs args)
     {
+        bool info = FindObjectOfType<Phase2InteractManager>().IsWear;
         Debug.Log("소화전");
-        if (SupplyManager.Instance != null)
+        XRBaseInteractor interactor = args.interactorObject as XRBaseInteractor;
+
+        var type = interactor.GetComponent<HandIdentifier>().handType;
+        if (Phase2ObjectManager.Instance != null && info)
         {
-            Phase2ObjectManager.Instance.FireAlarm();
+            FireAlarm();
+            //무기장착
+            Phase2ObjectManager.Instance.GrabWeapon(type);
         }
+    }
+    private void FireAlarm()
+    {
+        //소리 재생
     }
 }

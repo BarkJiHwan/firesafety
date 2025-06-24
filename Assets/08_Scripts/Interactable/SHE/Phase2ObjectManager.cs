@@ -7,28 +7,47 @@ public interface IInteractableInPhase2
 }
 public class Phase2ObjectManager : MonoBehaviour
 {
+    [SerializeField] private ExitSobaek _sobaek;
+    [SerializeField] private Phase2InteractManager _player;
     public static Phase2ObjectManager Instance
     {
         get; private set;
     }
+    private void Awake() => Instance = this;
     public void SupplyTowel(EHandType type)
     {
-
-    }
-    public void TurnOnWater()
-    {
-
+        SettingPlayer();
+        if (_player != null)
+        {
+            _player.TowelSupply(type);
+        }
     }
     public void WettingTowel(EHandType type)
     {
-
-    }
-    public void FireAlarm()
-    {
-
+        if (_player != null && !_player.gotWet)
+        {
+            _player.WettingTowel(type);
+        }
     }
     public void GrabWeapon(EHandType type)
     {
-
+        if (_player != null)
+        {
+            SettingPlayer();
+            _player.GrabWeapon(type);
+            CarEnable();
+        }
+    }
+    public void CarEnable() => _sobaek.ActivateSobaekCar();
+    private void SettingPlayer()
+    {
+        if (_player == null)
+        {
+            _player = FindObjectOfType<Phase2InteractManager>();
+        }
+        if (_sobaek == null)
+        {
+            _sobaek = FindObjectOfType<ExitSobaek>();
+        }
     }
 }
