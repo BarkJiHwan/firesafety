@@ -17,10 +17,7 @@ public class TutorialDataMgr : MonoBehaviourPun
     [SerializeField] private TutorialData _defaultData;
 
     public bool IsTriggerSupply { get; set; }
-    public bool IsTutorialFailed { get; set; }
 
-    [field: SerializeField, Header("튜토리얼시간은 90초 인스팩터창에서 임시로 노출 시켜 둠")]
-    public float Timer { get; private set; } = 90f;
     public int PlayerNumber { get => _playerNumber; set => _playerNumber = value; }
 
     private int _playerNumber;
@@ -68,5 +65,6 @@ public class TutorialDataMgr : MonoBehaviourPun
         if (playerListIndex < 0 || playerListIndex >= InteractObjects.Count)
         { return null; }
         return InteractObjects[playerListIndex];
+
     }
 }

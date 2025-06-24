@@ -19,7 +19,6 @@ public class PlayerTutorial : MonoBehaviourPun
     private FirePreventable _preventable;
     private Coroutine _tutorialCor;
     private Coroutine _tutorialTimerCor;
-    [SerializeField] private float _timer = 90f;
 
     private DialogueLoader _dialogueLoader;
     private TutorialAudioPlayer _tutorialAudioPlayer;
@@ -89,9 +88,10 @@ public class PlayerTutorial : MonoBehaviourPun
     private IEnumerator TutorialTimer()
     {
         _tutorialCor = StartCoroutine(TutorialRoutine());
-        while (_timer > 0)
+        float timer = 90f;
+        while (timer > 0)
         {
-            _timer -= Time.deltaTime;
+            timer -= Time.deltaTime;
             yield return null;
         }
         StartCoroutine(TutorialTimeOver());
@@ -119,13 +119,13 @@ public class PlayerTutorial : MonoBehaviourPun
     // 1. 이동 페이즈
     private IEnumerator HandleMovementPhase()
     {
-        bool completed = false;
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_001", UIType.Narration);
         yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
         OnStartArrow?.Invoke(_playerIndex);
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_002", UIType.Narration);
 
         _zone.SetActive(true);
+        bool completed = false;
         var trigger = _zone.GetComponent<ZoneTrigger>();
         if (trigger == null)
         {
@@ -145,19 +145,25 @@ public class PlayerTutorial : MonoBehaviourPun
         yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
     }
 
+    private IEnumerator someCorutine()
+    {
+        yield return null;
+    }
+
     // 2. 화재예방 패이즈
     private IEnumerator HandleInteractionPhase()
     {
-        Debug.Log("화재예방 튜토리얼 시작");
         bool completed = false;
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_004", UIType.Narration);
+
+        Debug.Log("화재예방 튜토리얼 시작");
         var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
         _preventable = interactObj.GetComponent<FirePreventable>();
         _preventable.OnHaveToPrevented += _preventable.OnSetPreventMaterialsOn;
         _preventable.TriggerPreventObejct(true);
         OnObjectUI?.Invoke(interactObj);
-        _preventable.SetFirePreventionPending();
 
+        _preventable.SetFirePreventionPending();
         var interactable = interactObj.GetComponent<XRSimpleInteractable>();
         UnityAction<SelectEnterEventArgs> tutorialSelect = null;
         tutorialSelect = (args) =>

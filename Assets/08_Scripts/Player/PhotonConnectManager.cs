@@ -9,8 +9,6 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
 {
     private string _gameVersion = "1";
     [SerializeField] private PlayerSpawner _playerSpawner;
-    [SerializeField] private string roomName = "_testRoomName2";
-    [SerializeField] private string lobbyName = "_testLobbyName";
     private bool[] seatTaken = new bool[6];
 
     private void Start()
