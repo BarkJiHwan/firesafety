@@ -224,7 +224,8 @@ public class PlayerTutorial : MonoBehaviourPun
             tutorial = _currentMonster.AddComponent<TaewooriTutorial>();
         }
 
-        // 3. 태우리가 죽을때 까지 대기
+
+
         yield return new WaitUntil(() => tutorial.IsDead);
         _tutorialAudioPlayer.TutorialAudioWithTextStop();
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_007", UIType.Narration);
