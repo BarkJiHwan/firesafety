@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -42,6 +43,10 @@ public class Phase2InteractManager : MonoBehaviour
     [SerializeField] private bool _nowCharging;
     [SerializeField] private int _count;
     [SerializeField] private float _bombSpeed = 3f;
+    public bool EncounterBoss
+    {
+        get; set;
+    }
     private void Start()
     {
         _handDatasDict[EHandType.LeftHand] = _leftHand;
@@ -57,8 +62,11 @@ public class Phase2InteractManager : MonoBehaviour
     }
     private void Update()
     {
-        ShootingWaterBomb(_leftHand);
-        ShootingWaterBomb(_rightHand);
+        if (EncounterBoss)
+        {
+            ShootingWaterBomb(_leftHand);
+            ShootingWaterBomb(_rightHand);
+        }
     }
     public void CheckingTowelCol()//가져다 댄 거 맞음??
     {
@@ -109,11 +117,14 @@ public class Phase2InteractManager : MonoBehaviour
             //{
             //    Destroy(child.gameObject);
             //}
+            
             var newModel = Instantiate(_weaponPrefab, hand.xrController.modelParent);
             newModel.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             var particle = newModel.GetComponentInChildren<Phase2_WeaponFX>();
             hand.chargingEffect = particle.chargeFX;
             hand.shootingFlash = particle.shootingFX;
+            hand.xrController.modelPrefab = _weaponPrefab.transform;
+
             //var particles = newModel.GetComponents<ParticleSystem>();
             //foreach (var particle in particles)
             //{
