@@ -71,6 +71,7 @@ public class PlayerSpawner : MonoBehaviour
 
         PlayerEnum selectedChar = GetSelectedCharacter();
         GameObject player = LocalInstantiate(selectedChar);
+        player.GetComponent<PlayerComponents>().customTunnelingVignette.SightShrink();
 
         if (player != null)
         {
