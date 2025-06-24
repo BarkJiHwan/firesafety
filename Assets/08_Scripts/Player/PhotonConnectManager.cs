@@ -145,33 +145,36 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
     }
     public override void OnMasterClientSwitched(Player newMasterClient)
     {//마스터가 바뀌면 다시한번 자리 인덱스 체크
-        if (PhotonNetwork.IsMasterClient)
+        if (!GameManager.Instance.IsGameStart)
         {
-            Debug.Log("마스터가 바뀌었습니다.");
-            HashSet<int> usedIndices = new HashSet<int>();
-            foreach (var player in PhotonNetwork.PlayerList)
+            if (PhotonNetwork.IsMasterClient)
             {
-                if (player.CustomProperties.TryGetValue("PlayerIndex", out object idx))
-                    usedIndices.Add((int)idx);
-            }
-
-            // 빈자리미할당 체크 및 재할당
-            for (int i = 0; i < PhotonNetwork.CurrentRoom.MaxPlayers; i++)
-            {
-                if (!usedIndices.Contains(i))
+                Debug.Log("마스터가 바뀌었습니다.");
+                HashSet<int> usedIndices = new HashSet<int>();
+                foreach (var player in PhotonNetwork.PlayerList)
                 {
-                    // 빈자리 발견시 미할당 플레이어에게 할당
-                    var unassignedPlayer = PhotonNetwork.PlayerList
-                        .FirstOrDefault(p => !p.CustomProperties.ContainsKey("PlayerIndex"));
-                    if (unassignedPlayer != null)
+                    if (player.CustomProperties.TryGetValue("PlayerIndex", out object idx))
+                        usedIndices.Add((int)idx);
+                }
+
+                // 빈자리미할당 체크 및 재할당
+                for (int i = 0; i < PhotonNetwork.CurrentRoom.MaxPlayers; i++)
+                {
+                    if (!usedIndices.Contains(i))
                     {
-                        Hashtable props = new Hashtable() { { "PlayerIndex", i } };
-                        unassignedPlayer.SetCustomProperties(props);
-                        usedIndices.Add(i);
+                        // 빈자리 발견시 미할당 플레이어에게 할당
+                        var unassignedPlayer = PhotonNetwork.PlayerList
+                            .FirstOrDefault(p => !p.CustomProperties.ContainsKey("PlayerIndex"));
+                        if (unassignedPlayer != null)
+                        {
+                            Hashtable props = new Hashtable() { { "PlayerIndex", i } };
+                            unassignedPlayer.SetCustomProperties(props);
+                            usedIndices.Add(i);
+                        }
                     }
                 }
+                Debug.Log(PhotonNetwork.LocalPlayer.CustomProperties["PlayerIndex"] + "바뀐 번호");
             }
-            Debug.Log(PhotonNetwork.LocalPlayer.CustomProperties["PlayerIndex"] + "바뀐 번호");
         }
     }
 

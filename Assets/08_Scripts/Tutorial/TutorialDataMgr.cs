@@ -1,9 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Photon.Pun;
 using UnityEngine;
-using Hashtable = ExitGames.Client.Photon.Hashtable;
-public class TutorialDataMgr : MonoBehaviourPun
+public class TutorialDataMgr : MonoBehaviour
 {
     public static TutorialDataMgr Instance { get; private set; }
     [field: Header("플레이어별 상호작용 오브젝트 (0~5번)")]
@@ -61,10 +59,8 @@ public class TutorialDataMgr : MonoBehaviourPun
 
     public GameObject GetInteractObject(int playerListIndex)
     {
-
         if (playerListIndex < 0 || playerListIndex >= InteractObjects.Count)
         { return null; }
         return InteractObjects[playerListIndex];
-
     }
 }
