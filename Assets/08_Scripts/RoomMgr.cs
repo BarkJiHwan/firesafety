@@ -133,6 +133,7 @@ public class RoomMgr : MonoBehaviourPunCallbacks
         Debug.Log("게임이 종료되었습니다.");
         if (PhotonNetwork.IsMasterClient)
         {
+            GameManager.Instance.IsGameStart = false;
             GameManager.Instance.OnGameEnd -= OnGameEndHandler;
         }
         //모든 코루틴 종료

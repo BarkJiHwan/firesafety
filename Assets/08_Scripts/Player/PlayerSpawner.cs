@@ -18,7 +18,7 @@ public class PlayerSpawner : MonoBehaviour
     public PlayerCharacterSo[] playerCharacterArray;
 
     [Header("소백이 & 소백카 설정")]
-    [SerializeField] private GameObject sobaekPrefab;
+    [SerializeField] private GameObject exitSobaekPrefab;
     [SerializeField] private GameObject sobaekCarPrefab;
     [SerializeField] private SplineContainer carTrack;
     #endregion
@@ -48,9 +48,9 @@ public class PlayerSpawner : MonoBehaviour
 
     private void LoadSobaekResources()
     {
-        if (sobaekPrefab == null)
+        if (exitSobaekPrefab == null)
         {
-            sobaekPrefab = Resources.Load<GameObject>("Sobaek");
+            exitSobaekPrefab = Resources.Load<GameObject>("ExitSobaek");
         }
 
         if (sobaekCarPrefab == null)
@@ -78,18 +78,6 @@ public class PlayerSpawner : MonoBehaviour
             AttachSobaekToPlayer(player);
         }
     }
-
-    //private bool IsTargetScene()
-    //{
-    //    if (SceneController.Instance == null && SceneManager.GetActiveScene().name.Equals("ExitScenes_CHM.Test"))
-    //    {
-
-    //        return true;
-    //    }
-
-    //    return SceneController.Instance.chooseSceneType == SceneType.IngameScene_Evacuation;
-
-    //}
     private bool IsTargetScene()
     {
         string currentSceneName = SceneManager.GetActiveScene().name;
@@ -109,16 +97,6 @@ public class PlayerSpawner : MonoBehaviour
 
         return false;
     }
-
-    //private PlayerEnum GetSelectedCharacter()
-    //{
-    //    if (SceneController.Instance?.GetChooseCharacterType() != null)
-
-    //    {
-    //        return SceneController.Instance.GetChooseCharacterType().characterType;
-    //    }
-    //    return PlayerEnum.Bico;
-    //}
     private PlayerEnum GetSelectedCharacter()
     {
 
@@ -174,13 +152,13 @@ public class PlayerSpawner : MonoBehaviour
         GameObject sobaekObj = CreateSobaek(player);
         if (sobaekObj != null)
         {
-            SetupSobaekCar(sobaekObj.GetComponent<Sobaek>(), player);
+            SetupSobaekCar(sobaekObj.GetComponent<ExitSobaek>(), player);
         }
     }
 
     private bool ValidateSobaekSetup()
     {
-        if (sobaekPrefab == null)
+        if (exitSobaekPrefab == null)
         {
             Debug.LogWarning("소백이 프리팹이 설정되지 않았습니다!");
             return false;
@@ -190,8 +168,8 @@ public class PlayerSpawner : MonoBehaviour
 
     private GameObject CreateSobaek(GameObject player)
     {
-        GameObject sobaekObj = Instantiate(sobaekPrefab);
-        Sobaek sobaek = sobaekObj.GetComponent<Sobaek>();
+        GameObject sobaekObj = Instantiate(exitSobaekPrefab);
+        ExitSobaek sobaek = sobaekObj.GetComponent<ExitSobaek>();
 
         if (sobaek != null)
         {
@@ -206,7 +184,7 @@ public class PlayerSpawner : MonoBehaviour
         }
     }
 
-    private void SetupSobaekCar(Sobaek sobaek, GameObject player)
+    private void SetupSobaekCar(ExitSobaek sobaek, GameObject player)
     {
         if (sobaekCarPrefab == null)
         {

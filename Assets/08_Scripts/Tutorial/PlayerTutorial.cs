@@ -6,6 +6,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using System;
 using System.Linq;
+using UnityEngine.Events;
 
 public class PlayerTutorial : MonoBehaviourPun
 {
@@ -121,7 +122,6 @@ public class PlayerTutorial : MonoBehaviourPun
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_001", UIType.Narration);
         yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
         OnStartArrow?.Invoke(_playerIndex);
-        TutorialDataMgr.Instance.IsStartTutorial = true;
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_002", UIType.Narration);
 
         _zone.SetActive(true);
@@ -153,6 +153,7 @@ public class PlayerTutorial : MonoBehaviourPun
     // 2. 화재예방 패이즈
     private IEnumerator HandleInteractionPhase()
     {
+        bool completed = false;
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_004", UIType.Narration);
 
         Debug.Log("화재예방 튜토리얼 시작");
@@ -164,8 +165,8 @@ public class PlayerTutorial : MonoBehaviourPun
 
         _preventable.SetFirePreventionPending();
         var interactable = interactObj.GetComponent<XRSimpleInteractable>();
-        bool completed = false;
-        interactable.selectEntered.AddListener(tutorialSelect =>
+        UnityAction<SelectEnterEventArgs> tutorialSelect = null;
+        tutorialSelect = (args) =>
         {
             _tutorialAudioPlayer.TutorialAudioWithTextStop();
             completed = true;
@@ -177,12 +178,13 @@ public class PlayerTutorial : MonoBehaviourPun
             // 완료했다는 표시 생성
             OnCompleteSign?.Invoke();
             isMaterialOn = true;
-        });
+            interactable.selectEntered.RemoveListener(tutorialSelect);
+        };
+        interactable.selectEntered.AddListener(tutorialSelect);
         StartCoroutine(MakeMaterialMoreBright());
         yield return new WaitUntil(() => completed);
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_005", UIType.Narration);
         yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
-        interactable.selectEntered.RemoveAllListeners();
     }
 
     IEnumerator MakeMaterialMoreBright()
@@ -227,6 +229,8 @@ public class PlayerTutorial : MonoBehaviourPun
         {
             tutorial = _currentMonster.AddComponent<TaewooriTutorial>();
         }
+
+
 
         yield return new WaitUntil(() => tutorial.IsDead);
         _tutorialAudioPlayer.TutorialAudioWithTextStop();
