@@ -34,12 +34,6 @@ public class SupplyXR : MonoBehaviour
         // 누른 손의 인터랙터 정보 가져오기
         XRBaseInteractor interactor = args.interactorObject as XRBaseInteractor;
 
-        if (interactor == null)
-        {
-            Debug.LogWarning("Interactor가 없음");
-            return;
-        }
-
         var type = interactor.GetComponent<HandIdentifier>();
         if (interactor == null)
         {
