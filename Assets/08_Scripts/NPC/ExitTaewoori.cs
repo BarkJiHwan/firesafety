@@ -2,7 +2,7 @@
 using UnityEngine.XR.Interaction.Toolkit;
 
 /// <summary>
-/// 새 구조용 ExitTaewoori - BaseTaewoori를 상속받아 애니메이션 시스템 활용
+/// 탈출씩용 ExitTaewoori - BaseTaewoori를 상속받아 애니메이션 시스템 활용
 /// </summary>
 public class ExitTaewoori : BaseTaewoori
 {
@@ -44,7 +44,7 @@ public class ExitTaewoori : BaseTaewoori
     {
         if (!isDead)
         {
-            UpdateFloatingEffect(); // basePosition + 둥둥효과로 최종 위치 설정
+            UpdateFloatingEffect(); 
             UpdateRotation(); // 플레이어 바라보기
         }
     }
@@ -84,7 +84,7 @@ public class ExitTaewoori : BaseTaewoori
     /// </summary>
     private void UpdateRotation()
     {
-        // 플레이어 카메라 찾기 (한 번만 실행되도록 최적화 가능)
+        // 플레이어 카메라 찾기
         Camera playerCamera = Camera.main;
         if (playerCamera == null)
         {

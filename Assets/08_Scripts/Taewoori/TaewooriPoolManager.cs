@@ -609,6 +609,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             var taewoori = taewooriObj.GetComponent<Taewoori>();
             if (taewoori != null && !taewoori.IsDead)
             {
+                taewoori.SetLastAttacker(taewooriID);//마지막 공격한 플레이어가 처치횟수 가져감
                 taewoori.TakeDamage(damage);
             }
         }

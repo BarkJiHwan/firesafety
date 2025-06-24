@@ -36,7 +36,7 @@ public class FixedViewCanvasController : MonoBehaviour
     ScoreBoardController scoreBoardCtrl;
     ConversationController conversationCtrl;
 
-    TutorialMgr tutorialMgr;
+    PlayerTutorial tutorialMgr;
 
     public GameObject ConversationPanel => conversationPanel;
 

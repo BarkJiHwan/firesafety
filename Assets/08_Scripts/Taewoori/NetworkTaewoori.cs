@@ -19,6 +19,7 @@ public abstract class NetworkTaewoori : BaseTaewoori
     // 네트워크 관련
     protected int networkID = -1;
     protected bool isClientOnly = false;
+    protected int lastAttackerID = -1;
     #endregion
 
     #region 프로퍼티
@@ -26,7 +27,7 @@ public abstract class NetworkTaewoori : BaseTaewoori
     /// 네트워크 고유 ID
     /// </summary>
     public int NetworkID => networkID;
-
+    
     /// <summary>
     /// 피버타임 상태 확인
     /// </summary>
@@ -54,10 +55,19 @@ public abstract class NetworkTaewoori : BaseTaewoori
         if (!PhotonNetwork.IsMasterClient || isClientOnly || isDead)
             return;
 
-        base.TakeDamage(damage);
+        base.TakeDamage(damage);        // BaseTaewoori 호출
 
-        // 네트워크로 체력 동기화 (하위 클래스에서 구현)
-        SyncHealthToNetwork();
+        // 히트 애니메이션 RPC (NetworkTaewoori 레벨에서)
+        if (manager != null && networkID != -1 && !isDead)
+        {
+            SyncHitAnimationToNetwork();
+        }
+
+        // 체력 동기화
+        if (!isDead)
+        {
+            SyncHealthToNetwork();
+        }
     }
     #endregion
 
@@ -72,7 +82,13 @@ public abstract class NetworkTaewoori : BaseTaewoori
         currentHealth = newCurrentHealth;
         maxHealth = newMaxHealth;
     }
-
+    /// <summary>
+    /// 히트 애니메이션 네트워크 동기화 - 하위 클래스에서 구현
+    /// </summary>
+    protected virtual void SyncHitAnimationToNetwork()
+    {
+        // 하위 클래스에서 구현
+    }
     /// <summary>
     /// 클라이언트용 체력 동기화 - 하위 클래스에서 구현
     /// </summary>
@@ -119,5 +135,54 @@ public abstract class NetworkTaewoori : BaseTaewoori
         networkID = id;
         isClientOnly = clientOnly;
     }
+    // NetworkTaewoori.cs에 추가
+    public override void Die()
+    {
+        if (isDead)
+            return;
+
+        base.Die();        // BaseTaewoori의 애니메이션 로직
+
+        if (PhotonNetwork.IsMasterClient && !isClientOnly)
+        {
+            //사망 애니메이션 RPC
+            if (manager != null && networkID != -1)
+            {
+                SyncDeathAnimationToNetwork();
+            }
+
+            // 하위 클래스별 사망 로직
+            HandleMasterDeathLogic();
+        }
+    }
+
+    /// <summary>
+    /// 사망 애니메이션 네트워크 동기화 - 하위 클래스에서 구현
+    /// </summary>
+    protected virtual void SyncDeathAnimationToNetwork()
+    {
+        // 하위 클래스에서 구현
+    }
+
+    /// <summary>
+    /// 마스터 사망 로직 - 하위 클래스에서 구현
+    /// </summary>
+    protected virtual void HandleMasterDeathLogic()
+    {
+        // 하위 클래스에서 구현
+    }
+    #endregion
+
+    #region 어떤플레이어가 태우리 처치했는지
+    public void SetLastAttacker(int attackerID)
+    {
+        lastAttackerID = attackerID;
+    }
+    public int GetLastAttackerID()
+    {
+        return lastAttackerID;
+    }
+
+
     #endregion
 }
