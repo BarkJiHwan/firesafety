@@ -25,6 +25,7 @@ public class PlayerSpawner : MonoBehaviour
 
     #region 정적 참조
     private static GameObject currentSobaekCar;
+    private static GameObject currentPlayer; // CHM - 텔레포트에서 사용할 플레이어 참조
     #endregion
 
     #region 유니티 라이프사이클
@@ -71,6 +72,7 @@ public class PlayerSpawner : MonoBehaviour
 
         PlayerEnum selectedChar = GetSelectedCharacter();
         GameObject player = LocalInstantiate(selectedChar);
+        currentPlayer = player;//CHM 추가 
         player.GetComponent<PlayerComponents>().customTunnelingVignette.SightShrink();
 
         if (player != null)
@@ -267,6 +269,26 @@ public class PlayerSpawner : MonoBehaviour
         {
             Debug.LogWarning("소백카에 SobaekCarScript가 없습니다!");
         }
+    }
+
+    // CHM 텔레 포트용 생성된 플레이어,소백이카 저장할 메서드
+
+    public static CustomTunnelingVignette GetPlayerVignette()
+    {
+        if (currentPlayer != null)
+        {
+            return currentPlayer.GetComponent<PlayerComponents>().customTunnelingVignette;
+        }
+        return null;
+    }
+
+    public static SplineAnimate GetSobaekCarSpline()
+    {
+        if (currentSobaekCar != null)
+        {
+            return currentSobaekCar.GetComponent<SplineAnimate>();
+        }
+        return null;
     }
     #endregion
 }
