@@ -7,9 +7,9 @@ public class TestSobaekCarTrigger : MonoBehaviour
     /// </summary>
     public void TestActivate()
     {
-        if (Sobaek.Instance != null)
+        if (ExitSobaek.Instance != null)
         {
-            Sobaek.Instance.ActivateSobaekCar();
+            ExitSobaek.Instance.ActivateSobaekCar();
         }
     }
 }
