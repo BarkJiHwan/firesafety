@@ -301,24 +301,13 @@ public class Taewoori : NetworkTaewoori
 
 
     #region 헬퍼 메서드
+
     /// <summary>
-    /// 마지막 공격자 ID 가져오기 - 임시로 랜덤 플레이어 반환
-    /// </summary>
+    /// 마지막 공격자 ID 가져오기 
     private int GetLastAttackerID()
     {
-        if (PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.PlayerCount > 0)
-        {
-            var players = PhotonNetwork.CurrentRoom.Players;
-            var playerArray = new int[players.Count];
-            int index = 0;
-            foreach (var player in players.Values)
-            {
-                playerArray[index++] = player.ActorNumber;
-            }
-            return playerArray[UnityEngine.Random.Range(0, playerArray.Length)];
-        }
-
-        return -1;
+        return base.GetLastAttackerID(); 
     }
+   
     #endregion
 }

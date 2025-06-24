@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
 
 /// <summary>
 /// 모든 태우리의 기본 클래스 - 순수 체력 관리 기능만 제공
@@ -13,7 +13,7 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
     [SerializeField] protected float currentHealth;
 
     [Header("애니메이션 설정")]
-    [SerializeField] protected bool useAnimation = true; // 애니메이션 사용 여부
+    [SerializeField] protected bool useAnimation = true; // 스몰태우리는 애니매이션 없어서 베이스쪽에서 UseAnimation 변수사용
     #endregion
 
     #region 변수 선언
@@ -169,7 +169,7 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
         if (UseAnimation)
         {
             PlayDeathAnimation();
-            // Death 애니메이션 완료 후 자동으로 오브젝트 처리
+
             StartCoroutine(HandleDeathSequence());
         }
         else
@@ -180,7 +180,7 @@ public abstract class BaseTaewoori : MonoBehaviour, IDamageable
     }
 
     /// <summary>
-    /// Death 애니메이션 완료 후 오브젝트 처리
+    /// 죽는애니매이션 약 3초정도 대기하고 제거 혹은 풀반환
     /// </summary>
     public virtual IEnumerator HandleDeathSequence()
     {

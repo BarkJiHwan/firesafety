@@ -9,8 +9,6 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
 {
     private string _gameVersion = "1";
     [SerializeField] private PlayerSpawner _playerSpawner;
-    [SerializeField] private string roomName = "_testRoomName2";
-    [SerializeField] private string lobbyName = "_testLobbyName";
     private bool[] seatTaken = new bool[6];
 
     private void Start()
@@ -45,11 +43,7 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         {
             if (!PhotonNetwork.InRoom)
             {
-                PhotonNetwork.JoinOrCreateRoom(
-                    roomName,
-                    new RoomOptions { MaxPlayers = 6 },
-                    new TypedLobby(lobbyName, LobbyType.Default)
-                );
+                JoinRandomRoomOrCreatRoom();
             }
         }
     }
@@ -129,10 +123,14 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
     private void JoinRandomRoomOrCreatRoom()
     {/*, PlayerTtl = 0*/
         RoomOptions options = new RoomOptions { MaxPlayers = 6, IsOpen = true };
-        PhotonNetwork.JoinOrCreateRoom(
-            roomName,
-            new RoomOptions { MaxPlayers = 6 },
-            new TypedLobby(lobbyName, LobbyType.Default)
+        PhotonNetwork.JoinRandomOrCreateRoom(
+        null, // 랜덤 조건: 아무 조건 없음
+        6, // 최대 인원 수 (RoomOptions에도 지정해두면 안전)
+        MatchmakingMode.FillRoom, // 기존 방을 최대한 채우는 방식
+        null, // 로비 타입 (null: 기본)
+        null, // 추가 필터 (없음)
+        null, // 방 이름 (null: 자동 생성)
+        options // 방 옵션
         );
     }
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
@@ -146,7 +144,7 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         }
     }
     public override void OnMasterClientSwitched(Player newMasterClient)
-    {
+    {//마스터가 바뀌면 다시한번 자리 인덱스 체크
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.Log("마스터가 바뀌었습니다.");
@@ -157,12 +155,12 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
                     usedIndices.Add((int)idx);
             }
 
-            // 2. 중복/빈자리/미할당 체크 및 재할당
+            // 빈자리미할당 체크 및 재할당
             for (int i = 0; i < PhotonNetwork.CurrentRoom.MaxPlayers; i++)
             {
                 if (!usedIndices.Contains(i))
                 {
-                    // 빈자리 발견 → 미할당 플레이어에게 할당
+                    // 빈자리 발견시 미할당 플레이어에게 할당
                     var unassignedPlayer = PhotonNetwork.PlayerList
                         .FirstOrDefault(p => !p.CustomProperties.ContainsKey("PlayerIndex"));
                     if (unassignedPlayer != null)
