@@ -129,7 +129,7 @@ public class SmallTaewoori : NetworkTaewoori
     }
     #endregion
 
-    #region 사망 처리 (NetworkTaewoori 추상 메서드 구현)
+    #region 사망 처리 
     /// <summary>
     /// 스몰태우리 사망 처리 - 마스터는 카운트 감소 및 네트워크 동기화, 클라이언트는 풀 반환만
     /// </summary>

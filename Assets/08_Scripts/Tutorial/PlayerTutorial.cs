@@ -215,9 +215,7 @@ public class PlayerTutorial : MonoBehaviourPun
             tutorial = _currentMonster.AddComponent<TaewooriTutorial>();
         }
 
-        // 3. 체력 0 될 때까지 폴링
-        yield return new WaitUntil(() => tutorial.CurrentHealth <= 0);//CHM수정
-        _currentMonster.SetActive(false); //태우리 끄기
+        yield return new WaitUntil(() => tutorial.IsDead);
         _tutorialAudioPlayer.TutorialAudioWithTextStop();
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_007", UIType.Narration);
 

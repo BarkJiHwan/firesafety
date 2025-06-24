@@ -44,7 +44,7 @@ public class ExitTaewoori : BaseTaewoori
     {
         if (!isDead)
         {
-            UpdateFloatingEffect(); // basePosition + 둥둥효과로 최종 위치 설정
+            UpdateFloatingEffect(); 
             UpdateRotation(); // 플레이어 바라보기
         }
     }
@@ -84,7 +84,7 @@ public class ExitTaewoori : BaseTaewoori
     /// </summary>
     private void UpdateRotation()
     {
-        // 플레이어 카메라 찾기 (한 번만 실행되도록 최적화 가능)
+        // 플레이어 카메라 찾기
         Camera playerCamera = Camera.main;
         if (playerCamera == null)
         {
