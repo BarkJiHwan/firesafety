@@ -609,6 +609,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             var taewoori = taewooriObj.GetComponent<Taewoori>();
             if (taewoori != null && !taewoori.IsDead)
             {
+                taewoori.SetLastAttacker(taewooriID);//마지막 공격한 플레이어가 처치횟수 가져감
                 taewoori.TakeDamage(damage);
             }
         }
@@ -626,6 +627,39 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             if (smallTaewoori != null && !smallTaewoori.IsDead)
             {
                 smallTaewoori.TakeDamage(damage);
+            }
+        }
+    }
+    // TaewooriPoolManager.cs에서
+    [PunRPC]
+    void NetworkTaewooriHit(int taewooriID)
+    {
+        if (PhotonNetwork.IsMasterClient)
+            return;
+
+        if (networkTaewooriDict.TryGetValue(taewooriID, out GameObject taewooriObj))
+        {
+            var taewoori = taewooriObj.GetComponent<Taewoori>();
+            if (taewoori != null && taewoori.UseAnimation)
+            {
+                taewoori.PlayHitAnimation();
+            }
+        }
+    }
+
+    [PunRPC]
+    void NetworkTaewooriDie(int taewooriID)
+    {
+        if (PhotonNetwork.IsMasterClient)
+            return;
+
+        if (networkTaewooriDict.TryGetValue(taewooriID, out GameObject taewooriObj))
+        {
+            var taewoori = taewooriObj.GetComponent<Taewoori>();
+            if (taewoori != null && taewoori.UseAnimation)
+            {
+                taewoori.PlayDeathAnimation();
+                taewoori.StartCoroutine(taewoori.HandleDeathSequence());
             }
         }
     }

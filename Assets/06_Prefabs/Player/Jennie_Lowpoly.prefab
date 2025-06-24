@@ -2111,12 +2111,12 @@ GameObject:
   - component: {fileID: 8768484109574292545}
   - component: {fileID: 8768484109574292546}
   - component: {fileID: 8768484109574292547}
-  - component: {fileID: 8768484109574292549}
   - component: {fileID: 8768484109574292550}
   - component: {fileID: 8768484109574292551}
   - component: {fileID: 8768484109574292604}
   - component: {fileID: 8768484109574292605}
   - component: {fileID: 8768484109574292606}
+  - component: {fileID: -9132830343895732962}
   m_Layer: 9
   m_Name: Jennie_Lowpoly
   m_TagString: Untagged
@@ -2217,18 +2217,6 @@ MonoBehaviour:
   photonView: {fileID: 8768484109574292551}
   sobaekPrefab: {fileID: 2550521804121879437, guid: 8c557239dc3323e42a0bb6401677f15b,
     type: 3}
---- !u!114 &8768484109574292549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6512691694462292651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69b0932f20b768946a953a91e08d68e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8768484109574292550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2440,6 +2428,18 @@ MonoBehaviour:
   _sprayOrigin: {fileID: 0}
   _currentAmount: 100
   _isPressed: 0
+--- !u!114 &-9132830343895732962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6512691694462292651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478f13aad4df65b4da8c927338be7d00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6682478284845889747
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerInteractor : MonoBehaviour
 {
@@ -21,6 +20,7 @@ public class PlayerInteractor : MonoBehaviour
         {
             return;
         }
+
         Debug.Log("Trigger Enter : " + other);
 
         var preventFire = other.GetComponent<FirePreventable>();
@@ -103,8 +103,8 @@ public class PlayerInteractor : MonoBehaviour
         playerPos += new Vector3(0, 0.5f, 0);
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(playerPos, 2);
+        Gizmos.DrawWireSphere(playerPos, 2.5f);
         Handles.Label(playerPos + Vector3.up, "Interaction Collider");
     }
-    #endif
+#endif
 }
