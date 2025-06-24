@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                Debug.Log("인스턴스 없음");
             }
             return _instance;
         }

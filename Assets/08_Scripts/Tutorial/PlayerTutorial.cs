@@ -6,6 +6,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using System;
 using System.Linq;
+using UnityEngine.Events;
 
 public class PlayerTutorial : MonoBehaviourPun
 {
@@ -18,6 +19,7 @@ public class PlayerTutorial : MonoBehaviourPun
     private FirePreventable _preventable;
     private Coroutine _tutorialCor;
     private Coroutine _tutorialTimerCor;
+    [SerializeField] private float _timer = 90f;
 
     private DialogueLoader _dialogueLoader;
     private TutorialAudioPlayer _tutorialAudioPlayer;
@@ -87,10 +89,9 @@ public class PlayerTutorial : MonoBehaviourPun
     private IEnumerator TutorialTimer()
     {
         _tutorialCor = StartCoroutine(TutorialRoutine());
-        float timer = 90f;
-        while (timer > 0)
+        while (_timer > 0)
         {
-            timer -= Time.deltaTime;
+            _timer -= Time.deltaTime;
             yield return null;
         }
         StartCoroutine(TutorialTimeOver());
@@ -118,14 +119,13 @@ public class PlayerTutorial : MonoBehaviourPun
     // 1. 이동 페이즈
     private IEnumerator HandleMovementPhase()
     {
+        bool completed = false;
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_001", UIType.Narration);
         yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
         OnStartArrow?.Invoke(_playerIndex);
-        TutorialDataMgr.Instance.IsStartTutorial = true;
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_002", UIType.Narration);
 
         _zone.SetActive(true);
-        bool completed = false;
         var trigger = _zone.GetComponent<ZoneTrigger>();
         if (trigger == null)
         {
@@ -145,27 +145,22 @@ public class PlayerTutorial : MonoBehaviourPun
         yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
     }
 
-    private IEnumerator someCorutine()
-    {
-        yield return null;
-    }
-
     // 2. 화재예방 패이즈
     private IEnumerator HandleInteractionPhase()
     {
-        _tutorialAudioPlayer.PlayVoiceWithText("TUT_004", UIType.Narration);
-
         Debug.Log("화재예방 튜토리얼 시작");
+        bool completed = false;
+        _tutorialAudioPlayer.PlayVoiceWithText("TUT_004", UIType.Narration);
         var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
         _preventable = interactObj.GetComponent<FirePreventable>();
         _preventable.OnHaveToPrevented += _preventable.OnSetPreventMaterialsOn;
         _preventable.TriggerPreventObejct(true);
         OnObjectUI?.Invoke(interactObj);
-
         _preventable.SetFirePreventionPending();
+
         var interactable = interactObj.GetComponent<XRSimpleInteractable>();
-        bool completed = false;
-        interactable.selectEntered.AddListener(tutorialSelect =>
+        UnityAction<SelectEnterEventArgs> tutorialSelect = null;
+        tutorialSelect = (args) =>
         {
             _tutorialAudioPlayer.TutorialAudioWithTextStop();
             completed = true;
@@ -177,12 +172,13 @@ public class PlayerTutorial : MonoBehaviourPun
             // 완료했다는 표시 생성
             OnCompleteSign?.Invoke();
             isMaterialOn = true;
-        });
+            interactable.selectEntered.RemoveListener(tutorialSelect);
+        };
+        interactable.selectEntered.AddListener(tutorialSelect);
         StartCoroutine(MakeMaterialMoreBright());
         yield return new WaitUntil(() => completed);
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_005", UIType.Narration);
         yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
-        interactable.selectEntered.RemoveAllListeners();
     }
 
     IEnumerator MakeMaterialMoreBright()
@@ -228,9 +224,8 @@ public class PlayerTutorial : MonoBehaviourPun
             tutorial = _currentMonster.AddComponent<TaewooriTutorial>();
         }
 
-        // 3. 체력 0 될 때까지 폴링
-        yield return new WaitUntil(() => tutorial.CurrentHealth <= 0);//CHM수정
-        _currentMonster.SetActive(false); //태우리 끄기
+        // 3. 태우리가 죽을때 까지 대기
+        yield return new WaitUntil(() => tutorial.IsDead);
         _tutorialAudioPlayer.TutorialAudioWithTextStop();
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_007", UIType.Narration);
 

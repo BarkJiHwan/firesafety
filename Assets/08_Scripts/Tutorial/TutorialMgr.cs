@@ -116,7 +116,7 @@ public class TutorialMgr : MonoBehaviourPun
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_001", UIType.Narration);
         yield return new WaitUntil(()=> !_tutorialAudioPlayer._tutoAudio.isPlaying);
         OnStartArrow?.Invoke(_playerIndex);
-        TutorialDataMgr.Instance.IsStartTutorial = true;
+        //TutorialDataMgr.Instance.IsStartTutorial = true;
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_002", UIType.Narration);
         Debug.Log("이동 튜토리얼 시작");
         //튜토리얼 시작 트리거
