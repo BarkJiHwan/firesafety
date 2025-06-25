@@ -56,7 +56,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     private bool _isFeverTime = false;
     private readonly Collider[] _fireHits = new Collider[20];
     private readonly Collider[] _supplyHits = new Collider[10];
-    private readonly Dictionary<Collider, IDamageable> _cacheds = new();
+    private readonly Dictionary<GameObject, IDamageable> _cacheds = new();
     private Dictionary<EHandType, HandData> _hands = new();
     private readonly Collider[] _checkingCols = new Collider[20];
     private Vector3 _sprayStartPos;
@@ -90,13 +90,12 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
             _rightHand.interator = tutoSuppressor.rightHand.interator;
             _leftHand.interator = tutoSuppressor.leftHand.interator;
         }
-
+        SupplyManager.Instance.RegisterHand(EHandType.LeftHand, _leftHand, false);
+        SupplyManager.Instance.RegisterHand(EHandType.RightHand, _rightHand, false);
         if (pView != null && pView.IsMine)
         {
             _hands[EHandType.LeftHand] = _leftHand;
             _hands[EHandType.RightHand] = _rightHand;
-            SupplyManager.Instance.RegisterHand(EHandType.LeftHand, _leftHand, false);
-            SupplyManager.Instance.RegisterHand(EHandType.RightHand, _rightHand, false);
             SupplyManager.Instance.suppressantManager = this;
             UnityEngine.Debug.Log("등록 완료 본게임");
         }
@@ -233,15 +232,21 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
             return;
         }
         _fireHitCount = Physics.OverlapCapsuleNonAlloc(start, end, _sprayRadius, _fireHits, _fireMask);
+        //콜라이더로 캐싱하면 불안정하다고...
         for (int i = 0; i < _fireHitCount; i++)
         {
             var hit = _fireHits[i];
-            if (!_cacheds.TryGetValue(hit, out var cached))
+            var obj = hit.gameObject;
+            if (!_cacheds.TryGetValue(obj, out var cached))
             {
-                cached = hit.gameObject.GetComponent<IDamageable>();
+                cached = obj.GetComponent<IDamageable>();
                 if (cached != null)
                 {
-                    _cacheds[hit] = cached;
+                    _cacheds[obj] = cached;
+                }
+                else
+                {
+                    continue;
                 }
             }
             //_cacheds[hit]?.TakeDamage(_damage);
@@ -404,32 +409,29 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPC_PlayInitialFX(EHandType type)
     {
-        if (!pView.IsMine)
-        {
-            return;
-        }
         var hand = GetHand(type);
-        hand.initialFireFX.Play();
+        if (hand != null && !hand.initialFireFX.isPlaying)
+        {
+            hand.initialFireFX.Play();
+        }
     }
     [PunRPC]
     private void RPC_PlayNormalFX(EHandType type)
     {
-        if (!pView.IsMine)
-        {
-            return;
-        }
         var hand = GetHand(type);
-        hand.normalFireFX.Play();
+        if (hand != null && !hand.normalFireFX.isPlaying)
+        {
+            hand.normalFireFX.Play();
+        }
     }
     [PunRPC]
     private void RPC_PlayZeroAmountFX(EHandType type)
     {
-        if (!pView.IsMine)
-        {
-            return;
-        }
         var hand = GetHand(type);
-        hand.zeroAmountFireFX.Play();
+        if (hand != null && !hand.zeroAmountFireFX.isPlaying)
+        {
+            hand.zeroAmountFireFX.Play();
+        }
     }
     [PunRPC]
     private void RPC_StopPlayFX(EHandType type)
@@ -439,15 +441,15 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
             return;
         }
         var hand = GetHand(type);
-        if (hand.initialFireFX.isPlaying)
+        if (hand != null && hand.initialFireFX.isPlaying)
         {
             hand.initialFireFX.Stop();
         }
-        if (hand.normalFireFX.isPlaying)
+        if (hand != null && hand.normalFireFX.isPlaying)
         {
             hand.normalFireFX.Stop();
         }
-        if (hand.zeroAmountFireFX.isPlaying)
+        if (hand != null && hand.zeroAmountFireFX.isPlaying)
         {
             hand.zeroAmountFireFX.Stop();
         }
@@ -455,12 +457,8 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPC_SetActiveModel(EHandType type)
     {
-        if (!pView.IsMine)
-        {
-            return;
-        }
         var hand = GetHand(type);
-        if (!hand.modelPrefab.activeSelf)
+        if (hand != null && !hand.modelPrefab.activeSelf)
         {
             hand.modelPrefab.SetActive(true);
         }
@@ -468,20 +466,22 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPC_SetActiveModelFalse()
     {
-        if (!pView.IsMine)
-        {
-            return;
-        }
-        if (!_rightHand.enabled && _rightHand.modelPrefab.activeSelf)
+        if (_rightHand != null && !_rightHand.enabled && _rightHand.modelPrefab.activeSelf)
         {
             _rightHand.modelPrefab.SetActive(false);
         }
-        if (!_leftHand.enabled && _leftHand.modelPrefab.activeSelf)
+        if (_leftHand != null && !_leftHand.enabled && _leftHand.modelPrefab.activeSelf)
         {
             _leftHand.modelPrefab.SetActive(false);
         }
     }
-
+    //private Transform GetHandParticle(EHandType type)
+    //{
+    //    if (type == EHandType.LeftHand)
+    //    {
+    //        return _leftHand.
+    //    }
+    //}
     private void DrawSprayRange(HandData hand)
     {
         //소화기 범위

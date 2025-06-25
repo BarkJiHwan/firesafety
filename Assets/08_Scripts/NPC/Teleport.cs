@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.Splines;
 
 public class Teleport : MonoBehaviour
@@ -13,6 +14,8 @@ public class Teleport : MonoBehaviour
 
     private CustomTunnelingVignette vignetteController;
     private SplineAnimate sobaekCarSpline;
+
+    [SerializeField] private PlayableDirector _playerbleDir;
 
     void Start()
     {
@@ -91,6 +94,7 @@ public class Teleport : MonoBehaviour
         if (vignetteController != null)
         {
             vignetteController.FadeIn();
+            _playerbleDir.gameObject.SetActive(true);
         }
 
 
