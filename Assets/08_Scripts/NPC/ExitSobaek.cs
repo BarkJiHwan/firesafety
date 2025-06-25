@@ -39,22 +39,34 @@ public class ExitSobaek : MonoBehaviour
     #endregion
 
     #region 유니티 라이프사이클
+    /// <summary>
+    /// 싱글톤 초기화
+    /// </summary>
     void Awake()
     {
         InitializeSingleton();
     }
 
+    /// <summary>
+    /// 초기 위치 설정 및 소백카 비활성화
+    /// </summary>
     void Start()
     {
         SetupInitialPosition();
         SetupSobaekCar();
     }
 
+    /// <summary>
+    /// 매 프레임 이동 및 효과 업데이트
+    /// </summary>
     void LateUpdate()
     {
         UpdateMovementAndEffects();
     }
 
+    /// <summary>
+    /// 싱글톤 정리
+    /// </summary>
     void OnDestroy()
     {
         if (Instance == this)
@@ -65,6 +77,9 @@ public class ExitSobaek : MonoBehaviour
     #endregion
 
     #region 초기화
+    /// <summary>
+    /// 싱글톤 패턴 초기화
+    /// </summary>
     private void InitializeSingleton()
     {
         if (Instance == null)
@@ -77,6 +92,9 @@ public class ExitSobaek : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 소백카 초기 상태 설정 (비활성화)
+    /// </summary>
     private void SetupSobaekCar()
     {
         if (sobaekCarObject != null)
@@ -85,6 +103,9 @@ public class ExitSobaek : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 초기 위치 설정
+    /// </summary>
     private void SetupInitialPosition()
     {
         if (playerCamera != null)
@@ -97,6 +118,9 @@ public class ExitSobaek : MonoBehaviour
     #endregion
 
     #region 위치 및 이동
+    /// <summary>
+    /// 플레이어 카메라 기준 홈 포지션 계산
+    /// </summary>
     private void SetHomePosition()
     {
         if (playerCamera == null)
@@ -107,12 +131,18 @@ public class ExitSobaek : MonoBehaviour
         homePosition = playerCamera.position + rightDirection + forwardDirection + Vector3.up * offsetY;
     }
 
+    /// <summary>
+    /// 이동 및 효과 업데이트
+    /// </summary>
     private void UpdateMovementAndEffects()
     {
         UpdatePosition();
         UpdateFloatingEffect();
     }
 
+    /// <summary>
+    /// 위치 업데이트 (카메라 따라가기)
+    /// </summary>
     private void UpdatePosition()
     {
         if (playerCamera == null)
@@ -125,6 +155,9 @@ public class ExitSobaek : MonoBehaviour
         basePosition = Vector3.Slerp(basePosition, homePosition, followSpeed * Time.deltaTime);
     }
 
+    /// <summary>
+    /// 둥둥 떠다니기 효과 및 회전 업데이트
+    /// </summary>
     private void UpdateFloatingEffect()
     {
         floatTimer += Time.deltaTime * floatSpeed;
@@ -134,6 +167,9 @@ public class ExitSobaek : MonoBehaviour
         UpdateLookDirection();
     }
 
+    /// <summary>
+    /// 플레이어 카메라 바라보기
+    /// </summary>
     private void UpdateLookDirection()
     {
         if (playerCamera == null)

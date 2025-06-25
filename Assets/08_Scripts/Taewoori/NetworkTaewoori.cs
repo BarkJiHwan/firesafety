@@ -125,7 +125,6 @@ public abstract class NetworkTaewoori : BaseTaewoori
         networkID = id;
         isClientOnly = clientOnly;
     }
-    // NetworkTaewoori.cs에 추가
     public override void Die()
     {
         if (isDead)
