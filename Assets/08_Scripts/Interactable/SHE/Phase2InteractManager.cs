@@ -4,6 +4,8 @@ using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.Rendering.UI;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -42,6 +44,10 @@ public class Phase2InteractManager : MonoBehaviour
     [SerializeField] private bool _nowCharging;
     [SerializeField] private int _count;
     [SerializeField] private float _bombSpeed = 3f;
+    public bool EncounterBoss
+    {
+        get; set;
+    }
     private void Start()
     {
         _handDatasDict[EHandType.LeftHand] = _leftHand;
@@ -57,19 +63,22 @@ public class Phase2InteractManager : MonoBehaviour
     }
     private void Update()
     {
-        ShootingWaterBomb(_leftHand);
-        ShootingWaterBomb(_rightHand);
+        if (EncounterBoss)
+        {
+            ShootingWaterBomb(_leftHand);
+            ShootingWaterBomb(_rightHand);
+        }
     }
     public void CheckingTowelCol()//가져다 댄 거 맞음??
     {
         IsWear = true;
         if (_leftHand.isEnabled)
         {
-            _leftHand.towelModelPrefab.SetActive(false);
+            _leftHand.wetPrefab.SetActive(false);
         }
         if (_rightHand.isEnabled)
         {
-            _rightHand.towelModelPrefab.SetActive(false);
+            _rightHand.wetPrefab.SetActive(false);
         }
     }
     public void TowelSupply(EHandType type)
@@ -105,15 +114,13 @@ public class Phase2InteractManager : MonoBehaviour
             {
                 Debug.LogWarning("없다 모델이");
             }
-            //foreach (Transform child in hand.xrController.modelParent)
-            //{
-            //    Destroy(child.gameObject);
-            //}
             var newModel = Instantiate(_weaponPrefab, hand.xrController.modelParent);
             newModel.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             var particle = newModel.GetComponentInChildren<Phase2_WeaponFX>();
             hand.chargingEffect = particle.chargeFX;
             hand.shootingFlash = particle.shootingFX;
+            hand.xrController.modelPrefab = _weaponPrefab.transform;
+
             //var particles = newModel.GetComponents<ParticleSystem>();
             //foreach (var particle in particles)
             //{

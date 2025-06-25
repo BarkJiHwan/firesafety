@@ -17,6 +17,7 @@ public class Phase2_FireAlram : MonoBehaviour
             FireAlarm();
             //무기장착
             Phase2ObjectManager.Instance.GrabWeapon(type);
+            PlayerSpawner.StartSobaekCar();
         }
     }
     private void FireAlarm()
