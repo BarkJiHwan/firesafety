@@ -22,13 +22,13 @@ public class Phase2_TapWater : MonoBehaviour
             return;
         }
         var handType = type.handType;
-        var wasGotTowel = FindObjectOfType<Phase2InteractManager>().gotWet;
+        var wasGotTowelWet = FindObjectOfType<Phase2InteractManager>().gotWet;
         // 매니저에게 전달
-        if (Phase2ObjectManager.Instance != null && !wasGotTowel && !_turnOn)
+        if (Phase2ObjectManager.Instance != null && !wasGotTowelWet && !_turnOn)
         {
             TurnOnWater();
         }
-        else if (Phase2ObjectManager.Instance != null && !wasGotTowel && _turnOn)
+        else if (Phase2ObjectManager.Instance != null && !wasGotTowelWet && _turnOn)
         {
             Phase2ObjectManager.Instance.WettingTowel(handType);
             _waterRunning.SetActive(false);
