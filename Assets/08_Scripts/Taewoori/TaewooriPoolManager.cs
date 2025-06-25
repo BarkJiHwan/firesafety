@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
 using UnityEngine;
@@ -87,6 +88,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
 
     private static TaewooriPoolManager _instance;
     public static TaewooriPoolManager Instance => _instance;
+
+    // 점수판 발생시키는 이벤트 생성
+    public event Action OnScoreBoardOn;
     #endregion
 
     #region 프로퍼티
@@ -260,6 +264,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             scoreManager.SetScore(ScoreType.Fire_Time, scores.survivalScore);
             scoreManager.SetScore(ScoreType.Fire_Count, scores.GetPlayerKillScore(PhotonNetwork.LocalPlayer.ActorNumber));
             Debug.Log("ScoreManager에 점수 설정 완료!");
+            OnScoreBoardOn?.Invoke();
         }
         else
         {
