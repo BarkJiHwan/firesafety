@@ -241,30 +241,22 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     /// <summary>
     /// 피버타임 종료 시 호출
     /// </summary>
-    // TaewooriPoolManager.cs
     public void EndSurvivalTracking()
     {
-        Debug.Log("EndSurvivalTracking 호출됨!");
 
         if (!PhotonNetwork.IsMasterClient || !survivalTracker.IsTracking)
         {
-            Debug.Log($"호출 실패: IsMaster={PhotonNetwork.IsMasterClient}, IsTracking={survivalTracker.IsTracking}");
             return;
         }
 
         var scores = survivalTracker.EndTracking(PhotonNetwork.CurrentRoom.PlayerCount);
-        Debug.Log($"계산된 점수: survivalScore={scores.survivalScore}, killScore={scores.GetPlayerKillScore(PhotonNetwork.LocalPlayer.ActorNumber)}");
 
         if (scoreManager != null)
         {
             scoreManager.SetScore(ScoreType.Fire_Time, scores.survivalScore);
             scoreManager.SetScore(ScoreType.Fire_Count, scores.GetPlayerKillScore(PhotonNetwork.LocalPlayer.ActorNumber));
-            Debug.Log("ScoreManager에 점수 설정 완료!");
         }
-        else
-        {
-            Debug.Log("ScoreManager가 null입니다!");
-        }
+       
     }
 
     /// <summary>
