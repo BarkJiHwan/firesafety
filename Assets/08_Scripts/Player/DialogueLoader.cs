@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum DialogueDataType
 {
     Tutorial,
     Sobaek,
+    Exit
 }
 
 public class DialogueData
@@ -60,7 +62,16 @@ public class DialogueLoader : MonoBehaviour
     // 처음은 튜토리얼 대화 흐름 읽어오기
     private void Start()
     {
-        LoadTutorialData();
+        if (SceneManager.GetActiveScene().name.Equals("PlayerScene_BJH_Test"))
+        {
+            LoadTutorialData();
+        }
+
+        if (SceneManager.GetActiveScene().name.Equals("PlayerScene_BJH_Test"))
+        {
+            LoadExitData();
+            Debug.Log("DialogueCount : " + _dialogueList.Count);
+        }
     }
 
     private IEnumerator WaitForTest(float seconds)
@@ -72,6 +83,7 @@ public class DialogueLoader : MonoBehaviour
 
     public void LoadTutorialData() => LoadDialogue(DialogueDataType.Tutorial);
     public void LoadSobaekData() => LoadDialogue(DialogueDataType.Sobaek);
+    public void LoadExitData() => LoadDialogue(DialogueDataType.Exit);
 
     public void LoadDialogue(DialogueDataType type)
     {
