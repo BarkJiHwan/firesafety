@@ -1059,7 +1059,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57004e4a719d7b149af8f440b6be06d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  basicScore: 15
+  basicScore: 0
 --- !u!1 &1162789470 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 721043656672053152, guid: bcc073301b2c04454a03d6cb68c3a7dd,
@@ -1105,8 +1105,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerSpawner: {fileID: 1184504947}
-  roomName: _releaseHelpMe
-  lobbyName: _testLobbyName
 --- !u!4 &1184504946
 Transform:
   m_ObjectHideFlags: 0
@@ -1135,7 +1133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCharacterArray: []
-  sobaekPrefab: {fileID: 0}
+  exitSobaekPrefab: {fileID: 0}
   sobaekCarPrefab: {fileID: 0}
   carTrack: {fileID: 0}
 --- !u!114 &1184504948
@@ -1228,7 +1226,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: aaff290aa2e9fbc48bd9560a7c57d165, type: 2}
   - {fileID: 11400000, guid: c757a9080951bd140ac104787c173604, type: 2}
   _defaultData: {fileID: 11400000, guid: 0e8c00d9b628dfc42bfcdf390941f143, type: 2}
-  <Timer>k__BackingField: 90
 --- !u!4 &1308356752
 Transform:
   m_ObjectHideFlags: 0
@@ -1261,6 +1258,12 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 75
       objectReference: {fileID: 0}
+    - target: {fileID: 4060705980224060108, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: cd423c6b240ef3c4fb00c49b2af57bbe,
+        type: 3}
     - target: {fileID: 4060705980712908544, guid: 7e8817f6f572b7146bdae7d547c81463,
         type: 3}
       propertyPath: m_IsActive
@@ -1379,7 +1382,7 @@ PrefabInstance:
     - target: {fileID: 4060705981842663253, guid: 7e8817f6f572b7146bdae7d547c81463,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4144479511734439253, guid: 7e8817f6f572b7146bdae7d547c81463,
         type: 3}
@@ -1418,6 +1421,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7640460939075141454, guid: 7e8817f6f572b7146bdae7d547c81463,
         type: 3}
+      propertyPath: sobaekImage
+      value: 
+      objectReference: {fileID: 21300000, guid: cd423c6b240ef3c4fb00c49b2af57bbe,
+        type: 3}
+    - target: {fileID: 7640460939075141454, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
       propertyPath: narrationPos.x
       value: -3.05
       objectReference: {fileID: 0}
@@ -1426,6 +1435,17 @@ PrefabInstance:
       propertyPath: narrationPos.y
       value: -230
       objectReference: {fileID: 0}
+    - target: {fileID: 7640460939075141454, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: speakerNameTxt
+      value: 
+      objectReference: {fileID: 1338789933}
+    - target: {fileID: 7640460939075141454, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: dataewooriImage
+      value: 
+      objectReference: {fileID: 21300000, guid: c2e28ebe8e064c140b0c7d8ab71cbd42,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e8817f6f572b7146bdae7d547c81463, type: 3}
 --- !u!1 &1338789930 stripped
@@ -1450,6 +1470,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 161cde2191fb0b244a8ef9dabb5c120f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1338789933 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5880633998012614644, guid: 7e8817f6f572b7146bdae7d547c81463,
+    type: 3}
+  m_PrefabInstance: {fileID: 1338789929}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1358177255 stripped
@@ -2582,6 +2614,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6af11ef0d75a6b347b00977e6510d33f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMaxSurvivalTime: 0
+  debugCurrentAliveTaewoori: 0
+  debugTotalSpawnedTaewoori: 0
+  debugPlayerKills: []
   taewooriPrefab: {fileID: 5755754473064602975, guid: 410329fd359557640af4db8805ed6589,
     type: 3}
   smallTaewooriPrefab: {fileID: 2010531404510988514, guid: ccd90aeb4115cc147be8d5e5dc60ba71,

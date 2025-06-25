@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour, IScorable
 {
-    [SerializeField] int basicScore = 15;
+    [SerializeField] int basicScore = 0;
 
     Dictionary<ScoreType, int> dicScore = new Dictionary<ScoreType, int>();
 
@@ -41,5 +41,17 @@ public class ScoreManager : MonoBehaviour, IScorable
     public int GetDictionaryCount()
     {
         return dicScore.Count;
+    }
+
+    public int[] GetScores()
+    {
+        int[] scores = new int[dicScore.Count];
+        int index = 0;
+        foreach(int score in dicScore.Values)
+        {
+            scores[index] = score;
+            index++;
+        }
+        return scores;
     }
 }
