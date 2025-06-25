@@ -20,6 +20,7 @@ public class SobaekCarScript : MonoBehaviour
 
     #region 내부 변수
     private SplineContainer splineContainer; // CHM 변경 플레이어 스포너에서 받아옴 파인드 오브젝트 관련 지움
+    ExitSupplyManager exitMgr;
     #endregion
 
     #region 컴포넌트 참조
@@ -32,6 +33,8 @@ public class SobaekCarScript : MonoBehaviour
     {
         InitializeComponents();
         SetupInteraction();
+
+        exitMgr = FindObjectOfType<ExitSupplyManager>();
     }
     #endregion
 
@@ -62,6 +65,8 @@ public class SobaekCarScript : MonoBehaviour
         if (TrySetPlayerPosition())
         {
             DisableInteraction();
+            // 소화전 빛나는거 추가
+            exitMgr.SetFireAlarmMat(true);
         }
     }
 

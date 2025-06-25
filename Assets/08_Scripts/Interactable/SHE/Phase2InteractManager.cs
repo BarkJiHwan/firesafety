@@ -74,11 +74,11 @@ public class Phase2InteractManager : MonoBehaviour
         IsWear = true;
         if (_leftHand.isEnabled)
         {
-            _leftHand.towelModelPrefab.SetActive(false);
+            _leftHand.wetPrefab.SetActive(false);
         }
         if (_rightHand.isEnabled)
         {
-            _rightHand.towelModelPrefab.SetActive(false);
+            _rightHand.wetPrefab.SetActive(false);
         }
     }
     public void TowelSupply(EHandType type)

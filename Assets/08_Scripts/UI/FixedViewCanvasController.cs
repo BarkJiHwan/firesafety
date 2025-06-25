@@ -60,7 +60,7 @@ public class FixedViewCanvasController : MonoBehaviour
 
         // 1. 점수판
         // 화재 페이즈가 끝나면 점수판 출력 (GameManager.Instance.CurrentPhase == leaveDangerArea)
-        GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
+        TaewooriPoolManager.Instance.OnScoreBoardOn += TurnOnScoreBoard;
 
         // 2. 대화창
         // 튜토리얼 설정
@@ -79,6 +79,7 @@ public class FixedViewCanvasController : MonoBehaviour
     IEnumerator UpdateBoard()
     {
         yield return new WaitForEndOfFrame();
+        //여기서 한번 기다려야함
         if (scorePanel.activeSelf == true)
         {
             SceneType sceneType = SceneController.Instance.chooseSceneType;
@@ -119,7 +120,7 @@ public class FixedViewCanvasController : MonoBehaviour
 
     private void OnDestroy()
     {
-        GameManager.Instance.OnGameEnd -= TurnOnScoreBoard;
+        TaewooriPoolManager.Instance.OnScoreBoardOn -= TurnOnScoreBoard;
     }
 
     public void SwitchConverstaionPanel(UIType type)

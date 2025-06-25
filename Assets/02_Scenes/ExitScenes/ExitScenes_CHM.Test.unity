@@ -153,6 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sobaek: {fileID: 0}
   _player: {fileID: 0}
+  _exitSupplyMgr: {fileID: 1500997674}
 --- !u!4 &66263153
 Transform:
   m_ObjectHideFlags: 0
@@ -378,8 +379,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 192718205}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 10.612, y: 18.755, z: -34.892002}
-  m_LocalScale: {x: 0.8, y: 1.1455469, z: 0.5}
+  m_LocalPosition: {x: 10.627, y: 18.755, z: -34.892002}
+  m_LocalScale: {x: 0.8, y: 1.1155336, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -446,6 +447,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Towel_Normal
+      objectReference: {fileID: 0}
+    - target: {fileID: 5024756838268159253, guid: 6d0715d38a927c240ae9e26e2789fa14,
+        type: 3}
+      propertyPath: m_TagString
+      value: ExitNecessity
       objectReference: {fileID: 0}
     - target: {fileID: 5688139874847170479, guid: 6d0715d38a927c240ae9e26e2789fa14,
         type: 3}
@@ -1223,6 +1229,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FireAlarm.mk2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4156237644181190066, guid: 37464199f5151e2468666fff4dfbb278,
+        type: 3}
+      propertyPath: m_TagString
+      value: ExitNecessity
       objectReference: {fileID: 0}
     - target: {fileID: 4911243277018133553, guid: 37464199f5151e2468666fff4dfbb278,
         type: 3}
@@ -2372,6 +2383,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: APT
       objectReference: {fileID: 0}
+    - target: {fileID: 2259016895806816924, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: m_TagString
+      value: ExitNecessity
+      objectReference: {fileID: 0}
     - target: {fileID: 2984470150778732308, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_IsActive
@@ -2899,6 +2915,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 1.4
       objectReference: {fileID: 0}
+    - target: {fileID: 511315091, guid: 77eb7aff511ea5b41ad004f9fbcddfdd, type: 3}
+      propertyPath: exitMgr
+      value: 
+      objectReference: {fileID: 1500997674}
     - target: {fileID: 511315094, guid: 77eb7aff511ea5b41ad004f9fbcddfdd, type: 3}
       propertyPath: m_Target
       value: 
@@ -4473,6 +4493,50 @@ MonoBehaviour:
       m_Data: []
   m_Knots:
     m_KnotsLink: []
+--- !u!1 &1500997672
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1500997673}
+  - component: {fileID: 1500997674}
+  m_Layer: 0
+  m_Name: ExitSupplyManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1500997673
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500997672}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1500997674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500997672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6ec4aaadf6bae4daf27cc5ac5aac52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1548372696
 PrefabInstance:
   m_ObjectHideFlags: 0
