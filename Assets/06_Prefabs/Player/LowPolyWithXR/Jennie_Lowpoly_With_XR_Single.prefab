@@ -1949,6 +1949,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d6b8d34ab76a49a9adb308f306d123a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  quizUI: {fileID: 6051270372194970288}
 --- !u!1 &8768484110817278394
 GameObject:
   m_ObjectHideFlags: 0
@@ -2499,6 +2500,12 @@ PrefabInstance:
 --- !u!224 &97027903430227282 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5713207550201200101, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+    type: 3}
+  m_PrefabInstance: {fileID: 5625512301467535543}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6051270372194970288 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2156023510354813447, guid: 35256c14657cf49bd8156ed4fe9fbe25,
     type: 3}
   m_PrefabInstance: {fileID: 5625512301467535543}
   m_PrefabAsset: {fileID: 0}

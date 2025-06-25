@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class ExitDialogue : MonoBehaviour
 {
+    public GameObject quizUI;
     private DialoguePlayer _dialoguePlayer;
+
     private void Start()
     {
         _dialoguePlayer = FindObjectOfType<DialoguePlayer>();
@@ -23,11 +25,24 @@ public class ExitDialogue : MonoBehaviour
 
     public void OnSelectRightAnswer()
     {
+        HideQuizUI();
         _dialoguePlayer.PlayWithText("EXIT_003", UIType.Sobaek);
+
     }
 
     public void OnSelectWrongAnswer()
     {
+        HideQuizUI();
         _dialoguePlayer.PlayWithText("EXIT_004", UIType.Sobaek);
+    }
+
+    public void ShowQuizUI()
+    {
+        quizUI.SetActive(true);
+    }
+
+    public void HideQuizUI()
+    {
+        quizUI.SetActive(false);
     }
 }
