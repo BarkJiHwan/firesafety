@@ -36,7 +36,6 @@ public class FireParticles : MonoBehaviour
     private void Start()
     {
         SetupPhysics();
-        SetupCollisionIgnoring();
     }
 
     private void OnEnable()
@@ -61,18 +60,6 @@ public class FireParticles : MonoBehaviour
         if (rb != null)
         {
             rb.freezeRotation = true;
-        }
-    }
-
-    /// <summary>
-    /// 충돌 무시 설정
-    /// </summary>
-    private void SetupCollisionIgnoring()
-    {
-        // 태우리와 물리적 충돌 무시 설정
-        if (originTaewoori != null)
-        {
-            IgnoreCollisionWith(originTaewoori.GetComponent<Collider>());
         }
     }
 

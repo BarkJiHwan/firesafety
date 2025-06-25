@@ -26,6 +26,9 @@ public class PlayerSpawner : MonoBehaviour
     #region 정적 참조
     private static GameObject currentSobaekCar;
     private static GameObject currentPlayer; // CHM - 텔레포트에서 사용할 플레이어 참조
+
+    public SplineContainer CarTrack => carTrack;
+
     #endregion
 
     #region 유니티 라이프사이클
@@ -59,7 +62,7 @@ public class PlayerSpawner : MonoBehaviour
             sobaekCarPrefab = Resources.Load<GameObject>("SobaekCar");
         }
 
-        if (carTrack == null)
+        if (CarTrack == null)
         {
             carTrack = FindObjectOfType<SplineContainer>();
         }
@@ -72,7 +75,7 @@ public class PlayerSpawner : MonoBehaviour
 
         PlayerEnum selectedChar = GetSelectedCharacter();
         GameObject player = LocalInstantiate(selectedChar);
-        currentPlayer = player;//CHM 추가 
+        currentPlayer = player;//CHM 추가
         player.GetComponent<PlayerComponents>().customTunnelingVignette.SightShrink();
 
         if (player != null)
@@ -101,7 +104,6 @@ public class PlayerSpawner : MonoBehaviour
     }
     private PlayerEnum GetSelectedCharacter()
     {
-
         if (SceneController.Instance != null &&
             SceneController.Instance.GetChooseCharacterType() != null)
         {
@@ -216,11 +218,6 @@ public class PlayerSpawner : MonoBehaviour
 
         Transform playerRoot = GetPlayerRootTransform(player);
         carScript.SetPlayer(playerRoot.gameObject);
-
-        if (carTrack != null)
-        {
-            carScript.SetSplineContainer(carTrack);
-        }
     }
 
     private Transform GetPlayerCameraOrRoot(GameObject player)
