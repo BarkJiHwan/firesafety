@@ -83,7 +83,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
 
     // 스몰태우리 개수 관리
     private Dictionary<Taewoori, int> smallTaewooriCountByTaewoori = new Dictionary<Taewoori, int>();
-
     // 네트워크 동기화용 추적
     private Dictionary<int, GameObject> networkTaewooriDict = new Dictionary<int, GameObject>();
     private Dictionary<int, GameObject> networkSmallTaewooriDict = new Dictionary<int, GameObject>();
@@ -278,22 +277,25 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     /// </summary>
     public void EndSurvivalTracking()
     {
-
         if (!PhotonNetwork.IsMasterClient || !survivalTracker.IsTracking)
-        {
             return;
-        }
 
         var scores = survivalTracker.EndTracking(PhotonNetwork.CurrentRoom.PlayerCount);
 
         if (scoreManager != null)
         {
+            // 생존시간 점수는 모든 플레이어 동일
             scoreManager.SetScore(ScoreType.Fire_Time, scores.survivalScore);
-            scoreManager.SetScore(ScoreType.Fire_Count, scores.GetPlayerKillScore(PhotonNetwork.LocalPlayer.ActorNumber));
+
+            // 각 플레이어별 킬 점수 RPC 전송
+            foreach (var player in PhotonNetwork.PlayerList)
+            {
+                int playerKillScore = scores.GetPlayerKillScore(player.ActorNumber);
+                photonView.RPC("NetworkScore", RpcTarget.All, player.ActorNumber, playerKillScore);
+            }
             Debug.Log("ScoreManager에 점수 설정 완료!");
             OnScoreBoardOn?.Invoke();
         }
-
     }
 
     /// <summary>
@@ -526,6 +528,14 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region 네트워크 RPC
+    [PunRPC]
+    void NetworkScore(int playerId, int killScore)
+    {
+        if (scoreManager != null && PhotonNetwork.LocalPlayer.ActorNumber == playerId)
+        {
+            scoreManager.SetScore(ScoreType.Fire_Count, killScore);
+        }
+    }
     /// <summary>
     /// 다른 클라이언트에서 태우리 스폰 동기화
     /// </summary>
@@ -1107,7 +1117,7 @@ public class SurvivalTracker
     private float maxSurvivalTime = 0f;
     private Dictionary<int, float> taewooriSpawnTimes = new Dictionary<int, float>();
     private Dictionary<int, int> playerTaewooriKills = new Dictionary<int, int>();
-    private Dictionary<int, int> playerKillScores = new Dictionary<int, int>();
+    public Dictionary<int, int> playerKillScores = new Dictionary<int, int>();
     #endregion
     #region 프로퍼티
     public bool IsTracking => isTracking;
@@ -1205,6 +1215,19 @@ public class SurvivalTracker
         int killCount = playerTaewooriKills[killerPlayerID];
         int killScore = CalculateKillScore(killCount);
         playerKillScores[killerPlayerID] = killScore;
+    }
+    /// <summary>
+    /// 모든 플레이어의 킬 점수 딕셔너리 반환
+    /// </summary>
+    public Dictionary<int, int> GetAllPlayerKillScores()
+    {
+        var killScores = new Dictionary<int, int>();
+        foreach (var kvp in playerTaewooriKills)
+        {
+            int killScore = CalculateKillScore(kvp.Value);
+            killScores[kvp.Key] = killScore;
+        }
+        return killScores;
     }
 
     /// <summary>
