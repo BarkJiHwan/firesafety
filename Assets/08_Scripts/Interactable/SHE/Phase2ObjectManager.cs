@@ -9,11 +9,13 @@ public class Phase2ObjectManager : MonoBehaviour
 {
     [SerializeField] private ExitSobaek _sobaek;
     [SerializeField] private Phase2InteractManager _player;
+    [SerializeField] ExitSupplyManager _exitSupplyMgr;
     public static Phase2ObjectManager Instance
     {
         get; private set;
     }
     private void Awake() => Instance = this;
+
     public void SupplyTowel(EHandType type)
     {
         SettingPlayer();
@@ -28,6 +30,9 @@ public class Phase2ObjectManager : MonoBehaviour
         {
             _player.WettingTowel(type);
             CarEnable();
+
+            // 타월과 수도 빛나는거 끄기
+            _exitSupplyMgr.SetTowelAndWater(false);
         }
     }
     public void GrabWeapon(EHandType type)
@@ -36,6 +41,9 @@ public class Phase2ObjectManager : MonoBehaviour
         {
             SettingPlayer();
             _player.GrabWeapon(type);
+
+            // 소화전 빛나는거 끄기
+            _exitSupplyMgr.SetFireAlarmMat(false);
         }
     }
     public void CarEnable() => _sobaek.ActivateSobaekCar();
