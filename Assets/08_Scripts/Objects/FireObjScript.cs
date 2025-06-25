@@ -32,7 +32,7 @@ public class FireObjScript : MonoBehaviour, ITaewooriPos
                 {
                     if (TaewooriPoolManager.Instance != null)
                     {
-                        TaewooriPoolManager.Instance.SpawnTaewooriAtPosition(TaewooriPos(), this);
+                        TaewooriPoolManager.Instance.SpawnTaewoori(TaewooriPos(), this);
                     }
                 }
             }

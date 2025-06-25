@@ -301,9 +301,7 @@ public class Taewoori : NetworkTaewoori
     }
     #endregion
 
-
     #region 헬퍼 메서드
-
     /// <summary>
     /// 마지막 공격자 ID 가져오기
     /// </summary>>

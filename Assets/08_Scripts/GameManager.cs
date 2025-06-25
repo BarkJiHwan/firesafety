@@ -141,7 +141,7 @@ public class GameManager : MonoBehaviour
             {
                 //CHM - 게임 종료 시 태우리 정리 및 점수 확정
                 TaewooriPoolManager.Instance?.EndSurvivalTracking();
-
+                //여기다 점수판 출력 쓰셈
                 OnGameEnd?.Invoke();
             }
         }
