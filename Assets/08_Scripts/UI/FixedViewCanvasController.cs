@@ -79,6 +79,7 @@ public class FixedViewCanvasController : MonoBehaviour
     IEnumerator UpdateBoard()
     {
         yield return new WaitForEndOfFrame();
+        //여기서 한번 기다려야함
         if (scorePanel.activeSelf == true)
         {
             SceneType sceneType = SceneController.Instance.chooseSceneType;
