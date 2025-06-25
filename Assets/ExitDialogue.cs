@@ -15,4 +15,19 @@ public class ExitDialogue : MonoBehaviour
     {
         _dialoguePlayer.PlayWithText("EXIT_001", UIType.Sobaek);
     }
+
+    public void OnBeforeStartShootingTrack()
+    {
+        _dialoguePlayer.PlayWithText("EXIT_002", UIType.Sobaek);
+    }
+
+    public void OnSelectRightAnswer()
+    {
+        _dialoguePlayer.PlayWithText("EXIT_003", UIType.Sobaek);
+    }
+
+    public void OnSelectWrongAnswer()
+    {
+        _dialoguePlayer.PlayWithText("EXIT_004", UIType.Sobaek);
+    }
 }

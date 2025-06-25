@@ -20,7 +20,9 @@ public class SobaekCarScript : MonoBehaviour
 
     #region 내부 변수
     private SplineContainer splineContainer; // CHM 변경 플레이어 스포너에서 받아옴 파인드 오브젝트 관련 지움
-    ExitSupplyManager exitMgr;
+    private ExitSupplyManager exitMgr;
+    private PlayerSpawner _playerSpawner;
+    private ExitDialogue _exitDialogue;
     #endregion
 
     #region 컴포넌트 참조
@@ -35,6 +37,8 @@ public class SobaekCarScript : MonoBehaviour
         SetupInteraction();
 
         exitMgr = FindObjectOfType<ExitSupplyManager>();
+        _playerSpawner = FindObjectOfType<PlayerSpawner>();
+        SetSplineContainer(_playerSpawner.CarTrack);
     }
     #endregion
 
@@ -43,11 +47,6 @@ public class SobaekCarScript : MonoBehaviour
     {
         simpleInteractable = GetComponent<XRSimpleInteractable>();
         splineAnimate = GetComponent<SplineAnimate>();
-
-        if (splineAnimate == null)
-        {
-            splineAnimate = gameObject.AddComponent<SplineAnimate>();
-        }
     }
 
     private void SetupInteraction()
@@ -56,6 +55,7 @@ public class SobaekCarScript : MonoBehaviour
         {
             simpleInteractable.selectEntered.AddListener(OnEnteredCar);
         }
+
     }
     #endregion
 
@@ -67,6 +67,7 @@ public class SobaekCarScript : MonoBehaviour
             DisableInteraction();
             // 소화전 빛나는거 추가
             exitMgr.SetFireAlarmMat(true);
+            _exitDialogue.OnBeforeStartShootingTrack();
         }
     }
 
@@ -122,6 +123,7 @@ public class SobaekCarScript : MonoBehaviour
     public void SetPlayer(GameObject newPlayer)
     {
         player = newPlayer;
+        _exitDialogue = player.GetComponent<ExitDialogue>();
     }
 
     public void SetSplineContainer(SplineContainer container)
@@ -129,7 +131,7 @@ public class SobaekCarScript : MonoBehaviour
         splineContainer = container;
         if (splineAnimate != null)
         {
-            splineAnimate.Container = container;
+            splineAnimate.Container = splineContainer;
         }
     }
     #endregion
