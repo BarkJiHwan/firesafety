@@ -62,7 +62,10 @@ public class FixedViewCanvasController : MonoBehaviour
 
         // 1. 점수판
         // 화재 페이즈가 끝나면 점수판 출력 (GameManager.Instance.CurrentPhase == leaveDangerArea)
-        GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
+        }
 
         // 2. 대화창
         // 튜토리얼 설정
@@ -81,7 +84,7 @@ public class FixedViewCanvasController : MonoBehaviour
 
     IEnumerator UpdateBoard()
     {
-        yield return new WaitUntil(() => 
+        yield return new WaitUntil(() =>
         {
             foreach (int score in scoreMgr.GetScores())
             {
@@ -133,7 +136,10 @@ public class FixedViewCanvasController : MonoBehaviour
 
     private void OnDestroy()
     {
-        GameManager.Instance.OnGameEnd -= TurnOnScoreBoard;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameEnd -= TurnOnScoreBoard;
+        }
     }
 
 

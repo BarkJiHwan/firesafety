@@ -123,7 +123,7 @@ public class SobaekCarScript : MonoBehaviour
     public void SetPlayer(GameObject newPlayer)
     {
         player = newPlayer;
-        _exitDialogue = player.GetComponent<ExitDialogue>();
+        _exitDialogue = player.GetComponent<PlayerComponents>().exitDialogue;
     }
 
     public void SetSplineContainer(SplineContainer container)
