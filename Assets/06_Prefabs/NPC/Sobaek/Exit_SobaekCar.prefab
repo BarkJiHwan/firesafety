@@ -133,7 +133,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6576176639307382228
 Transform:
   m_ObjectHideFlags: 0
@@ -179,7 +179,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seatPosition: {fileID: 480815317}
   player: {fileID: 0}
-  splineContainer: {fileID: 0}
 --- !u!114 &511315092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,7 +298,7 @@ MonoBehaviour:
   m_LoopMode: 1
   m_Method: 0
   m_Duration: 240
-  m_MaxSpeed: 120
+  m_MaxSpeed: 1.6666114
   m_EasingMode: 0
   m_AlignmentMode: 1
   m_ObjectForwardAxis: 2
