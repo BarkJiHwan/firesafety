@@ -67,10 +67,9 @@ public class DialogueLoader : MonoBehaviour
             LoadTutorialData();
         }
 
-        if (SceneManager.GetActiveScene().name.Equals("PlayerScene_BJH_Test"))
+        if (SceneManager.GetActiveScene().name.Equals("ExitScenes_CHM.Test"))
         {
             LoadExitData();
-            Debug.Log("DialogueCount : " + _dialogueList.Count);
         }
     }
 
@@ -99,7 +98,12 @@ public class DialogueLoader : MonoBehaviour
             fileName = DialogueDataType.Sobaek.ToString();
         }
 
-        if (fileName == string.Empty)
+        if (type == DialogueDataType.Exit)
+        {
+            fileName = DialogueDataType.Exit.ToString();
+        }
+
+        if (fileName == "")
         {
             Debug.LogWarning("데이터가 없습니다, 확인해주세요");
             return;
