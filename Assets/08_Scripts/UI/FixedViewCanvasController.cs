@@ -9,11 +9,13 @@ public enum UIType
 {
     Narration,
     Sobaek,
+    Dataewoori,
     None
 }
 
 public class FixedViewCanvasController : MonoBehaviour
 {
+    [SerializeField] ScoreManager scoreMgr;
     [Header("점수판")]
     [SerializeField] GameObject scorePanel;
     [SerializeField] GameObject conversationBoard;
@@ -60,10 +62,7 @@ public class FixedViewCanvasController : MonoBehaviour
 
         // 1. 점수판
         // 화재 페이즈가 끝나면 점수판 출력 (GameManager.Instance.CurrentPhase == leaveDangerArea)
-        if (TaewooriPoolManager.Instance != null)
-        {
-            TaewooriPoolManager.Instance.OnScoreBoardOn += TurnOnScoreBoard;
-        }
+        GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
 
         // 2. 대화창
         // 튜토리얼 설정
@@ -73,6 +72,7 @@ public class FixedViewCanvasController : MonoBehaviour
         }
     }
 
+    // ScoreBoard 켜는 것
     void TurnOnScoreBoard()
     {
         scorePanel.SetActive(true);
@@ -81,7 +81,17 @@ public class FixedViewCanvasController : MonoBehaviour
 
     IEnumerator UpdateBoard()
     {
-        yield return new WaitForEndOfFrame();
+        yield return new WaitUntil(() => 
+        {
+            foreach (int score in scoreMgr.GetScores())
+            {
+                if (score == 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        });
         //여기서 한번 기다려야함
         if (scorePanel.activeSelf == true)
         {
@@ -123,12 +133,11 @@ public class FixedViewCanvasController : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (TaewooriPoolManager.Instance != null)
-        {
-            TaewooriPoolManager.Instance.OnScoreBoardOn -= TurnOnScoreBoard;
-        }
+        GameManager.Instance.OnGameEnd -= TurnOnScoreBoard;
     }
 
+
+    // 대화창 타입에 따라 위치 등 변경 -> 대화창 켜는 것까지 작동
     public void SwitchConverstaionPanel(UIType type)
     {
         Vector3 pos = narrationPos;
@@ -139,8 +148,10 @@ public class FixedViewCanvasController : MonoBehaviour
                 conversationCtrl.PrintNarration();
                 break;
             case UIType.Sobaek:
+            case UIType.Dataewoori:
                 pos = conversationPos;
                 conversationCtrl.PrintConversation();
+                conversationCtrl.ChangeDataeWooriImage(type);
                 break;
         }
         conversationBoard.GetComponent<RectTransform>().anchoredPosition = pos;

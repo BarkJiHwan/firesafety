@@ -9,6 +9,10 @@ public class ConversationController : MonoBehaviour
     [SerializeField] Image speakerImg;
     [SerializeField] Image speakerName;
     [SerializeField] Image conversationContent;
+    [SerializeField] TextMeshProUGUI speakerNameTxt;
+    [Header("Speaker 이미지")]
+    [SerializeField] Sprite sobaekImage;
+    [SerializeField] Sprite dataewooriImage;
 
     public TextMeshProUGUI conversationTxt { get; private set; }
     private void Start()
@@ -34,5 +38,20 @@ public class ConversationController : MonoBehaviour
     public void ChangeConversation(string text)
     {
         conversationTxt.text = text;
+    }
+
+    public void ChangeDataeWooriImage(UIType type)
+    {
+        switch (type)
+        {
+            case UIType.Sobaek:
+                speakerImg.sprite = sobaekImage;
+                speakerNameTxt.text = "소백이";
+                break;
+            case UIType.Dataewoori:
+                speakerImg.sprite = dataewooriImage;
+                speakerNameTxt.text = "다태우리";
+                break;
+        }
     }
 }
