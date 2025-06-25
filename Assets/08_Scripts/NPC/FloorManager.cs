@@ -9,6 +9,9 @@ public enum FloorEventType
     FireOnly,
 }
 
+/// <summary>
+/// 층별 관리 시스템 - 웨이포인트 기반 태우리 스폰 및 진행 관리
+/// </summary>
 public class FloorManager : MonoBehaviour
 {
     #region 인스펙터 설정
@@ -48,6 +51,9 @@ public class FloorManager : MonoBehaviour
     #endregion
 
     #region 유니티 라이프사이클
+    /// <summary>
+    /// 초기화 및 웨이포인트 설정
+    /// </summary>
     void Start()
     {
         if (!isInitialized)
@@ -60,6 +66,9 @@ public class FloorManager : MonoBehaviour
         SetupWaypoints();
     }
 
+    /// <summary>
+    /// 모든 층 초기 상태 설정 (4층만 활성화)
+    /// </summary>
     void InitializeAllFloors()
     {
         FloorManager[] allFloors = FindObjectsOfType<FloorManager>(true);
@@ -77,6 +86,9 @@ public class FloorManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 웨이포인트 트리거 컴포넌트 설정
+    /// </summary>
     void SetupWaypoints()
     {
         if (startWaypoint != null)
@@ -104,6 +116,9 @@ public class FloorManager : MonoBehaviour
     #endregion
 
     #region 층 활성화/비활성화
+    /// <summary>
+    /// 층 활성화 - 시작 웨이포인트만 활성화
+    /// </summary>
     public void ActivateFloor()
     {
         isActive = true;
@@ -123,6 +138,9 @@ public class FloorManager : MonoBehaviour
         endTriggered = false;
     }
 
+    /// <summary>
+    /// 층 비활성화 - 모든 요소 비활성화
+    /// </summary>
     public void DeactivateFloor()
     {
         isActive = false;
@@ -145,6 +163,9 @@ public class FloorManager : MonoBehaviour
     #endregion
 
     #region 웨이포인트 이벤트
+    /// <summary>
+    /// 시작 웨이포인트 트리거 시 스폰 시퀀스 시작
+    /// </summary>
     public void OnStartWaypointTriggered()
     {
         if (!isActive || startTriggered || floorCompleted)
@@ -159,6 +180,9 @@ public class FloorManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 종료 웨이포인트 트리거 시 다음 층으로 진행
+    /// </summary>
     public void OnEndWaypointTriggered()
     {
         if (!isActive || endTriggered || floorCompleted)
@@ -190,12 +214,18 @@ public class FloorManager : MonoBehaviour
     #endregion
 
     #region 점수 관리
+    /// <summary>
+    /// 태우리 처치 시 카운트 증가
+    /// </summary>
     public void OnTaewooliKilled()
     {
         taewooliKillCount++;
         totalTaewooliKills++;
     }
 
+    /// <summary>
+    /// 총 점수 계산 및 전송 (1층 도달 시)
+    /// </summary>
     void SendTotalScore()
     {
         if (scoreManager == null)
@@ -205,6 +235,9 @@ public class FloorManager : MonoBehaviour
         scoreManager.SetScore(ScoreType.Taewoori_Count, killScore);
     }
 
+    /// <summary>
+    /// 처치 수에 따른 점수 계산
+    /// </summary>
     int CalculateKillScore(int totalKills)
     {
         if (totalKills >= 8)
@@ -217,6 +250,9 @@ public class FloorManager : MonoBehaviour
     #endregion
 
     #region 스폰 시퀀스
+    /// <summary>
+    /// 파티클 및 태우리 스폰 시퀀스 실행
+    /// </summary>
     IEnumerator SpawnSequence()
     {
         if (particleStartDelay > 0)
@@ -274,6 +310,9 @@ public class FloorManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 층 완료 시 모든 태우리 정리
+    /// </summary>
     void CleanupFloor()
     {
         ExitTaewoori[] allTaewoori = FindObjectsOfType<ExitTaewoori>();

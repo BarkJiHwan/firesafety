@@ -68,13 +68,17 @@ public class Sobaek : MonoBehaviour
     #endregion
 
     #region 유니티 라이프사이클
+    /// <summary>
+    /// 싱글톤 초기화
+    /// </summary>
     void Awake()
     {
         InitializeSingleton();
-
-        
     }
 
+    /// <summary>
+    /// 컴포넌트 초기화 및 이벤트 등록
+    /// </summary>
     void Start()
     {
         InitializeComponents();
@@ -82,11 +86,17 @@ public class Sobaek : MonoBehaviour
         SubscribeToGameManagerEvents();
     }
 
+    /// <summary>
+    /// 매 프레임 이동 및 효과 업데이트
+    /// </summary>
     void LateUpdate()
     {
         UpdateMovementAndEffects();
     }
 
+    /// <summary>
+    /// 이벤트 해제 및 싱글톤 정리
+    /// </summary>
     void OnDestroy()
     {
         UnsubscribeFromGameManagerEvents();
@@ -99,6 +109,9 @@ public class Sobaek : MonoBehaviour
     #endregion
 
     #region 초기화
+    /// <summary>
+    /// 싱글톤 패턴 초기화
+    /// </summary>
     private void InitializeSingleton()
     {
         if (Instance == null)
@@ -111,11 +124,17 @@ public class Sobaek : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 컴포넌트 참조 초기화
+    /// </summary>
     private void InitializeComponents()
     {
         animator = GetComponent<Animator>() ?? GetComponentInChildren<Animator>();
     }
 
+    /// <summary>
+    /// 초기 위치 설정
+    /// </summary>
     private void SetupInitialPosition()
     {
         if (playerTransform != null)
@@ -128,6 +147,9 @@ public class Sobaek : MonoBehaviour
     #endregion
 
     #region 게임 페이즈 관리
+    /// <summary>
+    /// GameManager 이벤트 구독
+    /// </summary>
     private void SubscribeToGameManagerEvents()
     {
         // GameManager가 있으면 이벤트 구독
@@ -139,6 +161,9 @@ public class Sobaek : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// GameManager 이벤트 구독 해제
+    /// </summary>
     private void UnsubscribeFromGameManagerEvents()
     {
         // GameManager가 있으면 이벤트 구독 해제
@@ -148,6 +173,9 @@ public class Sobaek : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 게임 페이즈 변경 시 상호작용 활성화/비활성화
+    /// </summary>
     private void OnPhaseChanged(GamePhase newPhase)
     {
         switch (newPhase)
@@ -164,6 +192,9 @@ public class Sobaek : MonoBehaviour
     #endregion
 
     #region 위치 및 이동
+    /// <summary>
+    /// 플레이어 기준 홈 포지션 계산
+    /// </summary>
     private void SetHomePosition()
     {
         if (playerTransform == null)
@@ -174,6 +205,9 @@ public class Sobaek : MonoBehaviour
         homePosition = playerTransform.position + rightDirection + forwardDirection + Vector3.up * offsetY;
     }
 
+    /// <summary>
+    /// 이동 및 효과 업데이트
+    /// </summary>
     private void UpdateMovementAndEffects()
     {
         UpdatePosition();
@@ -181,6 +215,9 @@ public class Sobaek : MonoBehaviour
         UpdateAnimations();
     }
 
+    /// <summary>
+    /// 위치 업데이트 (상태에 따른 이동)
+    /// </summary>
     private void UpdatePosition()
     {
         if (playerTransform == null)
@@ -200,6 +237,9 @@ public class Sobaek : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 타겟 위치로 이동
+    /// </summary>
     private void MoveToTarget()
     {
         basePosition = Vector3.Slerp(basePosition, targetPosition, moveSpeed * Time.deltaTime);
@@ -212,6 +252,9 @@ public class Sobaek : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 홈 위치로 이동
+    /// </summary>
     private void MoveToHome()
     {
         basePosition = Vector3.Slerp(basePosition, homePosition, moveSpeed * Time.deltaTime);
@@ -223,6 +266,9 @@ public class Sobaek : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 플레이어 따라가기
+    /// </summary>
     private void FollowPlayer()
     {
         SetHomePosition();
@@ -231,6 +277,9 @@ public class Sobaek : MonoBehaviour
     #endregion
 
     #region 떠다니기 효과 및 애니메이션
+    /// <summary>
+    /// 둥둥 떠다니기 효과 및 회전 업데이트
+    /// </summary>
     private void UpdateFloatingEffect()
     {
         floatTimer += Time.deltaTime * floatSpeed;
@@ -240,6 +289,9 @@ public class Sobaek : MonoBehaviour
         UpdateLookDirection();
     }
 
+    /// <summary>
+    /// 바라볼 방향 업데이트
+    /// </summary>
     private void UpdateLookDirection()
     {
         Vector3 targetDirection = GetLookDirection();
@@ -252,6 +304,9 @@ public class Sobaek : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 상황에 따른 바라볼 방향 계산
+    /// </summary>
     private Vector3 GetLookDirection()
     {
         if (isMovingToTarget && currentTarget != null)
@@ -265,6 +320,9 @@ public class Sobaek : MonoBehaviour
         return Vector3.zero;
     }
 
+    /// <summary>
+    /// 애니메이션 상태 업데이트
+    /// </summary>
     private void UpdateAnimations()
     {
         if (animator == null)
@@ -277,6 +335,9 @@ public class Sobaek : MonoBehaviour
     #endregion
 
     #region 상호작용
+    /// <summary>
+    /// 타겟으로 이동하기
+    /// </summary>
     public void MoveToTarget(Transform target)
     {
         if (!sobaekInteractionEnabled || target == null)
@@ -285,6 +346,9 @@ public class Sobaek : MonoBehaviour
         SetupTargetMovement(target);
     }
 
+    /// <summary>
+    /// 타겟 이동 설정
+    /// </summary>
     private void SetupTargetMovement(Transform target)
     {
         currentTarget = target;
@@ -300,6 +364,9 @@ public class Sobaek : MonoBehaviour
         isTalking = false;
     }
 
+    /// <summary>
+    /// 대화 중단하고 홈으로 돌아가기
+    /// </summary>
     public void StopTalkingAndReturnHome()
     {
         isTalking = false;
@@ -311,16 +378,25 @@ public class Sobaek : MonoBehaviour
         basePosition = transform.position;
     }
 
+    /// <summary>
+    /// 대화 시작
+    /// </summary>
     public void StartTalking()
     {
         isTalking = true;
     }
 
+    /// <summary>
+    /// 대화 중단
+    /// </summary>
     public void StopTalking()
     {
         isTalking = false;
     }
 
+    /// <summary>
+    /// 홈으로 돌아가기
+    /// </summary>
     public void ReturnHome()
     {
         isMovingToTarget = false;
@@ -346,6 +422,9 @@ public class Sobaek : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 소백이 활성화
+    /// </summary>
     private void ActivateSobaek()
     {
         gameObject.SetActive(true);
@@ -358,6 +437,9 @@ public class Sobaek : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 소백이 비활성화 (애니메이션 후)
+    /// </summary>
     private void DeactivateSobaek()
     {
         if (animator != null)
@@ -367,6 +449,9 @@ public class Sobaek : MonoBehaviour
         StartCoroutine(DeactivateAfterAnimation());
     }
 
+    /// <summary>
+    /// 애니메이션 재생 후 비활성화
+    /// </summary>
     private IEnumerator DeactivateAfterAnimation()
     {
         yield return new WaitForSeconds(1f);
