@@ -128,19 +128,19 @@ public class GameManager : MonoBehaviour
 
             if (CurrentPhase == GamePhase.FireWaiting)
             {
-                //CHM- Fire 페이즈 시작 시 생존시간 추적 시작
-                TaewooriPoolManager.Instance?.StartSurvivalTracking();
-
                 PauseGameTimer();
                 _dialoguePlayer.onFinishDialogue += ResumeGameTimer;
                 _dialoguePlayer.PlayWithTexts(new []{"Sobak_009", "Sobak_011"}, UIType.Sobaek);
             }
-
+            if (CurrentPhase == GamePhase.Fire)
+            {
+                //CHM- Fire 페이즈 시작 시 생존시간 추적 시작
+                TaewooriPoolManager.Instance?.StartSurvivalTracking();
+            }
             if (CurrentPhase == GamePhase.LeaveDangerArea)
             {
                 //CHM - 게임 종료 시 태우리 정리 및 점수 확정
                 TaewooriPoolManager.Instance?.EndSurvivalTracking();
-                //TaewooriPoolManager.Instance?.CleanupAllResources();//잠시대기
 
                 OnGameEnd?.Invoke();
             }

@@ -219,6 +219,8 @@ public class Taewoori : NetworkTaewoori
     {
         if (PhotonNetwork.IsMasterClient)
         {
+            // CHM: 마스터 클라이언트도 자신을 공격자로 설정
+            SetLastAttacker(PhotonNetwork.LocalPlayer.ActorNumber);
             TakeDamage(damage);
         }
         else
@@ -303,7 +305,8 @@ public class Taewoori : NetworkTaewoori
     #region 헬퍼 메서드
 
     /// <summary>
-    /// 마지막 공격자 ID 가져오기 
+    /// 마지막 공격자 ID 가져오기
+    /// </summary>>
     private int GetLastAttackerID()
     {
         return base.GetLastAttackerID(); 

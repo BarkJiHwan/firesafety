@@ -1817,7 +1817,7 @@ MonoBehaviour:
     y: 1
     z: 1
     w: 1
-  syncTarget: {fileID: 0}
+  syncTarget: {fileID: 8768484109455136476}
 --- !u!1 &8768484110700811222
 GameObject:
   m_ObjectHideFlags: 0
@@ -2038,8 +2038,8 @@ MonoBehaviour:
     x: 1
     y: 1
     z: 1
-    w: 0
-  syncTarget: {fileID: 0}
+    w: 1
+  syncTarget: {fileID: 8768484111181698275}
 --- !u!1 &8768484111249053739
 GameObject:
   m_ObjectHideFlags: 0
@@ -3873,6 +3873,11 @@ PrefabInstance:
       propertyPath: photonView
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8768484109574292547, guid: 09fc676349e4741ffab20193dedcbd2e,
+        type: 3}
+      propertyPath: playerOrigin
+      value: 
+      objectReference: {fileID: 8768484109542761823}
     - target: {fileID: 8768484109574292605, guid: 09fc676349e4741ffab20193dedcbd2e,
         type: 3}
       propertyPath: m_RigLayers.Array.size
@@ -3928,6 +3933,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b342d8ce5c2fd48b8fa3147d48d1d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &8768484109455136476 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 799966962, guid: 09fc676349e4741ffab20193dedcbd2e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8768484110165708846}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8768484109900764010 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 274678596, guid: 09fc676349e4741ffab20193dedcbd2e,
@@ -3949,6 +3960,12 @@ Transform:
 --- !u!4 &8768484110827514919 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1502772233, guid: 09fc676349e4741ffab20193dedcbd2e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8768484110165708846}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8768484111181698275 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1152500941, guid: 09fc676349e4741ffab20193dedcbd2e,
     type: 3}
   m_PrefabInstance: {fileID: 8768484110165708846}
   m_PrefabAsset: {fileID: 0}

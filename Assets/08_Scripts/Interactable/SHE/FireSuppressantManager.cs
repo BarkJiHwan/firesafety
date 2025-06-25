@@ -250,7 +250,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
                 }
             }
             //_cacheds[hit]?.TakeDamage(_damage);
-            UnityEngine.Debug.Log("데미지 처리. 호출자: " + info.Sender);
+            //UnityEngine.Debug.Log("데미지 처리. 호출자: " + info.Sender);
             if (cached != null)
             {
                 // CHM: 태우리 타입인지 확인하고 네트워크 데미지 요청

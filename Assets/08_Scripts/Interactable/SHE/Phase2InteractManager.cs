@@ -4,6 +4,8 @@ using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.Rendering.UI;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -72,11 +74,11 @@ public class Phase2InteractManager : MonoBehaviour
         IsWear = true;
         if (_leftHand.isEnabled)
         {
-            _leftHand.wetPrefab.SetActive(false);
+            _leftHand.towelModelPrefab.SetActive(false);
         }
         if (_rightHand.isEnabled)
         {
-            _rightHand.wetPrefab.SetActive(false);
+            _rightHand.towelModelPrefab.SetActive(false);
         }
     }
     public void TowelSupply(EHandType type)
@@ -118,8 +120,17 @@ public class Phase2InteractManager : MonoBehaviour
             hand.chargingEffect = particle.chargeFX;
             hand.shootingFlash = particle.shootingFX;
             hand.xrController.modelPrefab = _weaponPrefab.transform;
+
+            //var particles = newModel.GetComponents<ParticleSystem>();
+            //foreach (var particle in particles)
+            //{
+            //    if (particle.name.ToLower().Contains("Charging"))
+            //    {
+            //        hand.chargingEffect = particle;
             //    }
-            //}
+            //    else if (particle.name.ToLower().Contains("Shooting"))
+            //    {
+            //        hand.shootingFlash = particle;
             //    }
             //}
         }
@@ -136,7 +147,7 @@ public class Phase2InteractManager : MonoBehaviour
             StartCoroutine(ChargeAndShoot(hand));
         }
 
-    } 
+    }
     private IEnumerator ChargeAndShoot(TowelHandData hand)
     {
         if (_count != 0)

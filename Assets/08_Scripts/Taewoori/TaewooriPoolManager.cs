@@ -2,13 +2,40 @@
 using System.Linq;
 using Photon.Pun;
 using UnityEngine;
+public class ReadOnlyAttribute : PropertyAttribute { }
+// 플레이어 킬 정보를 위한 시리얼라이즈 가능한 클래스
+[System.Serializable]
+public class PlayerKillDebugInfo
+{
+    [ReadOnly] public string playerName;
+    [ReadOnly] public int playerID;
+    [ReadOnly] public int killCount;
+    [ReadOnly] public bool isMaster;
+    [ReadOnly] public bool isLocal;
 
+    public override string ToString()
+    {
+        string prefix = isMaster ? "[M]" : "";
+        prefix += isLocal ? "[L]" : "";
+        return $"{prefix} {playerName} (ID:{playerID}) - {killCount}킬";
+    }
+}
 /// <summary>
 /// 태우리 오브젝트 풀링 및 네트워크 동기화를 관리하는 매니저
 /// 마스터 클라이언트가 모든 태우리 로직을 처리하고, 다른 클라이언트들은 시각적 동기화만 받음
 /// </summary>
 public class TaewooriPoolManager : MonoBehaviourPunCallbacks
 {
+
+    #region 인스펙터 디버깅 (SerializeField로 실시간 확인)
+    [Header("===== 디버깅 정보 (ReadOnly) =====")]
+    [SerializeField, ReadOnly] private float debugMaxSurvivalTime = 0f;
+    [SerializeField, ReadOnly] private int debugCurrentAliveTaewoori = 0;
+    [SerializeField, ReadOnly] private int debugTotalSpawnedTaewoori = 0;
+
+    [Header("===== 플레이어별 킬 카운트 =====")]
+    [SerializeField] private PlayerKillDebugInfo[] debugPlayerKills = new PlayerKillDebugInfo[0];
+    #endregion
     #region 인스펙터 설정
     [Header("===== 프리팹 설정 =====")]
     [SerializeField] private GameObject taewooriPrefab;
@@ -73,6 +100,28 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     /// 생존시간 추적 중인지 여부
     /// </summary>
     public bool IsSurvivalTracking => survivalTracker?.IsTracking ?? false;
+    /// <summary>
+    /// 현재 활성화된 태우리 수 가져오기
+    /// </summary>
+    public int CurrentAliveTaewooriCount
+    {
+        get
+        {
+            int aliveCount = 0;
+            foreach (var kvp in networkTaewooriDict)
+            {
+                if (kvp.Value != null && kvp.Value.activeInHierarchy)
+                {
+                    var taewoori = kvp.Value.GetComponent<Taewoori>();
+                    if (taewoori != null && !taewoori.IsDead)
+                    {
+                        aliveCount++;
+                    }
+                }
+            }
+            return aliveCount;
+        }
+    }
     #endregion
 
     #region 유니티 라이프사이클
@@ -91,6 +140,13 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         Taewoori.OnTaewooriDestroyed += HandleTaewooriDestroyed;
+
+        // ScoreManager 확인
+        if (scoreManager == null)
+        {
+            scoreManager = FindObjectOfType<ScoreManager>();
+            Debug.Log($"ScoreManager 찾기 결과: {scoreManager}");
+        }
     }
 
     private void OnDestroy()
@@ -104,6 +160,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             ProcessRespawnQueue();
+            UpdateDebugInfo();//디버깅용
         }
     }
     #endregion
@@ -184,24 +241,29 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     /// <summary>
     /// 피버타임 종료 시 호출
     /// </summary>
+    // TaewooriPoolManager.cs
     public void EndSurvivalTracking()
     {
+        Debug.Log("EndSurvivalTracking 호출됨!");
+
         if (!PhotonNetwork.IsMasterClient || !survivalTracker.IsTracking)
+        {
+            Debug.Log($"호출 실패: IsMaster={PhotonNetwork.IsMasterClient}, IsTracking={survivalTracker.IsTracking}");
             return;
+        }
 
         var scores = survivalTracker.EndTracking(PhotonNetwork.CurrentRoom.PlayerCount);
+        Debug.Log($"계산된 점수: survivalScore={scores.survivalScore}, killScore={scores.GetPlayerKillScore(PhotonNetwork.LocalPlayer.ActorNumber)}");
 
-        // ScoreManager에 점수 전달
         if (scoreManager != null)
         {
             scoreManager.SetScore(ScoreType.Fire_Time, scores.survivalScore);
-
-            if (PhotonNetwork.LocalPlayer != null)
-            {
-                int playerID = PhotonNetwork.LocalPlayer.ActorNumber;
-                int killScore = scores.GetPlayerKillScore(playerID);
-                scoreManager.SetScore(ScoreType.Fire_Count, killScore);
-            }
+            scoreManager.SetScore(ScoreType.Fire_Count, scores.GetPlayerKillScore(PhotonNetwork.LocalPlayer.ActorNumber));
+            Debug.Log("ScoreManager에 점수 설정 완료!");
+        }
+        else
+        {
+            Debug.Log("ScoreManager가 null입니다!");
         }
     }
 
@@ -597,7 +659,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             Debug.LogWarning($"SmallTaewoori ID {smallTaewooriID}를 Dictionary에서 찾을 수 없습니다!");
         }
     }
-
+    
     [PunRPC]
     void RequestTaewooriDamage(int taewooriID, float damage, int senderID)
     {
@@ -609,7 +671,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             var taewoori = taewooriObj.GetComponent<Taewoori>();
             if (taewoori != null && !taewoori.IsDead)
             {
-                taewoori.SetLastAttacker(taewooriID);//마지막 공격한 플레이어가 처치횟수 가져감
+                taewoori.SetLastAttacker(senderID);  // 수정: senderID로 변경
                 taewoori.TakeDamage(damage);
             }
         }
@@ -797,6 +859,56 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         if (keyToRemove != 0)
         {
             dict.Remove(keyToRemove);
+        }
+    }
+    #endregion
+
+    #region 디버깅용
+    /// <summary>
+    /// 인스펙터용 디버깅 정보 업데이트
+    /// </summary>
+    private void UpdateDebugInfo()
+    {
+        if (survivalTracker != null && survivalTracker.IsTracking)
+        {
+            // 최대 생존시간 업데이트
+            debugMaxSurvivalTime = survivalTracker.GetMaxSurvivalTime();
+
+            // 현재 살아있는 태우리 수 업데이트
+            debugCurrentAliveTaewoori = CurrentAliveTaewooriCount;
+
+            // 총 스폰된 태우리 수 업데이트
+            debugTotalSpawnedTaewoori = nextTaewooriID;
+
+            // 플레이어별 킬 카운트 업데이트
+            UpdatePlayerKillDebugInfo();
+        }
+    }
+
+    /// <summary>
+    /// 플레이어별 킬 카운트 디버깅 정보 업데이트
+    /// </summary>
+    private void UpdatePlayerKillDebugInfo()
+    {
+        if (PhotonNetwork.CurrentRoom == null)
+            return;
+
+        var players = PhotonNetwork.PlayerList;
+        debugPlayerKills = new PlayerKillDebugInfo[players.Length];
+
+        for (int i = 0; i < players.Length; i++)
+        {
+            var player = players[i];
+            int killCount = survivalTracker?.GetPlayerKillCount(player.ActorNumber) ?? 0;
+
+            debugPlayerKills[i] = new PlayerKillDebugInfo
+            {
+                playerName = player.NickName,
+                playerID = player.ActorNumber,
+                killCount = killCount,
+                isMaster = player.IsMasterClient,
+                isLocal = player.IsLocal
+            };
         }
     }
     #endregion
@@ -1011,7 +1123,7 @@ public class SurvivalTracker
     {
         return playerCount switch
         {
-            1 => (40f, 60f),
+            1 => (40f, 60f),// 1명: 40초 이하=25점, 40~60초=20점, 60초 이상=15점
             2 => (30f, 45f),
             3 => (24f, 36f),
             4 => (20f, 30f),
@@ -1027,11 +1139,50 @@ public class SurvivalTracker
     private int CalculateKillScore(int killCount)
     {
         if (killCount >= 30)
-            return 25;
+            return 25; // 30마리 이상: 25점
         if (killCount >= 24)
             return 20;
         return 15;
     }
+
+    #region 점수 디버깅용
+    /// <summary>
+    /// 특정 플레이어의 킬 카운트 가져오기
+    /// </summary>
+    /// <param name="playerID">플레이어 ID</param>
+    /// <returns>해당 플레이어의 킬 카운트</returns>
+    public int GetPlayerKillCount(int playerID)
+    {
+        return playerTaewooriKills.TryGetValue(playerID, out int killCount) ? killCount : 0;
+    }
+
+    /// <summary>
+    /// 현재 최대 생존시간 가져오기 (실시간)
+    /// </summary>
+    /// <returns>현재까지의 최대 생존시간</returns>
+    public float GetMaxSurvivalTime()
+    {
+        return maxSurvivalTime;
+    }
+
+    /// <summary>
+    /// 현재 추적 중인 태우리 수 가져오기
+    /// </summary>
+    /// <returns>스폰되어 아직 죽지 않은 태우리 수</returns>
+    public int GetCurrentTrackingCount()
+    {
+        return taewooriSpawnTimes.Count;
+    }
+
+    /// <summary>
+    /// 모든 플레이어의 킬 카운트 딕셔너리 가져오기 (디버깅용)
+    /// </summary>
+    /// <returns>플레이어ID : 킬카운트 딕셔너리</returns>
+    public Dictionary<int, int> GetAllPlayerKillCounts()
+    {
+        return new Dictionary<int, int>(playerTaewooriKills);
+    }
+    #endregion
 }
 
 /// <summary>
