@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ExitDialogue : MonoBehaviour
@@ -27,7 +25,6 @@ public class ExitDialogue : MonoBehaviour
     {
         HideQuizUI();
         _dialoguePlayer.PlayWithText("EXIT_003", UIType.Sobaek);
-
     }
 
     public void OnSelectWrongAnswer()
@@ -44,5 +41,14 @@ public class ExitDialogue : MonoBehaviour
     public void HideQuizUI()
     {
         quizUI.SetActive(false);
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        // 4층 시작점일때 퀴즈 켜기
+        if (other.gameObject.name.Equals("Floor4 WayPoints.Start"))
+        {
+            ShowQuizUI();
+        }
     }
 }
