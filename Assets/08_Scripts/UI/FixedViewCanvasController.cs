@@ -60,7 +60,10 @@ public class FixedViewCanvasController : MonoBehaviour
 
         // 1. 점수판
         // 화재 페이즈가 끝나면 점수판 출력 (GameManager.Instance.CurrentPhase == leaveDangerArea)
-        TaewooriPoolManager.Instance.OnScoreBoardOn += TurnOnScoreBoard;
+        if (TaewooriPoolManager.Instance != null)
+        {
+            TaewooriPoolManager.Instance.OnScoreBoardOn += TurnOnScoreBoard;
+        }
 
         // 2. 대화창
         // 튜토리얼 설정
@@ -120,7 +123,10 @@ public class FixedViewCanvasController : MonoBehaviour
 
     private void OnDestroy()
     {
-        TaewooriPoolManager.Instance.OnScoreBoardOn -= TurnOnScoreBoard;
+        if (TaewooriPoolManager.Instance != null)
+        {
+            TaewooriPoolManager.Instance.OnScoreBoardOn -= TurnOnScoreBoard;
+        }
     }
 
     public void SwitchConverstaionPanel(UIType type)
