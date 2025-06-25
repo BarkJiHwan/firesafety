@@ -85,10 +85,7 @@ public class RoomMgr : MonoBehaviourPunCallbacks
     private IEnumerator StartGameCountdown()
     {
         float timer = 3f;
-        while (timer > 0f)
-        {
-            yield return new WaitForSeconds(timer);
-        }
+        yield return new WaitForSeconds(timer);
         StartGame();
     }
 
