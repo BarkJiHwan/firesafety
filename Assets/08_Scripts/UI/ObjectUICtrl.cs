@@ -167,7 +167,7 @@ public class ObjectUICtrl : MonoBehaviour
             transform.Rotate(0, 180, 0);
         }
 
-        if (currentPrevent.MyType == PreventType.ElectricKettle || currentPrevent.MyType == PreventType.PowerBank)
+        if (currentPrevent.MyType == PreventType.ElectricKettle)
         {
             transform.position = originPosition + basicPos;
             transform.Rotate(0, 0, 0);

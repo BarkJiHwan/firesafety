@@ -57,7 +57,7 @@ public abstract class NetworkTaewoori : BaseTaewoori
 
         base.TakeDamage(damage);        // BaseTaewoori 호출
 
-        // 히트 애니메이션 RPC (NetworkTaewoori 레벨에서)
+        // 히트 애니메이션 RPC
         if (manager != null && networkID != -1 && !isDead)
         {
             SyncHitAnimationToNetwork();
@@ -72,16 +72,6 @@ public abstract class NetworkTaewoori : BaseTaewoori
     #endregion
 
     #region 네트워크 동기화
-    /// <summary>
-    /// 네트워크용 체력 동기화 - 클라이언트에서 마스터 데이터로 업데이트
-    /// </summary>
-    /// <param name="newCurrentHealth">새로운 현재 체력</param>
-    /// <param name="newMaxHealth">새로운 최대 체력</param>
-    public void SyncHealthData(float newCurrentHealth, float newMaxHealth)
-    {
-        currentHealth = newCurrentHealth;
-        maxHealth = newMaxHealth;
-    }
     /// <summary>
     /// 히트 애니메이션 네트워크 동기화 - 하위 클래스에서 구현
     /// </summary>
@@ -135,7 +125,6 @@ public abstract class NetworkTaewoori : BaseTaewoori
         networkID = id;
         isClientOnly = clientOnly;
     }
-    // NetworkTaewoori.cs에 추가
     public override void Die()
     {
         if (isDead)
@@ -176,10 +165,12 @@ public abstract class NetworkTaewoori : BaseTaewoori
     #region 어떤플레이어가 태우리 처치했는지
     public void SetLastAttacker(int attackerID)
     {
+        Debug.Log($"[SetLastAttacker] 태우리 {networkID}: {lastAttackerID} → {attackerID}");
         lastAttackerID = attackerID;
     }
     public int GetLastAttackerID()
     {
+        Debug.Log($"[GetLastAttackerID] 태우리 {networkID} 마지막 공격자: {lastAttackerID}");
         return lastAttackerID;
     }
 

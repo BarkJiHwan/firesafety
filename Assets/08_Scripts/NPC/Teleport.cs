@@ -1,7 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.Splines;
 
+/// <summary>
+/// 텔레포트 시스템 - 페이드 효과와 함께 플레이어 위치 이동
+/// </summary>
 public class Teleport : MonoBehaviour
 {
     [Header("텔레포트 설정")]
@@ -14,12 +18,20 @@ public class Teleport : MonoBehaviour
     private CustomTunnelingVignette vignetteController;
     private SplineAnimate sobaekCarSpline;
 
+    [SerializeField] private PlayableDirector _playerbleDir;
+
+    /// <summary>
+    /// 초기화 및 컴포넌트 찾기 시작
+    /// </summary>
     void Start()
     {
         // 잠시 기다렸다가 찾기
         StartCoroutine(FindComponentsDelayed());
     }
 
+    /// <summary>
+    /// PlayerSpawner 초기화 대기 후 컴포넌트 찾기
+    /// </summary>
     IEnumerator FindComponentsDelayed()
     {
         yield return new WaitForSeconds(0.1f); // PlayerSpawner 실행 기다리기
@@ -37,6 +49,9 @@ public class Teleport : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 플레이어 트리거 진입 시 텔레포트 시작
+    /// </summary>
     private void OnTriggerEnter(Collider other)
     {
         // 플레이어 레이어 체크
@@ -53,11 +68,17 @@ public class Teleport : MonoBehaviour
         StartCoroutine(TeleportSequence(other.gameObject));
     }
 
+    /// <summary>
+    /// 오브젝트가 플레이어 레이어인지 확인
+    /// </summary>
     private bool IsPlayerLayer(GameObject obj)
     {
         return (playerLayer.value & (1 << obj.layer)) != 0;
     }
 
+    /// <summary>
+    /// 텔레포트 시퀀스 - 페이드아웃 → 이동 → 페이드인
+    /// </summary>
     private IEnumerator TeleportSequence(GameObject player)
     {
         if (sobaekCarSpline != null)
@@ -91,6 +112,7 @@ public class Teleport : MonoBehaviour
         if (vignetteController != null)
         {
             vignetteController.FadeIn();
+            _playerbleDir.gameObject.SetActive(true);
         }
 
 

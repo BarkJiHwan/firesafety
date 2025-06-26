@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour, IScorable
 {
-    [SerializeField] int basicScore = 15;
+    [SerializeField] int basicScore = 0;
 
     Dictionary<ScoreType, int> dicScore = new Dictionary<ScoreType, int>();
 
     void Start()
     {
-        for(int i=0; i<(int)ScoreType.Taewoori_Count; i++)
+        for(int i=0; i<(int)ScoreType.End; i++)
         {
             ScoreType type = (ScoreType)i;
             dicScore.Add(type, basicScore);
@@ -41,5 +41,22 @@ public class ScoreManager : MonoBehaviour, IScorable
     public int GetDictionaryCount()
     {
         return dicScore.Count;
+    }
+
+    public int[] GetScores(int sceneIndex)
+    {
+        int[] scores = new int[dicScore.Count / 2];
+        int index = 0;
+        Debug.Log("scores Length : " + scores.Length);
+        //foreach(int score in dicScore.Values)
+        //{
+        //    scores[index] = score;
+        //    index++;
+        //}
+        for(int i=sceneIndex; i<sceneIndex + (dicScore.Count / 2); i++)
+        {
+            scores[i] = dicScore[(ScoreType)i];
+        }
+        return scores;
     }
 }

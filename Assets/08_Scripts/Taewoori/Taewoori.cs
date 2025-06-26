@@ -219,17 +219,27 @@ public class Taewoori : NetworkTaewoori
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            // CHM: 마스터 클라이언트도 자신을 공격자로 설정
-            SetLastAttacker(PhotonNetwork.LocalPlayer.ActorNumber);
+            // 마스터 클라이언트가 직접 공격하는 경우
+            int masterID = PhotonNetwork.LocalPlayer.ActorNumber;
+            Debug.Log($"[마스터 직접 공격] 마스터 ID: {masterID}");
+            SetLastAttacker(masterID);
             TakeDamage(damage);
         }
         else
         {
-            // 클라이언트면 마스터에게 요청
+            // 클라이언트가 공격하는 경우 - 자신의 ID를 전송
+            int clientID = PhotonNetwork.LocalPlayer.ActorNumber;
+            Debug.Log($"[클라이언트 공격 요청] 클라이언트 ID: {clientID}, 태우리 NetworkID: {networkID}");
+
             if (TaewooriPoolManager.Instance != null && networkID != -1)
             {
+                Debug.Log($"[RPC 전송] RequestTaewooriDamage - 태우리ID: {networkID}, 데미지: {damage}, 공격자ID: {clientID}");
                 TaewooriPoolManager.Instance.photonView.RPC("RequestTaewooriDamage",
-                    RpcTarget.MasterClient, networkID, damage, PhotonNetwork.LocalPlayer.ActorNumber);
+                    RpcTarget.MasterClient, networkID, damage, clientID);
+            }
+            else
+            {
+                Debug.LogError($"[RPC 전송 실패] TaewooriPoolManager: {TaewooriPoolManager.Instance}, NetworkID: {networkID}");
             }
         }
     }
@@ -256,7 +266,7 @@ public class Taewoori : NetworkTaewoori
 
         if (manager != null && killerID != -1)
         {
-            ((TaewooriPoolManager)manager).UpdateSurvivalTimeAndRecordKill(networkID, killerID);
+            ((TaewooriPoolManager)manager).OnTaewooriKilled(killerID, networkID);
         }
 
         if (manager != null)
@@ -301,9 +311,7 @@ public class Taewoori : NetworkTaewoori
     }
     #endregion
 
-
     #region 헬퍼 메서드
-
     /// <summary>
     /// 마지막 공격자 ID 가져오기
     /// </summary>>
