@@ -132,6 +132,15 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         var hand = GetHand(type);
         _triggerValue = hand.triggerAction.action.ReadValue<float>();
         _isPressed = _triggerValue > 0.1f;
+        //_colHitCount = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
+        //if (_isPressed && _colHitCounts > 0 && !_isFeverTime) <-- 본래 조건문
+        //if (hand.interator.TryGetCurrent3DRaycastHit(out RaycastHit hit) && !_isFeverTime && hand.triggerAction.action.WasPressedThisFrame())
+        //{
+        //    if (IsInLayerMask(hit.collider.gameObject, _supplyMask))
+        //    {
+        //        Supply(type);
+        //    }
+        //}
         if (_isPressed && !hand.isSpraying && hand.enabled && hand.triggerAction.action.WasPressedThisFrame())
         {
             if (_currentCor == null)
@@ -342,28 +351,42 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     }
     public void Supply(EHandType type)
     {
+        #region Instantiate ver
+        //if (!_rightHand.enabled && !_leftHand.enabled)
+        //{
+        //    Quaternion sprayRot = Quaternion.EulerAngles(-90f, 0f, -90f);
+        //    Vector3 sprayPos = new(0f, 0.008f, 0f);
+        //    Quaternion finalRot = hand.grabSpot.rotation * sprayRot;
+        //    Vector3 finalPos = hand.grabSpot.position + hand.grabSpot.rotation * sprayPos;
+        //    var spray = Instantiate(hand.modelPrefab, finalPos, finalRot, hand.grabSpot);
+        //    hand.enabled = true;
+        //    _sprayOrigin = spray.transform.Find("SprayOrigin");
+        //    hand.normalFireFX = spray.transform.Find("Normal FX").GetComponent<ParticleSystem>();
+        //    hand.zeroAmountFireFX = spray.transform.Find("Zero Amount FX").GetComponent<ParticleSystem>();
+        //    hand.initialFireFX = spray.transform.Find("Initialize FX").GetComponent<ParticleSystem>();
+        //    Debug.Log("보급: 생성 및 할당");
+        //}
+        #endregion
         if (!pView.IsMine || GameManager.Instance.CurrentPhase != GamePhase.Fire)
         {
             return;
         }
         var hand = GetHand(type);
-        if (!hand.enabled)
+        if (!_rightHand.enabled && !_leftHand.enabled)
         {
-            if (_rightHand != hand)
-            {
-                _rightHand.modelPrefab.SetActive(false);
-                _rightHand.enabled = false;
-            }
-            if (_leftHand != hand)
-            {
-                _leftHand.modelPrefab.SetActive(false);
-                _leftHand.enabled = false;
-            }
             hand.modelPrefab.SetActive(true);
             hand.enabled = true;
             _sprayOrigin = hand.modelPrefab.transform.Find("SprayOrigin");
-            pView.RPC("RPC_SetActiveModelFalse", RpcTarget.Others);
             pView.RPC("RPC_SetActiveModel", RpcTarget.Others, type);
+        }
+        else if (!hand.enabled)
+        {
+            _rightHand.modelPrefab.SetActive(false);
+            _leftHand.modelPrefab.SetActive(false);
+            _rightHand.enabled = false;
+            _leftHand.enabled = false;
+            hand.modelPrefab.SetActive(true);
+            hand.enabled = true;
         }
         if (hand.enabled && _currentAmount < _maxAmount)
         {
