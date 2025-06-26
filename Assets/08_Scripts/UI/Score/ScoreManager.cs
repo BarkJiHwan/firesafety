@@ -10,7 +10,7 @@ public class ScoreManager : MonoBehaviour, IScorable
 
     void Start()
     {
-        for(int i=0; i<(int)ScoreType.Taewoori_Count; i++)
+        for(int i=0; i<(int)ScoreType.End; i++)
         {
             ScoreType type = (ScoreType)i;
             dicScore.Add(type, basicScore);

@@ -50,5 +50,11 @@ public class ExitDialogue : MonoBehaviour
         {
             ShowQuizUI();
         }
+
+        // 4층 종료지점일때 퀴즈 끄기
+        if (other.gameObject.name.Equals("Floor4 WayPoints.End") && quizUI.gameObject.activeSelf)
+        {
+            OnSelectRightAnswer();
+        }
     }
 }
