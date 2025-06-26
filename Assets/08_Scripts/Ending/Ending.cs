@@ -9,6 +9,8 @@ public class Ending : MonoBehaviour
     [SerializeField] private ParticleSystem _particl01;
     [SerializeField] private ParticleSystem _particl02;
     [SerializeField] private ParticleSystem _particl03;
+
+    [SerializeField] private FixedViewCanvasController _fVCCon;
     void Start()
     {
         if (_player == null)
@@ -63,5 +65,10 @@ public class Ending : MonoBehaviour
     {
         var main = _playerParticles.main;
         main.startSpeed = 50;
+    }
+
+    public void showScoreBoard()
+    {
+        _fVCCon.TurnOnScoreBoard();
     }
 }

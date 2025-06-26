@@ -78,7 +78,7 @@ public class FixedViewCanvasController : MonoBehaviour
     }
 
     // ScoreBoard 켜는 것
-    void TurnOnScoreBoard()
+    public void TurnOnScoreBoard()
     {
         InitScoreIndex(SceneController.Instance.chooseSceneType);
         scorePanel.SetActive(true);

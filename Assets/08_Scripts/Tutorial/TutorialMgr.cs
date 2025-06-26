@@ -145,6 +145,7 @@ public class TutorialMgr : MonoBehaviourPun
         //Tutorial_NAR_003번 나레이션 실행 : 잘했어요!
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_003", UIType.Narration);
         yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
+        // 나중에 지움
     }
 
     private IEnumerator someCorutine()
