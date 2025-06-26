@@ -1537,6 +1537,7 @@ GameObject:
   - component: {fileID: 1739876679}
   - component: {fileID: 9103372645289403674}
   - component: {fileID: 5371388982716814699}
+  - component: {fileID: 8565178558782162953}
   m_Layer: 9
   m_Name: XR Components
   m_TagString: Untagged
@@ -1765,6 +1766,19 @@ MonoBehaviour:
   m_LocomotionProvider: {fileID: 7745211862258476249}
   m_MinHeight: 1.5
   m_MaxHeight: Infinity
+--- !u!114 &8565178558782162953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7745211863123509214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d6b8d34ab76a49a9adb308f306d123a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  quizUI: {fileID: 1218704363163474791}
 --- !u!1 &7745211863253218687
 GameObject:
   m_ObjectHideFlags: 0
@@ -1992,7 +2006,6 @@ GameObject:
   - component: {fileID: 7745211863621262517}
   - component: {fileID: 7745211863621262516}
   - component: {fileID: -5703260726861997307}
-  - component: {fileID: 1956710006232103124}
   m_Layer: 9
   m_Name: Toto_WithXR_Single
   m_TagString: Untagged
@@ -2033,6 +2046,7 @@ MonoBehaviour:
   xRComponents: {fileID: 7745211863123509214}
   model: {fileID: 7475391501277220497}
   customTunnelingVignette: {fileID: 7745211863123509213}
+  exitDialogue: {fileID: 8565178558782162953}
 --- !u!114 &-5703260726861997307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2100,19 +2114,6 @@ MonoBehaviour:
   _nowCharging: 0
   _count: 0
   _bombSpeed: 3
---- !u!114 &1956710006232103124
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7745211863621262518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d6b8d34ab76a49a9adb308f306d123a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  quizUI: {fileID: 1218704363163474791}
 --- !u!1 &7745211863730072580
 GameObject:
   m_ObjectHideFlags: 0
@@ -2305,10 +2306,55 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7745211863621262517}
     m_Modifications:
+    - target: {fileID: 308885686205418201, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 941414388532522307, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 941414388729731450, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 941414388740747992, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 941414389038722174, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 941414389245403299, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 941414389570354669, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2156023510354813447, guid: 35256c14657cf49bd8156ed4fe9fbe25,
         type: 3}
       propertyPath: m_Name
       value: QuizUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 2156023510354813447, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2156023510354813447, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5713207550201200101, guid: 35256c14657cf49bd8156ed4fe9fbe25,
         type: 3}
@@ -2368,7 +2414,7 @@ PrefabInstance:
     - target: {fileID: 5713207550201200101, guid: 35256c14657cf49bd8156ed4fe9fbe25,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5713207550201200101, guid: 35256c14657cf49bd8156ed4fe9fbe25,
         type: 3}
@@ -2398,7 +2444,7 @@ PrefabInstance:
     - target: {fileID: 5713207550201200101, guid: 35256c14657cf49bd8156ed4fe9fbe25,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5713207550201200101, guid: 35256c14657cf49bd8156ed4fe9fbe25,
         type: 3}
@@ -2414,6 +2460,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7125509969618732479, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35256c14657cf49bd8156ed4fe9fbe25, type: 3}
