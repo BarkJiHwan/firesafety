@@ -2030,7 +2030,7 @@ MonoBehaviour:
     interator: {fileID: 204756830080729528}
   _sprayLength: 2.5
   _sprayRadius: 1
-  _damage: 1
+  _damage: 2
   _maxAmount: 100
   _decreaseAmount: 1
   _fireMask:
@@ -2271,6 +2271,11 @@ PrefabInstance:
       propertyPath: playerOrigin
       value: 
       objectReference: {fileID: 7297529228999957534}
+    - target: {fileID: 3759552973863989688, guid: ba5697950f61547dfba6abe8a9aad00c,
+        type: 3}
+      propertyPath: _damage
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3759552973863989688, guid: ba5697950f61547dfba6abe8a9aad00c,
         type: 3}
       propertyPath: tutoSuppressor
