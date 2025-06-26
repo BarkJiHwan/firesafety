@@ -233,6 +233,9 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         }
         _fireHitCount = Physics.OverlapCapsuleNonAlloc(start, end, _sprayRadius, _fireHits, _fireMask);
         //콜라이더로 캐싱하면 불안정하다고...
+        // 실제 공격자 ID 가져오기
+        int attackerID = info.Sender.ActorNumber;
+        UnityEngine.Debug.Log($"[RPC_RequestDamage] 실제 공격자 ID: {attackerID}");
         for (int i = 0; i < _fireHitCount; i++)
         {
             var hit = _fireHits[i];
@@ -253,15 +256,19 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
             //UnityEngine.Debug.Log("데미지 처리. 호출자: " + info.Sender);
             if (cached != null)
             {
-                // CHM: 태우리 타입인지 확인하고 네트워크 데미지 요청
+                // 태우리 타입인지 확인하고 공격자 ID 설정 후 데미지 처리
                 if (cached is Taewoori taewoori)
                 {
-                    taewoori.RequestDamageFromClient(_damage);
+                    UnityEngine.Debug.Log($"[태우리 공격] 공격자 ID: {attackerID}");
+                    taewoori.SetLastAttacker(attackerID);  // 실제 공격자 ID 설정
+                    taewoori.TakeDamage(_damage);          // 직접 데미지 처리
                 }
-                // CHM: 스몰태우리 타입인지 확인하고 네트워크 데미지 요청
+                // 스몰태우리 타입인지 확인하고 데미지 처리
                 else if (cached is SmallTaewoori smallTaewoori)
                 {
-                    smallTaewoori.RequestDamageFromClient(_damage);
+                    UnityEngine.Debug.Log($"[스몰태우리 공격] 공격자 ID: {attackerID}");
+                    smallTaewoori.SetLastAttacker(attackerID);  // 실제 공격자 ID 설정
+                    smallTaewoori.TakeDamage(_damage);           // 직접 데미지 처리
                 }
                 // CHM: 일반 IDamageable 오브젝트는 기존 방식으로 데미지 처리
                 else

@@ -2255,13 +2255,13 @@ PrefabInstance:
     - target: {fileID: 40383052613266636, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: floorEventType
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 40383052613266636, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: allParticleGroup
       value: 
-      objectReference: {fileID: 929823675}
+      objectReference: {fileID: 0}
     - target: {fileID: 142045296464970803, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_RootOrder
@@ -2889,12 +2889,6 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 47df5f1363cfc724a8931583fd91e944, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 89d20f9f903079c44a1d68ef6defda95, type: 3}
---- !u!1 &929823675 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3950713269011089755, guid: 89d20f9f903079c44a1d68ef6defda95,
-    type: 3}
-  m_PrefabInstance: {fileID: 929823674}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &929823676 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1098288063540714162, guid: 89d20f9f903079c44a1d68ef6defda95,

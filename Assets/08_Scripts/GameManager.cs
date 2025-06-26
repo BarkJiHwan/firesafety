@@ -132,16 +132,11 @@ public class GameManager : MonoBehaviour
                 _dialoguePlayer.onFinishDialogue += ResumeGameTimer;
                 _dialoguePlayer.PlayWithTexts(new []{"Sobak_009", "Sobak_011"}, UIType.Sobaek);
             }
-            if (CurrentPhase == GamePhase.Fire)
-            {
-                //CHM- Fire 페이즈 시작 시 생존시간 추적 시작
-                TaewooriPoolManager.Instance?.StartSurvivalTracking();
-            }
+            // GameManager.cs - UpdateGamePhaseCor 메서드에서
             if (CurrentPhase == GamePhase.LeaveDangerArea)
             {
-                //CHM - 게임 종료 시 태우리 정리 및 점수 확정
-                TaewooriPoolManager.Instance?.EndSurvivalTracking();
-                //여기다 점수판 출력 쓰셈
+                Debug.Log("게임 종료! 점수 계산 시작");
+                TaewooriPoolManager.Instance?.CalculateFinalScores(); // 변경된 메서드 호출
                 OnGameEnd?.Invoke();
             }
         }
@@ -187,8 +182,8 @@ public class GameManager : MonoBehaviour
     {
         //_isGameStart = true;
         GameTimer = 0f;
-        //CHM 태우리 생존시간 리셋
-        TaewooriPoolManager.Instance?.ResetSurvivalTracking();
+        //CHM 태우리 킬카운트 리셋
+        TaewooriPoolManager.Instance?.ResetKillCounts();
         TaewooriPoolManager.Instance?.CleanupAllResources();
     }
 

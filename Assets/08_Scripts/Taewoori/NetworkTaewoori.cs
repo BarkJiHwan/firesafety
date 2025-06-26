@@ -165,10 +165,12 @@ public abstract class NetworkTaewoori : BaseTaewoori
     #region 어떤플레이어가 태우리 처치했는지
     public void SetLastAttacker(int attackerID)
     {
+        Debug.Log($"[SetLastAttacker] 태우리 {networkID}: {lastAttackerID} → {attackerID}");
         lastAttackerID = attackerID;
     }
     public int GetLastAttackerID()
     {
+        Debug.Log($"[GetLastAttackerID] 태우리 {networkID} 마지막 공격자: {lastAttackerID}");
         return lastAttackerID;
     }
 
