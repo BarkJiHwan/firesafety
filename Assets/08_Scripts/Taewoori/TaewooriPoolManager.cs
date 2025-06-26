@@ -384,9 +384,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             Debug.Log($"점수 RPC 발송 - 플레이어 {player.ActorNumber}: 생존={survivalScore}, 킬={killScore}");
             photonView.RPC("SetPlayerScores", RpcTarget.All, player.ActorNumber, survivalScore, killScore);
         }
-
-        // 점수판 표시
-        photonView.RPC("ShowScoreBoardRPC", RpcTarget.All);
     }
 
     /// <summary>
@@ -601,13 +598,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             scoreManager.SetScore(ScoreType.Fire_Count, killScore);
             Debug.Log($"점수 설정 완료! 플레이어 {playerId}");
         }
-    }
-
-    [PunRPC]
-    void ShowScoreBoardRPC()
-    {
-        Debug.Log("점수판 표시!");
-        OnScoreBoardOn?.Invoke();
     }
 
     [PunRPC]
