@@ -141,7 +141,7 @@ MonoBehaviour:
   m_OriginBaseGameObject: {fileID: 8768484109542761821}
   m_CameraFloorOffsetObject: {fileID: 8768484109850580587}
   m_RequestedTrackingOriginMode: 1
-  m_CameraYOffset: 1.5
+  m_CameraYOffset: 1.7
 --- !u!114 &8768484109542761818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,7 +307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LocomotionProvider: {fileID: 8768484109441216839}
-  m_MinHeight: 1.5
+  m_MinHeight: 1.7
   m_MaxHeight: Infinity
 --- !u!143 &4626926811808969870
 CharacterController:
@@ -320,13 +320,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 2
-  m_Radius: 1.5
+  m_Height: 1.7
+  m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &2478699707939913160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -714,7 +714,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8768484109850580587}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: -0.2}
+  m_LocalPosition: {x: 0, y: 1.7, z: -0.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2406,6 +2406,16 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 941414388740747994, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2478699707939913160}
+    - target: {fileID: 941414388740747994, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnSelectWrongAnswer
+      objectReference: {fileID: 0}
     - target: {fileID: 941414389038722174, guid: 35256c14657cf49bd8156ed4fe9fbe25,
         type: 3}
       propertyPath: m_Layer
@@ -2415,6 +2425,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 941414389245403301, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2478699707939913160}
+    - target: {fileID: 941414389245403301, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnSelectRightAnswer
       objectReference: {fileID: 0}
     - target: {fileID: 941414389570354669, guid: 35256c14657cf49bd8156ed4fe9fbe25,
         type: 3}

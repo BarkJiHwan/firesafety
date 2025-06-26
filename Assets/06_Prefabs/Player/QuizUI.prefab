@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 716164755377216156}
   - component: {fileID: 3427441986373318972}
   - component: {fileID: 6458573338420854831}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 941414388532522306}
   - component: {fileID: 941414388532522308}
   - component: {fileID: 941414388532522309}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 941414388729731453}
   - component: {fileID: 941414388729731455}
   - component: {fileID: 941414388729731452}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,7 +361,7 @@ GameObject:
   - component: {fileID: 941414388740747996}
   - component: {fileID: 941414388740747997}
   - component: {fileID: 941414388740747994}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Answer2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -472,7 +472,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 941414388740747997}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: ExitDialogue, Assembly-CSharp
+        m_MethodName: OnSelectWrongAnswer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &941414389038722174
 GameObject:
   m_ObjectHideFlags: 0
@@ -484,7 +496,7 @@ GameObject:
   - component: {fileID: 941414389038722145}
   - component: {fileID: 941414389038722147}
   - component: {fileID: 941414389038722144}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -561,7 +573,7 @@ GameObject:
   - component: {fileID: 941414389245403303}
   - component: {fileID: 941414389245403300}
   - component: {fileID: 941414389245403301}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Answer1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -671,7 +683,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 941414389245403300}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: ExitDialogue, Assembly-CSharp
+        m_MethodName: OnSelectRightAnswer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &941414389570354669
 GameObject:
   m_ObjectHideFlags: 0
@@ -683,7 +707,7 @@ GameObject:
   - component: {fileID: 941414389570354668}
   - component: {fileID: 941414389570354670}
   - component: {fileID: 941414389570354671}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -821,7 +845,7 @@ GameObject:
   - component: {fileID: 8333743764672621454}
   - component: {fileID: 791774746526712037}
   - component: {fileID: 8498644809319385656}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: QuizUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -943,7 +967,7 @@ GameObject:
   - component: {fileID: 2740810003224922994}
   - component: {fileID: 6500002020851109730}
   - component: {fileID: 2901012999823273234}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}

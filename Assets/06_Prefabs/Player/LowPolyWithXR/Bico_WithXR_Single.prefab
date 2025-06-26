@@ -992,7 +992,7 @@ MonoBehaviour:
   m_OriginBaseGameObject: {fileID: 2359668730081601938}
   m_CameraFloorOffsetObject: {fileID: 2359668730143225528}
   m_RequestedTrackingOriginMode: 1
-  m_CameraYOffset: 1.5
+  m_CameraYOffset: 1.7
 --- !u!114 &2359668730081601967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1158,7 +1158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LocomotionProvider: {fileID: 2359668730311190189}
-  m_MinHeight: 1.5
+  m_MinHeight: 1.7
   m_MaxHeight: Infinity
 --- !u!143 &7185442216055633023
 CharacterController:
@@ -1171,13 +1171,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 1.5
+  m_Height: 1.7
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &1199571301811076890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1215,7 +1215,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2359668730143225528}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: -0.2}
+  m_LocalPosition: {x: 0, y: 1.7, z: -0.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2290,50 +2290,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2359668729433713897}
     m_Modifications:
-    - target: {fileID: 308885686205418201, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+    - target: {fileID: 941414388740747994, guid: 35256c14657cf49bd8156ed4fe9fbe25,
         type: 3}
-      propertyPath: m_Layer
-      value: 5
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1199571301811076890}
+    - target: {fileID: 941414388740747994, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnSelectWrongAnswer
       objectReference: {fileID: 0}
-    - target: {fileID: 941414388532522307, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+    - target: {fileID: 941414389245403301, guid: 35256c14657cf49bd8156ed4fe9fbe25,
         type: 3}
-      propertyPath: m_Layer
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 941414388729731450, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1199571301811076890}
+    - target: {fileID: 941414389245403301, guid: 35256c14657cf49bd8156ed4fe9fbe25,
         type: 3}
-      propertyPath: m_Layer
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 941414388740747992, guid: 35256c14657cf49bd8156ed4fe9fbe25,
-        type: 3}
-      propertyPath: m_Layer
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 941414389038722174, guid: 35256c14657cf49bd8156ed4fe9fbe25,
-        type: 3}
-      propertyPath: m_Layer
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 941414389245403299, guid: 35256c14657cf49bd8156ed4fe9fbe25,
-        type: 3}
-      propertyPath: m_Layer
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 941414389570354669, guid: 35256c14657cf49bd8156ed4fe9fbe25,
-        type: 3}
-      propertyPath: m_Layer
-      value: 5
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnSelectRightAnswer
       objectReference: {fileID: 0}
     - target: {fileID: 2156023510354813447, guid: 35256c14657cf49bd8156ed4fe9fbe25,
         type: 3}
       propertyPath: m_Name
       value: QuizUI
-      objectReference: {fileID: 0}
-    - target: {fileID: 2156023510354813447, guid: 35256c14657cf49bd8156ed4fe9fbe25,
-        type: 3}
-      propertyPath: m_Layer
-      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5713207550201200101, guid: 35256c14657cf49bd8156ed4fe9fbe25,
         type: 3}
@@ -2439,11 +2419,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7125509969618732479, guid: 35256c14657cf49bd8156ed4fe9fbe25,
-        type: 3}
-      propertyPath: m_Layer
-      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35256c14657cf49bd8156ed4fe9fbe25, type: 3}
@@ -5293,6 +5268,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6464127176000479839, guid: 7f40806208fb449d092b9488d43ba1b5,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6468542627485427508, guid: 7f40806208fb449d092b9488d43ba1b5,
         type: 3}
