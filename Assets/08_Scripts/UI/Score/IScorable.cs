@@ -11,7 +11,8 @@ public enum ScoreType
     Elevator,
     Smoke,
     Taewoori_Count,
-    DaTaewoori
+    DaTaewoori,
+    End
 }
 
 public interface IScorable

@@ -9,11 +9,13 @@ public enum UIType
 {
     Narration,
     Sobaek,
+    Dataewoori,
     None
 }
 
 public class FixedViewCanvasController : MonoBehaviour
 {
+    [SerializeField] ScoreManager scoreMgr;
     [Header("점수판")]
     [SerializeField] GameObject scorePanel;
     [SerializeField] GameObject conversationBoard;
@@ -38,6 +40,8 @@ public class FixedViewCanvasController : MonoBehaviour
 
     PlayerTutorial tutorialMgr;
 
+    int scoreStartIndex;
+
     public GameObject ConversationPanel => conversationPanel;
 
     public TextMeshProUGUI ConversationTxt => conversationTxt;
@@ -60,7 +64,10 @@ public class FixedViewCanvasController : MonoBehaviour
 
         // 1. 점수판
         // 화재 페이즈가 끝나면 점수판 출력 (GameManager.Instance.CurrentPhase == leaveDangerArea)
-        GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
+        }
 
         // 2. 대화창
         // 튜토리얼 설정
@@ -70,15 +77,27 @@ public class FixedViewCanvasController : MonoBehaviour
         }
     }
 
+    // ScoreBoard 켜는 것
     void TurnOnScoreBoard()
     {
+        InitScoreIndex(SceneController.Instance.chooseSceneType);
         scorePanel.SetActive(true);
         StartCoroutine(UpdateBoard());
     }
 
     IEnumerator UpdateBoard()
     {
-        yield return new WaitForEndOfFrame();
+        yield return new WaitUntil(() =>
+        {
+            foreach (int score in scoreMgr.GetScores(scoreStartIndex))
+            {
+                if (score == 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        });
         //여기서 한번 기다려야함
         if (scorePanel.activeSelf == true)
         {
@@ -118,11 +137,29 @@ public class FixedViewCanvasController : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
+    void InitScoreIndex(SceneType type)
     {
-        GameManager.Instance.OnGameEnd -= TurnOnScoreBoard;
+        switch (type)
+        {
+            case SceneType.IngameScene_Fire:
+                scoreStartIndex = 0;
+                break;
+            case SceneType.IngameScene_Evacuation:
+                scoreStartIndex = 4;
+                break;
+        }
     }
 
+    private void OnDestroy()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameEnd -= TurnOnScoreBoard;
+        }
+    }
+
+
+    // 대화창 타입에 따라 위치 등 변경 -> 대화창 켜는 것까지 작동
     public void SwitchConverstaionPanel(UIType type)
     {
         Vector3 pos = narrationPos;
@@ -133,8 +170,10 @@ public class FixedViewCanvasController : MonoBehaviour
                 conversationCtrl.PrintNarration();
                 break;
             case UIType.Sobaek:
+            case UIType.Dataewoori:
                 pos = conversationPos;
                 conversationCtrl.PrintConversation();
+                conversationCtrl.ChangeDataeWooriImage(type);
                 break;
         }
         conversationBoard.GetComponent<RectTransform>().anchoredPosition = pos;

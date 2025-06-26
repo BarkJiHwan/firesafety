@@ -84,18 +84,8 @@ public class RoomMgr : MonoBehaviourPunCallbacks
     [PunRPC]
     private IEnumerator StartGameCountdown()
     {
-        int prevCount = -1;
         float timer = 3f;
-        while (timer > 0f)
-        {
-            int currentCount = Mathf.CeilToInt(timer);
-            if (currentCount != prevCount)
-            {
-                prevCount = currentCount;
-            }
-            timer -= Time.deltaTime;
-            yield return null;
-        }
+        yield return new WaitForSeconds(timer);
         StartGame();
     }
 
@@ -114,10 +104,9 @@ public class RoomMgr : MonoBehaviourPunCallbacks
             // 타이머 동기화 시작
             _timerRoutine = StartCoroutine(SyncTimerRoutine());
 
-            // 게임 종료 이벤트 구독
-            GameManager.Instance.OnGameEnd += OnGameEndHandler;
         }
-
+        // 게임 종료 이벤트 구독
+        GameManager.Instance.OnGameEnd += OnGameEndHandler;
         // 게임 시작
         GameManager.Instance.GameStartWhenAllReady();
     }
@@ -144,12 +133,8 @@ public class RoomMgr : MonoBehaviourPunCallbacks
     // 게임 종료
     private void OnGameEndHandler()
     {
-        Debug.Log("게임이 종료되었습니다.");
-        if (PhotonNetwork.IsMasterClient)
-        {
-            GameManager.Instance.IsGameStart = false;
-            GameManager.Instance.OnGameEnd -= OnGameEndHandler;
-        }
+        GameManager.Instance.IsGameStart = false;
+        GameManager.Instance.OnGameEnd -= OnGameEndHandler;
         //모든 코루틴 종료
         StopAllCoroutines();
     }

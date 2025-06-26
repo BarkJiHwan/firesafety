@@ -92,6 +92,11 @@ public partial class FirePreventable : MonoBehaviour
 
     void SetHighlightStronger(Renderer rend, float interValue)
     {
+        if (rend.materials.Length < 2)
+        {
+            Debug.Log(rend.gameObject.name);
+            return;
+        }
         Material highlightMat = rend.materials[1];
         if (highlightMat.HasProperty("_RimPower"))
         {

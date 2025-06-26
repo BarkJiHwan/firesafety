@@ -351,8 +351,8 @@ public class FireObjMgr : MonoBehaviour
     private int CalculateScore(float time, int players)
     {
         players = Mathf.Clamp(players, 1, 6);
-        //if (players == 1)
-        //    return 25; // 혼자 할 때는 항상 만점
+        if (players == 1)
+            return 25; // 혼자 할 때는 항상 만점
         float maxScoreThreshold = Mathf.Round(60f / players);
         float midScoreThreshold = maxScoreThreshold + 10f;
 
