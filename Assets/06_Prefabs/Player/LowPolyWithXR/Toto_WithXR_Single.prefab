@@ -1750,7 +1750,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &5371388982716814699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2326,6 +2326,16 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 941414388740747994, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 8565178558782162953}
+    - target: {fileID: 941414388740747994, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnSelectWrongAnswer
+      objectReference: {fileID: 0}
     - target: {fileID: 941414389038722174, guid: 35256c14657cf49bd8156ed4fe9fbe25,
         type: 3}
       propertyPath: m_Layer
@@ -2335,6 +2345,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 941414389245403301, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 8565178558782162953}
+    - target: {fileID: 941414389245403301, guid: 35256c14657cf49bd8156ed4fe9fbe25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnSelectRightAnswer
       objectReference: {fileID: 0}
     - target: {fileID: 941414389570354669, guid: 35256c14657cf49bd8156ed4fe9fbe25,
         type: 3}
