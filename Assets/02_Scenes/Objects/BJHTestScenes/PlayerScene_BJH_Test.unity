@@ -1374,6 +1374,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4060705981305032297, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: scoreMgr
+      value: 
+      objectReference: {fileID: 1058851943}
     - target: {fileID: 4060705981305032300, guid: 7e8817f6f572b7146bdae7d547c81463,
         type: 3}
       propertyPath: m_Name
@@ -1382,7 +1387,7 @@ PrefabInstance:
     - target: {fileID: 4060705981842663253, guid: 7e8817f6f572b7146bdae7d547c81463,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4144479511734439253, guid: 7e8817f6f572b7146bdae7d547c81463,
         type: 3}
@@ -1791,12 +1796,12 @@ PrefabInstance:
     - target: {fileID: 1639427579897862118, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
       propertyPath: _spawnOffset.y
-      value: 0.3
+      value: 0.55
       objectReference: {fileID: 0}
     - target: {fileID: 1639427579897862118, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
       propertyPath: _spawnOffset.z
-      value: -0.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1819361708237454474, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
@@ -1896,12 +1901,12 @@ PrefabInstance:
     - target: {fileID: 2558539946496216446, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
       propertyPath: _spawnOffset.x
-      value: 0.6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2558539946496216446, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
       propertyPath: _spawnOffset.y
-      value: 0.25
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 2558539946496216446, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
@@ -2167,12 +2172,12 @@ PrefabInstance:
     - target: {fileID: 5894161903735763735, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
       propertyPath: _spawnOffset.y
-      value: 0.34
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 5894161903735763735, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
       propertyPath: _spawnOffset.z
-      value: 0.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5970637012127424767, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
@@ -2327,7 +2332,7 @@ PrefabInstance:
     - target: {fileID: 6841246247133567501, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
       propertyPath: _spawnOffset.x
-      value: -0.8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6841246247133567501, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
@@ -2337,7 +2342,7 @@ PrefabInstance:
     - target: {fileID: 6841246247133567501, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
       propertyPath: _spawnOffset.z
-      value: 0.8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6868733416432271659, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
