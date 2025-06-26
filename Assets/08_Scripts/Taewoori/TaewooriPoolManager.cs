@@ -391,9 +391,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     /// </summary>
     private int CalculateKillScore(int killCount)
     {
-        if (killCount >= 2)
+        if (killCount >= 30)
             return 25;
-        if (killCount >= 1)
+        if (killCount >= 24)
             return 20;
         return 15;
     }
