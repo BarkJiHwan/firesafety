@@ -120,19 +120,6 @@ public class Phase2InteractManager : MonoBehaviour
             hand.chargingEffect = particle.chargeFX;
             hand.shootingFlash = particle.shootingFX;
             hand.xrController.modelPrefab = _weaponPrefab.transform;
-
-            //var particles = newModel.GetComponents<ParticleSystem>();
-            //foreach (var particle in particles)
-            //{
-            //    if (particle.name.ToLower().Contains("Charging"))
-            //    {
-            //        hand.chargingEffect = particle;
-            //    }
-            //    else if (particle.name.ToLower().Contains("Shooting"))
-            //    {
-            //        hand.shootingFlash = particle;
-            //    }
-            //}
         }
     }
     private void ShootingWaterBomb(TowelHandData hand)

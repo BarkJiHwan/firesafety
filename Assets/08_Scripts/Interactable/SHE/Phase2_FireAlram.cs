@@ -14,14 +14,13 @@ public class Phase2_FireAlram : MonoBehaviour
         var type = interactor.GetComponent<HandIdentifier>().handType;
         if (Phase2ObjectManager.Instance != null && info)
         {
-            FireAlarm();
-            //무기장착
+            //FireAlarm();
             Phase2ObjectManager.Instance.GrabWeapon(type);
             PlayerSpawner.StartSobaekCar();
         }
     }
-    private void FireAlarm()
-    {
-        //소리 재생
-    }
+    //private void FireAlarm()
+    //{
+    //    //소리 재생
+    //}
 }
