@@ -40,6 +40,8 @@ public class FixedViewCanvasController : MonoBehaviour
 
     PlayerTutorial tutorialMgr;
 
+    int scoreStartIndex;
+
     public GameObject ConversationPanel => conversationPanel;
 
     public TextMeshProUGUI ConversationTxt => conversationTxt;
@@ -78,6 +80,7 @@ public class FixedViewCanvasController : MonoBehaviour
     // ScoreBoard 켜는 것
     void TurnOnScoreBoard()
     {
+        InitScoreIndex(SceneController.Instance.chooseSceneType);
         scorePanel.SetActive(true);
         StartCoroutine(UpdateBoard());
     }
@@ -86,7 +89,7 @@ public class FixedViewCanvasController : MonoBehaviour
     {
         yield return new WaitUntil(() =>
         {
-            foreach (int score in scoreMgr.GetScores())
+            foreach (int score in scoreMgr.GetScores(scoreStartIndex))
             {
                 if (score == 0)
                 {
@@ -131,6 +134,19 @@ public class FixedViewCanvasController : MonoBehaviour
         {
             // MainScene으로 이동
             SceneController.Instance.MoveToMainScene();
+        }
+    }
+
+    void InitScoreIndex(SceneType type)
+    {
+        switch (type)
+        {
+            case SceneType.IngameScene_Fire:
+                scoreStartIndex = 0;
+                break;
+            case SceneType.IngameScene_Evacuation:
+                scoreStartIndex = 4;
+                break;
         }
     }
 
