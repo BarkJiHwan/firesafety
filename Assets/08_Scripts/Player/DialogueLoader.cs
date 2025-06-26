@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum DialogueDataType
 {
     Tutorial,
     Sobaek,
+    Exit
 }
 
 public class DialogueData
@@ -60,7 +62,15 @@ public class DialogueLoader : MonoBehaviour
     // 처음은 튜토리얼 대화 흐름 읽어오기
     private void Start()
     {
-        LoadTutorialData();
+        if (SceneManager.GetActiveScene().name.Equals("PlayerScene_BJH_Test"))
+        {
+            LoadTutorialData();
+        }
+
+        if (SceneManager.GetActiveScene().name.Equals("ExitScenes_CHM.Test"))
+        {
+            LoadExitData();
+        }
     }
 
     private IEnumerator WaitForTest(float seconds)
@@ -72,6 +82,7 @@ public class DialogueLoader : MonoBehaviour
 
     public void LoadTutorialData() => LoadDialogue(DialogueDataType.Tutorial);
     public void LoadSobaekData() => LoadDialogue(DialogueDataType.Sobaek);
+    public void LoadExitData() => LoadDialogue(DialogueDataType.Exit);
 
     public void LoadDialogue(DialogueDataType type)
     {
@@ -87,7 +98,12 @@ public class DialogueLoader : MonoBehaviour
             fileName = DialogueDataType.Sobaek.ToString();
         }
 
-        if (fileName == string.Empty)
+        if (type == DialogueDataType.Exit)
+        {
+            fileName = DialogueDataType.Exit.ToString();
+        }
+
+        if (fileName == "")
         {
             Debug.LogWarning("데이터가 없습니다, 확인해주세요");
             return;
