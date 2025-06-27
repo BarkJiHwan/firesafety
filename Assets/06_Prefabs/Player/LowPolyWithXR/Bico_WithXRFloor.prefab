@@ -3233,6 +3233,11 @@ PrefabInstance:
       propertyPath: m_RaycastMask.m_Bits
       value: 2147484001
       objectReference: {fileID: 0}
+    - target: {fileID: 7693184380767619946, guid: ad818c36731146e994540a1896ad8f24,
+        type: 3}
+      propertyPath: m_Parameters.widthMultiplier
+      value: 0.01
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad818c36731146e994540a1896ad8f24, type: 3}
 --- !u!1 &4067547240589883540 stripped
@@ -3994,6 +3999,11 @@ PrefabInstance:
       propertyPath: m_RaycastMask.m_Bits
       value: 2147484001
       objectReference: {fileID: 0}
+    - target: {fileID: 7693184380767619946, guid: ad818c36731146e994540a1896ad8f24,
+        type: 3}
+      propertyPath: m_Parameters.widthMultiplier
+      value: 0.01
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad818c36731146e994540a1896ad8f24, type: 3}
 --- !u!1 &4067547241217275778 stripped
@@ -4108,7 +4118,7 @@ PrefabInstance:
     - target: {fileID: 2359668729140138968, guid: 7f40806208fb449d092b9488d43ba1b5,
         type: 3}
       propertyPath: m_Radius
-      value: 2.5
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2359668729140138973, guid: 7f40806208fb449d092b9488d43ba1b5,
         type: 3}
