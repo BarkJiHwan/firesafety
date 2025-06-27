@@ -216,27 +216,28 @@ public class TutorialSuppressor : MonoBehaviourPunCallbacks
         var hand = GetHand(type);
         if (_currentAmount <= 0)
         {
-            Debug.Log("여길 안오는데??");
             TutorialDataMgr.Instance.IsTriggerSupply = true;
         }
-        if (!rightHand.enabled && !leftHand.enabled)
+        if (!hand.enabled)
         {
+            if (rightHand != hand)
+            {
+                rightHand.modelPrefab.SetActive(false);
+                rightHand.enabled = false;
+            }
+            if (leftHand != hand)
+            {
+                leftHand.modelPrefab.SetActive(false);
+                leftHand.enabled = false;
+            }
             hand.modelPrefab.SetActive(true);
             hand.enabled = true;
             _sprayOrigin = hand.modelPrefab.transform.Find("SprayOrigin");
-        }
-        else if (!hand.enabled)
-        {
-            rightHand.modelPrefab.SetActive(false);
-            leftHand.modelPrefab.SetActive(false);
-            rightHand.enabled = false;
-            leftHand.enabled = false;
-            hand.modelPrefab.SetActive(true);
-            hand.enabled = true;
         }
         if (hand.enabled && _currentAmount < _maxAmount)
         {
             _currentAmount = _maxAmount;
         }
     }
+
 }
