@@ -47,7 +47,6 @@ public class ScoreManager : MonoBehaviour, IScorable
     {
         int[] scores = new int[dicScore.Count / 2];
         int index = 0;
-        Debug.Log("scores Length : " + scores.Length);
         //foreach(int score in dicScore.Values)
         //{
         //    scores[index] = score;

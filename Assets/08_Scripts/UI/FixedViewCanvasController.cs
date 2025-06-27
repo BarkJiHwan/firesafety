@@ -33,6 +33,9 @@ public class FixedViewCanvasController : MonoBehaviour
     [Header("경고창")]
     [SerializeField] GameObject warningPanel;
 
+    [Header("타이머")]
+    [SerializeField] GameObject timePanel;
+
     UIType pastDiaType = UIType.None;
 
     ScoreBoardController scoreBoardCtrl;
@@ -75,6 +78,14 @@ public class FixedViewCanvasController : MonoBehaviour
         {
             conversationBoard.SetActive(false);
         }
+
+        // 4. 타이머
+        if(timePanel.activeSelf == true)
+        {
+            timePanel.SetActive(false);
+        }
+        // GameManger OnPhaseChanged 구독
+        GameManager.Instance.OnPhaseChanged += TurnTimeBoard;
     }
 
     // ScoreBoard 켜는 것
@@ -193,5 +204,18 @@ public class FixedViewCanvasController : MonoBehaviour
     public void ChangeScoreBoardPlayerColor(int index)
     {
         scoreBoardCtrl.SetPlayerImageBack(index);
+    }
+
+    public void TurnTimeBoard(GamePhase phase)
+    {
+        if(phase == GamePhase.Prevention)
+        {
+            timePanel.SetActive(true);
+        }
+        else if(phase == GamePhase.LeaveDangerArea)
+        {
+            timePanel.SetActive(false);
+            GameManager.Instance.OnPhaseChanged -= TurnTimeBoard;
+        }
     }
 }
