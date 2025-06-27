@@ -172,7 +172,7 @@ PrefabInstance:
     - target: {fileID: 3730916225136171698, guid: f083486cb0f046249947a496ebbff5b9,
         type: 3}
       propertyPath: xrRigCameraOffSet.z
-      value: 0.6
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 3730916225136171701, guid: f083486cb0f046249947a496ebbff5b9,
         type: 3}
@@ -2246,18 +2246,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6570799444046986462, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 6570799444046986462, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 6570799444046986462, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 6570799444046986462, guid: bcc073301b2c04454a03d6cb68c3a7dd,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6570799444046986462, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6570799444046986462, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 6570799444046986462, guid: bcc073301b2c04454a03d6cb68c3a7dd,
         type: 3}
@@ -2619,9 +2634,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6af11ef0d75a6b347b00977e6510d33f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMaxSurvivalTime: 0
   debugCurrentAliveTaewoori: 0
   debugTotalSpawnedTaewoori: 0
+  debugTotalKilledTaewoori: 0
+  debugSurvivalConfig: 
+  debugMaxSurvivalTime: 0
   debugPlayerKills: []
   taewooriPrefab: {fileID: 5755754473064602975, guid: 410329fd359557640af4db8805ed6589,
     type: 3}
@@ -2633,6 +2650,44 @@ MonoBehaviour:
   baseRespawnTime: 20
   feverTimeCoolTime: 0.5
   scoreManager: {fileID: 1058851943}
+  enableSurvivalScoring: 1
+  survivalTimeScores:
+  - playerCount: 1
+    manQiTime: 40
+    mediumTime: 60
+    maxScore: 25
+    mediumScore: 20
+    minScore: 15
+  - playerCount: 2
+    manQiTime: 30
+    mediumTime: 45
+    maxScore: 25
+    mediumScore: 20
+    minScore: 15
+  - playerCount: 3
+    manQiTime: 24
+    mediumTime: 36
+    maxScore: 25
+    mediumScore: 20
+    minScore: 15
+  - playerCount: 4
+    manQiTime: 20
+    mediumTime: 30
+    maxScore: 25
+    mediumScore: 20
+    minScore: 15
+  - playerCount: 5
+    manQiTime: 17
+    mediumTime: 26
+    maxScore: 25
+    mediumScore: 20
+    minScore: 15
+  - playerCount: 6
+    manQiTime: 15
+    mediumTime: 23
+    maxScore: 25
+    mediumScore: 20
+    minScore: 15
 --- !u!4 &1701025121
 Transform:
   m_ObjectHideFlags: 0
