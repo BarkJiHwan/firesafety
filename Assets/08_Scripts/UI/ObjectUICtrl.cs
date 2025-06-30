@@ -175,7 +175,7 @@ public class ObjectUICtrl : MonoBehaviour
 
         else if (currentPrevent.MyType == PreventType.OldWire)
         {
-            transform.position = originPosition + new Vector3(0, 0, 1);
+            transform.position = originPosition + new Vector3(0, 0, 0.5f);
         }
 
         else if (IsUIBlocked())

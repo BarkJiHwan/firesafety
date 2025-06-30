@@ -4129,6 +4129,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2175827415952386788, guid: 7f40806208fb449d092b9488d43ba1b5,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 2359668729140138967, guid: 7f40806208fb449d092b9488d43ba1b5,
         type: 3}
       propertyPath: playerOrigin
@@ -4169,6 +4174,26 @@ PrefabInstance:
       propertyPath: _rightHand.interator
       value: 
       objectReference: {fileID: 5129111100600365514}
+    - target: {fileID: 4452875662784987833, guid: 7f40806208fb449d092b9488d43ba1b5,
+        type: 3}
+      propertyPath: lengthInSec
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4452875662784987833, guid: 7f40806208fb449d092b9488d43ba1b5,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4452875663394947126, guid: 7f40806208fb449d092b9488d43ba1b5,
+        type: 3}
+      propertyPath: lengthInSec
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4452875663394947126, guid: 7f40806208fb449d092b9488d43ba1b5,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f40806208fb449d092b9488d43ba1b5, type: 3}
 --- !u!1 &2430774988772017372 stripped
