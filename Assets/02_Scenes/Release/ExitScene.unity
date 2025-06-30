@@ -314,8 +314,6 @@ MonoBehaviour:
   sobaekCarPrefab: {fileID: 5767023576030062446, guid: 77eb7aff511ea5b41ad004f9fbcddfdd,
     type: 3}
   carTrack: {fileID: 1444993853}
-  currentSobaekCar: {fileID: 0}
-  currentPlayer: {fileID: 0}
 --- !u!4 &195861029
 Transform:
   m_ObjectHideFlags: 0
@@ -1865,6 +1863,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4060705980712908544, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4060705980712908556, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: scoreItemsText.Array.data[4]
+      value: "\uBE44\uC0C1\uAD6C\uB85C \uD0C8\uCD9C \uD588\uB098\uC694?"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4060705980712908556, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: scoreItemsText.Array.data[5]
+      value: "\uC5F0\uAE30\uB97C \uD53C\uD588\uB098\uC694?"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4060705980712908556, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: scoreItemsText.Array.data[6]
+      value: "\uD0DC\uC6B0\uB9AC\uB97C \uC798 \uC7A1\uC558\uB098\uC694?"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4060705980712908556, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: scoreItemsText.Array.data[7]
+      value: "\uB2E4 \uD0DC\uC6B0\uB9AC\uB97C \uBB3C\uB9AC\uCCE4\uB098\uC694?"
       objectReference: {fileID: 0}
     - target: {fileID: 4060705981305032296, guid: 7e8817f6f572b7146bdae7d547c81463,
         type: 3}

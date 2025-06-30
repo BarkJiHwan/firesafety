@@ -3,11 +3,15 @@ using UnityEngine;
 public class ExitDialogue : MonoBehaviour
 {
     public GameObject quizUI;
+    private bool _quizResult;
+
     private DialoguePlayer _dialoguePlayer;
+    private ScoreManager _scoreManager;
 
     private void Start()
     {
         _dialoguePlayer = FindObjectOfType<DialoguePlayer>();
+        _scoreManager = FindObjectOfType<ScoreManager>();
         Invoke("OnStartExitScene", 1f);
     }
 
@@ -25,12 +29,17 @@ public class ExitDialogue : MonoBehaviour
     {
         HideQuizUI();
         _dialoguePlayer.PlayWithText("EXIT_003", UIType.Sobaek);
+        _quizResult = true;
+        _scoreManager.SetScore(ScoreType.Elevator, CalculateQuizScore());
+        _scoreManager.SetScore(ScoreType.DaTaewoori, 25);
     }
 
     public void OnSelectWrongAnswer()
     {
         HideQuizUI();
         _dialoguePlayer.PlayWithText("EXIT_004", UIType.Sobaek);
+        _scoreManager.SetScore(ScoreType.Elevator, CalculateQuizScore());
+        _scoreManager.SetScore(ScoreType.DaTaewoori, 25);
     }
 
     public void ShowQuizUI()
@@ -57,4 +66,6 @@ public class ExitDialogue : MonoBehaviour
             OnSelectRightAnswer();
         }
     }
+
+    private int CalculateQuizScore() => _quizResult ? 25 : 15;
 }
