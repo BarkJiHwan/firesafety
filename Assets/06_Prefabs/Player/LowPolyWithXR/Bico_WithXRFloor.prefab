@@ -111,7 +111,7 @@ Transform:
   m_GameObject: {fileID: 2359668729433713896}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2359668730081601936}
@@ -781,6 +781,7 @@ MonoBehaviour:
     z: 1
     w: 1
   syncTarget: {fileID: 8929926404025022717}
+  scaledHeightSyncronizer: {fileID: 0}
 --- !u!1 &2359668729984268863
 GameObject:
   m_ObjectHideFlags: 0
@@ -805,7 +806,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2359668729984268863}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1195,6 +1196,7 @@ MonoBehaviour:
     z: 1
     w: 1
   syncTarget: {fileID: 8929926403325638007}
+  scaledHeightSyncronizer: {fileID: 0}
 --- !u!1 &2359668730465428492
 GameObject:
   m_ObjectHideFlags: 0
@@ -1207,8 +1209,8 @@ GameObject:
   - component: {fileID: 2359668730465428490}
   - component: {fileID: 2359668730465428489}
   - component: {fileID: 2359668730465428488}
-  - component: {fileID: 2359668730465428491}
   - component: {fileID: 3075507850859373127}
+  - component: {fileID: 2359668730465428491}
   m_Layer: 9
   m_Name: Camera
   m_TagString: MainCamera
@@ -1255,7 +1257,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.2
+  near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -1355,6 +1357,30 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+--- !u!114 &3075507850859373127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2359668730465428492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4ecfb47bad1644b58875052f3d554d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position:
+    x: 0
+    y: 0
+    z: 0
+    w: 0
+  rotation:
+    x: 1
+    y: 1
+    z: 1
+    w: 1
+  syncTarget: {fileID: 8929926402880810382}
+  scaledHeightSyncronizer: {fileID: 0}
 --- !u!114 &2359668730465428491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1388,29 +1414,6 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
---- !u!114 &3075507850859373127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2359668730465428492}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4ecfb47bad1644b58875052f3d554d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  position:
-    x: 0
-    y: 0
-    z: 0
-    w: 0
-  rotation:
-    x: 1
-    y: 1
-    z: 1
-    w: 1
-  syncTarget: {fileID: 8929926402880810382}
 --- !u!1 &2359668730482786517
 GameObject:
   m_ObjectHideFlags: 0
@@ -2248,6 +2251,7 @@ MonoBehaviour:
     z: 0
     w: 0
   syncTarget: {fileID: 2359668730465428492}
+  scaledHeightSyncronizer: {fileID: 0}
 --- !u!136 &7559629151217050738
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -4062,6 +4066,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1837433213010112373, guid: 7f40806208fb449d092b9488d43ba1b5,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1837433213010112373, guid: 7f40806208fb449d092b9488d43ba1b5,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1837433213010112373, guid: 7f40806208fb449d092b9488d43ba1b5,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1837433213010112373, guid: 7f40806208fb449d092b9488d43ba1b5,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -4129,6 +4148,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _damage
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2359668729140138975, guid: 7f40806208fb449d092b9488d43ba1b5,
+        type: 3}
+      propertyPath: _sprayLength
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2359668729140138975, guid: 7f40806208fb449d092b9488d43ba1b5,
         type: 3}
