@@ -23,7 +23,7 @@ public class DevXRTestHelper : MonoBehaviour
             // 2. Floor 모드일때 최소 시야 볼수 있게 Y값 올려주기
             if (xrOrigin.RequestedTrackingOriginMode == XROrigin.TrackingOriginMode.Floor)
             {
-                Vector3 minHeightVector = new Vector3(0, 1, 0);
+                Vector3 minHeightVector = new Vector3(0, 0.5f, 0);
                 xrOrigin.CameraFloorOffsetObject.transform.position += minHeightVector;
                 controllersOffset.transform.position += (minHeightVector / 2);
             }

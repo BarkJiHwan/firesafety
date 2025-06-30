@@ -8,7 +8,8 @@ public class Ending : MonoBehaviour
     [SerializeField] private ParticleSystem _playerParticles;
     [SerializeField] private ParticleSystem _particl01;
     [SerializeField] private ParticleSystem _particl02;
-    [SerializeField] private ParticleSystem _particl03;
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip __siren;
 
     [SerializeField] private FixedViewCanvasController _fVCCon;
     void Start()
@@ -44,13 +45,11 @@ public class Ending : MonoBehaviour
     {
         _particl01.Play();
         _particl02.Play();
-        _particl03.Play();
     }
     public void SoptParticle()
     {
         _particl01.Stop();
         _particl02.Stop();
-        _particl03.Stop();
     }
 
     public void StartPlayerParticle()
@@ -70,5 +69,15 @@ public class Ending : MonoBehaviour
     public void showScoreBoard()
     {
         _fVCCon.TurnOnScoreBoard();
+    }
+
+    public void OnSiren()
+    {
+        _audioSource.clip = __siren;
+        _audioSource.Play();
+    }
+    public void OffSiren()
+    {
+        _audioSource.Stop();
     }
 }
