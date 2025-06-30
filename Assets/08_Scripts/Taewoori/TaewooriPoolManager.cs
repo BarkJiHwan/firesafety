@@ -127,8 +127,14 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region 프로퍼티
+    /// <summary>
+    /// 현재 게임이 피버 타임인지 확인
+    /// </summary>
     private bool IsFeverTime => GameManager.Instance != null && GameManager.Instance.CurrentPhase == GamePhase.Fever;
 
+    /// <summary>
+    /// 현재 살아있는 태우리 개수를 반환
+    /// </summary>
     public int CurrentAliveTaewooriCount
     {
         get
@@ -149,6 +155,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region 유니티 라이프사이클
+    /// <summary>
+    /// 싱글톤 패턴으로 인스턴스 초기화
+    /// </summary>
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -160,6 +169,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         InitializeComponents();
     }
 
+    /// <summary>
+    /// 게임 시작 시 이벤트 구독 및 컴포넌트 연결
+    /// </summary>
     private void Start()
     {
         Taewoori.OnTaewooriDestroyed += HandleTaewooriDestroyed;
@@ -170,12 +182,18 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 매니저 파괴 시 이벤트 구독 해제 및 리소스 정리
+    /// </summary>
     private void OnDestroy()
     {
         Taewoori.OnTaewooriDestroyed -= HandleTaewooriDestroyed;
         CleanupAllResources();
     }
 
+    /// <summary>
+    /// 매 프레임 리스폰 큐 처리 및 디버그 정보 업데이트
+    /// </summary>
     private void Update()
     {
         if (PhotonNetwork.IsMasterClient)
@@ -185,6 +203,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region 초기화
+    /// <summary>
+    /// 컴포넌트 초기화 및 오브젝트 풀 생성
+    /// </summary>
     private void InitializeComponents()
     {
         InitializePools();
@@ -192,6 +213,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
             scoreManager = FindObjectOfType<ScoreManager>();
     }
 
+    /// <summary>
+    /// 초기 오브젝트 풀 생성
+    /// </summary>
     private void InitializePools()
     {
         for (int i = 0; i < initialPoolSize; i++)
@@ -202,6 +226,12 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 풀링용 오브젝트 생성 및 비활성화
+    /// </summary>
+    /// <param name="prefab">생성할 프리팹</param>
+    /// <param name="pool">추가할 풀</param>
+    /// <returns>생성된 게임오브젝트</returns>
     private GameObject CreatePooledObject(GameObject prefab, Queue<GameObject> pool)
     {
         GameObject obj = Instantiate(prefab, transform);
@@ -210,6 +240,12 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         return obj;
     }
 
+    /// <summary>
+    /// 풀에서 오브젝트를 가져오거나 새로 생성
+    /// </summary>
+    /// <param name="pool">가져올 풀</param>
+    /// <param name="prefab">풀이 비어있을 때 생성할 프리팹</param>
+    /// <returns>사용 가능한 게임오브젝트</returns>
     private GameObject GetFromPool(Queue<GameObject> pool, GameObject prefab)
     {
         if (pool.Count == 0)
@@ -242,7 +278,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         return globalMaxTime;
     }
     /// <summary>
-    /// 전체 최대 생존시간 기반으로 모든 플레이어에게 동일한 점수 적용
+    /// 전체 최대 생존시간 기반으로 모든 플레이어에게 동일한 점수 적용 CalculateFinalScores에서 사용
     /// </summary>
     private int CalculateGlobalSurvivalScore()
     {
@@ -414,6 +450,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region 리스폰 시스템
+    /// <summary>
+    /// 태우리 파괴 시 해당 FireObj의 리스폰 큐 추가
+    /// </summary>
     private void HandleTaewooriDestroyed(Taewoori taewoori, FireObjScript fireObj)
     {
         if (!PhotonNetwork.IsMasterClient)
@@ -426,6 +465,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// FireObj를 리스폰 큐에 추가
+    /// </summary>
     private void QueueForRespawn(FireObjScript fireObj)
     {
         if (!PhotonNetwork.IsMasterClient || fireObj == null || !fireObj.IsBurning)
@@ -437,6 +479,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         respawnQueue.Add(new RespawnEntry(fireObj));
     }
 
+    /// <summary>
+    /// 리스폰 큐 처리 - 시간이 된 FireObj에서 태우리 재생성
+    /// </summary>
     private void ProcessRespawnQueue()
     {
         if (!PhotonNetwork.IsMasterClient)
@@ -470,6 +515,12 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region 스폰 함수들
+    /// <summary>
+    /// 태우리 스폰 - 마스터 클라이언트에서만 실행
+    /// </summary>
+    /// <param name="position">스폰 위치</param>
+    /// <param name="fireObj">연결될 FireObj</param>
+    /// <returns>생성된 태우리 게임오브젝트</returns>
     public GameObject SpawnTaewoori(Vector3 position, FireObjScript fireObj)
     {
         if (!PhotonNetwork.IsMasterClient || !CanSpawnTaewoori(fireObj))
@@ -488,6 +539,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         return taewooriObj;
     }
 
+    /// <summary>
+    /// 태우리 스폰 가능 여부 확인
+    /// </summary>
     private bool CanSpawnTaewoori(FireObjScript fireObj)
     {
         if (fireObj == null || !fireObj.IsBurning || fireObj.HasActiveTaewoori())
@@ -497,6 +551,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         return preventable == null || !preventable.IsFirePreventable;
     }
 
+    /// <summary>
+    /// 태우리 오브젝트 초기 설정
+    /// </summary>
     private void SetupTaewoori(GameObject taewooriObj, FireObjScript fireObj)
     {
         taewooriObj.transform.position = fireObj.TaewooriPos();
@@ -517,6 +574,13 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         taewooriObj.SetActive(true);
     }
 
+    /// <summary>
+    /// 불 투사체 스폰 - 마스터 클라이언트에서만 실행
+    /// </summary>
+    /// <param name="position">스폰 위치</param>
+    /// <param name="rotation">스폰 회전</param>
+    /// <param name="taewoori">원본 태우리</param>
+    /// <returns>생성된 투사체 게임오브젝트</returns>
     public GameObject PoolSpawnFireParticle(Vector3 position, Quaternion rotation, Taewoori taewoori)
     {
         if (!PhotonNetwork.IsMasterClient || !CanLaunchProjectile(taewoori, taewoori.MaxSmallTaewooriCount))
@@ -532,6 +596,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         return particle;
     }
 
+    /// <summary>
+    /// 불 투사체 초기 설정
+    /// </summary>
     private void SetupFireParticle(GameObject particle, Vector3 position, Quaternion rotation, Taewoori taewoori)
     {
         particle.transform.position = position;
@@ -547,6 +614,12 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         IncrementSmallTaewooriCount(taewoori);
     }
 
+    /// <summary>
+    /// 스몰 태우리 스폰 - 마스터 클라이언트에서만 실행
+    /// </summary>
+    /// <param name="position">스폰 위치</param>
+    /// <param name="originTaewoori">원본 태우리</param>
+    /// <returns>생성된 스몰 태우리 게임오브젝트</returns>
     public GameObject PoolSpawnSmallTaewoori(Vector3 position, Taewoori originTaewoori)
     {
         if (!PhotonNetwork.IsMasterClient || originTaewoori == null)
@@ -564,6 +637,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         return smallTaewoori;
     }
 
+    /// <summary>
+    /// 스몰 태우리 초기 설정
+    /// </summary>
     private void SetupSmallTaewoori(GameObject smallTaewoori, Vector3 position, Taewoori originTaewoori)
     {
         smallTaewoori.transform.position = position;
@@ -580,6 +656,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region 네트워크 RPC
+    /// <summary>
+    /// 플레이어 킬 카운트 동기화 RPC
+    /// </summary>
     [PunRPC]
     void SyncKillCount(int playerID, int totalKills)
     {
@@ -587,6 +666,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         Debug.Log($"킬카운트 동기화! 플레이어 {playerID}: {totalKills}킬");
     }
 
+    /// <summary>
+    /// 플레이어 점수 설정 RPC
+    /// </summary>
     [PunRPC]
     void SetPlayerScores(int playerId, int survivalScore, int killScore)
     {
@@ -600,6 +682,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 태우리 네트워크 스폰 RPC
+    /// </summary>
     [PunRPC]
     void NetworkSpawnTaewoori(int taewooriID, Vector3 position, Quaternion rotation)
     {
@@ -623,6 +708,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 불 투사체 네트워크 스폰 RPC
+    /// </summary>
     [PunRPC]
     void NetworkSpawnFireParticle(int taewooriID, Vector3 position, Quaternion rotation)
     {
@@ -648,6 +736,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 스몰 태우리 네트워크 스폰 RPC
+    /// </summary>
     [PunRPC]
     void NetworkSpawnSmallTaewoori(int originTaewooriID, Vector3 position, int smallTaewooriID)
     {
@@ -673,6 +764,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 태우리 체력 네트워크 동기화 RPC
+    /// </summary>
     [PunRPC]
     void NetworkTaewooriDamage(int taewooriID, float currentHealth, float maxHealth)
     {
@@ -689,6 +783,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 스몰 태우리 체력 네트워크 동기화 RPC
+    /// </summary>
     [PunRPC]
     void NetworkSmallTaewooriDamage(int smallTaewooriID, float currentHealth, float maxHealth)
     {
@@ -705,6 +802,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 태우리 파괴 네트워크 동기화 RPC
+    /// </summary>
     [PunRPC]
     void NetworkTaewooriDestroy(int taewooriID)
     {
@@ -722,6 +822,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 스몰 태우리 파괴 네트워크 동기화 RPC
+    /// </summary>
     [PunRPC]
     void NetworkSmallTaewooriDestroy(int smallTaewooriID)
     {
@@ -761,6 +864,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 태우리 데미지 요청 RPC - 마스터 클라이언트에서 처리
+    /// </summary>
     [PunRPC]
     void RequestTaewooriDamage(int taewooriID, float damage, int senderID)
     {
@@ -794,6 +900,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 스몰 태우리 데미지 요청 RPC - 마스터 클라이언트에서 처리
+    /// </summary>
     [PunRPC]
     void RequestSmallTaewooriDamage(int smallTaewooriID, float damage, int senderID)
     {
@@ -810,6 +919,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 태우리 히트 애니메이션 네트워크 동기화 RPC
+    /// </summary>
     [PunRPC]
     void NetworkTaewooriHit(int taewooriID)
     {
@@ -826,6 +938,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 태우리 사망 애니메이션 네트워크 동기화 RPC
+    /// </summary>
     [PunRPC]
     void NetworkTaewooriDie(int taewooriID)
     {
@@ -845,6 +960,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region 네트워크 동기화 헬퍼
+    /// <summary>
+    /// 태우리 체력 네트워크 동기화 요청
+    /// </summary>
     public void SyncTaewooriDamage(int taewooriID, float currentHealth, float maxHealth)
     {
         if (PhotonNetwork.IsMasterClient)
@@ -853,6 +971,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 스몰 태우리 체력 네트워크 동기화 요청
+    /// </summary>
     public void SyncSmallTaewooriDamage(int smallTaewooriID, float currentHealth, float maxHealth)
     {
         if (PhotonNetwork.IsMasterClient)
@@ -861,6 +982,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 태우리 파괴 네트워크 동기화 요청
+    /// </summary>
     public void SyncTaewooriDestroy(int taewooriID)
     {
         if (PhotonNetwork.IsMasterClient)
@@ -869,6 +993,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 스몰 태우리 파괴 네트워크 동기화 요청
+    /// </summary>
     public void SyncSmallTaewooriDestroy(int smallTaewooriID)
     {
         if (PhotonNetwork.IsMasterClient)
@@ -879,6 +1006,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region 스몰태우리 카운트 관리
+    /// <summary>
+    /// 태우리의 스몰 태우리 개수 증가
+    /// </summary>
     public void IncrementSmallTaewooriCount(Taewoori originTaewoori)
     {
         if (PhotonNetwork.IsMasterClient && originTaewoori != null)
@@ -891,6 +1021,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 태우리의 스몰 태우리 개수 감소
+    /// </summary>
     public void DecrementSmallTaewooriCount(Taewoori originTaewoori)
     {
         if (PhotonNetwork.IsMasterClient && originTaewoori != null)
@@ -903,6 +1036,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 태우리의 현재 스몰 태우리 개수 반환
+    /// </summary>
     public int GetSmallTaewooriCount(Taewoori originTaewoori)
     {
         if (originTaewoori == null)
@@ -910,6 +1046,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         return smallTaewooriCountByTaewoori.TryGetValue(originTaewoori, out int count) ? count : 0;
     }
 
+    /// <summary>
+    /// 투사체 발사 가능 여부 확인
+    /// </summary>
     public bool CanLaunchProjectile(Taewoori taewoori, int maxSmallTaewooriCount)
     {
         if (!PhotonNetwork.IsMasterClient || taewoori == null)
@@ -919,6 +1058,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region 풀 반환
+    /// <summary>
+    /// 태우리를 풀로 반환
+    /// </summary>
     public void ReturnTaewooriToPool(GameObject taewooriObj)
     {
         if (taewooriObj == null)
@@ -934,6 +1076,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         ReturnToPool(taewooriObj, taewooriPool);
     }
 
+    /// <summary>
+    /// 스몰 태우리를 풀로 반환
+    /// </summary>
     public void ReturnSmallTaewooriToPool(GameObject smallTaewooriObj)
     {
         if (smallTaewooriObj == null)
@@ -943,6 +1088,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         ReturnToPool(smallTaewooriObj, smallTaewooriPool);
     }
 
+    /// <summary>
+    /// 불 투사체를 풀로 반환
+    /// </summary>
     public void ReturnFireParticleToPool(GameObject particleObj)
     {
         if (particleObj != null)
@@ -951,6 +1099,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 불 투사체를 풀로 반환 (스몰태우리 카운트 감소 없이)
+    /// </summary>
     public void ReturnFireParticleToPoolWithoutSpawn(GameObject particleObj, Taewoori originTaewoori)
     {
         if (particleObj != null)
@@ -963,6 +1114,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 오브젝트를 지정된 풀로 반환
+    /// </summary>
     private void ReturnToPool(GameObject obj, Queue<GameObject> pool)
     {
         obj.SetActive(false);
@@ -970,6 +1124,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         pool.Enqueue(obj);
     }
 
+    /// <summary>
+    /// 네트워크 딕셔너리에서 오브젝트 제거
+    /// </summary>
     private void RemoveFromNetworkDict(GameObject obj, Dictionary<int, GameObject> dict)
     {
         var keyToRemove = dict.FirstOrDefault(kvp => kvp.Value == obj).Key;
@@ -981,6 +1138,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region 디버깅
+    /// <summary>
+    /// 디버그 정보 업데이트
+    /// </summary>
     private void UpdateDebugInfo()
     {
         debugCurrentAliveTaewoori = CurrentAliveTaewooriCount;
@@ -1010,8 +1170,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         UpdatePlayerKillDebugInfo();
     }
 
-    // UpdateSurvivalDebugInfo() 함수는 제거
-
+    /// <summary>
+    /// 플레이어별 킬 디버그 정보 업데이트
+    /// </summary>
     private void UpdatePlayerKillDebugInfo()
     {
         if (PhotonNetwork.CurrentRoom == null)
@@ -1038,6 +1199,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region 씬 전환 시 정리
+    /// <summary>
+    /// 모든 리소스 정리
+    /// </summary>
     public void CleanupAllResources()
     {
         if (PhotonNetwork.IsMasterClient)
@@ -1048,6 +1212,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         ClearAllData();
     }
 
+    /// <summary>
+    /// 활성화된 모든 오브젝트 정리
+    /// </summary>
     private void CleanupAllActiveObjects()
     {
         // 태우리 정리
@@ -1081,6 +1248,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// 모든 데이터 초기화
+    /// </summary>
     private void ClearAllData()
     {
         networkTaewooriDict.Clear();
@@ -1097,6 +1267,9 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
         nextSmallTaewooriID = 0;
     }
 
+    /// <summary>
+    /// 씬 전환 준비 - 정적 메서드
+    /// </summary>
     public static void PrepareForSceneTransition()
     {
         if (Instance != null)

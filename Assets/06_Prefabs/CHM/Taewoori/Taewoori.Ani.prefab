@@ -1631,10 +1631,45 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6979098890641307485, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6979098890641307485, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6979098890641307485, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6979098890641307485, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
         type: 3}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
         type: 3}
@@ -1685,6 +1720,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 315bb9a38a331ee47af4a02e7ecfb0d8, type: 3}
