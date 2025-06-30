@@ -17,9 +17,9 @@ public class PlayerBehavior : MonoBehaviour
     private GameObject _playerCamOffset;
 
     //CHM - 소백이 관련
-    [SerializeField] private GameObject sobaekPrefab;
-    private GameObject sobaekInstance;
-    private bool hasSubscribedToGameManager = false;
+    //[SerializeField] private GameObject sobaekPrefab;
+    //private GameObject sobaekInstance;
+    //private bool hasSubscribedToGameManager = false;
 
     public bool IsSitting => _isSitting;
     public bool IsMoving => _isMoving;
@@ -37,162 +37,162 @@ public class PlayerBehavior : MonoBehaviour
     }
 
     //CHM - 내 플레이어일 때만 게임 시작 이벤트 구독
-    private void Start()
-    {
-        if (photonView != null && photonView.IsMine)
-        {
-            SubscribeToGameManager();
-        }
-    }
+    //private void Start()
+    //{
+    //    if (photonView != null && photonView.IsMine)
+    //    {
+    //        SubscribeToGameManager();
+    //    }
+    //}
 
     //CHM - 게임 매니저 이벤트 구독
-    private void SubscribeToGameManager()
-    {
-        if (hasSubscribedToGameManager)
-            return;
+    //private void SubscribeToGameManager()
+    //{
+    //    if (hasSubscribedToGameManager)
+    //        return;
 
-        // GameManager가 준비될 때까지 대기 후 구독
-        StartCoroutine(WaitForGameManagerAndSubscribe());
-    }
+    //    // GameManager가 준비될 때까지 대기 후 구독
+    //    StartCoroutine(WaitForGameManagerAndSubscribe());
+    //}
 
     //CHM - GameManager 준비되면 이벤트 구독
-    private IEnumerator WaitForGameManagerAndSubscribe()
-    {
-        // GameManager 인스턴스가 준비될 때까지 대기
-        while (GameManager.Instance == null)
-        {
-            yield return new WaitForSeconds(0.1f);
-        }
+    //private IEnumerator WaitForGameManagerAndSubscribe()
+    //{
+    //    // GameManager 인스턴스가 준비될 때까지 대기
+    //    while (GameManager.Instance == null)
+    //    {
+    //        yield return new WaitForSeconds(0.1f);
+    //    }
 
-        // 게임 시작 상태 확인 및 이벤트 구독
-        if (GameManager.Instance.IsGameStart)
-        {
-            // 이미 게임이 시작된 상태라면 즉시 소백이 생성
-            CreateSobaekWhenReady();
-        }
+    //    // 게임 시작 상태 확인 및 이벤트 구독
+    //    //if (GameManager.Instance.IsGameStart)
+    //    //{
+    //    //    // 이미 게임이 시작된 상태라면 즉시 소백이 생성
+    //    //    CreateSobaekWhenReady();
+    //    //}
 
 
-        hasSubscribedToGameManager = true;
+    //    hasSubscribedToGameManager = true;
 
-        // 게임 상태 주기적으로 체크
-        StartCoroutine(CheckGameStartPeriodically());
-    }
+    //    // 게임 상태 주기적으로 체크
+    //    StartCoroutine(CheckGameStartPeriodically());
+    //}
 
-    //CHM - 게임 시작 상태 주기적 체크
-    private IEnumerator CheckGameStartPeriodically()
-    {
-        bool lastGameStartState = false;
+    ////CHM - 게임 시작 상태 주기적 체크
+    //private IEnumerator CheckGameStartPeriodically()
+    //{
+    //    bool lastGameStartState = false;
 
-        while (this != null && gameObject.activeInHierarchy)
-        {
-            if (GameManager.Instance != null)
-            {
-                bool currentGameStartState = GameManager.Instance.IsGameStart;
+    //    while (this != null && gameObject.activeInHierarchy)
+    //    {
+    //        if (GameManager.Instance != null)
+    //        {
+    //            bool currentGameStartState = GameManager.Instance.IsGameStart;
 
-                // 게임 시작 상태가 변경되었을 때
-                if (currentGameStartState != lastGameStartState)
-                {
-                    if (currentGameStartState)
-                    {
-                        // 게임 시작됨 - 소백이 생성
-                        OnGameStart();
-                    }
-                    else
-                    {
-                        // 게임 종료됨 - 소백이 비활성화
-                        OnGameEnd();
-                    }
+    //            // 게임 시작 상태가 변경되었을 때
+    //            if (currentGameStartState != lastGameStartState)
+    //            {
+    //                if (currentGameStartState)
+    //                {
+    //                    // 게임 시작됨 - 소백이 생성
+    //                    OnGameStart();
+    //                }
+    //                else
+    //                {
+    //                    // 게임 종료됨 - 소백이 비활성화
+    //                    OnGameEnd();
+    //                }
 
-                    lastGameStartState = currentGameStartState;
-                }
-            }
+    //                lastGameStartState = currentGameStartState;
+    //            }
+    //        }
 
-            yield return new WaitForSeconds(0.5f); // 0.5초마다 체크
-        }
-    }
+    //        yield return new WaitForSeconds(0.5f); // 0.5초마다 체크
+    //    }
+    //}
 
     //CHM - 게임 시작 시 호출
-    private void OnGameStart()
-    {
-        CreateSobaekWhenReady();
-    }
-    //CHM - 게임 종료 시 호출
-    private void OnGameEnd()
-    {
+    //private void OnGameStart()
+    //{
+    //    CreateSobaekWhenReady();
+    //}
+    ////CHM - 게임 종료 시 호출
+    //private void OnGameEnd()
+    //{
 
-        if (sobaekInstance != null)
-        {
-            Sobaek sobaekScript = sobaekInstance.GetComponent<Sobaek>();
-            if (sobaekScript != null)
-            {
-                sobaekScript.SetSobaekActive(false);
-            }
-        }
-    }
+    //    if (sobaekInstance != null)
+    //    {
+    //        Sobaek sobaekScript = sobaekInstance.GetComponent<Sobaek>();
+    //        if (sobaekScript != null)
+    //        {
+    //            sobaekScript.SetSobaekActive(false);
+    //        }
+    //    }
+    //}
 
-    //CHM - 플레이어 준비되면 소백이 생성
-    private void CreateSobaekWhenReady()
-    {
-        // 이미 소백이가 있다면 활성화만
-        if (sobaekInstance != null)
-        {
-            Sobaek sobaekScript = sobaekInstance.GetComponent<Sobaek>();
-            if (sobaekScript != null)
-            {
-                sobaekScript.SetSobaekActive(true);
-            }
-            return;
-        }
+    ////CHM - 플레이어 준비되면 소백이 생성
+    //private void CreateSobaekWhenReady()
+    //{
+    //    // 이미 소백이가 있다면 활성화만
+    //    if (sobaekInstance != null)
+    //    {
+    //        Sobaek sobaekScript = sobaekInstance.GetComponent<Sobaek>();
+    //        if (sobaekScript != null)
+    //        {
+    //            sobaekScript.SetSobaekActive(true);
+    //        }
+    //        return;
+    //    }
 
-        StartCoroutine(CreateSobaekCoroutine());
-    }
+    //    StartCoroutine(CreateSobaekCoroutine());
+    //}
 
-    //CHM - 소백이 생성 코루틴
-    private IEnumerator CreateSobaekCoroutine()
-    {
-        // PlayerCam과 XR이 제대로 설정될 때까지 대기
-        while (_playerCam == null || playerOrigin == null)
-        {
-            yield return null;
-        }
+    ////CHM - 소백이 생성 코루틴
+    //private IEnumerator CreateSobaekCoroutine()
+    //{
+    //    // PlayerCam과 XR이 제대로 설정될 때까지 대기
+    //    while (_playerCam == null || playerOrigin == null)
+    //    {
+    //        yield return null;
+    //    }
 
-        yield return new WaitForSeconds(0.1f); // 지연시켜 줘야함
+    //    yield return new WaitForSeconds(0.1f); // 지연시켜 줘야함
 
-        CreateSobaek();
-    }
+    //    CreateSobaek();
+    //}
 
-    //CHM - 소백이 생성 메서드
-    private void CreateSobaek()
-    {
-        if (sobaekPrefab == null)
-        {
-            return;
-        }
-        sobaekInstance = Instantiate(sobaekPrefab);
+    ////CHM - 소백이 생성 메서드
+    //private void CreateSobaek()
+    //{
+    //    if (sobaekPrefab == null)
+    //    {
+    //        return;
+    //    }
+    //    sobaekInstance = Instantiate(sobaekPrefab);
 
 
-        Sobaek sobaekScript = sobaekInstance.GetComponent<Sobaek>();
+    //    Sobaek sobaekScript = sobaekInstance.GetComponent<Sobaek>();
 
-        if (sobaekScript != null)
-        {
-            // 플레이어 카메라 설정
-            sobaekScript.Player = _playerCam.transform;
+    //    if (sobaekScript != null)
+    //    {
+    //        // 플레이어 카메라 설정
+    //        sobaekScript.Player = _playerCam.transform;
 
-            // 게임이 시작된 상태라면 활성화, 아니면 비활성화
-            bool shouldActivate = GameManager.Instance != null && GameManager.Instance.IsGameStart;
-            sobaekScript.SetSobaekActive(shouldActivate);
-        }
-    }
+    //        // 게임이 시작된 상태라면 활성화, 아니면 비활성화
+    //        bool shouldActivate = GameManager.Instance != null && GameManager.Instance.IsGameStart;
+    //        sobaekScript.SetSobaekActive(shouldActivate);
+    //    }
+    //}
 
-    //CHM - 플레이어 파괴시 소백이도 같이 파괴
-    private void OnDestroy()
-    {
-        if (sobaekInstance != null)
-        {
-            Destroy(sobaekInstance);
-        }
+    ////CHM - 플레이어 파괴시 소백이도 같이 파괴
+    //private void OnDestroy()
+    //{
+    //    if (sobaekInstance != null)
+    //    {
+    //        Destroy(sobaekInstance);
+    //    }
 
-    }
+    //}
 
     /* Position 업데이트 및 움직이는 상테인지 체크 */
     private void UpdatePosition()

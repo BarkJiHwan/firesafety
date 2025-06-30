@@ -60,7 +60,7 @@ public partial class FirePreventable : MonoBehaviour
         _xrInteractable = GetComponent<XRSimpleInteractable>();
 
         //CHM - 소백이 상호작용 이벤트 자동 연결
-        SetupSobaekInteraction();
+        //SetupSobaekInteraction();
 
         _view = GetComponent<PhotonView>();
         SetActiveOut();
@@ -80,55 +80,55 @@ public partial class FirePreventable : MonoBehaviour
     }
 
     //CHM - 소백이 상호작용 자동 설정 (싱글톤 방식으로 수정)
-    private void SetupSobaekInteraction()
-    {
-        if (!enableSobaekInteraction)
-            return;
+    //private void SetupSobaekInteraction()
+    //{
+    //    if (!enableSobaekInteraction)
+    //        return;
 
-        // XR Interactable이 없으면 추가
-        if (_xrInteractable == null)
-        {
-            _xrInteractable = gameObject.AddComponent<XRSimpleInteractable>();
-        }
+    //    // XR Interactable이 없으면 추가
+    //    if (_xrInteractable == null)
+    //    {
+    //        _xrInteractable = gameObject.AddComponent<XRSimpleInteractable>();
+    //    }
 
-        // 호버 이벤트 자동 연결 (소백이 찾기는 호버 시에 진행)
-        _xrInteractable.hoverEntered.AddListener(OnSobaekHoverEnter);
-        _xrInteractable.hoverExited.AddListener(OnSobaekHoverExit);
+    //    // 호버 이벤트 자동 연결 (소백이 찾기는 호버 시에 진행)
+    //    _xrInteractable.hoverEntered.AddListener(OnSobaekHoverEnter);
+    //    _xrInteractable.hoverExited.AddListener(OnSobaekHoverExit);
 
 
-    }
+    //}
 
     //CHM - 호버 시작 시 소백이 이동 6-12 함수명변경
-    private void OnSobaekHoverEnter(HoverEnterEventArgs args)
-    {
-        if (Sobaek.Instance != null && enableSobaekInteraction)
-        {
-            Sobaek.Instance.MoveToTarget(transform);
+    //private void OnSobaekHoverEnter(HoverEnterEventArgs args)
+    //{
+    //    if (Sobaek.Instance != null && enableSobaekInteraction)
+    //    {
+    //        Sobaek.Instance.MoveToTarget(transform);
 
-        }
-    }
+    //    }
+    //}
 
-    //CHM - 호버 종료 시 소백이 복귀 + 토킹 중단 6-12 함수명변경
-    private void OnSobaekHoverExit(HoverExitEventArgs args)
-    {
-        if (Sobaek.Instance != null && enableSobaekInteraction)
-        {
-            Sobaek.Instance.StopTalking();
-            Sobaek.Instance.ReturnHome();
-        }
-    }
+    ////CHM - 호버 종료 시 소백이 복귀 + 토킹 중단 6-12 함수명변경
+    //private void OnSobaekHoverExit(HoverExitEventArgs args)
+    //{
+    //    if (Sobaek.Instance != null && enableSobaekInteraction)
+    //    {
+    //        Sobaek.Instance.StopTalking();
+    //        Sobaek.Instance.ReturnHome();
+    //    }
+    //}
 
-    //CHM - 소백이 상호작용 활성화/비활성화 6-12 함수명변경
-    public void SetSobaekInteraction(bool enable)
-    {
-        enableSobaekInteraction = enable;
+    ////CHM - 소백이 상호작용 활성화/비활성화 6-12 함수명변경
+    //public void SetSobaekInteraction(bool enable)
+    //{
+    //    enableSobaekInteraction = enable;
 
-        if (!enable && Sobaek.Instance != null)
-        {
-            Sobaek.Instance.StopTalking();
-            Sobaek.Instance.ReturnHome();
-        }
-    }
+    //    if (!enable && Sobaek.Instance != null)
+    //    {
+    //        Sobaek.Instance.StopTalking();
+    //        Sobaek.Instance.ReturnHome();
+    //    }
+    //}
 
     void Update()
     {

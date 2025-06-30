@@ -150,7 +150,7 @@ public class PlayerSpawner : MonoBehaviour
     {
         if (!ValidateSobaekSetup())
             return;
-        if (Sobaek.Instance != null)
+        if (ExitSobaek.Instance != null)
             return;
 
         GameObject sobaekObj = CreateSobaek(player);
