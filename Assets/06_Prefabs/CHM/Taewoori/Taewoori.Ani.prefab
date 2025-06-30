@@ -1095,9 +1095,9 @@ MonoBehaviour:
   currentHealth: 0
   useAnimation: 1
   feverTimeExtraHealth: 50
-  throwForce: 1
-  upwardForce: 4
-  fireRadius: 2
+  throwForce: 0.5
+  upwardForce: 2
+  fireRadius: 1
   useRandomDirection: 1
   maxSmallTaewooriCount: 4
   projectileCooldown: 10
@@ -1533,7 +1533,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8457264802037841164}
   m_LocalRotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.5, z: 0}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
