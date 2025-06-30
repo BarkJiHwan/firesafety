@@ -36,7 +36,6 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [Header("양손 소화기 데이터")]
     [SerializeField] public HandData _leftHand;
     [SerializeField] public HandData _rightHand;
-
     [Header("공통 설정")]
     [SerializeField] private float _sprayLength = 2.5f;
     [SerializeField] private float _sprayRadius = 1;
@@ -81,21 +80,18 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     }
     private IEnumerator Start()
     {
-        while (SupplyManager.Instance == null)
-        {
-            yield return null;
-        }
+        yield return new WaitUntil(() => SupplyManager.Instance != null);
         if (tutoSuppressor != null)
         {
             _rightHand.interator = tutoSuppressor.rightHand.interator;
             _leftHand.interator = tutoSuppressor.leftHand.interator;
         }
-        SupplyManager.Instance.RegisterHand(EHandType.LeftHand, _leftHand, false);
-        SupplyManager.Instance.RegisterHand(EHandType.RightHand, _rightHand, false);
+        _hands[EHandType.LeftHand] = _leftHand;
+        _hands[EHandType.RightHand] = _rightHand;
         if (pView != null && pView.IsMine)
         {
-            _hands[EHandType.LeftHand] = _leftHand;
-            _hands[EHandType.RightHand] = _rightHand;
+            SupplyManager.Instance.RegisterHand(EHandType.LeftHand, _leftHand, false);
+            SupplyManager.Instance.RegisterHand(EHandType.RightHand, _rightHand, false);
             SupplyManager.Instance.suppressantManager = this;
             UnityEngine.Debug.Log("등록 완료 본게임");
         }
@@ -107,11 +103,11 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
-        if (!pView.IsMine)
+        if (!GameManager.Instance.IsGameStart)
         {
             return;
         }
-        if (!GameManager.Instance.IsGameStart)
+        if (!pView.IsMine)
         {
             return;
         }
@@ -132,15 +128,6 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         var hand = GetHand(type);
         _triggerValue = hand.triggerAction.action.ReadValue<float>();
         _isPressed = _triggerValue > 0.1f;
-        //_colHitCount = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
-        //if (_isPressed && _colHitCounts > 0 && !_isFeverTime) <-- 본래 조건문
-        //if (hand.interator.TryGetCurrent3DRaycastHit(out RaycastHit hit) && !_isFeverTime && hand.triggerAction.action.WasPressedThisFrame())
-        //{
-        //    if (IsInLayerMask(hit.collider.gameObject, _supplyMask))
-        //    {
-        //        Supply(type);
-        //    }
-        //}
         if (_isPressed && !hand.isSpraying && hand.enabled && hand.triggerAction.action.WasPressedThisFrame())
         {
             if (_currentCor == null)
@@ -344,6 +331,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         {
             hand.initialFireFX.Stop();
         }
+        pView.RPC("RPC_StopPlayFX", RpcTarget.Others, type);
         _cacheds.Clear();
         hand.isSpraying = false;
         hand.initialFire = false;
@@ -351,7 +339,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     }
     public void Supply(EHandType type)
     {
-        if (!pView.IsMine || GameManager.Instance.CurrentPhase != GamePhase.Fire)
+        if (!pView.IsMine || GameManager.Instance.CurrentPhase == GamePhase.Waiting || !GameManager.Instance.IsGameStart)
         {
             return;
         }
@@ -368,11 +356,11 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
                 _leftHand.modelPrefab.SetActive(false);
                 _leftHand.enabled = false;
             }
+            pView.RPC("RPC_SetActiveModelFalse", RpcTarget.Others);
+            pView.RPC("RPC_SetActiveModel", RpcTarget.Others, type);
             hand.modelPrefab.SetActive(true);
             hand.enabled = true;
             _sprayOrigin = hand.modelPrefab.transform.Find("SprayOrigin");
-            pView.RPC("RPC_SetActiveModelFalse", RpcTarget.Others);
-            pView.RPC("RPC_SetActiveModel", RpcTarget.Others, type);
         }
         if (hand.enabled && _currentAmount < _maxAmount)
         {
@@ -430,20 +418,16 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPC_StopPlayFX(EHandType type)
     {
-        if (!pView.IsMine)
-        {
-            return;
-        }
         var hand = GetHand(type);
-        if (hand != null && hand.initialFireFX.isPlaying)
+        if (hand.initialFireFX.isPlaying)
         {
             hand.initialFireFX.Stop();
         }
-        if (hand != null && hand.normalFireFX.isPlaying)
+        if (hand.normalFireFX.isPlaying)
         {
             hand.normalFireFX.Stop();
         }
-        if (hand != null && hand.zeroAmountFireFX.isPlaying)
+        if (hand.zeroAmountFireFX.isPlaying)
         {
             hand.zeroAmountFireFX.Stop();
         }
@@ -452,7 +436,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     private void RPC_SetActiveModel(EHandType type)
     {
         var hand = GetHand(type);
-        if (hand != null && !hand.modelPrefab.activeSelf)
+        if (hand.modelPrefab != null && !hand.modelPrefab.activeSelf)
         {
             hand.modelPrefab.SetActive(true);
         }
@@ -460,13 +444,13 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPC_SetActiveModelFalse()
     {
-        if (_rightHand != null && !_rightHand.enabled && _rightHand.modelPrefab.activeSelf)
-        {
-            _rightHand.modelPrefab.SetActive(false);
-        }
-        if (_leftHand != null && !_leftHand.enabled && _leftHand.modelPrefab.activeSelf)
+        if (_leftHand.modelPrefab.activeSelf)
         {
             _leftHand.modelPrefab.SetActive(false);
+        }
+        if (_rightHand.modelPrefab.activeSelf)
+        {
+            _rightHand.modelPrefab.SetActive(false);
         }
     }
     //private Transform GetHandParticle(EHandType type)

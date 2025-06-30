@@ -76,6 +76,9 @@ public class GameManager : MonoBehaviour
     public event Action onGamePause;
     public event Action onGameResume;
 
+    public bool IsPausing { get; private set; }
+    public float[] StartTime { get; private set; }
+
     private void Awake()
     {
         _dialoguePlayer = FindObjectOfType<DialoguePlayer>();
@@ -92,6 +95,9 @@ public class GameManager : MonoBehaviour
     {
         CachingPhaseList();
         GameStart();
+
+        // Time 세팅
+        SetStartTime();
     }
 
     private IEnumerator GameTimerRoutine()
@@ -255,5 +261,16 @@ public class GameManager : MonoBehaviour
     {
         public GamePhase Phase;
         public float StartTime;
+    }
+
+    // Phases StartTime 받아오기
+    void SetStartTime()
+    {
+        StartTime = new float[_phases.Count];
+        int index = 0;
+        for(int i=0; i<_phases.Count; i++)
+        {
+            StartTime[i] = _phases[i].StartTime;
+        }
     }
 }

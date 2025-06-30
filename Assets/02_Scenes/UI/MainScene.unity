@@ -187,7 +187,12 @@ PrefabInstance:
     - target: {fileID: 3730916226655663049, guid: f083486cb0f046249947a496ebbff5b9,
         type: 3}
       propertyPath: angleThreshold
-      value: 50
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 3730916226655663049, guid: f083486cb0f046249947a496ebbff5b9,
+        type: 3}
+      propertyPath: rotationDuration
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 3730916226655663094, guid: f083486cb0f046249947a496ebbff5b9,
         type: 3}
