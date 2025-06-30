@@ -5,6 +5,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class Phase2_FireAlram : MonoBehaviour
 {
+    [SerializeField] private PlayerSpawner playerSpawner;
     public void OnSelectEntered(SelectEnterEventArgs args)
     {
         bool info = FindObjectOfType<Phase2InteractManager>().IsWear;
@@ -17,7 +18,7 @@ public class Phase2_FireAlram : MonoBehaviour
             FireAlarm();
             //무기장착
             Phase2ObjectManager.Instance.GrabWeapon(type);
-            PlayerSpawner.StartSobaekCar();
+            playerSpawner.StartSobaekCar();
         }
     }
     private void FireAlarm()

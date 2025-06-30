@@ -19,13 +19,13 @@ public class Teleport : MonoBehaviour
     private SplineAnimate sobaekCarSpline;
 
     [SerializeField] private PlayableDirector _playerbleDir;
+    [SerializeField] private PlayerSpawner _playerSpawner;
 
     /// <summary>
     /// 초기화 및 컴포넌트 찾기 시작
     /// </summary>
     void Start()
     {
-        // 잠시 기다렸다가 찾기
         StartCoroutine(FindComponentsDelayed());
     }
 
@@ -34,10 +34,10 @@ public class Teleport : MonoBehaviour
     /// </summary>
     IEnumerator FindComponentsDelayed()
     {
-        yield return new WaitForSeconds(0.1f); // PlayerSpawner 실행 기다리기
+        yield return new WaitWhile(() => _playerSpawner.CurrentPlayer == null);
 
-        vignetteController = PlayerSpawner.GetPlayerVignette();
-        sobaekCarSpline = PlayerSpawner.GetSobaekCarSpline();
+        vignetteController = _playerSpawner.GetPlayerVignette();
+        sobaekCarSpline = _playerSpawner.GetSobaekCarSpline();
 
         if (vignetteController == null)
         {

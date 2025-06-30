@@ -62,12 +62,14 @@ public class DialogueLoader : MonoBehaviour
     // 처음은 튜토리얼 대화 흐름 읽어오기
     private void Start()
     {
-        if (SceneManager.GetActiveScene().name.Equals("PlayerScene_BJH_Test"))
+        if (SceneManager.GetActiveScene().name.Equals("PlayerScene_BJH_Test")
+            || SceneManager.GetActiveScene().name.Equals("FirePreventScene"))
         {
             LoadTutorialData();
         }
 
-        if (SceneManager.GetActiveScene().name.Equals("ExitScenes_CHM.Test"))
+        if (SceneManager.GetActiveScene().name.Equals("ExitScenes_CHM.Test")
+            || SceneManager.GetActiveScene().name.Equals("ExitScene"))
         {
             LoadExitData();
         }

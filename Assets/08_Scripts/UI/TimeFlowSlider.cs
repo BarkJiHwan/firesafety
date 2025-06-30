@@ -10,12 +10,20 @@ public class TimeFlowSlider : MonoBehaviour
 
     void Start()
     {
-        characterImg.sprite = SceneController.Instance.GetChooseCharacterType().characterImage;
+        if (SceneController.Instance != null)
+        {
+            characterImg.sprite = SceneController.Instance.GetChooseCharacterType().characterImage;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.Instance == null)
+        {
+            return;
+        }
+
         if(GameManager.Instance.CurrentPhase >= GamePhase.Prevention)
         {
             if(GameManager.Instance.IsPausing == true)
