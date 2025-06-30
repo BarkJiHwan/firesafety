@@ -15,6 +15,7 @@ public class ObjectSyncronizer : MonoBehaviour
     public SyncVector position;
     public SyncVector rotation;
     public GameObject syncTarget;
+    public ScaledHeightSyncronizer scaledHeightSyncronizer;
 
     private void FixedUpdate()
     {
@@ -31,6 +32,12 @@ public class ObjectSyncronizer : MonoBehaviour
         float x = position.x ? myPos.x : targetPos.x;
         float y = position.y ? myPos.y : targetPos.y;
         float z = position.z ? myPos.z : targetPos.z;
+
+        // ScaledHeightSYncronizer 있을경우 y값 대체함
+        if (scaledHeightSyncronizer != null)
+        {
+            y = scaledHeightSyncronizer.CalculateScaledHeight();
+        }
 
         syncTarget.transform.position = new Vector3(x, y, z);
     }
