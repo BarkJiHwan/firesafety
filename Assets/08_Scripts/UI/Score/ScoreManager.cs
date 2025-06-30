@@ -46,15 +46,11 @@ public class ScoreManager : MonoBehaviour, IScorable
     public int[] GetScores(int sceneIndex)
     {
         int[] scores = new int[dicScore.Count / 2];
-        int index = 0;
-        //foreach(int score in dicScore.Values)
-        //{
-        //    scores[index] = score;
-        //    index++;
-        //}
+
         for(int i=sceneIndex; i<sceneIndex + (dicScore.Count / 2); i++)
         {
-            scores[i] = dicScore[(ScoreType)i];
+            Debug.Log("SceneIdx :" + sceneIndex + " DicScoreCnt : " + dicScore.Count + "index:" + i);
+            scores[i-sceneIndex] = dicScore[(ScoreType)i];
         }
         return scores;
     }

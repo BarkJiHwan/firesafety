@@ -67,9 +67,11 @@ public class FixedViewCanvasController : MonoBehaviour
 
         // 1. 점수판
         // 화재 페이즈가 끝나면 점수판 출력 (GameManager.Instance.CurrentPhase == leaveDangerArea)
+        // GameManger OnPhaseChanged 구독
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
+            GameManager.Instance.OnPhaseChanged += TurnTimeBoard;
         }
 
         // 2. 대화창
@@ -79,13 +81,11 @@ public class FixedViewCanvasController : MonoBehaviour
             conversationBoard.SetActive(false);
         }
 
-        // 4. 타이머
+        // 3. 타이머
         if(timePanel.activeSelf == true)
         {
             timePanel.SetActive(false);
         }
-        // GameManger OnPhaseChanged 구독
-        GameManager.Instance.OnPhaseChanged += TurnTimeBoard;
     }
 
     // ScoreBoard 켜는 것
