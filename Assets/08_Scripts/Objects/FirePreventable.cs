@@ -29,9 +29,9 @@ public partial class FirePreventable : MonoBehaviour
     [SerializeField, Range(0.1f, 2f)]
     private float _shieldRadius = 1f;
 
-    //CHM - 소백이 연동 설정
-    [Header("소백이 연동")]
-    [SerializeField] private bool enableSobaekInteraction = true; // 소백이 상호작용 활성화
+    // //CHM - 소백이 연동 설정
+    // [Header("소백이 연동")]
+    // [SerializeField] private bool enableSobaekInteraction = true; // 소백이 상호작용 활성화
 
     Renderer _renderer;
     Material[] originMats;

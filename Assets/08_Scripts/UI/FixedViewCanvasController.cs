@@ -36,8 +36,6 @@ public class FixedViewCanvasController : MonoBehaviour
     [Header("타이머")]
     [SerializeField] GameObject timePanel;
 
-    UIType pastDiaType = UIType.None;
-
     ScoreBoardController scoreBoardCtrl;
     ConversationController conversationCtrl;
 

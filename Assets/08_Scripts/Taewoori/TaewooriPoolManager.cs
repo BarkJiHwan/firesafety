@@ -89,7 +89,6 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
 
     private static TaewooriPoolManager _instance;
     public static TaewooriPoolManager Instance => _instance;
-    public event Action OnScoreBoardOn;
     #endregion
 
     #region 태우리 생존시간 추적 시스템 추가

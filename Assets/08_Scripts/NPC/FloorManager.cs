@@ -17,7 +17,6 @@ public class FloorManager : MonoBehaviour
     #region 인스펙터 설정
     [Header("층 기본 설정")]
     [SerializeField] private int floorNumber = 4;
-    [SerializeField] private FloorEventType floorEventType = FloorEventType.Nothing;
 
     [Header("웨이포인트 설정")]
     [SerializeField] private GameObject startWaypoint;

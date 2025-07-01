@@ -10,7 +10,6 @@ public class ExitTaewoori : BaseTaewoori
     [Header("이동 설정")]
     [SerializeField] private float floatingSpeed = 1f; // 둥둥 효과 속도
     [SerializeField] private float floatingHeight = 0.2f; // 둥둥 효과 높이
-    [SerializeField] private float moveSpeed = 1f; // 플레이어 향해 이동 속도
     [SerializeField] private float rotationSpeed = 2f; // 회전 속도
     #endregion
 
@@ -44,7 +43,7 @@ public class ExitTaewoori : BaseTaewoori
     {
         if (!isDead)
         {
-            UpdateFloatingEffect(); 
+            UpdateFloatingEffect();
             UpdateRotation(); // 플레이어 바라보기
         }
     }
@@ -112,7 +111,7 @@ public class ExitTaewoori : BaseTaewoori
 
     #region 클릭 이벤트
     /// <summary>
-    /// 클릭 공격 
+    /// 클릭 공격
     /// </summary>
     void OnClicked(ActivateEventArgs args)
     {

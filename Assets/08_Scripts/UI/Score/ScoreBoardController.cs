@@ -30,10 +30,7 @@ public class ScoreBoardController : MonoBehaviour
     [SerializeField] Sprite[] stampTypes;
     [SerializeField] string[] mentionText;
 
-    int startIndex = 0;
     ScoreManager scoreMgr;
-
-    public event Action<SceneType> OnScoreBoardOpen;
 
     private void Awake()
     {
@@ -49,7 +46,7 @@ public class ScoreBoardController : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
     // 점수판 초기화

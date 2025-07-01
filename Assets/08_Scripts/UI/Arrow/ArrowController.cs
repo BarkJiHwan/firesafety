@@ -10,7 +10,6 @@ public class ArrowController : MonoBehaviour
     [Header("원 회전")]
     [SerializeField] float radius = 2f;
     [SerializeField] float speed = 5f;
-    [SerializeField] float appearDuration = 1f;
     [SerializeField] float heightOffset = 0.7f;
     [SerializeField] Vector3 rotArrow;
 

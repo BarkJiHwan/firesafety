@@ -43,9 +43,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [SerializeField] private int _maxAmount = 100;
     [SerializeField] private int _decreaseAmount = 1;
     [SerializeField] private LayerMask _fireMask;
-    [SerializeField] private float _refillCooldown = 3f;
     [SerializeField] private LayerMask _supplyMask;
-    [SerializeField] private float _supplyDetectRange = 0.8f;
     [SerializeField] private float _supplyCooldown;
     [SerializeField] private Transform _sprayOrigin; //스프레이 발사 지점
     [SerializeField] private int _currentAmount = 100;
@@ -152,7 +150,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         }
     }
 
-    //CHM 변경 
+    //CHM 변경
     //private void Spray(HandData hand)
     //{
     //    _sprayStartPos = _sprayOrigin.transform.position;
@@ -475,5 +473,5 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         Gizmos.DrawLine(start, end);
     }
 
-  
+
 }
