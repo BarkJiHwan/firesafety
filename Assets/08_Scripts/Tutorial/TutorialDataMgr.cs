@@ -1,9 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Photon.Pun;
 using UnityEngine;
-using Hashtable = ExitGames.Client.Photon.Hashtable;
-public class TutorialDataMgr : MonoBehaviourPun
+public class TutorialDataMgr : MonoBehaviour
 {
     public static TutorialDataMgr Instance { get; private set; }
     [field: Header("플레이어별 상호작용 오브젝트 (0~5번)")]
@@ -16,14 +14,11 @@ public class TutorialDataMgr : MonoBehaviourPun
     [Header("기본 데이터 (에러 발생 시 사용)")]
     [SerializeField] private TutorialData _defaultData;
 
-    private Coroutine _tutorialRoutine;
-
     public bool IsTriggerSupply { get; set; }
-    public bool IsStartTutorial { get; set; }
-    public bool IsTutorialFailed { get; set; }
 
-    [field: SerializeField, Header("튜토리얼시간은 90초 인스팩터창에서 임시로 노출 시켜 둠")]
-    public float Timer { get; private set; } = 90f;
+    public int PlayerNumber { get => _playerNumber; set => _playerNumber = value; }
+
+    private int _playerNumber;
 
     void Awake()
     {
@@ -33,9 +28,13 @@ public class TutorialDataMgr : MonoBehaviourPun
             return;
         }
         Instance = this;
-        IsStartTutorial = false;
-        IsTutorialFailed = false;
         IsTriggerSupply = false;
+    }
+
+    public void SetNumber(int num)
+    {
+        Debug.Log(num + "내 번호 입니다.");
+        PlayerNumber = num;
     }
 
     // PlayerList 인덱스 기반 데이터 반환
@@ -60,32 +59,8 @@ public class TutorialDataMgr : MonoBehaviourPun
 
     public GameObject GetInteractObject(int playerListIndex)
     {
-
         if (playerListIndex < 0 || playerListIndex >= InteractObjects.Count)
         { return null; }
         return InteractObjects[playerListIndex];
-
     }
-    public void StartTutorial()
-    {
-        if (PhotonNetwork.LocalPlayer.IsLocal)
-        {
-            _tutorialRoutine = StartCoroutine(TutorialRoutine());
-        }
-    }
-
-    private IEnumerator TutorialRoutine()
-    {
-        yield return new WaitUntil(() => IsStartTutorial);
-        while (Timer > 0)
-        {
-            Timer -= Time.deltaTime;
-            yield return null;
-        }
-        TutorialFailed();
-    }
-
-    public void TutorialFailed() => IsTutorialFailed = true;
-
-    public void StopTutorialRoutine() => StopCoroutine(_tutorialRoutine);
 }

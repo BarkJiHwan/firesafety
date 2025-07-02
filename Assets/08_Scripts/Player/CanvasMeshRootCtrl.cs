@@ -7,6 +7,7 @@ public class CanvasMeshRootCtrl : MonoBehaviour
     [SerializeField] GameObject canvas;
     [SerializeField] GameObject curvedMesh;
     [SerializeField] float angleThreshold = 30f;
+    [SerializeField] float rotationSpeed = 90f;
     public bool isPlayerMove;
 
     Transform xrCam;
@@ -18,6 +19,10 @@ public class CanvasMeshRootCtrl : MonoBehaviour
     Camera uiCam;
 
     bool isMade;
+    bool isRotating;
+
+    float rotationStartAngle;
+    float rotationTargetAngle;
 
     void Awake()
     {
@@ -44,7 +49,7 @@ public class CanvasMeshRootCtrl : MonoBehaviour
         {
             xrCam = Camera.main.transform;
             lastYAngle = GetYaw(xrCam.forward);
-            FollowUser();
+            FollowUser(lastYAngle);
             isMade = true;
         }
     }
@@ -59,7 +64,7 @@ public class CanvasMeshRootCtrl : MonoBehaviour
         {
             xrCam = Camera.main.transform;
             lastYAngle = GetYaw(xrCam.forward);
-            FollowUser();
+            FollowUser(lastYAngle);
             isMade = true;
         }
         float currentYaw = GetYaw(xrCam.forward);
@@ -67,52 +72,85 @@ public class CanvasMeshRootCtrl : MonoBehaviour
 
         if (isPlayerMove == true)
         {
-            FollowUserMove();
-
-            if (angleDelta > angleThreshold)
+            if (isRotating == false)
             {
-                FollowUserRotation(currentYaw);
-                lastYAngle = currentYaw;
+                FollowUserMove();
+            }
+
+            if (angleDelta > angleThreshold && isRotating == false)
+            {
+                rotationStartAngle = transform.eulerAngles.y;
+                rotationTargetAngle = currentYaw;
+                isRotating = true;
+            }
+            if (isRotating == true)
+            {
+                FollowUserRotation(rotationTargetAngle);
             }
         }
         else
         {
-            if (angleDelta > angleThreshold)
+            if (angleDelta > angleThreshold && isRotating == false)
             {
-                FollowUser();
-                lastYAngle = currentYaw;
+                rotationStartAngle = transform.eulerAngles.y;
+                rotationTargetAngle = currentYaw;
+                isRotating = true;
+            }
+            if (isRotating == true)
+            {
+                FollowUser(rotationTargetAngle);
             }
         }
     }
 
     void FollowUserMove()
     {
+        //float currentYaw = GetYaw(xrCam.forward);
         Quaternion rot = Quaternion.Euler(0, lastYAngle, 0);
         Vector3 rotatedOffset = rot * curvedManager.xrRigCurvedMeshDist;
 
         Vector3 pos = xrCam.position + new Vector3(rotatedOffset.x, -0.9f, rotatedOffset.z);
         transform.position = pos;
+        transform.rotation = rot;
     }
 
-    void FollowUser()
+    void FollowUser(float angle)
     {
-        Vector3 forward = new Vector3(xrCam.forward.x, 0, xrCam.forward.z).normalized;
+        Quaternion targetRot = Quaternion.Euler(0, angle, 0);
 
-        Quaternion rot = Quaternion.LookRotation(forward);
-        Vector3 rotatedOffset = rot * curvedManager.xrRigCurvedMeshDist;
+        Vector3 rotatedOffset = targetRot * curvedManager.xrRigCurvedMeshDist;
+        Vector3 targetPos = xrCam.position + new Vector3(rotatedOffset.x, 0f, rotatedOffset.z);
+        targetPos.y = -0.2f;
 
-        Vector3 pos = xrCam.position + new Vector3(rotatedOffset.x, 0, rotatedOffset.z);
+        transform.position = targetPos;
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, Time.deltaTime * rotationSpeed);
 
-        pos.y = 0;
-
-        transform.position = pos;
-        transform.rotation = rot;
+        float angleToTarget = Quaternion.Angle(transform.rotation, targetRot);
+        if(angleToTarget < 1f)
+        {
+            transform.rotation = targetRot;
+            isRotating = false;
+            lastYAngle = angle;
+        }
     }
 
     void FollowUserRotation(float angle)
     {
-        Quaternion rot = Quaternion.Euler(0, angle, 0);
-        transform.rotation = rot;
+        Quaternion targetRot = Quaternion.Euler(0, angle, 0);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 5f);
+
+        Quaternion currentRot = transform.rotation;
+        Vector3 rotatedOffset = currentRot * curvedManager.xrRigCurvedMeshDist;
+        Vector3 targetPos = xrCam.position + new Vector3(rotatedOffset.x, -0.9f, rotatedOffset.z);
+        transform.position = targetPos;
+
+        float angleToTarget = Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.y, angle));
+        if (angleToTarget < 1f)
+        {
+            transform.rotation = targetRot;
+            isRotating = false;
+            lastYAngle = angle;
+        }
     }
 
     float GetYaw(Vector3 forward)

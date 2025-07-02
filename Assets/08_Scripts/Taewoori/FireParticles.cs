@@ -15,7 +15,7 @@ public class FireParticles : MonoBehaviour
     [Header("시간 설정")]
     [SerializeField] private float autoDestroyTime = 5f; // 자동 파괴 시간
 
-    [Header("지면 감지 설정")] // CHM 추가함: 구체 감지 설정
+    [Header("지면 감지 설정")]
     [SerializeField] private float sphereRadius = 0.2f; // 구체 반지름
     #endregion
 
@@ -36,7 +36,6 @@ public class FireParticles : MonoBehaviour
     private void Start()
     {
         SetupPhysics();
-        SetupCollisionIgnoring();
     }
 
     private void OnEnable()
@@ -61,18 +60,6 @@ public class FireParticles : MonoBehaviour
         if (rb != null)
         {
             rb.freezeRotation = true;
-        }
-    }
-
-    /// <summary>
-    /// 충돌 무시 설정
-    /// </summary>
-    private void SetupCollisionIgnoring()
-    {
-        // 태우리와 물리적 충돌 무시 설정
-        if (originTaewoori != null)
-        {
-            IgnoreCollisionWith(originTaewoori.GetComponent<Collider>());
         }
     }
 
@@ -205,7 +192,7 @@ public class FireParticles : MonoBehaviour
     }
 
     /// <summary>
-    /// CHM 추가함: 구체 형태로 지면 감지하여 정확한 위치 계산
+    /// 구체 형태로 지면 감지하여 정확한 위치 계산
     /// </summary>
     /// <returns>스몰태우리 생성 위치</returns>
     private Vector3 GetGroundPosition()

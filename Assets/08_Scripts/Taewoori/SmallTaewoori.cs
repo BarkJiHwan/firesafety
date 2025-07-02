@@ -11,34 +11,19 @@ public class SmallTaewoori : NetworkTaewoori
     private Taewoori originTaewoori;
     #endregion
 
-    #region 프로퍼티
-    /// <summary>
-    /// 이 스몰태우리를 생성한 원본 태우리 참조
-    /// </summary>
-    public Taewoori OriginTaewoori => originTaewoori;
+    #region 유니티 라이프사이클
+    protected override void Awake()
+    {
+        // 스몰태우리는 파티클 기반이므로 애니메이션 사용 안함
+        useAnimation = false;
+
+        // 부모 클래스 초기화 호출
+        base.Awake();
+    }
     #endregion
 
     #region 초기화 메서드들
-    /// <summary>
-    /// 마스터용 초기화 (카운트 증가 포함) - 직접 생성 시 사용
-    /// </summary>
-    /// <param name="taewooriManager">풀 매니저 참조</param>
-    /// <param name="taewoori">원본 태우리 참조</param>
-    /// <param name="id">네트워크 고유 ID</param>
-    public void Initialize(TaewooriPoolManager taewooriManager, Taewoori taewoori, int id)
-    {
-        SetupNetwork(taewooriManager, id, false);
-        originTaewoori = taewoori;
-
-        // 마스터만 카운트 증가
-        if (PhotonNetwork.IsMasterClient && manager != null && originTaewoori != null)
-        {
-            manager.IncrementSmallTaewooriCount(originTaewoori);
-        }
-
-        InitializeHealth();
-        ResetState();
-    }
+ 
 
     /// <summary>
     /// 마스터용 초기화 (카운트 증가 없이) - 파이어파티클에서 생성할 때 사용
@@ -118,7 +103,7 @@ public class SmallTaewoori : NetworkTaewoori
     }
     #endregion
 
-    #region 사망 처리 (NetworkTaewoori 추상 메서드 구현)
+    #region 사망 처리 
     /// <summary>
     /// 스몰태우리 사망 처리 - 마스터는 카운트 감소 및 네트워크 동기화, 클라이언트는 풀 반환만
     /// </summary>
@@ -129,6 +114,7 @@ public class SmallTaewoori : NetworkTaewoori
 
         isDead = true;
 
+        // 애니메이션이 없으므로 즉시 사망 처리
         // 마스터만 카운트 감소 및 네트워크 동기화
         if (PhotonNetwork.IsMasterClient && !isClientOnly)
         {

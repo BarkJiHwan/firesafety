@@ -1,422 +1,461 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿//using System.Collections;
+//using UnityEngine;
 
-public class Sobaek : MonoBehaviour
-{
-    #region 인스펙터 설정
-    [Header("기본 위치 설정")]
-    [SerializeField] private Transform player; // 플레이어 프리팹 직접 할당
-    [SerializeField] private float offsetX = 1.5f;
-    [SerializeField] private float offsetY = 0.5f;
-    [SerializeField] private float offsetZ = 0.5f;
-    [SerializeField] private bool stayOnRightSide = true;
+///// <summary>
+///// 화재/예방 씬 전용 소백이 - GameManager 연동 및 상호작용 시스템
+///// </summary>
+//public class Sobaek : MonoBehaviour
+//{
+//    #region 인스펙터 설정
+//    [Header("기본 위치 설정")]
+//    [SerializeField] private float offsetX = 1.5f;
+//    [SerializeField] private float offsetY = 0.5f;
+//    [SerializeField] private float offsetZ = 0.5f;
+//    [SerializeField] private bool stayOnRightSide = true;
 
-    [Header("둥둥 떠다니기 효과")]
-    [SerializeField] private float floatAmplitude = 0.3f;
-    [SerializeField] private float floatSpeed = 1f;
-    [SerializeField] private float lookAtSpeed = 2f;
+//    [Header("둥둥 떠다니기 효과")]
+//    [SerializeField] private float floatAmplitude = 0.3f;
+//    [SerializeField] private float floatSpeed = 1f;
+//    [SerializeField] private float lookAtSpeed = 2f;
 
-    [Header("이동 설정")]
-    [SerializeField] private float moveSpeed = 8f;
-    [SerializeField] private float followSpeed = 5f; // 카메라 따라다니기 속도
-    [SerializeField] private float arrivalDistance = 0.5f;
+//    [Header("이동 설정")]
+//    [SerializeField] private float moveSpeed = 8f;
+//    [SerializeField] private float followSpeed = 5f;
+//    [SerializeField] private float arrivalDistance = 0.5f;
 
-    [Header("소백카 설정")]
-    [SerializeField] private GameObject sobaekCar;
+//    [Header("생성 설정")]
+//    [SerializeField] private bool startInactive = true; // 비활성화 상태로 시작
+//    #endregion
 
-    [Header("테스트용 설정")]
-    [SerializeField] private bool testActivateCar = false;
-    #endregion
+//    #region 프로퍼티
+//    public static Sobaek Instance { get; private set; }
+//    public Transform Player { get => playerTransform; set => playerTransform = value; }
+//    public bool IsMoving => isMovingToTarget || isMovingToHome;
+//    public bool IsTalking => isTalking;
+//    public bool SobaekInteractionEnabled
+//    {
+//        get => sobaekInteractionEnabled;
+//        set
+//        {
+//            sobaekInteractionEnabled = value;
+//            if (!value)
+//            {
+//                StopTalkingAndReturnHome();
+//            }
+//        }
+//    }
+//    #endregion
 
-    #region 프로퍼티
-    public static Sobaek Instance { get; private set; }
-    public Transform Player { get => player; set => player = value; }
-    public bool IsMoving => isMovingToTarget || isMovingToHome;
-    public bool IsTalking => isTalking;
-    public bool SobaekInteractionEnabled
-    {
-        get => sobaekInteractionEnabled;
-        set
-        {
-            sobaekInteractionEnabled = value;
-            if (!value)
-            {
-                StopTalkingAndReturnHome();
-            }
-        }
-    }
-    public bool UseGameManager { get; private set; }
-    #endregion
+//    #region 변수 선언
+//    private Transform playerTransform;
+//    private Vector3 homePosition;
+//    private Vector3 basePosition;
+//    private Vector3 targetPosition;
+//    private Transform currentTarget;
+//    private Animator animator;
 
-    #region 변수 선언
-    private Vector3 homePosition;
-    private Vector3 basePosition;
-    private Vector3 targetPosition;
-    private Transform currentTarget;
-    private Animator animator;
+//    private bool isMovingToTarget = false;
+//    private bool isMovingToHome = false;
+//    private bool isTalking = false;
+//    private bool sobaekInteractionEnabled = true;
 
-    private bool isMovingToTarget = false;
-    private bool isMovingToHome = false;
-    private bool isTalking = false;
-    private bool sobaekInteractionEnabled = true;
+//    private float floatTimer = 0f;
 
-    private float floatTimer = 0f;
-    private GamePhase lastPhase;
+//    // 애니메이션 해시
+//    private readonly int hashIsFlying = Animator.StringToHash("isFlying");
+//    private readonly int hashIsTalking = Animator.StringToHash("isTalking");
+//    private readonly int hashBackJump = Animator.StringToHash("BackJump");
+//    #endregion
 
-    // 애니메이션 해시
-    private readonly int hashIsFlying = Animator.StringToHash("isFlying");
-    private readonly int hashIsTalking = Animator.StringToHash("isTalking");
-    private readonly int hashBackJump = Animator.StringToHash("BackJump");
-    #endregion
+//    #region 유니티 라이프사이클
+//    /// <summary>
+//    /// 싱글톤 초기화
+//    /// </summary>
+//    void Awake()
+//    {
+//        InitializeSingleton();
+//    }
 
-    #region 유니티 라이프사이클
-    void Start()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+//    /// <summary>
+//    /// 컴포넌트 초기화 및 이벤트 등록
+//    /// </summary>
+//    void Start()
+//    {
+//        InitializeComponents();
+//        SetupInitialPosition();
+//        SubscribeToGameManagerEvents();
+//    }
 
-        InitializeComponents();
+//    /// <summary>
+//    /// 매 프레임 이동 및 효과 업데이트
+//    /// </summary>
+//    void LateUpdate()
+//    {
+//        UpdateMovementAndEffects();
+//    }
 
-        // 플레이어가 설정되어 있는지 확인 후 홈 포지션 설정
-        if (player != null)
-        {
-            SetHomePosition();
-            basePosition = homePosition;
-            transform.position = homePosition;
-        }
-        else
-        {
-            // 플레이어가 없으면 현재 위치를 홈으로 설정
-            basePosition = transform.position;
-        }
+//    /// <summary>
+//    /// 이벤트 해제 및 싱글톤 정리
+//    /// </summary>
+//    void OnDestroy()
+//    {
+//        UnsubscribeFromGameManagerEvents();
 
-        // 소백카 초기 비활성화
-        if (sobaekCar != null)
-        {
-            sobaekCar.SetActive(false);
-        }
-    }
+//        if (Instance == this)
+//        {
+//            Instance = null;
+//        }
+//    }
+//    #endregion
 
-    void LateUpdate()
-    {
-        if (UseGameManager)
-        {
-            CheckGamePhase();
-        }
+//    #region 초기화
+//    /// <summary>
+//    /// 싱글톤 패턴 초기화
+//    /// </summary>
+//    private void InitializeSingleton()
+//    {
+//        if (Instance == null)
+//        {
+//            Instance = this;
+//        }
+//        else
+//        {
+//            Destroy(gameObject);
+//        }
+//    }
 
-        if (testActivateCar)
-        {
-            testActivateCar = false;
-            ActivateSobaekCar();
-        }
+//    /// <summary>
+//    /// 컴포넌트 참조 초기화
+//    /// </summary>
+//    private void InitializeComponents()
+//    {
+//        animator = GetComponent<Animator>() ?? GetComponentInChildren<Animator>();
+//    }
 
-        UpdatePosition();
-        UpdateFloatingEffect();
-        UpdateAnimations();
-    }
+//    /// <summary>
+//    /// 초기 위치 설정
+//    /// </summary>
+//    private void SetupInitialPosition()
+//    {
+//        if (playerTransform != null)
+//        {
+//            SetHomePosition();
+//            basePosition = homePosition;
+//            transform.position = homePosition;
+//        }
+//    }
+//    #endregion
 
-    void OnDestroy()
-    {
-        if (Instance == this)
-        {
-            Instance = null;
-        }
-    }
-    #endregion
+//    #region 게임 페이즈 관리
+//    /// <summary>
+//    /// GameManager 이벤트 구독
+//    /// </summary>
+//    private void SubscribeToGameManagerEvents()
+//    {
+//        // GameManager가 있으면 이벤트 구독
+//        if (GameManager.Instance != null)
+//        {
+//            GameManager.Instance.OnPhaseChanged += OnPhaseChanged;
+//            // 현재 페이즈도 확인 (NowPhase 사용)
+//            OnPhaseChanged(GameManager.Instance.NowPhase);
+//        }
+//    }
 
-    #region 초기화
-    /// <summary>
-    /// 모든 컴포넌트 자동 초기화
-    /// </summary>
-    void InitializeComponents()
-    {
-        // 애니메이터 자동 찾기
-        animator = GetComponent<Animator>();
-        if (animator == null)
-        {
-            animator = GetComponentInChildren<Animator>();
-        }
+//    /// <summary>
+//    /// GameManager 이벤트 구독 해제
+//    /// </summary>
+//    private void UnsubscribeFromGameManagerEvents()
+//    {
+//        // GameManager가 있으면 이벤트 구독 해제
+//        if (GameManager.Instance != null)
+//        {
+//            GameManager.Instance.OnPhaseChanged -= OnPhaseChanged;
+//        }
+//    }
 
-        // 게임매니저 사용 여부 자동 감지
-        DetectGameManagerUsage();
-    }
+//    /// <summary>
+//    /// 게임 페이즈 변경 시 상호작용 활성화/비활성화
+//    /// </summary>
+//    private void OnPhaseChanged(GamePhase newPhase)
+//    {
+//        switch (newPhase)
+//        {
+//            case GamePhase.Prevention:
+//                sobaekInteractionEnabled = true;
+//                break;
+//            default:
+//                sobaekInteractionEnabled = false;
+//                StopTalkingAndReturnHome();
+//                break;
+//        }
+//    }
+//    #endregion
 
-    /// <summary>
-    /// 게임매니저 사용 여부 자동 감지
-    /// </summary>
-    void DetectGameManagerUsage()
-    {
-        // GameManager가 씬에 있는지 확인
-        UseGameManager = GameManager.Instance != null;
+//    #region 위치 및 이동
+//    /// <summary>
+//    /// 플레이어 기준 홈 포지션 계산
+//    /// </summary>
+//    private void SetHomePosition()
+//    {
+//        if (playerTransform == null)
+//            return;
 
-        if (!UseGameManager)
-        {
-            // 게임매니저 없는 씬에서는 상호작용 비활성화
-            sobaekInteractionEnabled = false;
-            isMovingToTarget = false;
-            isMovingToHome = false;
-            currentTarget = null;
-        }
-    }
-    #endregion
+//        Vector3 rightDirection = playerTransform.right * (stayOnRightSide ? offsetX : -offsetX);
+//        Vector3 forwardDirection = playerTransform.forward * offsetZ;
+//        homePosition = playerTransform.position + rightDirection + forwardDirection + Vector3.up * offsetY;
+//    }
 
-    #region 게임 페이즈 감지
-    /// <summary>
-    /// 게임 페이즈 변경 감지 및 처리
-    /// </summary>
-    void CheckGamePhase()
-    {
-        // GameManager 재확인 (씬 전환 등으로 사라질 수 있음)
-        if (GameManager.Instance == null)
-        {
-            UseGameManager = false;
-            return;
-        }
+//    /// <summary>
+//    /// 이동 및 효과 업데이트
+//    /// </summary>
+//    private void UpdateMovementAndEffects()
+//    {
+//        UpdatePosition();
+//        UpdateFloatingEffect();
+//        UpdateAnimations();
+//    }
 
-        GamePhase currentPhase = GameManager.Instance.CurrentPhase;
+//    /// <summary>
+//    /// 위치 업데이트 (상태에 따른 이동)
+//    /// </summary>
+//    private void UpdatePosition()
+//    {
+//        if (playerTransform == null)
+//            return;
 
-        // 페이즈가 변경되었을 때만 처리
-        if (currentPhase != lastPhase)
-        {
-            if (currentPhase == GamePhase.Fire)
-            {
-                // 화재 페이즈: 상호작용 비활성화, 홈으로 복귀
-                sobaekInteractionEnabled = false;
-                StopTalkingAndReturnHome();
-            }
-            else if (currentPhase == GamePhase.Prevention)
-            {
-                // 예방 페이즈: 상호작용 활성화
-                sobaekInteractionEnabled = true;
-            }
+//        if (isMovingToTarget)
+//        {
+//            MoveToTarget();
+//        }
+//        else if (isMovingToHome)
+//        {
+//            MoveToHome();
+//        }
+//        else if (!isTalking)
+//        {
+//            FollowPlayer();
+//        }
+//    }
 
-            lastPhase = currentPhase;
-        }
-    }
-    #endregion
+//    /// <summary>
+//    /// 타겟 위치로 이동
+//    /// </summary>
+//    private void MoveToTarget()
+//    {
+//        basePosition = Vector3.Slerp(basePosition, targetPosition, moveSpeed * Time.deltaTime);
 
-    #region 위치 및 이동
-    void SetHomePosition()
-    {
-        if (player == null)
-        {
-            return;
-        }
+//        if (Vector3.Distance(basePosition, targetPosition) <= arrivalDistance)
+//        {
+//            basePosition = targetPosition;
+//            isMovingToTarget = false;
+//            isTalking = true;
+//        }
+//    }
 
-        Vector3 rightDirection = player.right * (stayOnRightSide ? offsetX : -offsetX);
-        Vector3 forwardDirection = player.forward * offsetZ;
-        homePosition = player.position + rightDirection + forwardDirection + Vector3.up * offsetY;
-    }
+//    /// <summary>
+//    /// 홈 위치로 이동
+//    /// </summary>
+//    private void MoveToHome()
+//    {
+//        basePosition = Vector3.Slerp(basePosition, homePosition, moveSpeed * Time.deltaTime);
 
-    void UpdatePosition()
-    {
-        if (player == null)
-            return;
+//        if (Vector3.Distance(basePosition, homePosition) <= arrivalDistance)
+//        {
+//            basePosition = homePosition;
+//            isMovingToHome = false;
+//        }
+//    }
 
-        if (isMovingToTarget)
-        {
-            // 타겟으로 이동 - 부드러운 보간
-            basePosition = Vector3.Slerp(basePosition, targetPosition, moveSpeed * Time.deltaTime);
+//    /// <summary>
+//    /// 플레이어 따라가기
+//    /// </summary>
+//    private void FollowPlayer()
+//    {
+//        SetHomePosition();
+//        basePosition = Vector3.Slerp(basePosition, homePosition, followSpeed * Time.deltaTime);
+//    }
+//    #endregion
 
-            // 도착 체크
-            if (Vector3.Distance(basePosition, targetPosition) <= arrivalDistance)
-            {
-                basePosition = targetPosition;
-                isMovingToTarget = false;
-                isTalking = true;
-            }
-        }
-        else if (isMovingToHome)
-        {
-            // 홈으로 이동 - moveSpeed와 같은 속도로 복귀
-            basePosition = Vector3.Slerp(basePosition, homePosition, moveSpeed * Time.deltaTime);
+//    #region 떠다니기 효과 및 애니메이션
+//    /// <summary>
+//    /// 둥둥 떠다니기 효과 및 회전 업데이트
+//    /// </summary>
+//    private void UpdateFloatingEffect()
+//    {
+//        floatTimer += Time.deltaTime * floatSpeed;
+//        float floatY = Mathf.Sin(floatTimer) * floatAmplitude;
+//        transform.position = basePosition + Vector3.up * floatY;
 
-            // 도착 체크
-            if (Vector3.Distance(basePosition, homePosition) <= arrivalDistance)
-            {
-                basePosition = homePosition;
-                isMovingToHome = false;
-            }
-        }
-        else if (!isMovingToTarget && !isMovingToHome && !isTalking)
-        {
-            // 평상시 플레이어 따라다니기 - followSpeed로 조절
-            SetHomePosition();
-            basePosition = Vector3.Slerp(basePosition, homePosition, followSpeed * Time.deltaTime);
-        }
-    }
-    #endregion
+//        UpdateLookDirection();
+//    }
 
-    #region 떠다니기 효과 및 회전
-    void UpdateFloatingEffect()
-    {
-        floatTimer += Time.deltaTime * floatSpeed;
-        float floatY = Mathf.Sin(floatTimer) * floatAmplitude;
-        transform.position = basePosition + Vector3.up * floatY;
+//    /// <summary>
+//    /// 바라볼 방향 업데이트
+//    /// </summary>
+//    private void UpdateLookDirection()
+//    {
+//        Vector3 targetDirection = GetLookDirection();
 
-        UpdateLookDirection();
-    }
+//        if (targetDirection != Vector3.zero)
+//        {
+//            targetDirection.y = 0;
+//            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+//            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, lookAtSpeed * Time.deltaTime);
+//        }
+//    }
 
-    void UpdateLookDirection()
-    {
-        Vector3 targetDirection = Vector3.zero;
+//    /// <summary>
+//    /// 상황에 따른 바라볼 방향 계산
+//    /// </summary>
+//    private Vector3 GetLookDirection()
+//    {
+//        if (isMovingToTarget && currentTarget != null)
+//        {
+//            return (currentTarget.position - transform.position).normalized;
+//        }
+//        else if (playerTransform != null)
+//        {
+//            return (playerTransform.position - transform.position).normalized;
+//        }
+//        return Vector3.zero;
+//    }
 
-        if (isMovingToTarget && currentTarget != null)
-        {
-            targetDirection = (currentTarget.position - transform.position).normalized;
-        }
-        else if (player != null)
-        {
-            targetDirection = (player.position - transform.position).normalized;
-        }
+//    /// <summary>
+//    /// 애니메이션 상태 업데이트
+//    /// </summary>
+//    private void UpdateAnimations()
+//    {
+//        if (animator == null)
+//            return;
 
-        if (targetDirection != Vector3.zero)
-        {
-            targetDirection.y = 0;
-            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, lookAtSpeed * Time.deltaTime);
-        }
-    }
+//        bool isFlying = isMovingToTarget || isMovingToHome;
+//        animator.SetBool(hashIsFlying, isFlying);
+//        animator.SetBool(hashIsTalking, isTalking);
+//    }
+//    #endregion
 
-    void UpdateAnimations()
-    {
-        if (animator == null)
-            return;
+//    #region 상호작용
+//    /// <summary>
+//    /// 타겟으로 이동하기
+//    /// </summary>
+//    public void MoveToTarget(Transform target)
+//    {
+//        if (!sobaekInteractionEnabled || target == null)
+//            return;
 
-        // 이동 중이면 Flying
-        bool isFlying = isMovingToTarget || isMovingToHome;
-        animator.SetBool(hashIsFlying, isFlying);
+//        SetupTargetMovement(target);
+//    }
 
-        // 토킹 상태
-        animator.SetBool(hashIsTalking, isTalking);
-    }
-    #endregion
+//    /// <summary>
+//    /// 타겟 이동 설정
+//    /// </summary>
+//    private void SetupTargetMovement(Transform target)
+//    {
+//        currentTarget = target;
+//        Vector3 directionFromTarget = (transform.position - target.position).normalized;
+//        if (directionFromTarget == Vector3.zero)
+//            directionFromTarget = Vector3.up;
 
-    #region 플레이어가 호출할 간단한 함수들
-    /// <summary>
-    /// 타겟으로 이동 (플레이어 호출용)
-    /// </summary>
-    public void MoveToTarget(Transform target)
-    {
-        if (!sobaekInteractionEnabled || target == null)
-            return;
+//        targetPosition = target.position + directionFromTarget * 0.5f;
+//        basePosition = transform.position;
 
-        currentTarget = target;
-        Vector3 directionFromTarget = (transform.position - target.position).normalized;
-        if (directionFromTarget == Vector3.zero)
-            directionFromTarget = Vector3.up;
+//        isMovingToTarget = true;
+//        isMovingToHome = false;
+//        isTalking = false;
+//    }
 
-        targetPosition = target.position + directionFromTarget * 0.5f;
+//    /// <summary>
+//    /// 대화 중단하고 홈으로 돌아가기
+//    /// </summary>
+//    public void StopTalkingAndReturnHome()
+//    {
+//        isTalking = false;
+//        isMovingToTarget = false;
+//        isMovingToHome = true;
+//        currentTarget = null;
 
-        // 현재 위치를 basePosition으로 동기화 (끊김 방지)
-        basePosition = transform.position;
+//        SetHomePosition();
+//        basePosition = transform.position;
+//    }
 
-        isMovingToTarget = true;
-        isMovingToHome = false;
-        isTalking = false;
-    }
+//    /// <summary>
+//    /// 대화 시작
+//    /// </summary>
+//    public void StartTalking()
+//    {
+//        isTalking = true;
+//    }
 
-    /// <summary>
-    /// 토킹 중단하고 홈으로 복귀
-    /// </summary>
-    public void StopTalkingAndReturnHome()
-    {
-        isTalking = false;
-        isMovingToTarget = false;
-        isMovingToHome = true;
-        currentTarget = null;
+//    /// <summary>
+//    /// 대화 중단
+//    /// </summary>
+//    public void StopTalking()
+//    {
+//        isTalking = false;
+//    }
 
-        // 현재 플레이어 위치 기준으로 홈 포지션 업데이트
-        SetHomePosition();
+//    /// <summary>
+//    /// 홈으로 돌아가기
+//    /// </summary>
+//    public void ReturnHome()
+//    {
+//        isMovingToTarget = false;
+//        isMovingToHome = true;
+//        isTalking = false;
+//        currentTarget = null;
+//    }
+//    #endregion
 
-        // 현재 위치를 basePosition으로 동기화 (끊김 방지)
-        basePosition = transform.position;
-    }
+//    #region 소백이 관리
+//    /// <summary>
+//    /// 소백이 활성화/비활성화 설정
+//    /// </summary>
+//    public void SetSobaekActive(bool active)
+//    {
+//        if (active)
+//        {
+//            ActivateSobaek();
+//        }
+//        else
+//        {
+//            DeactivateSobaek();
+//        }
+//    }
 
-    /// <summary>
-    /// 토킹 애니매이션 실행
-    /// </summary>
-    public void StartTalking()
-    {
-        if (!UseGameManager || sobaekInteractionEnabled)
-        {
-            isTalking = true;
-        }
-    }
+//    /// <summary>
+//    /// 소백이 활성화
+//    /// </summary>
+//    private void ActivateSobaek()
+//    {
+//        gameObject.SetActive(true);
 
-    /// <summary>
-    /// 토킹애니매이션만 중단 (위치는 유지)
-    /// </summary>
-    public void StopTalking()
-    {
-        isTalking = false;
-    }
+//        if (playerTransform != null)
+//        {
+//            SetHomePosition();
+//            basePosition = homePosition;
+//            transform.position = homePosition;
+//        }
+//    }
 
-    /// <summary>
-    /// 홈으로 돌아가기
-    /// </summary>
-    public void ReturnHome()
-    {
-        isMovingToTarget = false;
-        isMovingToHome = true;
-        isTalking = false;
-        currentTarget = null;
-    }
-    #endregion
+//    /// <summary>
+//    /// 소백이 비활성화 (애니메이션 후)
+//    /// </summary>
+//    private void DeactivateSobaek()
+//    {
+//        if (animator != null)
+//        {
+//            animator.SetTrigger(hashBackJump);
+//        }
+//        StartCoroutine(DeactivateAfterAnimation());
+//    }
 
-    #region 소백이 활성화/비활성화
-    public void SetSobaekActive(bool active)
-    {
-        gameObject.SetActive(active);
-
-        if (active)
-        {
-            if (player != null)
-            {
-                SetHomePosition();
-                basePosition = homePosition;
-                transform.position = homePosition;
-            }
-        }
-        else
-        {
-            if (animator != null)
-            {
-                animator.SetTrigger(hashBackJump);
-            }
-            StartCoroutine(DeactivateAfterAnimation());
-        }
-    }
-
-    private IEnumerator DeactivateAfterAnimation()
-    {
-        yield return new WaitForSeconds(1f);
-        gameObject.SetActive(false);
-    }
-    #endregion
-
-    #region 소백카 관련 메서드
-    /// <summary>
-    /// 수건 입에 닿았을때 호출하면된다 한얼아
-    /// 또는 테스트용 설정으로 활성화 가능
-    /// </summary>
-    public void ActivateSobaekCar()
-    {
-        if (sobaekCar != null)
-        {
-            // 소백카 활성화
-            sobaekCar.SetActive(true);
-
-            // 소백이 비활성화
-            gameObject.SetActive(false);
-        }
-    }
-    #endregion
-}
+//    /// <summary>
+//    /// 애니메이션 재생 후 비활성화
+//    /// </summary>
+//    private IEnumerator DeactivateAfterAnimation()
+//    {
+//        yield return new WaitForSeconds(1f);
+//        gameObject.SetActive(false);
+//    }
+//    #endregion
+//}

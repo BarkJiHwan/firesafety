@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +14,7 @@ public class ObjectUICtrl : MonoBehaviour
     [SerializeField] Color backColor;
 
     [Header("대화창 배경")]
-    [SerializeField] Image ConverBackImage;
+    [SerializeField] Image converBackImage;
     [SerializeField] Color converBackColor;
 
     [Header("대화창 대화 Text")]
@@ -25,12 +26,15 @@ public class ObjectUICtrl : MonoBehaviour
     [SerializeField] Image iconImg;
     [SerializeField] Sprite warningIcon;
     [SerializeField] Sprite completeIcon;
+    [SerializeField] Sprite triggerButtonIcon;
 
     RectTransform rect;
     GameManager gameManager;
     Vector3 basicPos;
     FirePreventable currentPrevent;
     bool isPointing;
+    PlayerTutorial[] turtorialMgr;
+    PlayerTutorial myTutorialMgr;
 
     private void Awake()
     {
@@ -41,7 +45,7 @@ public class ObjectUICtrl : MonoBehaviour
     {
         // 초기 세팅
         backImage.color = backColor;
-        ConverBackImage.color = converBackColor;
+        converBackImage.color = converBackColor;
         preventWord.fontSize = fontSize;
         preventWord.color = fontColor;
         iconImg.sprite = warningIcon;
@@ -56,12 +60,30 @@ public class ObjectUICtrl : MonoBehaviour
 
     void Update()
     {
-        if(GameManager.Instance.CurrentPhase != GamePhase.Prevention)
+        if (turtorialMgr == null || turtorialMgr.Length == 0)
         {
-            if(backImage.gameObject.activeSelf == true || iconImg.gameObject.activeSelf == true)
+            turtorialMgr = FindObjectsOfType<PlayerTutorial>();
+        }
+        if (turtorialMgr != null && myTutorialMgr == null)
+        {
+            foreach (var tutMgr in turtorialMgr)
             {
-                backImage.gameObject.SetActive(false);
-                iconImg.gameObject.SetActive(false);
+                PhotonView view = tutMgr.gameObject.GetComponent<PhotonView>();
+                if (view != null && view.IsMine)
+                {
+                    myTutorialMgr = tutMgr;
+                    myTutorialMgr.OnObjectUI += TutorialPreventObject;
+                    myTutorialMgr.OnCompleteSign += ChangeTutorialIcon;
+                    myTutorialMgr.OnFinishTutorial += FinishTutorial;
+                }
+            }
+        }
+
+        if (GameManager.Instance.CurrentPhase == GamePhase.FireWaiting)
+        {
+            if(gameObject.activeSelf == true)
+            {
+                gameObject.SetActive(false);
             }
         }
 
@@ -80,24 +102,48 @@ public class ObjectUICtrl : MonoBehaviour
         {
             return;
         }
-        var target = args.interactableObject;
+        var targetObject = args.interactableObject;
+        Transform target = targetObject.transform;
         //FirePreventable prevent = target.transform.GetComponent<FirePreventable>();
-        currentPrevent = target.transform.GetComponent<FirePreventable>();
-        FireObjScript fire = target.transform.GetComponent<FireObjScript>();
 
-        //transform.position = target.transform.position + fire.SpawnOffset;
-        Vector3 originPosition = fire.TaewooriPos();
+        PositionUI(target);
+
+        // ray로 계속 쏘고 있으면
+        isPointing = true;
+        RefreshUI();
+    }
+
+    public void PositionUI(Transform targetPos)
+    {
+        currentPrevent = targetPos.GetComponent<FirePreventable>();
+        Vector3 originPosition = Vector3.zero;
+        if (currentPrevent == null)
+        {
+            originPosition = targetPos.position + new Vector3(0, 0.3f, 0);
+            transform.position = originPosition + basicPos;
+            Vector3 cam = Camera.main.transform.position - transform.position;
+            cam.y = 0;
+            transform.rotation = Quaternion.LookRotation(cam) * Quaternion.Euler(0, 180, 0);
+            return;
+        }
+        else
+        {
+            FireObjScript fire = targetPos.GetComponent<FireObjScript>();
+
+            //transform.position = target.transform.position + fire.SpawnOffset;
+            originPosition = fire.TaewooriPos();
+        }
         transform.position = originPosition + basicPos;
 
-        Vector3 targetForward = target.transform.forward;
-        if(targetForward != Vector3.zero)
+        Vector3 targetForward = targetPos.forward;
+        if (targetForward != Vector3.zero)
         {
             targetForward.y = 0;
             targetForward.Normalize();
         }
 
-        Vector3 camDir = Camera.main.transform.position - target.transform.position;
-        if(camDir != Vector3.zero)
+        Vector3 camDir = Camera.main.transform.position - targetPos.position;
+        if (camDir != Vector3.zero)
         {
             camDir.Normalize();
         }
@@ -121,26 +167,21 @@ public class ObjectUICtrl : MonoBehaviour
             transform.Rotate(0, 180, 0);
         }
 
-        if (currentPrevent.MyType == PreventType.ElectricKettle || currentPrevent.MyType == PreventType.PowerBank)
+        if (currentPrevent.MyType == PreventType.ElectricKettle)
         {
             transform.position = originPosition + basicPos;
             transform.Rotate(0, 0, 0);
         }
 
-        else if(currentPrevent.MyType == PreventType.OldWire)
+        else if (currentPrevent.MyType == PreventType.OldWire)
         {
-            transform.position = originPosition + new Vector3(0, 0, 1);
+            transform.position = originPosition + new Vector3(0, 0, 0.5f);
         }
 
         else if (IsUIBlocked())
         {
-            Debug.Log("위치 수정");
             MoveUIPosition(originPosition);
         }
-
-        // ray로 계속 쏘고 있으면
-        isPointing = true;
-        RefreshUI();
     }
 
     public void DisSelectedObject()
@@ -230,5 +271,35 @@ public class ObjectUICtrl : MonoBehaviour
         backImage.gameObject.SetActive(!currentPrevent.IsFirePreventable);
         // 아이콘 활성화
         iconImg.gameObject.SetActive(true);
+    }
+
+    void TutorialPreventObject(GameObject preventObject)
+    {
+        iconImg.rectTransform.localScale = new Vector3(2f, 2f, 1);
+        // 활성화
+        iconImg.sprite = triggerButtonIcon;
+        // 활성화
+        iconImg.gameObject.SetActive(true);
+
+        PositionUI(preventObject.transform);
+    }
+
+    void ChangeTutorialIcon()
+    {
+        iconImg.rectTransform.localScale = Vector3.one;
+        iconImg.sprite = completeIcon;
+    }
+
+    void FinishTutorial()
+    {
+        iconImg.rectTransform.localScale = Vector3.one;
+        iconImg.gameObject.SetActive(false);
+        myTutorialMgr.OnObjectUI -= TutorialPreventObject;
+        myTutorialMgr.OnCompleteSign -= ChangeTutorialIcon;
+    }
+
+    private void OnDisable()
+    {
+        myTutorialMgr.OnFinishTutorial -= FinishTutorial;
     }
 }

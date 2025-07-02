@@ -173,6 +173,19 @@ public class Taewoori : NetworkTaewoori
     #endregion
 
     #region 네트워크 동기화 구현
+
+    /// <summary>
+    /// 히트 애니메이션 네트워크 동기화
+    /// </summary>
+    protected override void SyncHitAnimationToNetwork()
+    {
+        if (manager != null && networkID != -1)
+        {
+            ((TaewooriPoolManager)manager).photonView.RPC("NetworkTaewooriHit", RpcTarget.Others, networkID);
+        }
+    }
+
+
     /// <summary>
     /// 체력 동기화를 위한 네트워크 전송
     /// </summary>
@@ -206,52 +219,69 @@ public class Taewoori : NetworkTaewoori
     {
         if (PhotonNetwork.IsMasterClient)
         {
+            // 마스터 클라이언트가 직접 공격하는 경우
+            int masterID = PhotonNetwork.LocalPlayer.ActorNumber;
+            Debug.Log($"[마스터 직접 공격] 마스터 ID: {masterID}");
+            SetLastAttacker(masterID);
             TakeDamage(damage);
         }
         else
         {
-            // 클라이언트면 마스터에게 요청
+            // 클라이언트가 공격하는 경우 - 자신의 ID를 전송
+            int clientID = PhotonNetwork.LocalPlayer.ActorNumber;
+            Debug.Log($"[클라이언트 공격 요청] 클라이언트 ID: {clientID}, 태우리 NetworkID: {networkID}");
+
             if (TaewooriPoolManager.Instance != null && networkID != -1)
             {
+                Debug.Log($"[RPC 전송] RequestTaewooriDamage - 태우리ID: {networkID}, 데미지: {damage}, 공격자ID: {clientID}");
                 TaewooriPoolManager.Instance.photonView.RPC("RequestTaewooriDamage",
-                    RpcTarget.MasterClient, networkID, damage, PhotonNetwork.LocalPlayer.ActorNumber);
+                    RpcTarget.MasterClient, networkID, damage, clientID);
+            }
+            else
+            {
+                Debug.LogError($"[RPC 전송 실패] TaewooriPoolManager: {TaewooriPoolManager.Instance}, NetworkID: {networkID}");
             }
         }
     }
     #endregion
 
-    #region 사망 처리 (NetworkTaewoori 추상 메서드 구현)
+    #region 사망 처리 
     /// <summary>
-    /// 태우리 사망 처리 - 생존시간 기록, 처치 점수, 네트워크 동기화, 리스폰 처리
+    /// 사망 애니메이션 네트워크 동기화
     /// </summary>
-    public override void Die()
+    protected override void SyncDeathAnimationToNetwork()
     {
-        if (isDead)
-            return;
-
-        isDead = true;
-
-        // 마스터만 실제 로직 처리
-        if (PhotonNetwork.IsMasterClient && !isClientOnly)
+        if (manager != null && networkID != -1)
         {
-            int killerID = GetLastAttackerID();
+            ((TaewooriPoolManager)manager).photonView.RPC("NetworkTaewooriDie", RpcTarget.Others, networkID);
+        }
+    }
 
-            // 생존시간 및 처치 기록
-            if (manager != null && killerID != -1)
-            {
-                ((TaewooriPoolManager)manager).UpdateSurvivalTimeAndRecordKill(networkID, killerID);
-            }
+    /// <summary>
+    /// 마스터 사망 로직
+    /// </summary>
+    protected override void HandleMasterDeathLogic()
+    {
+        int killerID = GetLastAttackerID();
 
-            // 네트워크로 파괴 알림
-            if (manager != null)
-            {
-                ((TaewooriPoolManager)manager).SyncTaewooriDestroy(networkID);
-            }
-
-            // 이벤트 발생 (리스폰 처리용)
-            OnTaewooriDestroyed?.Invoke(this, sourceFireObj);
+        if (manager != null && killerID != -1)
+        {
+            ((TaewooriPoolManager)manager).OnTaewooriKilled(killerID, networkID);
         }
 
+        if (manager != null)
+        {
+            ((TaewooriPoolManager)manager).SyncTaewooriDestroy(networkID);
+        }
+
+        OnTaewooriDestroyed?.Invoke(this, sourceFireObj);
+    }
+
+    /// <summary>
+    /// Death 애니메이션 완료 후 실제 풀 반환 처리
+    /// </summary>
+    protected override void PerformFinalDeath()
+    {
         // 풀로 반환 (마스터/클라이언트 공통)
         if (manager != null)
         {
@@ -273,37 +303,22 @@ public class Taewoori : NetworkTaewoori
 
         isDead = true;
 
-        // 클라이언트는 풀로만 반환
-        if (manager != null)
-        {
-            manager.ReturnTaewooriToPool(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        // Death 애니메이션 재생
+        PlayDeathAnimation();
+
+        // 애니메이션 완료 후 풀 반환
+        StartCoroutine(HandleDeathSequence());
     }
     #endregion
 
     #region 헬퍼 메서드
     /// <summary>
-    /// 마지막 공격자 ID 가져오기 - 임시로 랜덤 플레이어 반환
-    /// </summary>
+    /// 마지막 공격자 ID 가져오기
+    /// </summary>>
     private int GetLastAttackerID()
     {
-        if (PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.PlayerCount > 0)
-        {
-            var players = PhotonNetwork.CurrentRoom.Players;
-            var playerArray = new int[players.Count];
-            int index = 0;
-            foreach (var player in players.Values)
-            {
-                playerArray[index++] = player.ActorNumber;
-            }
-            return playerArray[UnityEngine.Random.Range(0, playerArray.Length)];
-        }
-
-        return -1;
+        return base.GetLastAttackerID(); 
     }
+   
     #endregion
 }

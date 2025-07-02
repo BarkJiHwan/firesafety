@@ -36,7 +36,6 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [Header("양손 소화기 데이터")]
     [SerializeField] public HandData _leftHand;
     [SerializeField] public HandData _rightHand;
-
     [Header("공통 설정")]
     [SerializeField] private float _sprayLength = 2.5f;
     [SerializeField] private float _sprayRadius = 1;
@@ -44,9 +43,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [SerializeField] private int _maxAmount = 100;
     [SerializeField] private int _decreaseAmount = 1;
     [SerializeField] private LayerMask _fireMask;
-    [SerializeField] private float _refillCooldown = 3f;
     [SerializeField] private LayerMask _supplyMask;
-    [SerializeField] private float _supplyDetectRange = 0.8f;
     [SerializeField] private float _supplyCooldown;
     [SerializeField] private Transform _sprayOrigin; //스프레이 발사 지점
     [SerializeField] private int _currentAmount = 100;
@@ -56,7 +53,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     private bool _isFeverTime = false;
     private readonly Collider[] _fireHits = new Collider[20];
     private readonly Collider[] _supplyHits = new Collider[10];
-    private readonly Dictionary<Collider, IDamageable> _cacheds = new();
+    private readonly Dictionary<GameObject, IDamageable> _cacheds = new();
     private Dictionary<EHandType, HandData> _hands = new();
     private readonly Collider[] _checkingCols = new Collider[20];
     private Vector3 _sprayStartPos;
@@ -81,20 +78,16 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     }
     private IEnumerator Start()
     {
-        while (SupplyManager.Instance == null)
-        {
-            yield return null;
-        }
+        yield return new WaitUntil(() => SupplyManager.Instance != null);
         if (tutoSuppressor != null)
         {
             _rightHand.interator = tutoSuppressor.rightHand.interator;
             _leftHand.interator = tutoSuppressor.leftHand.interator;
         }
-
+        _hands[EHandType.LeftHand] = _leftHand;
+        _hands[EHandType.RightHand] = _rightHand;
         if (pView != null && pView.IsMine)
         {
-            _hands[EHandType.LeftHand] = _leftHand;
-            _hands[EHandType.RightHand] = _rightHand;
             SupplyManager.Instance.RegisterHand(EHandType.LeftHand, _leftHand, false);
             SupplyManager.Instance.RegisterHand(EHandType.RightHand, _rightHand, false);
             SupplyManager.Instance.suppressantManager = this;
@@ -108,11 +101,11 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
-        if (!pView.IsMine)
+        if (!GameManager.Instance.IsGameStart)
         {
             return;
         }
-        if (!GameManager.Instance.IsGameStart)
+        if (!pView.IsMine)
         {
             return;
         }
@@ -133,15 +126,6 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         var hand = GetHand(type);
         _triggerValue = hand.triggerAction.action.ReadValue<float>();
         _isPressed = _triggerValue > 0.1f;
-        //_colHitCount = Physics.OverlapSphereNonAlloc(hand.grabSpot.position, _supplyDetectRange, _supplyHits, _supplyMask);
-        //if (_isPressed && _colHitCounts > 0 && !_isFeverTime) <-- 본래 조건문
-        //if (hand.interator.TryGetCurrent3DRaycastHit(out RaycastHit hit) && !_isFeverTime && hand.triggerAction.action.WasPressedThisFrame())
-        //{
-        //    if (IsInLayerMask(hit.collider.gameObject, _supplyMask))
-        //    {
-        //        Supply(type);
-        //    }
-        //}
         if (_isPressed && !hand.isSpraying && hand.enabled && hand.triggerAction.action.WasPressedThisFrame())
         {
             if (_currentCor == null)
@@ -166,7 +150,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         }
     }
 
-    //CHM 변경 
+    //CHM 변경
     //private void Spray(HandData hand)
     //{
     //    _sprayStartPos = _sprayOrigin.transform.position;
@@ -233,30 +217,43 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
             return;
         }
         _fireHitCount = Physics.OverlapCapsuleNonAlloc(start, end, _sprayRadius, _fireHits, _fireMask);
+        //콜라이더로 캐싱하면 불안정하다고...
+        // 실제 공격자 ID 가져오기
+        int attackerID = info.Sender.ActorNumber;
+        UnityEngine.Debug.Log($"[RPC_RequestDamage] 실제 공격자 ID: {attackerID}");
         for (int i = 0; i < _fireHitCount; i++)
         {
             var hit = _fireHits[i];
-            if (!_cacheds.TryGetValue(hit, out var cached))
+            var obj = hit.gameObject;
+            if (!_cacheds.TryGetValue(obj, out var cached))
             {
-                cached = hit.gameObject.GetComponent<IDamageable>();
+                cached = obj.GetComponent<IDamageable>();
                 if (cached != null)
                 {
-                    _cacheds[hit] = cached;
+                    _cacheds[obj] = cached;
+                }
+                else
+                {
+                    continue;
                 }
             }
             //_cacheds[hit]?.TakeDamage(_damage);
-            UnityEngine.Debug.Log("데미지 처리. 호출자: " + info.Sender);
+            //UnityEngine.Debug.Log("데미지 처리. 호출자: " + info.Sender);
             if (cached != null)
             {
-                // CHM: 태우리 타입인지 확인하고 네트워크 데미지 요청
+                // 태우리 타입인지 확인하고 공격자 ID 설정 후 데미지 처리
                 if (cached is Taewoori taewoori)
                 {
-                    taewoori.RequestDamageFromClient(_damage);
+                    UnityEngine.Debug.Log($"[태우리 공격] 공격자 ID: {attackerID}");
+                    taewoori.SetLastAttacker(attackerID);  // 실제 공격자 ID 설정
+                    taewoori.TakeDamage(_damage);          // 직접 데미지 처리
                 }
-                // CHM: 스몰태우리 타입인지 확인하고 네트워크 데미지 요청
+                // 스몰태우리 타입인지 확인하고 데미지 처리
                 else if (cached is SmallTaewoori smallTaewoori)
                 {
-                    smallTaewoori.RequestDamageFromClient(_damage);
+                    UnityEngine.Debug.Log($"[스몰태우리 공격] 공격자 ID: {attackerID}");
+                    smallTaewoori.SetLastAttacker(attackerID);  // 실제 공격자 ID 설정
+                    smallTaewoori.TakeDamage(_damage);           // 직접 데미지 처리
                 }
                 // CHM: 일반 IDamageable 오브젝트는 기존 방식으로 데미지 처리
                 else
@@ -332,6 +329,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         {
             hand.initialFireFX.Stop();
         }
+        pView.RPC("RPC_StopPlayFX", RpcTarget.Others, type);
         _cacheds.Clear();
         hand.isSpraying = false;
         hand.initialFire = false;
@@ -339,48 +337,35 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     }
     public void Supply(EHandType type)
     {
-        #region Instantiate ver
-        //if (!_rightHand.enabled && !_leftHand.enabled)
-        //{
-        //    Quaternion sprayRot = Quaternion.EulerAngles(-90f, 0f, -90f);
-        //    Vector3 sprayPos = new(0f, 0.008f, 0f);
-        //    Quaternion finalRot = hand.grabSpot.rotation * sprayRot;
-        //    Vector3 finalPos = hand.grabSpot.position + hand.grabSpot.rotation * sprayPos;
-        //    var spray = Instantiate(hand.modelPrefab, finalPos, finalRot, hand.grabSpot);
-        //    hand.enabled = true;
-        //    _sprayOrigin = spray.transform.Find("SprayOrigin");
-        //    hand.normalFireFX = spray.transform.Find("Normal FX").GetComponent<ParticleSystem>();
-        //    hand.zeroAmountFireFX = spray.transform.Find("Zero Amount FX").GetComponent<ParticleSystem>();
-        //    hand.initialFireFX = spray.transform.Find("Initialize FX").GetComponent<ParticleSystem>();
-        //    Debug.Log("보급: 생성 및 할당");
-        //}
-        #endregion
-        if (!pView.IsMine || GameManager.Instance.CurrentPhase != GamePhase.Fire)
+        if (!pView.IsMine || GameManager.Instance.CurrentPhase == GamePhase.Waiting || !GameManager.Instance.IsGameStart)
         {
             return;
         }
         var hand = GetHand(type);
-        if (!_rightHand.enabled && !_leftHand.enabled)
+        if (!hand.enabled)
         {
+            if (_rightHand != hand)
+            {
+                _rightHand.modelPrefab.SetActive(false);
+                _rightHand.enabled = false;
+            }
+            if (_leftHand != hand)
+            {
+                _leftHand.modelPrefab.SetActive(false);
+                _leftHand.enabled = false;
+            }
+            pView.RPC("RPC_SetActiveModelFalse", RpcTarget.Others);
+            pView.RPC("RPC_SetActiveModel", RpcTarget.Others, type);
             hand.modelPrefab.SetActive(true);
             hand.enabled = true;
             _sprayOrigin = hand.modelPrefab.transform.Find("SprayOrigin");
-            pView.RPC("RPC_SetActiveModel", RpcTarget.Others, type);
-        }
-        else if (!hand.enabled)
-        {
-            _rightHand.modelPrefab.SetActive(false);
-            _leftHand.modelPrefab.SetActive(false);
-            _rightHand.enabled = false;
-            _leftHand.enabled = false;
-            hand.modelPrefab.SetActive(true);
-            hand.enabled = true;
         }
         if (hand.enabled && _currentAmount < _maxAmount)
         {
             _currentAmount = _maxAmount;
         }
     }
+
     public void DetachSuppressor()
     {
         if (_rightHand.enabled)
@@ -404,40 +389,33 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPC_PlayInitialFX(EHandType type)
     {
-        if (!pView.IsMine)
-        {
-            return;
-        }
         var hand = GetHand(type);
-        hand.initialFireFX.Play();
+        if (hand != null && !hand.initialFireFX.isPlaying)
+        {
+            hand.initialFireFX.Play();
+        }
     }
     [PunRPC]
     private void RPC_PlayNormalFX(EHandType type)
     {
-        if (!pView.IsMine)
-        {
-            return;
-        }
         var hand = GetHand(type);
-        hand.normalFireFX.Play();
+        if (hand != null && !hand.normalFireFX.isPlaying)
+        {
+            hand.normalFireFX.Play();
+        }
     }
     [PunRPC]
     private void RPC_PlayZeroAmountFX(EHandType type)
     {
-        if (!pView.IsMine)
-        {
-            return;
-        }
         var hand = GetHand(type);
-        hand.zeroAmountFireFX.Play();
+        if (hand != null && !hand.zeroAmountFireFX.isPlaying)
+        {
+            hand.zeroAmountFireFX.Play();
+        }
     }
     [PunRPC]
     private void RPC_StopPlayFX(EHandType type)
     {
-        if (!pView.IsMine)
-        {
-            return;
-        }
         var hand = GetHand(type);
         if (hand.initialFireFX.isPlaying)
         {
@@ -455,12 +433,8 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPC_SetActiveModel(EHandType type)
     {
-        if (!pView.IsMine)
-        {
-            return;
-        }
         var hand = GetHand(type);
-        if (!hand.modelPrefab.activeSelf)
+        if (hand.modelPrefab != null && !hand.modelPrefab.activeSelf)
         {
             hand.modelPrefab.SetActive(true);
         }
@@ -468,20 +442,22 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPC_SetActiveModelFalse()
     {
-        if (!pView.IsMine)
-        {
-            return;
-        }
-        if (!_rightHand.enabled && _rightHand.modelPrefab.activeSelf)
-        {
-            _rightHand.modelPrefab.SetActive(false);
-        }
-        if (!_leftHand.enabled && _leftHand.modelPrefab.activeSelf)
+        if (_leftHand.modelPrefab.activeSelf)
         {
             _leftHand.modelPrefab.SetActive(false);
         }
+        if (_rightHand.modelPrefab.activeSelf)
+        {
+            _rightHand.modelPrefab.SetActive(false);
+        }
     }
-
+    //private Transform GetHandParticle(EHandType type)
+    //{
+    //    if (type == EHandType.LeftHand)
+    //    {
+    //        return _leftHand.
+    //    }
+    //}
     private void DrawSprayRange(HandData hand)
     {
         //소화기 범위
@@ -497,5 +473,5 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         Gizmos.DrawLine(start, end);
     }
 
-  
+
 }
