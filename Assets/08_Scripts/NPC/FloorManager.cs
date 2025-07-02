@@ -42,10 +42,10 @@ public class FloorManager : MonoBehaviour
     private bool floorCompleted = false;
     private ExitTaewooliSpawnParticle[] taewooliSpawners;
     private Coroutine spawnCoroutine;
-    private static bool isInitialized = false;
+    private bool isInitialized = false;
 
     private int taewooliKillCount = 0;
-    private static int totalTaewooliKills = 0;
+    private int totalTaewooliKills = 0;
     private ScoreManager scoreManager;
     #endregion
 
