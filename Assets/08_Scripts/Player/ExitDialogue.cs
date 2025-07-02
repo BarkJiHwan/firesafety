@@ -45,7 +45,6 @@ public class ExitDialogue : MonoBehaviour
         _dialoguePlayer.PlayWithText("EXIT_003", UIType.Sobaek);
         _quizResult = true;
         _scoreManager.SetScore(ScoreType.Elevator, CalculateQuizScore());
-        _scoreManager.SetScore(ScoreType.DaTaewoori, 25);
     }
 
     public void OnSelectWrongAnswer()
@@ -53,7 +52,6 @@ public class ExitDialogue : MonoBehaviour
         HideQuizUI();
         _dialoguePlayer.PlayWithText("EXIT_004", UIType.Sobaek);
         _scoreManager.SetScore(ScoreType.Elevator, CalculateQuizScore());
-        _scoreManager.SetScore(ScoreType.DaTaewoori, 25);
     }
 
     public void ShowQuizUI()
@@ -73,14 +71,15 @@ public class ExitDialogue : MonoBehaviour
         if (other.tag.Equals("Smoke"))
         {
             _fvCanvasController.TurnWarningSign(true);
-            _smokeTouchedCount++;
-        };
+            _smokeTouchedCount += 1;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.tag.Equals("Smoke"))
         {
+            Debug.Log("연기 몇번째? : " + _smokeTouchedCount);
             _fvCanvasController.TurnWarningSign(false);
         };
     }
@@ -89,5 +88,10 @@ public class ExitDialogue : MonoBehaviour
     {
         int score = CalculateSmokeScore();
         _scoreManager.SetScore(ScoreType.Smoke, score);
+    }
+
+    public void SendDaTaewooriScore()
+    {
+        _scoreManager.SetScore(ScoreType.DaTaewoori, 25);
     }
 }

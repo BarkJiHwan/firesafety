@@ -151,14 +151,19 @@ public class SobaekCarScript : MonoBehaviour
             _exitDialogue.OnSelectRightAnswer();
         }
 
-        if (other.gameObject.name.Equals("Floor3 WayPoints.End"))
+        if (other.gameObject.name.Equals("Floor2 WayPoints.Start"))
+        {
+            _exitDialogue.OnStartSmokePlace();
+        }
+
+        if (other.gameObject.name.Equals("Floor2 WayPoints.End"))
         {
             _exitDialogue.SendSmokeScore();
         }
 
-        if (other.gameObject.name.Equals("Floor2 WayPoints.Start"))
+        if (other.gameObject.name.Equals("Floor1 WayPoints.End"))
         {
-            _exitDialogue.OnStartSmokePlace();
+            _exitDialogue.SendDaTaewooriScore();
         }
     }
 }
