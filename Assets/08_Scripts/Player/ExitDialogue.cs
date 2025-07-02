@@ -1,17 +1,21 @@
+using System;
 using UnityEngine;
 
 public class ExitDialogue : MonoBehaviour
 {
     public GameObject quizUI;
     private bool _quizResult;
+    private int _smokeTouchedCount;
 
     private DialoguePlayer _dialoguePlayer;
     private ScoreManager _scoreManager;
+    private FixedViewCanvasController _fvCanvasController;
 
     private void Start()
     {
         _dialoguePlayer = FindObjectOfType<DialoguePlayer>();
         _scoreManager = FindObjectOfType<ScoreManager>();
+        _fvCanvasController = FindObjectOfType<FixedViewCanvasController>();
         Invoke("OnStartExitScene", 1f);
     }
 
@@ -52,20 +56,28 @@ public class ExitDialogue : MonoBehaviour
         quizUI.SetActive(false);
     }
 
-    public void OnTriggerEnter(Collider other)
+    private int CalculateQuizScore() => _quizResult ? 25 : 15;
+    private int CalculateSmokeScore() => _smokeTouchedCount < 2 ? 25 : 15;
+    private void OnTriggerEnter(Collider other)
     {
-        // 4층 시작점일때 퀴즈 켜기
-        if (other.gameObject.name.Equals("Floor4 WayPoints.Start"))
+        if (other.tag.Equals("Smoke"))
         {
-            ShowQuizUI();
-        }
-
-        // 4층 종료지점일때 퀴즈 끄기
-        if (other.gameObject.name.Equals("Floor4 WayPoints.End") && quizUI.gameObject.activeSelf)
-        {
-            OnSelectRightAnswer();
-        }
+            _fvCanvasController.TurnWarningSign(true);
+            _smokeTouchedCount++;
+        };
     }
 
-    private int CalculateQuizScore() => _quizResult ? 25 : 15;
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag.Equals("Smoke"))
+        {
+            _fvCanvasController.TurnWarningSign(false);
+        };
+    }
+
+    public void SendSmokeScore()
+    {
+        int score = CalculateSmokeScore();
+        _scoreManager.SetScore(ScoreType.Smoke, score);
+    }
 }

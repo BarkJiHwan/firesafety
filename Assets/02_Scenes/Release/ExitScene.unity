@@ -1387,20 +1387,40 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1962081229333401858, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 2119143044244713059, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_Name
       value: APT
       objectReference: {fileID: 0}
+    - target: {fileID: 2634688221181830461, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: m_TagString
+      value: Smoke
+      objectReference: {fileID: 0}
+    - target: {fileID: 2634688221181830463, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 3034456901306495447, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_Size.y
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3034456901306495447, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_Center.y
-      value: 0
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3657553886519545965, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.8
       objectReference: {fileID: 0}
     - target: {fileID: 3804077365554935318, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
@@ -1420,12 +1440,12 @@ PrefabInstance:
     - target: {fileID: 4983086448909647671, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_Size.y
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4983086448909647671, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_Center.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5055532152270031471, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
@@ -1437,6 +1457,21 @@ PrefabInstance:
       propertyPath: _playerSpawner
       value: 
       objectReference: {fileID: 195861028}
+    - target: {fileID: 5452660932020513757, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: m_TagString
+      value: Smoke
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452660932020513759, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 6983998141290860503, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 7524651344830276143, guid: 89d20f9f903079c44a1d68ef6defda95,
         type: 3}
       propertyPath: m_RootOrder
@@ -1491,6 +1526,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359035757358768098, guid: 89d20f9f903079c44a1d68ef6defda95,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 200
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 89d20f9f903079c44a1d68ef6defda95, type: 3}
@@ -2004,6 +2044,11 @@ PrefabInstance:
       propertyPath: timePanel
       value: 
       objectReference: {fileID: 1232828550}
+    - target: {fileID: 4060705981305032297, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: conversationPos.y
+      value: -400
+      objectReference: {fileID: 0}
     - target: {fileID: 4060705981305032300, guid: 7e8817f6f572b7146bdae7d547c81463,
         type: 3}
       propertyPath: m_Name
