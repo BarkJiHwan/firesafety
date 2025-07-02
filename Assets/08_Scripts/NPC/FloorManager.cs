@@ -21,7 +21,7 @@ public class FloorManager : MonoBehaviour
     [Header("웨이포인트 설정")]
     [SerializeField] private GameObject startWaypoint;
     [SerializeField] private GameObject endWaypoint;
-    [SerializeField] private LayerMask playerLayerMask = 1 << 0; // 플레이어 레이어 설정
+    [SerializeField] private LayerMask playerLayerMask = 1 << 9; // 플레이어 레이어 설정
 
     [Header("파티클 그룹")]
     [SerializeField] private GameObject allParticleGroup;
