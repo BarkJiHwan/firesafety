@@ -155,5 +155,10 @@ public class SobaekCarScript : MonoBehaviour
         {
             _exitDialogue.SendSmokeScore();
         }
+
+        if (other.gameObject.name.Equals("Floor2 WayPoints.Start"))
+        {
+            _exitDialogue.OnStartSmokePlace();
+        }
     }
 }

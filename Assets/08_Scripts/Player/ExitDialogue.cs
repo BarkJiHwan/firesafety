@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ExitDialogue : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class ExitDialogue : MonoBehaviour
         _dialoguePlayer = FindObjectOfType<DialoguePlayer>();
         _scoreManager = FindObjectOfType<ScoreManager>();
         _fvCanvasController = FindObjectOfType<FixedViewCanvasController>();
+
+        // 버튼 이벤트 달아주기
+        quizUI.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(OnSelectRightAnswer);
+        quizUI.transform.GetChild(2).GetComponent<Button>().onClick.AddListener(OnSelectWrongAnswer);
         Invoke("OnStartExitScene", 1f);
     }
 
@@ -27,6 +32,11 @@ public class ExitDialogue : MonoBehaviour
     public void OnBeforeStartShootingTrack()
     {
         _dialoguePlayer.PlayWithText("EXIT_002", UIType.Sobaek);
+    }
+
+    public void OnStartSmokePlace()
+    {
+        _dialoguePlayer.PlayWithText("EXIT_015", UIType.Sobaek);
     }
 
     public void OnSelectRightAnswer()
