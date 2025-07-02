@@ -1014,7 +1014,7 @@ Transform:
   m_GameObject: {fileID: 5755754473064602975}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.007, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 647126719158790001}
@@ -1105,11 +1105,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f11993361d201fc48b5f104b0075dc95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 100
   currentHealth: 100
-  maxGreenBoost: 1
-  targetParticleSystems:
-  - {fileID: 6623866343465681098}
-  - {fileID: 7509235829024528869}
+  useAnimation: 1
 --- !u!1 &5887494048018585571
 GameObject:
   m_ObjectHideFlags: 0
@@ -1615,10 +1613,45 @@ PrefabInstance:
       propertyPath: m_Name
       value: TaewooriFire.Ver2
       objectReference: {fileID: 0}
+    - target: {fileID: 6979098890641307485, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6979098890641307485, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6979098890641307485, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6979098890641307485, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
         type: 3}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
         type: 3}
@@ -1670,23 +1703,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 315bb9a38a331ee47af4a02e7ecfb0d8, type: 3}
---- !u!198 &6623866343465681098 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 8105492470307074259, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
-    type: 3}
-  m_PrefabInstance: {fileID: 3139234532489801753}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6830183606197578124 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8455898496181721493, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
-    type: 3}
-  m_PrefabInstance: {fileID: 3139234532489801753}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &7509235829024528869 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 4874837769892211196, guid: 315bb9a38a331ee47af4a02e7ecfb0d8,
     type: 3}
   m_PrefabInstance: {fileID: 3139234532489801753}
   m_PrefabAsset: {fileID: 0}

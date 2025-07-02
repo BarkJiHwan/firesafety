@@ -1248,7 +1248,6 @@ GameObject:
   - component: {fileID: 8646238192549996217}
   - component: {fileID: 762319275}
   - component: {fileID: 762319276}
-  - component: {fileID: 454540275180752925}
   - component: {fileID: 8217539487878523174}
   m_Layer: 9
   m_Name: Jennie_Scaled_Model
@@ -1475,18 +1474,6 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
---- !u!114 &454540275180752925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4981747460995190306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69b0932f20b768946a953a91e08d68e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8217539487878523174
 MonoBehaviour:
   m_ObjectHideFlags: 0

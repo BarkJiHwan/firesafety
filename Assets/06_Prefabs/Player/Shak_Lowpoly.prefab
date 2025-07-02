@@ -43,8 +43,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aeda7bfbf984f2a4da5ab4b8967b115d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_Weight: 1
   m_Data:
     m_Root: {fileID: 8762107767699285866}
@@ -132,8 +132,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 70b342d8ce5c2fd48b8fa3147d48d1d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_Weight: 1
   m_Effectors:
   - m_Transform: {fileID: 2140430238}
@@ -188,8 +188,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 70b342d8ce5c2fd48b8fa3147d48d1d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_Weight: 1
   m_Effectors: []
 --- !u!1 &835994811
@@ -235,8 +235,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 796b75e345bd64d47a31edd757bd2670, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_Weight: 1
   m_Data:
     m_Root: {fileID: 1113027936956242933}
@@ -290,8 +290,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
@@ -339,8 +339,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 796b75e345bd64d47a31edd757bd2670, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_Weight: 1
   m_Data:
     m_Root: {fileID: 4389914908540427584}
@@ -426,8 +426,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
@@ -1265,7 +1265,7 @@ Transform:
   m_GameObject: {fileID: 2963019648728531938}
   m_LocalRotation: {x: -0.00000012397767, y: 6.8212114e-15, z: -4.5474726e-15, w: 1}
   m_LocalPosition: {x: 7.5253026e-10, y: -0.000000009482117, z: 0.000000013097701}
-  m_LocalScale: {x: 1, y: 1, z: 0.9999996}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6489268954678350333}
@@ -2237,7 +2237,6 @@ GameObject:
   - component: {fileID: 931875064371940231}
   - component: {fileID: 3759552973863989666}
   - component: {fileID: 3759552973863989664}
-  - component: {fileID: 3759552973863989665}
   - component: {fileID: 3759552973863989667}
   - component: {fileID: 3759552973863989668}
   - component: {fileID: 3759552973863989669}
@@ -2245,6 +2244,7 @@ GameObject:
   - component: {fileID: 3759552973863989671}
   - component: {fileID: 3759552973863989688}
   - component: {fileID: 3759552973863989689}
+  - component: {fileID: 5434359736362806540}
   m_Layer: 9
   m_Name: Shak_Lowpoly
   m_TagString: Untagged
@@ -2287,7 +2287,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -2303,7 +2303,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 2
+  m_Radius: 1.5
   m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!114 &3759552973863989664
 MonoBehaviour:
@@ -2315,24 +2315,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
---- !u!114 &3759552973863989665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5856178249069136711}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69b0932f20b768946a953a91e08d68e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3759552973863989667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2343,8 +2331,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
@@ -2368,8 +2356,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dd75eaf9d1a2843cb8f5ad29e6dbb345, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
 --- !u!114 &3759552973863989669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2380,8 +2368,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a3094e52a22024974a0dabd86d1278e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
 --- !u!114 &3759552973863989670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2392,8 +2380,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b2d8418b0b9634b1892b0268dd9c2743, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   boneShape: 1
   drawBones: 1
   drawTripods: 0
@@ -2484,8 +2472,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8916d597847a440c89b4a1918d94b06e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   playerOrigin: {fileID: 0}
   photonView: {fileID: 3759552973863989667}
   sobaekPrefab: {fileID: 2550521804121879437, guid: 8c557239dc3323e42a0bb6401677f15b,
@@ -2500,8 +2488,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b7831cc6ba61ab540866892822bb1692, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   pView: {fileID: 3759552973863989667}
   tutoSuppressor: {fileID: 0}
   _leftHand:
@@ -2510,10 +2498,10 @@ MonoBehaviour:
       m_Action:
         m_Name: Trigger
         m_Type: 0
-        m_ExpectedControlType: 
+        m_ExpectedControlType:
         m_Id: df42e2a4-65e3-4fa1-b038-51d33251bf69
-        m_Processors: 
-        m_Interactions: 
+        m_Processors:
+        m_Interactions:
         m_SingletonActionBindings: []
         m_Flags: 0
       m_Reference: {fileID: -4289430672226363583, guid: c348712bda248c246b8c49b3db54643f,
@@ -2534,10 +2522,10 @@ MonoBehaviour:
       m_Action:
         m_Name: Trigger
         m_Type: 0
-        m_ExpectedControlType: 
+        m_ExpectedControlType:
         m_Id: 2d67c7a2-1e98-48a8-8bda-f9dfa342fe8c
-        m_Processors: 
-        m_Interactions: 
+        m_Processors:
+        m_Interactions:
         m_SingletonActionBindings: []
         m_Flags: 0
       m_Reference: {fileID: 7904272356298805229, guid: c348712bda248c246b8c49b3db54643f,
@@ -2554,7 +2542,7 @@ MonoBehaviour:
     interator: {fileID: 0}
   _sprayLength: 2.5
   _sprayRadius: 1
-  _damage: 1
+  _damage: 2
   _maxAmount: 100
   _decreaseAmount: 1
   _fireMask:
@@ -2579,12 +2567,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fff0960ef4ea6e04eac66b4a7fd2189d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_RigLayers:
   - m_Rig: {fileID: 790558267}
     m_Active: 1
   m_Effectors: []
+--- !u!114 &5434359736362806540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5856178249069136711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478f13aad4df65b4da8c927338be7d00, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
 --- !u!1 &5901751887960527131
 GameObject:
   m_ObjectHideFlags: 0

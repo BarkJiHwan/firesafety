@@ -9,11 +9,13 @@ public enum UIType
 {
     Narration,
     Sobaek,
+    Dataewoori,
     None
 }
 
 public class FixedViewCanvasController : MonoBehaviour
 {
+    [SerializeField] ScoreManager scoreMgr;
     [Header("점수판")]
     [SerializeField] GameObject scorePanel;
     [SerializeField] GameObject conversationBoard;
@@ -28,10 +30,18 @@ public class FixedViewCanvasController : MonoBehaviour
     [SerializeField] Vector3 conversationPos;
     [SerializeField] TextMeshProUGUI conversationTxt;
 
-    UIType pastDiaType = UIType.None;
+    [Header("경고창")]
+    [SerializeField] GameObject warningPanel;
+
+    [Header("타이머")]
+    [SerializeField] GameObject timePanel;
 
     ScoreBoardController scoreBoardCtrl;
     ConversationController conversationCtrl;
+
+    PlayerTutorial tutorialMgr;
+
+    int scoreStartIndex;
 
     public GameObject ConversationPanel => conversationPanel;
 
@@ -55,7 +65,12 @@ public class FixedViewCanvasController : MonoBehaviour
 
         // 1. 점수판
         // 화재 페이즈가 끝나면 점수판 출력 (GameManager.Instance.CurrentPhase == leaveDangerArea)
-        GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
+        // GameManger OnPhaseChanged 구독
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameEnd += TurnOnScoreBoard;
+            GameManager.Instance.OnPhaseChanged += TurnTimeBoard;
+        }
 
         // 2. 대화창
         // 튜토리얼 설정
@@ -63,17 +78,36 @@ public class FixedViewCanvasController : MonoBehaviour
         {
             conversationBoard.SetActive(false);
         }
+
+        // 3. 타이머
+        if(timePanel.activeSelf == true)
+        {
+            timePanel.SetActive(false);
+        }
     }
 
-    void TurnOnScoreBoard()
+    // ScoreBoard 켜는 것
+    public void TurnOnScoreBoard()
     {
+        InitScoreIndex(SceneController.Instance.chooseSceneType);
         scorePanel.SetActive(true);
         StartCoroutine(UpdateBoard());
     }
 
     IEnumerator UpdateBoard()
     {
-        yield return new WaitForEndOfFrame();
+        yield return new WaitUntil(() =>
+        {
+            foreach (int score in scoreMgr.GetScores(scoreStartIndex))
+            {
+                if (score == 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        });
+        //여기서 한번 기다려야함
         if (scorePanel.activeSelf == true)
         {
             SceneType sceneType = SceneController.Instance.chooseSceneType;
@@ -112,11 +146,29 @@ public class FixedViewCanvasController : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
+    void InitScoreIndex(SceneType type)
     {
-        GameManager.Instance.OnGameEnd -= TurnOnScoreBoard;
+        switch (type)
+        {
+            case SceneType.IngameScene_Fire:
+                scoreStartIndex = 0;
+                break;
+            case SceneType.IngameScene_Evacuation:
+                scoreStartIndex = 4;
+                break;
+        }
     }
 
+    private void OnDestroy()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameEnd -= TurnOnScoreBoard;
+        }
+    }
+
+
+    // 대화창 타입에 따라 위치 등 변경 -> 대화창 켜는 것까지 작동
     public void SwitchConverstaionPanel(UIType type)
     {
         Vector3 pos = narrationPos;
@@ -127,11 +179,41 @@ public class FixedViewCanvasController : MonoBehaviour
                 conversationCtrl.PrintNarration();
                 break;
             case UIType.Sobaek:
+            case UIType.Dataewoori:
                 pos = conversationPos;
                 conversationCtrl.PrintConversation();
+                conversationCtrl.ChangeDataeWooriImage(type);
                 break;
         }
         conversationBoard.GetComponent<RectTransform>().anchoredPosition = pos;
         conversationPanel.SetActive(true);
+    }
+
+    public bool IsWarningSignActive()
+    {
+        return warningPanel.activeSelf;
+    }
+
+    public void TurnWarningSign(bool isActive)
+    {
+        warningPanel.SetActive(isActive);
+    }
+
+    public void ChangeScoreBoardPlayerColor(int index)
+    {
+        scoreBoardCtrl.SetPlayerImageBack(index);
+    }
+
+    public void TurnTimeBoard(GamePhase phase)
+    {
+        if(phase == GamePhase.Prevention)
+        {
+            timePanel.SetActive(true);
+        }
+        else if(phase == GamePhase.LeaveDangerArea)
+        {
+            timePanel.SetActive(false);
+            GameManager.Instance.OnPhaseChanged -= TurnTimeBoard;
+        }
     }
 }

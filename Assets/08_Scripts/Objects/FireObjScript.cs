@@ -32,7 +32,7 @@ public class FireObjScript : MonoBehaviour, ITaewooriPos
                 {
                     if (TaewooriPoolManager.Instance != null)
                     {
-                        TaewooriPoolManager.Instance.SpawnTaewooriAtPosition(TaewooriPos(), this);
+                        TaewooriPoolManager.Instance.SpawnTaewoori(TaewooriPos(), this);
                     }
                 }
             }
@@ -96,13 +96,13 @@ public class FireObjScript : MonoBehaviour, ITaewooriPos
         Gizmos.color = (_spawnOffset != Vector3.zero) ? Color.blue : Color.red;
 
         // 태우리 위치에 구체 그리기
-        Gizmos.DrawSphere(spawnPos, 0.1f);
+        Gizmos.DrawSphere(spawnPos, 0.03f);
 
         // 라인 그리기 (같은 색상 유지)
         Gizmos.DrawLine(transform.position, spawnPos);
 
         // 회전 방향 표시 (화살표)
-        Vector3 forward = spawnRot * Vector3.forward * 0.5f;
+        Vector3 forward = spawnRot * Vector3.forward * 0.1f;
 
         Gizmos.color = Color.green;
         Gizmos.DrawLine(spawnPos, spawnPos + forward); // 전방 방향
