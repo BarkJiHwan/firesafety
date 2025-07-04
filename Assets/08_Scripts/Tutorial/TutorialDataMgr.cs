@@ -30,10 +30,9 @@ public class TutorialDataMgr : MonoBehaviour
         Instance = this;
         IsTriggerSupply = false;
     }
-
+    // 안전하게 가공된 플레이어 인덱스
     public void SetNumber(int num)
     {
-        Debug.Log(num + "내 번호 입니다.");
         PlayerNumber = num;
     }
 
@@ -56,7 +55,12 @@ public class TutorialDataMgr : MonoBehaviour
 
         return _allTutorialData[index];
     }
-
+    /// <summary>
+    /// 플레이어 인덱스를 받아 배치 된 순서와 맞는 오브젝트 가져오기
+    /// 씬에 배치 된 TutorialDataMgr의 오브젝트에 순서대로 넣어서 관리
+    /// 코드적으로 문제가 없지만 확장과 변경이 불편함.
+    /// 애초에 배치되어 있는 오브젝트를 활용했기 때문에 분편한 부분이 많음.
+    /// </summary>
     public GameObject GetInteractObject(int playerListIndex)
     {
         if (playerListIndex < 0 || playerListIndex >= InteractObjects.Count)

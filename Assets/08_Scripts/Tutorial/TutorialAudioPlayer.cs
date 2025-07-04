@@ -10,7 +10,7 @@ public class TutorialAudioPlayer : MonoBehaviour
 
     public bool _istutoAudioPlay = false;
 
-    /* 사운드 및 텍스트 재생 */
+    // 사운드 및 텍스트 재생
     public void PlayVoiceWithText(string dialogueId, UIType type)
     {
         AudioClip clip = _dialogueLoader.GetAudioClip(dialogueId);
@@ -24,7 +24,7 @@ public class TutorialAudioPlayer : MonoBehaviour
         _fvCanvasController.ConversationTxt.text = text;
         _fvCanvasController.SwitchConverstaionPanel(type);
     }
-    /* 사운드 및 텍스트 끄기 */
+    // 사운드 및 텍스트 끄기
     public void TutorialAudioWithTextStop()
     {
         if (_tutoAudio.isPlaying)
@@ -35,7 +35,7 @@ public class TutorialAudioPlayer : MonoBehaviour
         _fvCanvasController.ConversationPanel.SetActive(false);
     }
 
-    /* 사운드 재생 중지 */
+    // 사운드 재생 중지 
     public void StopAudio()
     {
         if (_tutoAudio.isPlaying)
