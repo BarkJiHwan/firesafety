@@ -5,10 +5,16 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
+/*
+ * 포톤 접속 / 방 상태 변화시 콜백 받기위한 포톤 접속 매니저입니다.
+ * OnPlayerLeftRoom, OnPlayerPropertiesUpdate, OnMasterClientSwitched가
+ * PhotonConnectManager와 RoomMgr 두개에서 선언되어있어 버그 리포트에 추가로 올렸습니다.
+ */
 public class PhotonConnectManager : MonoBehaviourPunCallbacks
 {
-    private string _gameVersion = "1";
     [SerializeField] private PlayerSpawner _playerSpawner;
+
+    private string _gameVersion = "1";
     private bool[] seatTaken = new bool[6];
 
     private void Start()
@@ -26,11 +32,11 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
                 pool.ResourceCache.Add(soCharacter.characterName, soCharacter.characterPrefab);
             }
         }
-        TestConnectPhotonServer();
+        ConnectPhotonServer();
     }
 
-    // 테스트용 코드 덩어리들, 마스터 접속 상태인지 확인 후 접속 & 방 만들기 까지
-    public void TestConnectPhotonServer()
+    // 마스터 접속 상태인지 확인 후 접속 & 방 만들기 까지
+    public void ConnectPhotonServer()
     {
         PhotonNetwork.GameVersion = _gameVersion;
         PhotonNetwork.NickName = "테스트" + Random.Range(0, 1000);
@@ -43,17 +49,17 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         {
             if (!PhotonNetwork.InRoom)
             {
-                JoinRandomRoomOrCreatRoom();
+                JoinRandomRoomOrCreateRoom();
             }
         }
     }
 
     public override void OnConnectedToMaster()
     {
-        JoinRandomRoomOrCreatRoom();
+        JoinRandomRoomOrCreateRoom();
     }
 
-    // 테스트용, 이럴 일 없겠지만 누군가 방에 참가했을 때
+    // 누군가 방에 참가했을때, 빈자리를 찾아 인덱스에 넣는다.
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         foreach (var player in PhotonNetwork.PlayerList)
@@ -117,10 +123,10 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         player.GetComponent<PlayerComponents>().xRComponents.SetActive(true);
 
         GameManager.Instance.ResetGameTimer();
-        Debug.Log("나 참가 " + PhotonNetwork.LocalPlayer + "Room : " + PhotonNetwork.CurrentRoom.Name);        
+        Debug.Log("나 참가 " + PhotonNetwork.LocalPlayer + "Room : " + PhotonNetwork.CurrentRoom.Name);
     }
 
-    private void JoinRandomRoomOrCreatRoom()
+    private void JoinRandomRoomOrCreateRoom()
     {/*, PlayerTtl = 0*/
         RoomOptions options = new RoomOptions { MaxPlayers = 6, IsOpen = true };
         PhotonNetwork.JoinRandomOrCreateRoom(
@@ -143,8 +149,10 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
             TutorialDataMgr.Instance.SetNumber(myIndex);
         }
     }
+
+    //마스터가 바뀌면 다시한번 자리 인덱스 체크
     public override void OnMasterClientSwitched(Player newMasterClient)
-    {//마스터가 바뀌면 다시한번 자리 인덱스 체크
+    {
         if (!GameManager.Instance.IsGameStart)
         {
             if (PhotonNetwork.IsMasterClient)

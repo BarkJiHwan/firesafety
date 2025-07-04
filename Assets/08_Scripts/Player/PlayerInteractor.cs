@@ -1,7 +1,10 @@
 ﻿using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
+/*
+ * 플레이어와 상호작용이 필요한 것들에 대해 담아두는 정보입니다.
+ * 멀티플레이의 플레이어 범위 판별시에만 사용합니다.
+ */
 public class PlayerInteractor : MonoBehaviour
 {
     bool isActive = false;
@@ -96,7 +99,7 @@ public class PlayerInteractor : MonoBehaviour
     }
 
     // 에디터에서만 DrawGizmo 그려주기
-#if UNITY_EDITOR
+    #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Vector3 playerPos = gameObject.transform.position;
@@ -106,5 +109,5 @@ public class PlayerInteractor : MonoBehaviour
         Gizmos.DrawWireSphere(playerPos, 1.5f);
         Handles.Label(playerPos + Vector3.up, "Interaction Collider");
     }
-#endif
+    #endif
 }

@@ -357,7 +357,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     }
     #endregion
 
-    #region 수정된 킬 시스템
+    #region 킬 시스템
     /// <summary>
     /// 태우리 처치 시 호출 - 생존시간 기록 추가
     /// </summary>
@@ -381,7 +381,7 @@ public class TaewooriPoolManager : MonoBehaviourPunCallbacks
     }
 
     /// <summary>
-    /// 수정된 게임 종료 시 점수 계산 - 모든 플레이어 동일한 생존시간 점수
+    /// 게임 종료 시 점수 계산 - 모든 플레이어 동일한 생존시간 점수
     /// </summary>
     public void CalculateFinalScores()
     {

@@ -212,8 +212,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9640aa39b29fef448be6838f41b6b4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weaponPrefab: {fileID: 7256092359063047815, guid: 851196d9d6ec3904690530d91713507e,
-    type: 3}
   _leftHand:
     triggerAction:
       m_UseReference: 1
@@ -230,11 +228,8 @@ MonoBehaviour:
         type: 3}
     towelModelPrefab: {fileID: 7140024240024433306}
     wetPrefab: {fileID: 3302355045623961708}
-    chargingEffect: {fileID: 0}
-    shootingFlash: {fileID: 0}
     isWet: 0
     isEnabled: 0
-    activatedWeapon: 0
     interactor: {fileID: 5129111099602829020}
     handType: 1
     xrController: {fileID: 2359668730857187949}
@@ -254,19 +249,13 @@ MonoBehaviour:
         type: 3}
     towelModelPrefab: {fileID: 2316095284378651420}
     wetPrefab: {fileID: 3405035665661980844}
-    chargingEffect: {fileID: 0}
-    shootingFlash: {fileID: 0}
     isWet: 0
     isEnabled: 0
-    activatedWeapon: 0
     interactor: {fileID: 5129111100600365514}
     handType: 0
     xrController: {fileID: 2359668729783628956}
   _gotTowel: 0
   gotWet: 0
-  _nowCharging: 0
-  _count: 0
-  _bombSpeed: 3
 --- !u!1 &2359668729456127669
 GameObject:
   m_ObjectHideFlags: 0
@@ -898,7 +887,6 @@ MonoBehaviour:
     z: 1
     w: 1
   syncTarget: {fileID: 8929926404025022717}
-  scaledHeightSyncronizer: {fileID: 0}
 --- !u!1 &2359668729984268863
 GameObject:
   m_ObjectHideFlags: 0
@@ -1310,7 +1298,6 @@ MonoBehaviour:
     z: 1
     w: 1
   syncTarget: {fileID: 8929926403325638007}
-  scaledHeightSyncronizer: {fileID: 0}
 --- !u!1 &2359668730465428492
 GameObject:
   m_ObjectHideFlags: 0
@@ -1530,7 +1517,6 @@ MonoBehaviour:
     z: 1
     w: 1
   syncTarget: {fileID: 8929926402880810382}
-  scaledHeightSyncronizer: {fileID: 0}
 --- !u!114 &8442842775975215377
 MonoBehaviour:
   m_ObjectHideFlags: 0

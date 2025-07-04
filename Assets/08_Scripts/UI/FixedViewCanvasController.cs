@@ -89,11 +89,15 @@ public class FixedViewCanvasController : MonoBehaviour
     // ScoreBoard 켜는 것
     public void TurnOnScoreBoard()
     {
+        // 씬 타입에 따라 점수 시작 인덱스 설정
         InitScoreIndex(SceneController.Instance.chooseSceneType);
+        // 점수판 UI 활성화
         scorePanel.SetActive(true);
+        // 점수 로딩 대기 시작
         StartCoroutine(UpdateBoard());
     }
 
+    // 점수가 모두 로딩될 때까지 대기 후 점수판 업데이트
     IEnumerator UpdateBoard()
     {
         yield return new WaitUntil(() =>
@@ -102,20 +106,23 @@ public class FixedViewCanvasController : MonoBehaviour
             {
                 if (score == 0)
                 {
-                    return false;
+                    return false; // 점수가 아직 0이면 대기
                 }
             }
-            return true;
+            return true; // 모든 점수가 0이 아니면 진행
         });
         //여기서 한번 기다려야함
         if (scorePanel.activeSelf == true)
         {
             SceneType sceneType = SceneController.Instance.chooseSceneType;
+            // 씬 타입에 따라 점수판 기준 변경
             scoreBoardCtrl?.ChangeBoardStandard(sceneType);
+            // 일정 시간 후 점수판 닫기
             StartCoroutine(CloseScoreBoard());
         }
     }
 
+    // 점수판 일정 시간 후 자동으로 닫고 다음 씬으로 이동
     IEnumerator CloseScoreBoard()
     {
         float elapsedTime = 0;
@@ -124,10 +131,13 @@ public class FixedViewCanvasController : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
             restSecond = Mathf.CeilToInt(showScoreTime - elapsedTime);
+            // 남은 시간 갱신
             restSecondText.text = restSecond.ToString();
             yield return null;
         }
+        // 점수판 UI 비활성화
         scorePanel.SetActive(false);
+        // 점수판 초기화
         scoreBoardCtrl.InitateScoreBoard();
 
         // 예방/화재에서는 초가 끝나면 방을 나가서 씬 선택 창으로 이동
@@ -146,6 +156,7 @@ public class FixedViewCanvasController : MonoBehaviour
         }
     }
 
+    // 점수 인덱스는 각 씬 타입별로 다르게 지정
     void InitScoreIndex(SceneType type)
     {
         switch (type)
@@ -175,44 +186,57 @@ public class FixedViewCanvasController : MonoBehaviour
         switch (type)
         {
             case UIType.Narration:
+                // 나레이션 위치로 이동
                 pos = narrationPos;
+                // 나레이션 출력
                 conversationCtrl.PrintNarration();
                 break;
             case UIType.Sobaek:
             case UIType.Dataewoori:
+                // 대화창 위치로 이동
                 pos = conversationPos;
+                // 대화 출력
                 conversationCtrl.PrintConversation();
+                // UIType에 따라 캐릭터 이미지 변경
                 conversationCtrl.ChangeDataeWooriImage(type);
                 break;
         }
+        // 대화창 위치 및 활성화
         conversationBoard.GetComponent<RectTransform>().anchoredPosition = pos;
         conversationPanel.SetActive(true);
     }
 
+    // 경고창 활성 상태 반환
     public bool IsWarningSignActive()
     {
         return warningPanel.activeSelf;
     }
 
+    // 경고창 표시 / 숨김
     public void TurnWarningSign(bool isActive)
     {
         warningPanel.SetActive(isActive);
     }
 
+    // 플레이어 인덱스에 따라 배경 색상 변경
     public void ChangeScoreBoardPlayerColor(int index)
     {
         scoreBoardCtrl.SetPlayerImageBack(index);
     }
 
+    // 게임 페이즈에 따라 시간 패널 표시 / 숨김
     public void TurnTimeBoard(GamePhase phase)
     {
         if(phase == GamePhase.Prevention)
         {
+            // 예방 단계에서 시간 표시
             timePanel.SetActive(true);
         }
         else if(phase == GamePhase.LeaveDangerArea)
         {
+            // LeaveDangerArea 페이즈에서 시간 숨김
             timePanel.SetActive(false);
+            // 페이지 변경할 때마다 이벤트 해제
             GameManager.Instance.OnPhaseChanged -= TurnTimeBoard;
         }
     }

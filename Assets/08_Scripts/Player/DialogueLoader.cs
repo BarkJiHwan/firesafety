@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/* 대화 데이터 타입에 따라 로딩하도록 만든 커스텀 enum 클래스입니다. */
 public enum DialogueDataType
 {
     Tutorial,
@@ -11,6 +10,7 @@ public enum DialogueDataType
     Exit
 }
 
+/* 대화의 텍스트와 사운드를 한번에 로딩하기 위한 커스텀 데이터 클래스입니다. */
 public class DialogueData
 {
     private DialogueDataType _type;
@@ -36,6 +36,13 @@ public class DialogueData
     public override string ToString() => "type : " + _type + " id : " + _id + " fileName : " + _fileName + " text : " + _text;
 }
 
+/*
+ *  대화의 텍스트와 사운드를 로딩하기 위한 로더입니다.
+ *  CSV 파일을 읽어 원하는 경로의 파일을 로딩합니다.
+ *  로딩시에 한번에 한 CSV를 로딩한다고 가정하고 구성했습니다.
+ *  Start문에서는 시작씬의 기본 데이터를 로딩해 두었습니다.
+ *  대화 (텍스트 / 사운드) 세트를 바꾸고 싶다면 LoadDialogue를 별도로 구성하여 호출해야 합니다
+ */
 public class DialogueLoader : MonoBehaviour
 {
     private readonly string _audioMetaDataFolder = "AudioFileData/";
@@ -60,7 +67,7 @@ public class DialogueLoader : MonoBehaviour
         _audioDict = new Dictionary<string, AudioClip>();
     }
 
-    // 처음은 튜토리얼 대화 흐름 읽어오기
+    // 처음은 씬에 따라 기본 대사 흐름 읽어오기
     private void Start()
     {
         if (SceneManager.GetActiveScene().name.Equals("PlayerScene_BJH_Test")
@@ -74,13 +81,6 @@ public class DialogueLoader : MonoBehaviour
         {
             LoadExitData();
         }
-    }
-
-    private IEnumerator WaitForTest(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-        DialoguePlayer dialoguePlayer = FindObjectOfType<DialoguePlayer>();
-        dialoguePlayer.Stop();
     }
 
     public void LoadTutorialData() => LoadDialogue(DialogueDataType.Tutorial);

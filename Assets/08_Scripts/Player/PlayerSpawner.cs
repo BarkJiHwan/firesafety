@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Splines;
 
+/* 플레이어 생성시 판별용으로 쓰는 Enum 클래스입니다. */
 public enum PlayerEnum
 {
     Bico,
@@ -11,6 +12,10 @@ public enum PlayerEnum
     Toto
 }
 
+/*
+ *  플레이어 생성시 런타임으로 스폰해주기 위한 클래스 입니다
+ *  Photon을 통한 PhotonNetwork.Instantiate와 LocalInstantiate를 사용합니다.
+ */
 public class PlayerSpawner : MonoBehaviour
 {
     #region 인스펙터 설정
@@ -125,11 +130,6 @@ public class PlayerSpawner : MonoBehaviour
         PlayerCharacterSo selectedChar = playerCharacterArray[(int)playerEnum];
         GameObject player = PhotonNetwork.Instantiate(selectedChar.characterName, pos, quaternion);
 
-        if (IsMyPlayer(player))
-        {
-            AttachSobaekToPlayer(player);
-        }
-
         return player;
     }
 
@@ -137,12 +137,6 @@ public class PlayerSpawner : MonoBehaviour
     {
         PlayerCharacterSo selectedChar = playerCharacterArray[(int)playerEnum];
         return Instantiate(selectedChar.characterPrefabSingle, transform.position, transform.rotation);
-    }
-
-    private bool IsMyPlayer(GameObject player)
-    {
-        PhotonView pv = player.GetComponent<PhotonView>();
-        return pv != null && pv.IsMine;
     }
     #endregion
 
