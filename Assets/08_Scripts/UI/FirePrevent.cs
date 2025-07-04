@@ -22,14 +22,16 @@ public partial class FirePreventable : MonoBehaviour
         arrMat[0] = Resources.Load<Material>("Materials/OutlineMat");
         arrMat[1] = Resources.Load<Material>("Materials/OriginMat");
 
-        // 기존의 메테리얼
+        // 기존의 메테리얼 저장
         originMats = new Material[_renderer.materials.Length];
         originMats = _renderer.materials;
 
+        // 자식 오브젝트가 같은 레이어면 처리
         if (transform.childCount > 0 && transform.GetChild(0).gameObject.layer == gameObject.layer)
         {
             isHaveChild = true;
             childRend = transform.GetChild(0).GetComponent<Renderer>();
+            // 기존의 자식 오브젝트 Material 저장
             originChildMats = new Material[childRend.materials.Length];
             originChildMats = childRend.materials;
         }
@@ -37,8 +39,10 @@ public partial class FirePreventable : MonoBehaviour
 
     public void SetMaterials(Renderer rend, bool isActive)
     {
+        // Material 속성 값 변경
         foreach (var mat in rend.materials)
         {
+            // 해당 Material 아웃라인, 빛나는거 키고 끄는 것
             if (mat.HasProperty("_isNearPlayer"))
             {
                 //Debug.Log(mat.GetFloat("_isNearPlayer"));
@@ -59,6 +63,7 @@ public partial class FirePreventable : MonoBehaviour
     public bool GetHighlightProperty()
     {
         bool isHaveProperty = false;
+        // Renderer에 "_RimPower" 속성 존재 여부 확인
         foreach (var mat in _renderer.materials)
         {
             if (mat.HasProperty("_RimPower"))
@@ -76,6 +81,7 @@ public partial class FirePreventable : MonoBehaviour
 
     public bool GetNearPlayer()
     {
+        // _isNearPlayer 프로퍼티 값 반환
         foreach(var mat in _renderer.materials)
         {
             if(mat.HasProperty("_isNearPlayer"))
@@ -92,6 +98,7 @@ public partial class FirePreventable : MonoBehaviour
 
     void SetHighlightStronger(Renderer rend, float interValue)
     {
+        // 하이라이트 세기 조절
         if (rend.materials.Length < 2)
         {
             Debug.Log(rend.gameObject.name);
@@ -100,6 +107,7 @@ public partial class FirePreventable : MonoBehaviour
         Material highlightMat = rend.materials[1];
         if (highlightMat.HasProperty("_RimPower"))
         {
+            // 근접 시 밝아지고 멀어지면 어두어짐
             float rimPower = Mathf.Lerp(2, -0.8f, interValue);
             highlightMat.SetFloat("_RimPower", rimPower);
         }
@@ -118,6 +126,7 @@ public partial class FirePreventable : MonoBehaviour
     {
         float activeNum;
         bool isActive = false;
+        // 현재 _isNearPlayer가 켜져 있는지 확인
         foreach (var mat in _renderer.materials)
         {
             if (mat.HasProperty("_isNearPlayer"))
@@ -139,12 +148,14 @@ public partial class FirePreventable : MonoBehaviour
         Renderer rend = obj.GetComponent<Renderer>();
         Texture baseTexture;
 
+        // obj가 자신이면 originMats 사용
         Material[] arrMaterials;
         if (obj == gameObject)
         {
             arrMaterials = new Material[originMats.Length];
             arrMaterials = originMats;
         }
+        // 자식이면 originChildMats 사용
         else
         {
             arrMaterials = new Material[originChildMats.Length];
@@ -154,6 +165,7 @@ public partial class FirePreventable : MonoBehaviour
         // BaseMap이 있는 Material이면 Texture 받아오기
         foreach (Material originMat in arrMaterials)
         {
+            // _preventTexture에 원래 텍스처 복사
             baseTexture = originMat.GetTexture("_BaseMap");
             if (baseTexture != null)
             {
@@ -199,6 +211,7 @@ public partial class FirePreventable : MonoBehaviour
 
     void MakePowerStrip()
     {
+        // PowerStrip 타입은 3개의 Material을 사용
         Material[] powerstrip = new Material[3] { arrMat[0], arrMat[1], originMats[1] };
         powerstrip[1].SetTexture("_PreventTexture", null);
         _renderer.materials = powerstrip;
@@ -212,12 +225,14 @@ public partial class FirePreventable : MonoBehaviour
 
     public void MakeExceptObjectOff()
     {
+        // PowerStrip, OldWire 타입 복구 처리
         if (_myType == PreventType.PowerStrip || _myType == PreventType.OldWire)
         {
             if(_myType== PreventType.PowerStrip)
             {
                 _renderer.materials = originMats;
             }
+            // 자식이 있으면 자식도 복구 처리
             if (isHaveChild == true)
             {
                 childRend.materials = originChildMats;
@@ -228,6 +243,7 @@ public partial class FirePreventable : MonoBehaviour
     // UI 액션
     void OnSetUIAction(GamePhase phase)
     {
+        // 예방 페이즈이면 이벤트 구독
         if (phase == GamePhase.Prevention)
         {
             OnAlreadyPrevented += OnSetPreventMaterialsOff;
@@ -242,23 +258,29 @@ public partial class FirePreventable : MonoBehaviour
                 // 예외인 애들 추가
                 MakeExceptObjectOff();
             }
+            // 불필요한 이벤트 해제
             GameManager.Instance.OnPhaseChanged -= OnSetUIAction;
         }
     }
 
     public void TriggerPreventObejct(bool isOn)
     {
+        // 한번만 처리되도록 플래그 사용
         if(isAlreadyHandled == true)
         {
             return;
         }
         isAlreadyHandled = false;
+        // 켜져 있으면
         if(isOn == true)
         {
+            // 예방해야 하는 오브젝트 이벤트 발생
             OnHaveToPrevented?.Invoke();
         }
+        // 꺼져 있으면
         else
         {
+            // 이미 예방한 오브젝트 이벤트 발생
             OnAlreadyPrevented?.Invoke();
         }
     }
@@ -274,6 +296,7 @@ public partial class FirePreventable : MonoBehaviour
 
     public void OnSetPreventMaterialsOn()
     {
+        // 예방 필요하면 빛나는거 표시
         MakeExceptPreventObject(_myType);
         SetActiveOnMaterials(true);
         OnHaveToPrevented -= OnSetPreventMaterialsOn;

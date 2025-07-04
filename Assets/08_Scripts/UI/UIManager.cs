@@ -56,6 +56,7 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < firePreventObjects.Length; i++)
         {
             var interactable = firePreventObjects[i].preventObject.GetComponent<XRSimpleInteractable>();
+            // 예방 오브젝트에 Ray가 닿으면 오브젝트 위에 UI 띄우기
             interactable.hoverEntered.AddListener((args) =>
             {
                 if (objectUICtrl != null)
@@ -63,6 +64,7 @@ public class UIManager : MonoBehaviour
                     objectUICtrl.SelectedObject(args);
                 }
             });
+            // 예방 오브젝트에 Ray가 벗어나면 오브젝트 위에 UI 띄우기
             interactable.hoverExited.AddListener((args) =>
             {
                 if (objectUICtrl != null)

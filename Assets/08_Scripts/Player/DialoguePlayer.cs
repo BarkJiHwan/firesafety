@@ -1,8 +1,15 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
+/*
+ * DialoguePlayer와 쌍을 이뤄 대화를 재생하는 클래스입니다.
+ * 한개 대사를 호출할때는 PlayWithText,
+ * 여러개가 쭉 이어지는 대사라면 PlayWithTexts를 사용하도록 구성했습니다.
+ * 대화가 끝난 후에 어떤 이벤트를 발생시키고 싶다면
+ * onFinishDialogue를 이용해 등록하고, 바로 해재해줍니다
+ * (이벤트를 하나만 만들었습니다, 여러개 흐름을 만들어야 한다면 더 추가해야할듯)
+ */
 [RequireComponent(typeof(DialogueLoader))]
 public class DialoguePlayer : MonoBehaviour
 {

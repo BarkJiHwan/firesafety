@@ -2,6 +2,10 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+ *  탈출 씬 재생시 대화 재생 및 이벤트들을 담당하는 클래스입니다.
+ *  후반부 작업시 시간이 부족하여 객채지향적으로 여러개로 나누지는 못했습니다.
+ */
 public class ExitDialogue : MonoBehaviour
 {
     public GameObject quizUI;

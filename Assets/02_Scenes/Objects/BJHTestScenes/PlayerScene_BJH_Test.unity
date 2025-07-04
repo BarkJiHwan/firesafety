@@ -1110,7 +1110,6 @@ MonoBehaviour:
   dataMgr: {fileID: 1308356751}
   radius: 1
   speed: 20
-  appearDuration: 7
   heightOffset: 0.3
   rotArrow: {x: 90, y: -90, z: 0}
   flyDuration: 5
@@ -1467,6 +1466,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_fontSizeBase
       value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 2085261210588563304, guid: 7e8817f6f572b7146bdae7d547c81463,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -488
       objectReference: {fileID: 0}
     - target: {fileID: 4060705980224060108, guid: 7e8817f6f572b7146bdae7d547c81463,
         type: 3}
@@ -3456,6 +3460,7 @@ MonoBehaviour:
     StartTime: 242
   <GameTimer>k__BackingField: 0
   _currentPhase: 0
+  bgm: {fileID: 0}
 --- !u!4 &1824487200
 Transform:
   m_ObjectHideFlags: 0

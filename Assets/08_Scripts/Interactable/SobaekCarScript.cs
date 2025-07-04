@@ -3,14 +3,6 @@ using UnityEngine;
 using UnityEngine.Splines;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public enum CarSpeed
-{
-    Stop,
-    GearOne,
-    GearTwo,
-    GearThree
-}
-
 public class SobaekCarScript : MonoBehaviour
 {
     #region 인스펙터 설정
