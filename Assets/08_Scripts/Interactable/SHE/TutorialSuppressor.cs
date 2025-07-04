@@ -14,9 +14,7 @@ public class TutorialSuppressor : MonoBehaviourPunCallbacks
     [SerializeField] private float _sprayRadius = 1;
     [SerializeField] private int _damage = 1;
     [SerializeField] private int _maxAmount = 100;
-    [SerializeField] private int _decreaseAmount = 1;
     [SerializeField] private LayerMask _fireMask;
-    [SerializeField] private float _refillCooldown = 3f;
     [SerializeField] private LayerMask _supplyMask;
     [SerializeField] private float _supplyDetectRange = 0.8f;
     [SerializeField] private Transform _sprayOrigin; //스프레이 발사 지점
@@ -44,6 +42,7 @@ public class TutorialSuppressor : MonoBehaviourPunCallbacks
         }
         return null;
     }
+    //기본적인 구성은 모두 본게임 소화기와 동일합니다
     private IEnumerator Start()
     {
         while (SupplyManager.Instance == null)

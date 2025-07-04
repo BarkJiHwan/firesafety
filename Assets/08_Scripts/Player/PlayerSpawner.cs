@@ -21,13 +21,13 @@ public class PlayerSpawner : MonoBehaviour
     [SerializeField] private GameObject exitSobaekPrefab;
     [SerializeField] private GameObject sobaekCarPrefab;
     [SerializeField] private SplineContainer carTrack;
-    #endregion
 
-    #region 정적 참조
-    private static GameObject currentSobaekCar;
-    private static GameObject currentPlayer; // CHM - 텔레포트에서 사용할 플레이어 참조
+    private GameObject _currentSobaekCar;
+    private GameObject _currentPlayer; // CHM - 텔레포트에서 사용할 플레이어 참조
 
     public SplineContainer CarTrack => carTrack;
+    public GameObject CurrentSobaekCar => _currentSobaekCar;
+    public GameObject CurrentPlayer => _currentPlayer;
 
     #endregion
 
@@ -75,7 +75,7 @@ public class PlayerSpawner : MonoBehaviour
 
         PlayerEnum selectedChar = GetSelectedCharacter();
         GameObject player = LocalInstantiate(selectedChar);
-        currentPlayer = player;//CHM 추가
+        _currentPlayer = player;//CHM 추가
         player.GetComponent<PlayerComponents>().customTunnelingVignette.SightShrink();
 
         if (player != null)
@@ -88,7 +88,8 @@ public class PlayerSpawner : MonoBehaviour
         string currentSceneName = SceneManager.GetActiveScene().name;
 
         // 직접 씬 이름으로 확인
-        if (currentSceneName.Equals("ExitScenes_CHM.Test"))
+        if (currentSceneName.Equals("ExitScenes_CHM.Test")
+            || currentSceneName.Equals("ExitScene"))
         {
             return true;
         }
@@ -150,7 +151,7 @@ public class PlayerSpawner : MonoBehaviour
     {
         if (!ValidateSobaekSetup())
             return;
-        if (Sobaek.Instance != null)
+        if (ExitSobaek.Instance != null)
             return;
 
         GameObject sobaekObj = CreateSobaek(player);
@@ -198,7 +199,7 @@ public class PlayerSpawner : MonoBehaviour
 
         GameObject sobaekCarObj = CreateSobaekCar(player);
         sobaek.SobaekCar = sobaekCarObj;
-        currentSobaekCar = sobaekCarObj;
+        _currentSobaekCar = sobaekCarObj;
     }
 
     private GameObject CreateSobaekCar(GameObject player)
@@ -247,17 +248,16 @@ public class PlayerSpawner : MonoBehaviour
     }
     #endregion
 
-    #region 정적 메서드
     //소화전 클릭시 출발 할 메서드
-    public static void StartSobaekCar()
+    public void StartSobaekCar()
     {
-        if (currentSobaekCar == null)
+        if (CurrentSobaekCar == null)
         {
             Debug.LogWarning("생성된 소백카가 없습니다!");
             return;
         }
 
-        SobaekCarScript carScript = currentSobaekCar.GetComponent<SobaekCarScript>();
+        SobaekCarScript carScript = CurrentSobaekCar.GetComponent<SobaekCarScript>();
         if (carScript != null)
         {
             carScript.StartTrack();
@@ -270,22 +270,21 @@ public class PlayerSpawner : MonoBehaviour
 
     // CHM 텔레 포트용 생성된 플레이어,소백이카 저장할 메서드
 
-    public static CustomTunnelingVignette GetPlayerVignette()
+    public CustomTunnelingVignette GetPlayerVignette()
     {
-        if (currentPlayer != null)
+        if (CurrentPlayer != null)
         {
-            return currentPlayer.GetComponent<PlayerComponents>().customTunnelingVignette;
+            return CurrentPlayer.GetComponent<PlayerComponents>().customTunnelingVignette;
         }
         return null;
     }
 
-    public static SplineAnimate GetSobaekCarSpline()
+    public SplineAnimate GetSobaekCarSpline()
     {
-        if (currentSobaekCar != null)
+        if (CurrentSobaekCar != null)
         {
-            return currentSobaekCar.GetComponent<SplineAnimate>();
+            return CurrentSobaekCar.GetComponent<SplineAnimate>();
         }
         return null;
     }
-    #endregion
 }

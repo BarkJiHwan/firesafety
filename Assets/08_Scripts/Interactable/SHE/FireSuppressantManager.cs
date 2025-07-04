@@ -43,9 +43,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [SerializeField] private int _maxAmount = 100;
     [SerializeField] private int _decreaseAmount = 1;
     [SerializeField] private LayerMask _fireMask;
-    [SerializeField] private float _refillCooldown = 3f;
     [SerializeField] private LayerMask _supplyMask;
-    [SerializeField] private float _supplyDetectRange = 0.8f;
     [SerializeField] private float _supplyCooldown;
     [SerializeField] private Transform _sprayOrigin; //스프레이 발사 지점
     [SerializeField] private int _currentAmount = 100;
@@ -64,12 +62,13 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
     [SerializeField] private bool _isPressed;
     private int _colHitCount;
     private int _fireHitCount;
-    //Stopwatch stopwatch = new();
     private IEnumerator _currentCor;
+    //레이어가 맞는지 확인하는 변수. 실제로 사용하지는 않았지만 필요하다면 사용하십시오
     public static bool IsInLayerMask(GameObject obj, LayerMask mask)
     {
         return (mask.value & (1 << obj.layer)) != 0;
     }
+    //손을 편하게 가져오는 함수
     private HandData GetHand(EHandType type)
     {
         if (_hands.TryGetValue(type, out var hand))
@@ -78,6 +77,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         }
         return null;
     }
+    //코루틴으로 시작을 안돌리면 할당이 불안정해지는 경우가 있어서요
     private IEnumerator Start()
     {
         yield return new WaitUntil(() => SupplyManager.Instance != null);
@@ -101,6 +101,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
             enabled = false;
         }
     }
+    //튜토리얼 중에는 동작하지 않도록 만들었습니다
     private void Update()
     {
         if (!GameManager.Instance.IsGameStart)
@@ -118,7 +119,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
             FeverTimeOn();
         }
     }
-
+    //손 입력 값을 감지하고 실행하는 부분
     private void ProcessHand(EHandType type)
     {
         if (!pView.IsMine)
@@ -142,6 +143,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
             ResetSpray(type);
         }
     }
+    //피버타임이면 실행
     private void FeverTimeOn()
     {
         if (!_isFeverTime)
@@ -151,34 +153,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
             _currentAmount = 100;
         }
     }
-
-    //CHM 변경 
-    //private void Spray(HandData hand)
-    //{
-    //    _sprayStartPos = _sprayOrigin.transform.position;
-    //    _sprayEndPos = _sprayStartPos + (_sprayOrigin.forward * _sprayLength);
-    //
-    //    _fireHitCount = Physics.OverlapCapsuleNonAlloc(_sprayStartPos, _sprayEndPos, _sprayRadius, _fireHits, _fireMask);
-    //    if (!hand.normalFireFX.isPlaying)
-    //    {
-    //        hand.normalFireFX.Play();
-    //    }
-    //
-    //    // CHM: 마스터 클라이언트 체크 제거 - 각 클라이언트가 자신의 데미지 요청 처리
-    //    for (int i = 0; i < _fireHitCount; i++)
-    //    {
-    //        var hit = _fireHits[i];
-    //        if (!_cacheds.TryGetValue(hit, out var cached))
-    //        {
-    //            cached = hit.gameObject.GetComponent<IDamageable>();
-    //            if (!_cacheds.ContainsKey(hit) && cached != null)
-    //            {
-    //                _cacheds[hit] = cached;
-    //            }
-    //        }
-    //     }
-    //
-    //        // CHM: 네트워크 동기화를 위한 태우리 타입별 분기 처리 추가
+    //발사!
     private void Spray(EHandType type)
     {
         var hand = GetHand(type);
@@ -219,7 +194,6 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
             return;
         }
         _fireHitCount = Physics.OverlapCapsuleNonAlloc(start, end, _sprayRadius, _fireHits, _fireMask);
-        //콜라이더로 캐싱하면 불안정하다고...
         // 실제 공격자 ID 가져오기
         int attackerID = info.Sender.ActorNumber;
         UnityEngine.Debug.Log($"[RPC_RequestDamage] 실제 공격자 ID: {attackerID}");
@@ -239,8 +213,6 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
                     continue;
                 }
             }
-            //_cacheds[hit]?.TakeDamage(_damage);
-            //UnityEngine.Debug.Log("데미지 처리. 호출자: " + info.Sender);
             if (cached != null)
             {
                 // 태우리 타입인지 확인하고 공격자 ID 설정 후 데미지 처리
@@ -277,6 +249,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
             yield break;
         }
         var hand = GetHand(type);
+        //분사 시작
         if (!hand.initialFire && _currentAmount > 0)
         {
             hand.initialFireFX.Play();
@@ -286,6 +259,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
             pView.RPC("RPC_StopPlayFX", RpcTarget.Others, type);
             hand.initialFire = true;
         }
+        //진짜 분사는 여기부터
         while (hand.triggerAction.action.ReadValue<float>() > 0)
         {
             if (_currentAmount > 0)
@@ -296,6 +270,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
                 }
                 Spray(type);
             }
+            //다 떨어지면 바닥난 이펙트
             if (_currentAmount <= 0)
             {
                 if (hand.normalFireFX.isPlaying)
@@ -312,6 +287,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
             yield return _checkTime;
         }
     }
+    //파티클 상태 초기화
     private void ResetSpray(EHandType type)
     {
         if (!pView.IsMine)
@@ -337,6 +313,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         hand.initialFire = false;
         _currentCor = null;
     }
+    //보급
     public void Supply(EHandType type)
     {
         if (!pView.IsMine || GameManager.Instance.CurrentPhase == GamePhase.Waiting || !GameManager.Instance.IsGameStart)
@@ -367,7 +344,7 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
             _currentAmount = _maxAmount;
         }
     }
-
+    //소화기 제거가 필요할 경우 사용
     public void DetachSuppressor()
     {
         if (_rightHand.enabled)
@@ -475,5 +452,5 @@ public class FireSuppressantManager : MonoBehaviourPunCallbacks
         Gizmos.DrawLine(start, end);
     }
 
-  
+
 }

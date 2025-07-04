@@ -193,7 +193,7 @@ public class ObjectUICtrl : MonoBehaviour
         // 오래된 선일 경우 위치 조정
         else if (currentPrevent.MyType == PreventType.OldWire)
         {
-            transform.position = originPosition + new Vector3(0, 0, 1);
+            transform.position = originPosition + new Vector3(0, 0, 0.5f);
         }
 
         // 장애물(대채로 벽)로 UI가 가려지면 위치 이동

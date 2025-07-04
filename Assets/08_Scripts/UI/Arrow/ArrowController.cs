@@ -12,8 +12,6 @@ public class ArrowController : MonoBehaviour
     [SerializeField] float radius = 2f;
     // 회전 속도
     [SerializeField] float speed = 5f;
-    [SerializeField] float appearDuration = 1f;
-    // 화살표의 높이 오프셋
     [SerializeField] float heightOffset = 0.7f;
     // 화살표 회전에 추가할 로컬 오일러 회전값
     [SerializeField] Vector3 rotArrow;

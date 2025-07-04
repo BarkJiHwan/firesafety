@@ -23,31 +23,53 @@ public class FireObjMgr : MonoBehaviour
         }
     }
 
-    public Dictionary<int, MapIndex> _zoneDict = new Dictionary<int, MapIndex>();
-    public List<FireObjScript> _fireObjList = new List<FireObjScript>();
-    public List<FirePreventable> _preventObjList = new List<FirePreventable>();
+    // 영역(Zone) 관련 데이터 저장용 딕셔너리
+    public Dictionary<int, MapIndex> _zoneDict = new Dictionary<int, MapIndex>(); // 각 영역의 인덱스와 MapIndex 매핑
 
-    private bool _hasAreaReset = false;
-    private bool _hasRefreshedFireObjs = false;
-    private bool _isInBurningPhase = false;
-    private bool _hasLeaveDangerArea = false;
+    // 현재 맵에 존재하는 모든 화재 오브젝트 리스트
+    public List<FireObjScript> _fireObjList = new List<FireObjScript>(); // 맵 내의 화재 오브젝트 참조 리스트
 
+    // 화재 예방이 가능한 오브젝트 리스트
+    public List<FirePreventable> _preventObjList = new List<FirePreventable>(); // 화재 예방이 가능한 오브젝트 리스트
+
+    // 상태 플래그 변수들
+    private bool _hasAreaReset = false;            // 영역이 리셋되었는지 여부
+    private bool _hasRefreshedFireObjs = false;    // 화재 오브젝트가 갱신되었는지 여부
+    private bool _isInBurningPhase = false;        // 현재 화재(불타는) 단계인지 여부
+    private bool _hasLeaveDangerArea = false;      // 위험 구역을 벗어났는지 여부
+
+    // 태우리 생성 쿨타임 관련 변수
     [Header("태우리 생성 쿨타임")]
-    [SerializeField] private float _isBuringCoolTime = 30;
+    [SerializeField] private float _isBuringCoolTime = 30; // 태우리 생성 쿨타임(초 단위)
 
+    // 플레이어 수 관련 변수
     [Header("플레이어 수")]
     [Tooltip("추후 외부에서 주입 가능하도록 변경")]
-    [SerializeField] private int _playerCount = 1;
-    private GamePhase currentPhase;
-    private WaitForSeconds _forSeconds;
-    [SerializeField] private int _count;
+    [SerializeField] private int _playerCount = 1; // 현재 플레이어 수(기본값 1명)
 
+    // 게임의 현재 단계(페이즈)
+    private GamePhase currentPhase; // 현재 게임 페이즈
+
+    // 코루틴에서 사용할 대기 시간 객체
+    private WaitForSeconds _forSeconds; // 코루틴에서 대기 시간으로 사용
+
+    // 카운트(예: 남은 오브젝트 수 등)
+    [SerializeField] private int _count; // 카운트 변수(용도에 따라 이름 구체화 권장)
+
+    // 화재 예방 점수(외부에서 읽기만 가능)
     [field: SerializeField]
-    public int CompletedPreventionScore { get; private set; }
+    public int CompletedPreventionScore { get; private set; } // 완료된 화재 예방 점수
+
+    // 현재 점수(외부에서 읽기만 가능)
     [field: SerializeField]
-    public int _score { get; private set; }
-    public int Count { get => _count; set => _count = value; }
-    [SerializeField] private ScoreManager _scoreManager;
+    public int _score { get; private set; } // 현재 점수
+
+    // 카운트 프로퍼티(외부에서 읽고 쓸 수 있음)
+    public int Count { get => _count; set => _count = value; } // _count의 Getter/Setter
+
+    // 점수 관리 객체
+    [SerializeField] private ScoreManager _scoreManager; // 점수 관리용 ScoreManager 참조
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -59,7 +81,7 @@ public class FireObjMgr : MonoBehaviour
         RefreshZoneDictionary();
     }
     private void Start()
-    {        
+    {
         currentPhase = GameManager.Instance.CurrentPhase;
         _forSeconds = new WaitForSeconds(_isBuringCoolTime);
     }
@@ -70,18 +92,17 @@ public class FireObjMgr : MonoBehaviour
         {
             _playerCount = PhotonNetwork.PlayerList.Count();
             _isBuringCoolTime = _isBuringCoolTime / _playerCount;
-            Debug.Log("예방 페이즈 - 모든 구역 초기화");
+            // 구역 초기화
             foreach (var zone in _zoneDict.Values)
             {
                 ResetZone(zone);
             }
-            RefreshAllPrevention();
+            RefreshAllPrevention(); // 모든 화재 예방 오브젝트 상태를 갱신
             StartCoroutine(PreventionPhaseCoroutine());
             _hasAreaReset = true;
         }
         if (currentPhase == GamePhase.Fire && !_hasRefreshedFireObjs)
         {
-            Debug.Log("화재 페이즈 - 오브젝트 갱신");
             if(_scoreManager == null)
             {
                 _scoreManager = FindObjectOfType<ScoreManager>();
@@ -97,16 +118,13 @@ public class FireObjMgr : MonoBehaviour
 
         if (currentPhase == GamePhase.Fever && !_isInBurningPhase)
         {
-            Debug.Log("버닝 페이즈 - 태우리 쿨타임 감소");
-            _isBuringCoolTime = _isBuringCoolTime / 2;
+            _isBuringCoolTime = _isBuringCoolTime / 2; // 버닝 타임이면 태우리 생성 쿨타임 반으로 감소
             _forSeconds = new WaitForSeconds(_isBuringCoolTime);
             _isInBurningPhase = true;
         }
         if (currentPhase == GamePhase.LeaveDangerArea && !_hasLeaveDangerArea)
         {
-            Debug.Log("대피페이즈 돌입. 일단 게임 종료");
-            StopAllCoroutines();
-            Debug.Log("코루틴 멈춤");
+            StopAllCoroutines(); // 코루틴 멈추기
             _hasLeaveDangerArea = true;
         }
     }
@@ -119,7 +137,7 @@ public class FireObjMgr : MonoBehaviour
             preventable.IsFirePreventable = false;
         }
     }
-    //딕셔너리 초기화
+    // 딕셔너리 초기화
     public void RefreshZoneDictionary()
     {
         _zoneDict.Clear();
@@ -135,7 +153,7 @@ public class FireObjMgr : MonoBehaviour
         }
     }
 
-    // 모든 구역의 화재 오브젝트 갱신
+    // 예방이 안된 오브젝트 갱신
     public void RefreshAllFireObjects()
     {
         foreach (var zone in _zoneDict.Values)
@@ -154,6 +172,7 @@ public class FireObjMgr : MonoBehaviour
             }
         }
     }
+    // 모든 화재 예방 오브젝트 상태를 갱신
     public void RefreshAllPrevention()
     {
         foreach (var zone in _zoneDict.Values)
@@ -207,6 +226,7 @@ public class FireObjMgr : MonoBehaviour
             yield return _forSeconds;
         }
     }
+    // 구역내에 최소 1개의 오브젝트먼저 불이나게 구현
     private void ActivateRandomFireObjectsPerZone()
     {
         int totalTargetCount = _playerCount * 3;
@@ -280,11 +300,14 @@ public class FireObjMgr : MonoBehaviour
             (list[i], list[rand]) = (list[rand], list[i]);
         }
     }
+    //예방 점수 측정
     public void CompletedPreventionPhase()
     {
         CompletedPreventionScore = CalculateScore(_playerCount, Count);
         _scoreManager.SetScore(ScoreType.Prevention_Count, CompletedPreventionScore);
     }
+
+    // 들어와 있는 사람 수대로 점수 측정
     public int CalculateScore(int playerCount, int count)
     {
         switch (playerCount)
@@ -335,7 +358,7 @@ public class FireObjMgr : MonoBehaviour
                 return 0;
         }
     }
-
+    // 예방 시간에 따른 점수 측정 코루틴
     private IEnumerator PreventionPhaseCoroutine()
     {
         float _timer = Time.time;
@@ -348,6 +371,7 @@ public class FireObjMgr : MonoBehaviour
         _score = calculatedScore;
         _scoreManager.SetScore(ScoreType.Prevention_Time, calculatedScore);
     }
+    // 예방 시간 점수 측정
     private int CalculateScore(float time, int players)
     {
         players = Mathf.Clamp(players, 1, 6);

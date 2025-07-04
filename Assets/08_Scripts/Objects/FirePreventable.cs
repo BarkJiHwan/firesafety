@@ -3,18 +3,28 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
+// 예방 가능한 오브젝트 관련 변수 및 기능을 관리하는 컴포넌트
 public partial class FirePreventable : MonoBehaviour
 {
-    //예방 가능한 오브젝트
+    // 예방 완료 여부 플래그
     [Header("true일 때 예방 완료"), Tooltip("체크가 되어 있으면 트루입니다.")]
     [SerializeField] private bool _isFirePreventable;
 
+    // 연기(스모크) 프리팹 오브젝트
     [SerializeField] private GameObject _smokePrefab;
+
+    // 쉴드 프리팹 오브젝트
     [SerializeField] private GameObject _shieldPrefab;
 
+    // 예방 오브젝트의 데이터(설명, 속성 등)
     [SerializeField] private PreventableObjData _data;
+
+    // 이 오브젝트의 예방 타입(예: 전선, 소화기 등)
     [SerializeField] private PreventType _myType;
 
+    /// <summary>
+    /// 연기(스모크) 오브젝트의 스케일 값을 저장하는 구조체
+    /// </summary>
     [Serializable]
     public struct SmokeScaledAxis
     {
@@ -22,31 +32,38 @@ public partial class FirePreventable : MonoBehaviour
         [Range(0.1f, 2f)] public float y;
         [Range(0.1f, 2f)] public float z;
     }
+
+    // 연기 오브젝트(파티클)의 스케일 값
     [Header("연기 오브젝트(파티클) 스캐일")]
     [SerializeField] private SmokeScaledAxis _smokeScale;
 
+    // 쉴드 반지름 값
     [Header("쉴드 반지름")]
     [SerializeField, Range(0.1f, 2f)]
     private float _shieldRadius = 1f;
 
-    //CHM - 소백이 연동 설정
-    [Header("소백이 연동")]
-    [SerializeField] private bool enableSobaekInteraction = true; // 소백이 상호작용 활성화
+    // 렌더러 및 머티리얼 관련 변수들
+    Renderer _renderer;                 // 오브젝트의 렌더러
+    Material[] originMats;              // 원본 머티리얼 배열
+    Material[] arrMat;                  // 변경용 머티리얼 배열
+    Material[] originChildMats;         // 자식 오브젝트의 원본 머티리얼 배열
 
-    Renderer _renderer;
-    Material[] originMats;
-    Material[] arrMat;
-    Material[] originChildMats;
+    PhotonView _view;                   // Photon 네트워크 동기화용 뷰
+    XRSimpleInteractable _xrInteractable; // XR 인터랙션 컴포넌트
+    private bool _isXRinteract = true;  // XR 인터랙션 등록 여부
 
-    PhotonView _view;
-    XRSimpleInteractable _xrInteractable;
-    private bool _isXRinteract = true;
+    /// <summary>
+    /// 예방 완료 여부 프로퍼티
+    /// </summary>
     public bool IsFirePreventable
     {
         get => _isFirePreventable;
         set => _isFirePreventable = value;
     }
 
+    /// <summary>
+    /// 이 오브젝트의 예방 타입 반환
+    /// </summary>
     public PreventType MyType
     {
         get => _myType;
@@ -54,132 +71,94 @@ public partial class FirePreventable : MonoBehaviour
 
     private void Start()
     {
+        // 연기 및 쉴드 오브젝트 초기화
         ApplySmokeSettings();
         ApplyShieldSettings();
-        //CHM - XR 컴포넌트 가져오기
         _xrInteractable = GetComponent<XRSimpleInteractable>();
-
-        //CHM - 소백이 상호작용 이벤트 자동 연결
-        SetupSobaekInteraction();
-
         _view = GetComponent<PhotonView>();
+
+        // 연기 및 쉴드 비활성화
         SetActiveOut();
 
-
-        // CYW - 새로운 매테리얼 생성
+        // CYW - 새로운 머티리얼 생성 및 적용
         SetMaterial();
-
         ChangeMaterial(gameObject);
-        // 자식이 있으면 자식까지 반복해야 함
+
+        // 자식 오브젝트가 있고, 타입이 OldWire가 아니면 자식에도 머티리얼 적용
         if (isHaveChild && _myType != PreventType.OldWire)
         {
             ChangeMaterial(transform.GetChild(0).gameObject);
         }
-        // 이벤트 구독 (GameManager의 NowPhase가 변경되면 실행)
+
+        // 게임 페이즈 변경 이벤트 구독
         GameManager.Instance.OnPhaseChanged += OnSetUIAction;
-    }
-
-    //CHM - 소백이 상호작용 자동 설정 (싱글톤 방식으로 수정)
-    private void SetupSobaekInteraction()
-    {
-        if (!enableSobaekInteraction)
-            return;
-
-        // XR Interactable이 없으면 추가
-        if (_xrInteractable == null)
-        {
-            _xrInteractable = gameObject.AddComponent<XRSimpleInteractable>();
-        }
-
-        // 호버 이벤트 자동 연결 (소백이 찾기는 호버 시에 진행)
-        _xrInteractable.hoverEntered.AddListener(OnSobaekHoverEnter);
-        _xrInteractable.hoverExited.AddListener(OnSobaekHoverExit);
-
-
-    }
-
-    //CHM - 호버 시작 시 소백이 이동 6-12 함수명변경
-    private void OnSobaekHoverEnter(HoverEnterEventArgs args)
-    {
-        if (Sobaek.Instance != null && enableSobaekInteraction)
-        {
-            Sobaek.Instance.MoveToTarget(transform);
-
-        }
-    }
-
-    //CHM - 호버 종료 시 소백이 복귀 + 토킹 중단 6-12 함수명변경
-    private void OnSobaekHoverExit(HoverExitEventArgs args)
-    {
-        if (Sobaek.Instance != null && enableSobaekInteraction)
-        {
-            Sobaek.Instance.StopTalking();
-            Sobaek.Instance.ReturnHome();
-        }
-    }
-
-    //CHM - 소백이 상호작용 활성화/비활성화 6-12 함수명변경
-    public void SetSobaekInteraction(bool enable)
-    {
-        enableSobaekInteraction = enable;
-
-        if (!enable && Sobaek.Instance != null)
-        {
-            Sobaek.Instance.StopTalking();
-            Sobaek.Instance.ReturnHome();
-        }
     }
 
     void Update()
     {
-        // 페이즈 확인
+        // 현재 게임 페이즈 확인
         var currentPhase = GameManager.Instance.CurrentPhase;
 
         if (currentPhase == GamePhase.Prevention)
         {
+            // XR 인터랙션 리스너 1회 등록
             if (_isXRinteract)
             {
                 _xrInteractable.selectEntered.AddListener(EnterPrevention);
                 _isXRinteract = false;
             }
-            // 예방 페이즈
+            // 예방 페이즈 처리
             if (_isFirePreventable)
             {
-                OnFirePreventionComplete();
-                // 예방 완료하면 Material 끄기
-                SetActiveOnMaterials(false);
-                // 예외인 애들 추가
-                MakeExceptObjectOff();
+                OnFirePreventionComplete();        // 예방 완료 처리
+                SetActiveOnMaterials(false);       // 머티리얼 비활성화
+                MakeExceptObjectOff();             // 예외 오브젝트 처리
             }
             else
             {
-                SetFirePreventionPending();
+                SetFirePreventionPending();        // 예방 대기 상태 처리
             }
         }
     }
+
+    /// <summary>
+    /// 연기와 쉴드 오브젝트를 모두 비활성화합니다.
+    /// </summary>
     public void SetActiveOut()
     {
         _smokePrefab.SetActive(false);
         _shieldPrefab.SetActive(false);
     }
 
+    /// <summary>
+    /// 예방 완료 시 호출. 연기는 끄고 쉴드는 켭니다.
+    /// </summary>
     public void OnFirePreventionComplete()
     {
         _smokePrefab.SetActive(false);
         _shieldPrefab.SetActive(true);
     }
 
+    /// <summary>
+    /// 예방 대기 상태 처리. 연기는 켜고 쉴드는 끕니다.
+    /// </summary>
     public void SetFirePreventionPending()
     {
         _smokePrefab.SetActive(true);
         _shieldPrefab.SetActive(false);
     }
+
+    /// <summary>
+    /// 연기 오브젝트만 비활성화
+    /// </summary>
     public void SomkePrefabActiveOut()
     {
         _smokePrefab.SetActive(false);
     }
 
-    //스모크 사이즈 셋팅
+    /// <summary>
+    /// 연기(스모크) 오브젝트를 생성하고, 스케일을 적용합니다.
+    /// </summary>
     private void ApplySmokeSettings()
     {
         _smokePrefab = Instantiate(_smokePrefab, transform.position, transform.rotation);
@@ -187,7 +166,10 @@ public partial class FirePreventable : MonoBehaviour
         _smokePrefab.transform.localScale = new Vector3(_smokeScale.x, _smokeScale.y, _smokeScale.z);
         _smokePrefab.transform.position = transform.position;
     }
-    //쉴드 사이즈 셋팅
+
+    /// <summary>
+    /// 쉴드 오브젝트를 생성하고, 반지름(스케일)을 적용합니다.
+    /// </summary>
     private void ApplyShieldSettings()
     {
         _shieldPrefab = Instantiate(_shieldPrefab, transform.position, transform.rotation);
@@ -200,19 +182,25 @@ public partial class FirePreventable : MonoBehaviour
                 , diameter / transform.localScale.z);
     }
 
+    /// <summary>
+    /// 오브젝트 설명 텍스트 반환(예: UI 표시용)
+    /// </summary>
     public string ShowText()
     {
-        // 예: TextMeshProUGUI 등에 text를 할당
         return _data.GetItem(_myType).Description;
     }
 
+    /// <summary>
+    /// XR 인터랙션으로 예방을 시도할 때 호출되는 메서드
+    /// </summary>
+    /// <param name="Args">XR Select 이벤트 인자</param>
     public void EnterPrevention(SelectEnterEventArgs Args)
     {
         if (!_isFirePreventable)
         {
-            ++FireObjMgr.Instance.Count;
+            ++FireObjMgr.Instance.Count;   // 예방 카운트 증가
             _isFirePreventable = true;
-            _view.RPC("CompleteFirePrevention", RpcTarget.AllBuffered, _isFirePreventable);
+            _view.RPC("CompleteFirePrevention", RpcTarget.AllBuffered, _isFirePreventable); // 네트워크 동기화
         }
         else
         {
@@ -220,11 +208,13 @@ public partial class FirePreventable : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 네트워크를 통해 예방 완료 상태를 동기화합니다.
+    /// </summary>
+    /// <param name="complete">예방 완료 여부</param>
     [PunRPC]
     public void CompleteFirePrevention(bool complete)
     {
-        Debug.Log(_view.ViewID + "?");
-        Debug.Log(PhotonNetwork.LocalPlayer + "누가누른건지 확인됨?" + "확인되네?");
         _isFirePreventable = complete;
     }
 }

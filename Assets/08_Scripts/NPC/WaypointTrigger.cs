@@ -11,7 +11,8 @@ public enum WaypointType
 /// </summary>
 public class WaypointTrigger : MonoBehaviour
 {
-    private LayerMask playerLayerMask = 1 << 0;
+    // 9번 레이어가 플레이어
+    private LayerMask playerLayerMask = 1 << 9;
     private FloorManager floorManager;
     private WaypointType waypointType;
     private bool hasTriggered = false;

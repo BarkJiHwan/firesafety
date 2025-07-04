@@ -10,13 +10,20 @@ public class TimeFlowSlider : MonoBehaviour
 
     void Start()
     {
-        // 캐릭터 선택창에서 고른 캐릭터로 이미지 변경
-        characterImg.sprite = SceneController.Instance.GetChooseCharacterType().characterImage;
+        if (SceneController.Instance != null)
+        {
+            characterImg.sprite = SceneController.Instance.GetChooseCharacterType().characterImage;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.Instance == null)
+        {
+            return;
+        }
+
         if(GameManager.Instance.CurrentPhase >= GamePhase.Prevention)
         {
             if(GameManager.Instance.IsPausing == true)

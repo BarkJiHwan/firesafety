@@ -39,12 +39,7 @@ public class ScoreBoardController : MonoBehaviour
     // 멘트 문구
     [SerializeField] string[] mentionText;
 
-    // 점수 항목 시작 인덱스
-    int startIndex = 0;
     ScoreManager scoreMgr;
-
-    // 점수판 열림 이벤트
-    public event Action<SceneType> OnScoreBoardOpen;
 
     private void Awake()
     {
@@ -61,7 +56,7 @@ public class ScoreBoardController : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
     // 점수판 초기화

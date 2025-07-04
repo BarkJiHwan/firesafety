@@ -63,7 +63,7 @@ public class CharacterChoose : MonoBehaviour
     public GameObject[] GetCharacterObject()
     {
         GameObject[] obj = new GameObject[checkButtonList.Count];
-        int count = 0;
+
         for(int i=0; i<checkButtonList.Count; i++)
         {
             obj[i] = checkButtonList[i].characterObject;

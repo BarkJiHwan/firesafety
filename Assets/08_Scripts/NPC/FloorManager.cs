@@ -17,12 +17,11 @@ public class FloorManager : MonoBehaviour
     #region 인스펙터 설정
     [Header("층 기본 설정")]
     [SerializeField] private int floorNumber = 4;
-    [SerializeField] private FloorEventType floorEventType = FloorEventType.Nothing;
 
     [Header("웨이포인트 설정")]
     [SerializeField] private GameObject startWaypoint;
     [SerializeField] private GameObject endWaypoint;
-    [SerializeField] private LayerMask playerLayerMask = 1 << 0; // 플레이어 레이어 설정
+    [SerializeField] private LayerMask playerLayerMask = 1 << 9; // 플레이어 레이어 설정
 
     [Header("파티클 그룹")]
     [SerializeField] private GameObject allParticleGroup;
@@ -43,10 +42,10 @@ public class FloorManager : MonoBehaviour
     private bool floorCompleted = false;
     private ExitTaewooliSpawnParticle[] taewooliSpawners;
     private Coroutine spawnCoroutine;
-    private static bool isInitialized = false;
+    private bool isInitialized = false;
 
     private int taewooliKillCount = 0;
-    private static int totalTaewooliKills = 0;
+    private int totalTaewooliKills = 0;
     private ScoreManager scoreManager;
     #endregion
 

@@ -70,6 +70,7 @@ public class GameManager : MonoBehaviour
 
     private DialogueLoader _dialogueLoader;
     private DialoguePlayer _dialoguePlayer;
+    public AudioSource bgm;
 
     /* 일시정지 할때 추가 */
     private bool _isPausing;
@@ -129,8 +130,12 @@ public class GameManager : MonoBehaviour
         if (now.Phase != CurrentPhase)
         {
             CurrentPhase = now.Phase;
-            //_currentPhase = now.Phase;
             NowPhase = now.Phase;
+
+            if (CurrentPhase == GamePhase.Fever)
+            {
+                bgm.pitch = 1.15f;
+            }
 
             if (CurrentPhase == GamePhase.FireWaiting)
             {
@@ -139,6 +144,7 @@ public class GameManager : MonoBehaviour
                 _dialoguePlayer.PlayWithTexts(new []{"Sobak_009", "Sobak_011"}, UIType.Sobaek);
             }
             // GameManager.cs - UpdateGamePhaseCor 메서드에서
+
             if (CurrentPhase == GamePhase.LeaveDangerArea)
             {
                 Debug.Log("게임 종료! 점수 계산 시작");
@@ -166,6 +172,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Pausing");
         _isPausing = true;
+        bgm.Pause();
         onGamePause?.Invoke();
     }
 
@@ -173,6 +180,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Resuming");
         _isPausing = false;
+        bgm.Play();
         _dialoguePlayer.onFinishDialogue -= ResumeGameTimer;
         onGameResume?.Invoke();
     }
@@ -267,7 +275,7 @@ public class GameManager : MonoBehaviour
     void SetStartTime()
     {
         StartTime = new float[_phases.Count];
-        int index = 0;
+
         for(int i=0; i<_phases.Count; i++)
         {
             StartTime[i] = _phases[i].StartTime;

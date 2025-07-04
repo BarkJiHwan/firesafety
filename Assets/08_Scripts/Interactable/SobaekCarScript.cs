@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Splines;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -135,4 +136,34 @@ public class SobaekCarScript : MonoBehaviour
         }
     }
     #endregion
+
+    public void OnTriggerEnter(Collider other)
+    {
+        // 4층 시작점일때 퀴즈 켜기
+        if (other.gameObject.name.Equals("Floor4 WayPoints.Start"))
+        {
+            _exitDialogue.ShowQuizUI();
+        }
+
+        // 4층 종료지점일때 퀴즈 끄기
+        if (other.gameObject.name.Equals("Floor4 WayPoints.End") && _exitDialogue.quizUI.gameObject.activeSelf)
+        {
+            _exitDialogue.OnSelectRightAnswer();
+        }
+
+        if (other.gameObject.name.Equals("Floor2 WayPoints.Start"))
+        {
+            _exitDialogue.OnStartSmokePlace();
+        }
+
+        if (other.gameObject.name.Equals("Floor2 WayPoints.End"))
+        {
+            _exitDialogue.SendSmokeScore();
+        }
+
+        if (other.gameObject.name.Equals("Floor1 WayPoints.End"))
+        {
+            _exitDialogue.SendDaTaewooriScore();
+        }
+    }
 }

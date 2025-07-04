@@ -3,28 +3,37 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
+// 화재 예방 오브젝트의 정보(이름, 설명 등)를 저장하는 ScriptableObject 데이터 클래스
 [CreateAssetMenu(fileName = "PreventableObjData")]
 public class PreventableObjData : ScriptableObject
 {
+    /// <summary>
+    /// 예방 아이템 리스트
+    /// </summary>
     public List<SafetyItem> items = new List<SafetyItem>();
+
+    /// <summary>
+    /// 타입별 아이템 딕셔너리
+    /// </summary>
     private Dictionary<PreventType, SafetyItem> _itemDict;
 
+    /// <summary>
+    /// ScriptableObject가 활성화될 때 딕셔너리 매핑
+    /// </summary>
     private void OnEnable()
     {
-        Debug.Log("스크립터블 오브젝트 리스트 딕셔너리 매핑완료");
         SetDictionary();
     }
-    // CSV 파일 로드 및 딕셔너리 초기화
+
+    /// <summary>
+    /// CSV 파일을 불러와 리스트 초기화
+    /// </summary>
     public void LoadCSV()
     {
         items.Clear();
         var csvData = Resources.Load<TextAsset>("safety_items");
         if (csvData == null)
-        {
-            Debug.LogError("CSV 파일 없음: Resources/safety_items");
             return;
-        }
 
         string[] lines = csvData.text.Split('\n');
         for (int i = 1; i < lines.Length; i++)
@@ -35,16 +44,10 @@ public class PreventableObjData : ScriptableObject
 
             string[] values = line.Split('\t');
             if (values.Length < 5)
-            {
-                Debug.LogError($"{i}번째 줄 데이터 부족: {values.Length}/5");
                 continue;
-            }
 
             if (!Enum.TryParse(values[3], out PreventType type))
-            {
-                Debug.LogError($"{i}번째 줄 타입 오류: {values[3]}");
                 continue;
-            }
 
             SafetyItem item = new SafetyItem
             {
@@ -59,8 +62,14 @@ public class PreventableObjData : ScriptableObject
         }
     }
 
+    /// <summary>
+    /// 리스트를 PreventType 기준 딕셔너리로 매핑
+    /// </summary>
     public void SetDictionary() => _itemDict = items.ToDictionary(item => item.Type);
 
+    /// <summary>
+    /// 타입에 해당하는 아이템 반환
+    /// </summary>
     public SafetyItem GetItem(PreventType type)
     {
         if (_itemDict != null && _itemDict.TryGetValue(type, out SafetyItem item))

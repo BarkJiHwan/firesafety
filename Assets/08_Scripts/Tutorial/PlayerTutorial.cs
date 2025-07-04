@@ -54,6 +54,7 @@ public class PlayerTutorial : MonoBehaviourPun
 
         _roomMgr = FindObjectOfType<RoomMgr>();
     }
+    // 튜토리얼 오브젝트 생성
     public void SetTutorialPhase()
     {
         _zone = Instantiate(_myData.moveZonePrefab);
@@ -62,18 +63,21 @@ public class PlayerTutorial : MonoBehaviourPun
         _currentMonster = Instantiate(_myData.teawooriPrefab, obj.TaewooriPos(), obj.TaewooriRotation());
         _extinguisher = Instantiate(_myData.supplyPrefab, _myData.supplyOffset, _myData.supplyRotation);
     }
+    // 튜토리얼에서 사용되는 오브젝트 엑티베이트 끄기
     private void ObjectActiveFalse()
     {
         _zone.SetActive(false);
         _currentMonster.SetActive(false);
         _extinguisher.SetActive(false);
     }
+    // 튜토리얼에서 사용되는 오브젝트 제거
     private void DestroyTutorialObject()
     {
         Destroy(_zone);
         Destroy(_currentMonster);
         Destroy(_extinguisher);
     }
+    // 튜토리얼 셋팅
     private IEnumerator CountdownRoutine()
     {
         //약 3초 뒤 튜토리얼 시작
@@ -85,6 +89,7 @@ public class PlayerTutorial : MonoBehaviourPun
         ObjectActiveFalse();
         _tutorialTimerCor = StartCoroutine(TutorialTimer());
     }
+    // 튜토리얼 시작
     private IEnumerator TutorialTimer()
     {
         _tutorialCor = StartCoroutine(TutorialRoutine());
@@ -97,6 +102,7 @@ public class PlayerTutorial : MonoBehaviourPun
         StartCoroutine(TutorialTimeOver());
     }
 
+    // 튜토리얼 루틴
     private IEnumerator TutorialRoutine()
     {
         while (_currentPhase <= 3)
@@ -137,7 +143,6 @@ public class PlayerTutorial : MonoBehaviourPun
             completed = true;
             _tutorialAudioPlayer.TutorialAudioWithTextStop();
             _zone.SetActive(false);
-            Debug.Log("이동 튜토리얼 완료");
             arrowCtrl.gameObject.SetActive(false);
         };
         yield return new WaitUntil(() => completed);
@@ -156,7 +161,6 @@ public class PlayerTutorial : MonoBehaviourPun
         bool completed = false;
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_004", UIType.Narration);
 
-        Debug.Log("화재예방 튜토리얼 시작");
         var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
         _preventable = interactObj.GetComponent<FirePreventable>();
         _preventable.OnHaveToPrevented += _preventable.OnSetPreventMaterialsOn;
@@ -170,7 +174,6 @@ public class PlayerTutorial : MonoBehaviourPun
         {
             _tutorialAudioPlayer.TutorialAudioWithTextStop();
             completed = true;
-            Debug.Log("화재예방 튜토리얼 완료");
             _preventable.OnFirePreventionComplete();
             // 이벤트 실행
             _preventable.OnAlreadyPrevented += _preventable.OnSetPreventMaterialsOff;
@@ -193,7 +196,6 @@ public class PlayerTutorial : MonoBehaviourPun
 
         GameObject player = FindObjectOfType<PlayerComponents>().gameObject;
         player = player.GetComponentInChildren<PlayerInteractor>().gameObject;
-        Debug.Log(player.name);
 
         while (_currentPhase == 2)
         {
@@ -257,7 +259,7 @@ public class PlayerTutorial : MonoBehaviourPun
         OnFinishTutorial?.Invoke();
         StopAllCoroutines();
     }
-
+    // 튜토리얼 실패시
     private IEnumerator TutorialTimeOver()
     {
         StopCoroutine(_tutorialCor);
@@ -267,7 +269,6 @@ public class PlayerTutorial : MonoBehaviourPun
         {
             _preventable.SetActiveOut();
         }
-        Debug.Log("으휴! 이것도 못해?!");
 
         // 메테리얼 끄기
         if (isMaterialOn == true)
