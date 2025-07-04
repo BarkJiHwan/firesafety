@@ -42,6 +42,7 @@ public class ConversationController : MonoBehaviour
 
     public void ChangeDataeWooriImage(UIType type)
     {
+        // 받은 UIType에 따라 대화창 이름/이미지 변경
         switch (type)
         {
             case UIType.Sobaek:

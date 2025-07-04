@@ -10,6 +10,7 @@ public class ScoreManager : MonoBehaviour, IScorable
 
     void Start()
     {
+        // Dictionary에 모든 ScoreType의 기본 점수와 함께 생성
         for(int i=0; i<(int)ScoreType.End; i++)
         {
             ScoreType type = (ScoreType)i;
@@ -17,16 +18,19 @@ public class ScoreManager : MonoBehaviour, IScorable
         }
     }
 
+    // 해당 ScoreType에 따른 스코어 받아오기
     public int GetScore(ScoreType scoreType)
     {
         return dicScore[scoreType];
     }
 
+    // 해당 ScoreType에 따른 스코어 저장
     public void SetScore(ScoreType scoreType, int score)
     {
         dicScore[scoreType] = score;
     }
 
+    // 해당 ScoreType에 따른 스코어가 20점 이상이면 True 반환
     public bool IsScorePerfect(ScoreType scoreType)
     {
         return dicScore[scoreType] >= 20;
@@ -43,6 +47,7 @@ public class ScoreManager : MonoBehaviour, IScorable
         return dicScore.Count;
     }
 
+    // 해당 인덱스부터 4개의 Score 반환
     public int[] GetScores(int sceneIndex)
     {
         int[] scores = new int[dicScore.Count / 2];
