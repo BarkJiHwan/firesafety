@@ -2056,8 +2056,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9640aa39b29fef448be6838f41b6b4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weaponPrefab: {fileID: 7256092359063047815, guid: 851196d9d6ec3904690530d91713507e,
-    type: 3}
   _leftHand:
     triggerAction:
       m_UseReference: 1
@@ -2074,11 +2072,8 @@ MonoBehaviour:
         type: 3}
     towelModelPrefab: {fileID: 1601582712095002673}
     wetPrefab: {fileID: 4128354170812086040}
-    chargingEffect: {fileID: 0}
-    shootingFlash: {fileID: 0}
     isWet: 0
     isEnabled: 0
-    activatedWeapon: 0
     interactor: {fileID: 931678104546563556}
     handType: 1
     xrController: {fileID: 7745211862871791554}
@@ -2098,19 +2093,13 @@ MonoBehaviour:
         type: 3}
     towelModelPrefab: {fileID: 4654874293448861237}
     wetPrefab: {fileID: 4042258700934338442}
-    chargingEffect: {fileID: 0}
-    shootingFlash: {fileID: 0}
     isWet: 0
     isEnabled: 0
-    activatedWeapon: 0
     interactor: {fileID: 931678103967120142}
     handType: 0
     xrController: {fileID: 7745211862501525659}
   _gotTowel: 0
   gotWet: 0
-  _nowCharging: 0
-  _count: 0
-  _bombSpeed: 3
 --- !u!1 &7745211863730072580
 GameObject:
   m_ObjectHideFlags: 0

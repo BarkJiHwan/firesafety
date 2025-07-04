@@ -17,11 +17,8 @@ public class Phase2InteractManager : MonoBehaviour
         public InputActionProperty triggerAction;
         public GameObject towelModelPrefab;
         public GameObject wetPrefab;
-        public ParticleSystem chargingEffect;
-        public ParticleSystem shootingFlash;
         public bool isWet;
         public bool isEnabled = false;//수건을 가지고 있는가
-        public bool activatedWeapon = false;
         public XRRayInteractor interactor;
         public EHandType handType;
         public ActionBasedController xrController;
@@ -31,8 +28,6 @@ public class Phase2InteractManager : MonoBehaviour
     {
         get; private set;
     }
-    [Header("Common")]
-    [SerializeField] private GameObject _weaponPrefab;
     [Header("양손 수건 데이터")]
     [SerializeField] private TowelHandData _leftHand;
     [SerializeField] private TowelHandData _rightHand;
