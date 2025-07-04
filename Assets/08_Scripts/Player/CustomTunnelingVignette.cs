@@ -1,9 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
+/*
+    ITunnelingVignettesProvider를 상속하여
+    커스텀하게 멀미효과 / FadeIn, Out 효과를 내기 위한 클래스 입니다.
+    기본 Locomotion에 따라 동작하는 Vignette 효과를 제거하고 넣었습니다.
+ */
 public class CustomTunnelingVignette : MonoBehaviour, ITunnelingVignetteProvider
 {
     [SerializeField] private TunnelingVignetteController _tunnelingVignetteController;
@@ -32,18 +34,6 @@ public class CustomTunnelingVignette : MonoBehaviour, ITunnelingVignetteProvider
     public void ClearSight()
     {
         _tunnelingVignetteController.EndTunnelingVignette(this);
-    }
-
-    private IEnumerator FadeOutAfter(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-        FadeOut();
-    }
-
-    private IEnumerator FadeInAfter(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-        FadeIn();
     }
 
     public VignetteParameters vignetteParameters { get; }

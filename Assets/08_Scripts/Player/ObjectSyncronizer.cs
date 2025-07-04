@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+/* 간단한 구조체를 활용하여 동기화 하고 싶은 vector3 의 요소들을 선택합니다.*/
 [Serializable]
 public struct SyncVector
 {
@@ -10,12 +11,14 @@ public struct SyncVector
     public bool w;
 }
 
+/*
+ * 플레이어의 모델과 어떤 Object의 움직임을 싱크맞추기 위한 클래스입니다.
+ */
 public class ObjectSyncronizer : MonoBehaviour
 {
     public SyncVector position;
     public SyncVector rotation;
     public GameObject syncTarget;
-    public ScaledHeightSyncronizer scaledHeightSyncronizer;
 
     private void FixedUpdate()
     {
@@ -32,12 +35,6 @@ public class ObjectSyncronizer : MonoBehaviour
         float x = position.x ? myPos.x : targetPos.x;
         float y = position.y ? myPos.y : targetPos.y;
         float z = position.z ? myPos.z : targetPos.z;
-
-        // ScaledHeightSYncronizer 있을경우 y값 대체함
-        if (scaledHeightSyncronizer != null)
-        {
-            y = scaledHeightSyncronizer.CalculateScaledHeight();
-        }
 
         syncTarget.transform.position = new Vector3(x, y, z);
     }

@@ -2,9 +2,13 @@ using System.Collections;
 using Photon.Pun;
 using UnityEngine;
 
+/*
+ * 플레이어의 액션을 담당하는 클래스입니다.
+ * 현재는 움직임을 트래킹하여 애니메이션을 재생하는지 여부만 판단합니다.
+ */
 public class PlayerAction : MonoBehaviour
 {
-    private static readonly int _moving = Animator.StringToHash("IsMoving");
+    private readonly int _moving = Animator.StringToHash("IsMoving");
 
     private Animator _animator;
     private PlayerBehavior _playerBehavior;
