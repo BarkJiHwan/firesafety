@@ -37,21 +37,13 @@ public class Phase2InteractManager : MonoBehaviour
     [SerializeField] private TowelHandData _leftHand;
     [SerializeField] private TowelHandData _rightHand;
     [Header("수건")]
-    private float _triggerValue;
     [SerializeField] private bool _gotTowel = false;
     public bool gotWet = false;
-    [Header("물대포")]//일단 다른 것부터 해보자고 ㅇ
-    [SerializeField] private bool _nowCharging;
-    [SerializeField] private int _count;
-    [SerializeField] private float _bombSpeed = 3f;
-    public bool EncounterBoss
-    {
-        get; set;
-    }
     private void Start()
     {
         _handDatasDict[EHandType.LeftHand] = _leftHand;
         _handDatasDict[EHandType.RightHand] = _rightHand;
+        //수건을 Dictionary에 등록해두고, 밑에 GetHand함수로 수건 값을 가져올 수 있도록 함.
     }
     private TowelHandData GetHand(EHandType type)
     {
@@ -61,15 +53,9 @@ public class Phase2InteractManager : MonoBehaviour
         }
         return null;
     }
-    private void Update()
-    {
-        if (EncounterBoss)
-        {
-            ShootingWaterBomb(_leftHand);
-            ShootingWaterBomb(_rightHand);
-        }
-    }
-    public void CheckingTowelCol()//가져다 댄 거 맞음??
+    //본래 수건을 정말 입에 대려고 했으나, 캐릭터 기준으로는 어림 없었고 카메라 기준도 애매모호하다고 판단해 폐기.
+    //하지만 다음으로 진행했을 때 수건을 꺼주는 용도로 사용
+    public void CheckingTowelCol()
     {
         IsWear = true;
         if (_leftHand.isEnabled)
@@ -81,6 +67,10 @@ public class Phase2InteractManager : MonoBehaviour
             _rightHand.wetPrefab.SetActive(false);
         }
     }
+    /// <summary>
+    /// 수건을 활성화해주는 함수. XR Simple Interactor에서 EHandType을 넘겨주면 된다.
+    /// </summary>
+    /// <param name="type"></param>
     public void TowelSupply(EHandType type)
     {
         var hand = GetHand(type);
@@ -91,6 +81,10 @@ public class Phase2InteractManager : MonoBehaviour
             hand.towelModelPrefab.SetActive(true);
         }
     }
+    /// <summary>
+    /// 수건을 가진 손이 상호작용할 경우 동작하는 함수. EHandType을 넘겨주면 된다.
+    /// </summary>
+    /// <param name="type"></param>
     public void WettingTowel(EHandType type)
     {
         var hand = GetHand(type);
@@ -102,96 +96,5 @@ public class Phase2InteractManager : MonoBehaviour
             gotWet = true;
             CheckingTowelCol();
         }
-    }
-    public void GrabWeapon(EHandType type)
-    {
-        var hand = GetHand(type);
-        if (IsWear && !hand.activatedWeapon)
-        {
-            hand.activatedWeapon = true;
-            _weaponPrefab.SetActive(true);
-            if (hand.xrController.modelPrefab == null)
-            {
-                Debug.LogWarning("없다 모델이");
-            }
-            var newModel = Instantiate(_weaponPrefab, hand.xrController.modelParent);
-            newModel.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-            var particle = newModel.GetComponentInChildren<Phase2_WeaponFX>();
-            hand.chargingEffect = particle.chargeFX;
-            hand.shootingFlash = particle.shootingFX;
-            hand.xrController.modelPrefab = _weaponPrefab.transform;
-
-            //var particles = newModel.GetComponents<ParticleSystem>();
-            //foreach (var particle in particles)
-            //{
-            //    if (particle.name.ToLower().Contains("Charging"))
-            //    {
-            //        hand.chargingEffect = particle;
-            //    }
-            //    else if (particle.name.ToLower().Contains("Shooting"))
-            //    {
-            //        hand.shootingFlash = particle;
-            //    }
-            //}
-        }
-    }
-    private void ShootingWaterBomb(TowelHandData hand)
-    {
-        if (!hand.activatedWeapon)
-        {
-            return;
-        }
-        if (hand.triggerAction.action.WasPressedThisFrame() && !_nowCharging)
-        {
-            _nowCharging = true;
-            StartCoroutine(ChargeAndShoot(hand));
-        }
-
-    }
-    private IEnumerator ChargeAndShoot(TowelHandData hand)
-    {
-        if (_count != 0)
-        {
-            _count = 0;
-        }
-        if (!hand.chargingEffect.isPlaying)
-        {
-            hand.chargingEffect.Play();
-        }
-        while(_triggerValue > 0)
-        {
-            _count++;
-            yield return new WaitForSeconds(0.1f);
-        }
-        if (hand.chargingEffect.isPlaying)
-        {
-            hand.chargingEffect.Stop();
-        }
-        if (_count >= 2)
-        {
-            ShootingBigBomb(hand);
-        }
-        else
-        {
-            ShootingSmallBomb(hand);
-        }
-    }
-    private void ShootingBigBomb(TowelHandData hand)
-    {
-        var rayOrigin = hand.interactor.transform;
-        var bomb = Phase2_BombPoolManager.Instance.GetBigBomb();
-        bomb.transform.SetPositionAndRotation(rayOrigin.position, Quaternion.LookRotation(rayOrigin.forward));
-        var rb = bomb.GetComponent<Rigidbody>();
-        rb.velocity = rayOrigin.forward * _bombSpeed;
-        _count = 0;
-    }
-    private void ShootingSmallBomb(TowelHandData hand)
-    {
-        var rayOrigin = hand.interactor.transform;
-        var bomb = Phase2_BombPoolManager.Instance.GetSmallBomb();
-        bomb.transform.SetPositionAndRotation(rayOrigin.position, Quaternion.LookRotation(rayOrigin.forward));
-        var rb = bomb.GetComponent<Rigidbody>();
-        rb.velocity = rayOrigin.forward * _bombSpeed;
-        _count = 0;
     }
 }

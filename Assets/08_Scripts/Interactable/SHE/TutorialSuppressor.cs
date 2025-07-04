@@ -42,6 +42,7 @@ public class TutorialSuppressor : MonoBehaviourPunCallbacks
         }
         return null;
     }
+    //기본적인 구성은 모두 본게임 소화기와 동일합니다
     private IEnumerator Start()
     {
         while (SupplyManager.Instance == null)
