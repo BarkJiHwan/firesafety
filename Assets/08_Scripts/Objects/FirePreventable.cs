@@ -26,7 +26,7 @@ public partial class FirePreventable : MonoBehaviour
     /// 연기(스모크) 오브젝트의 스케일 값을 저장하는 구조체
     /// </summary>
     [Serializable]
-    public struct SmokeScaledAxis
+    private struct SmokeScaledAxis
     {
         [Range(0.1f, 2f)] public float x;
         [Range(0.1f, 2f)] public float y;

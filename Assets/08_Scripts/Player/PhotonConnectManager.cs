@@ -66,25 +66,22 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         {
             Debug.Log("player" + player.ActorNumber + " : " + player.NickName);
         }
-
         Debug.Log("roomName : " + PhotonNetwork.CurrentRoom.Name);
         Debug.Log("currentPlayers : " + PhotonNetwork.PlayerList.Length);
+
         if (PhotonNetwork.IsMasterClient)
         {
-            // 현재 사용 중인 인덱스 체크
             foreach (var player in PhotonNetwork.PlayerList)
-            {
+            {// 현재 사용 중인 인덱스 체크
                 if (player.CustomProperties.TryGetValue("PlayerIndex", out object idx))
                     seatTaken[(int)idx] = true;
             }
-
             // 빈자리(인덱스) 찾기
             int assignedIndex = System.Array.FindIndex(seatTaken, taken => !taken);
             Debug.Log(assignedIndex + "번인덱스 부여");
             // 자리 할당
             Hashtable props = new Hashtable() { { "PlayerIndex", assignedIndex } };
             newPlayer.SetCustomProperties(props);
-
             seatTaken[assignedIndex] = true;
         }
     }
@@ -125,18 +122,22 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         GameManager.Instance.ResetGameTimer();
         Debug.Log("나 참가 " + PhotonNetwork.LocalPlayer + "Room : " + PhotonNetwork.CurrentRoom.Name);
     }
-
+    /// <summary>
+    /// 포톤 콜백 함수가 아닙니다.
+    /// 마스터 클라이언트 연결 완료 되면
+    /// PhotonNetwork.JoinRandomOrCreateRoom()를 호출하기 위한 함수입니다.
+    /// </summary>
     private void JoinRandomRoomOrCreateRoom()
-    {/*, PlayerTtl = 0*/
+    {
         RoomOptions options = new RoomOptions { MaxPlayers = 6, IsOpen = true };
         PhotonNetwork.JoinRandomOrCreateRoom(
-        null, // 랜덤 조건: 아무 조건 없음
-        6, // 최대 인원 수 (RoomOptions에도 지정해두면 안전)
-        MatchmakingMode.FillRoom, // 기존 방을 최대한 채우는 방식
-        null, // 로비 타입 (null: 기본)
-        null, // 추가 필터 (없음)
-        null, // 방 이름 (null: 자동 생성)
-        options // 방 옵션
+        null, // 조건 없음
+        6, // 최대 인원 수
+        MatchmakingMode.FillRoom, // 기존 방을 최대한 채움
+        null, // 로비 타입
+        null, // 추가 필터
+        null, // 방 이름 자동 생성
+        options // 방 옵션 추가
         );
     }
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
@@ -145,7 +146,7 @@ public class PhotonConnectManager : MonoBehaviourPunCallbacks
         if (targetPlayer.IsLocal && changedProps.ContainsKey("PlayerIndex"))
         {
             int myIndex = (int)targetPlayer.CustomProperties["PlayerIndex"];
-            // 여기서부터 안전하게 인덱스 사용 가능!
+            // 인덱스를 받은 뒤 로컬에서 튜토리얼 진행
             TutorialDataMgr.Instance.SetNumber(myIndex);
         }
     }

@@ -7,6 +7,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 using System;
 using System.Linq;
 using UnityEngine.Events;
+using Unity.VisualScripting;
 
 public class PlayerTutorial : MonoBehaviourPun
 {
@@ -22,16 +23,20 @@ public class PlayerTutorial : MonoBehaviourPun
 
     private DialogueLoader _dialogueLoader;
     private TutorialAudioPlayer _tutorialAudioPlayer;
-
+    private XRSimpleInteractable _interactable;
+    private UnityAction<SelectEnterEventArgs> _tutorialSelect;
+    private GameObject _interactObj;
     bool isMaterialOn = false;
     private RoomMgr _roomMgr;
+    private ZoneTrigger _trigger;
+
+    public event Action _zoneHandler;
 
     // CYW_이벤트 발생
     public event Action<int> OnStartArrow;
     public event Action<GameObject> OnObjectUI;
     public event Action OnCompleteSign;
     public event Action OnFinishTutorial;
-
     public ArrowController arrowCtrl { get; set; }
 
 
@@ -59,9 +64,12 @@ public class PlayerTutorial : MonoBehaviourPun
     {
         _zone = Instantiate(_myData.moveZonePrefab);
         _zone.transform.position = _myData.moveZoneOffset;
+        _trigger = _zone.GetComponent<ZoneTrigger>();
         var obj = TutorialDataMgr.Instance.InteractObjects[_playerIndex].GetComponent<FireObjScript>();
         _currentMonster = Instantiate(_myData.teawooriPrefab, obj.TaewooriPos(), obj.TaewooriRotation());
         _extinguisher = Instantiate(_myData.supplyPrefab, _myData.supplyOffset, _myData.supplyRotation);
+        _interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
+        _interactable = _interactObj.GetComponent<XRSimpleInteractable>();
     }
     // 튜토리얼에서 사용되는 오브젝트 엑티베이트 끄기
     private void ObjectActiveFalse()
@@ -76,6 +84,17 @@ public class PlayerTutorial : MonoBehaviourPun
         Destroy(_zone);
         Destroy(_currentMonster);
         Destroy(_extinguisher);
+        // 이동 튜토리얼 이벤트가 남아 있다면 제거
+        if (_trigger.onEnter != null)
+        {
+            _trigger.onEnter = null;
+        }
+        // 상호작용 튜토리얼 이벤트가 남아 있다면 제거
+        if (_tutorialSelect != null)
+        {
+            _interactable.selectEntered.RemoveListener(_tutorialSelect);
+            _tutorialSelect = null;
+        }
     }
     // 튜토리얼 셋팅
     private IEnumerator CountdownRoutine()
@@ -122,7 +141,7 @@ public class PlayerTutorial : MonoBehaviourPun
             _currentPhase++;
         }
     }
-    // 1. 이동 페이즈
+    #region 1. 이동 페이즈 HandleMovementPhase()
     private IEnumerator HandleMovementPhase()
     {
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_001", UIType.Narration);
@@ -132,45 +151,39 @@ public class PlayerTutorial : MonoBehaviourPun
 
         _zone.SetActive(true);
         bool completed = false;
-        var trigger = _zone.GetComponent<ZoneTrigger>();
-        if (trigger == null)
+        
+        if (_trigger == null)
         {
-            trigger = _zone.AddComponent<ZoneTrigger>();
+            _trigger = _zone.AddComponent<ZoneTrigger>();
         }
-
-        trigger.onEnter += () =>
+        _zoneHandler = () =>
         {
             completed = true;
             _tutorialAudioPlayer.TutorialAudioWithTextStop();
             _zone.SetActive(false);
             arrowCtrl.gameObject.SetActive(false);
         };
+        _trigger.onEnter += _zoneHandler;
         yield return new WaitUntil(() => completed);
+        _trigger.onEnter -= _zoneHandler;
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_003", UIType.Narration);
         yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
     }
+    #endregion
 
-    private IEnumerator someCorutine()
-    {
-        yield return null;
-    }
 
-    // 2. 화재예방 패이즈
+    #region 2. 화재예방 패이즈 HandleInteractionPhase()
     private IEnumerator HandleInteractionPhase()
     {
         bool completed = false;
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_004", UIType.Narration);
-
-        var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
-        _preventable = interactObj.GetComponent<FirePreventable>();
+        _preventable = _interactObj.GetComponent<FirePreventable>();
         _preventable.OnHaveToPrevented += _preventable.OnSetPreventMaterialsOn;
         _preventable.TriggerPreventObejct(true);
-        OnObjectUI?.Invoke(interactObj);
+        OnObjectUI?.Invoke(_interactObj);
 
         _preventable.SetFirePreventionPending();
-        var interactable = interactObj.GetComponent<XRSimpleInteractable>();
-        UnityAction<SelectEnterEventArgs> tutorialSelect = null;
-        tutorialSelect = (args) =>
+        _tutorialSelect = (args) =>
         {
             _tutorialAudioPlayer.TutorialAudioWithTextStop();
             completed = true;
@@ -181,37 +194,18 @@ public class PlayerTutorial : MonoBehaviourPun
             // 완료했다는 표시 생성
             OnCompleteSign?.Invoke();
             isMaterialOn = true;
-            interactable.selectEntered.RemoveListener(tutorialSelect);
+            _interactable.selectEntered.RemoveListener(_tutorialSelect);
+            _tutorialSelect = null;
         };
-        interactable.selectEntered.AddListener(tutorialSelect);
+        _interactable.selectEntered.AddListener(_tutorialSelect);
         StartCoroutine(MakeMaterialMoreBright());
         yield return new WaitUntil(() => completed);
         _tutorialAudioPlayer.PlayVoiceWithText("TUT_005", UIType.Narration);
         yield return new WaitUntil(() => !_tutorialAudioPlayer._tutoAudio.isPlaying);
     }
+    #endregion
 
-    IEnumerator MakeMaterialMoreBright()
-    {
-        var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
-
-        GameObject player = FindObjectOfType<PlayerComponents>().gameObject;
-        player = player.GetComponentInChildren<PlayerInteractor>().gameObject;
-
-        while (_currentPhase == 2)
-        {
-            // 플레이어가 가까워질수록 내 Material _RimPower -시켜야 함 2->-0.2
-            float distance = Vector3.Distance(_preventable.transform.position, player.transform.position);
-            // 빛을 더 밝게 빛나기 위해서 * 2 했음
-            float t = (1 - Mathf.Clamp01(distance / 2f)) * 2;
-            if (_preventable.GetHighlightProperty() == true)
-            {
-                _preventable.SetHighlight(t);
-            }
-            yield return null;
-        }
-    }
-
-    // 3. 전투 페이즈
+    #region 3. 전투 페이즈 HandleCombatPhase()
     private IEnumerator HandleCombatPhase()
     {
         _preventable.SetActiveOut();
@@ -259,7 +253,9 @@ public class PlayerTutorial : MonoBehaviourPun
         OnFinishTutorial?.Invoke();
         StopAllCoroutines();
     }
-    // 튜토리얼 실패시
+    #endregion
+
+    #region 튜토리얼 실패시 TutorialTimeOver()
     private IEnumerator TutorialTimeOver()
     {
         StopCoroutine(_tutorialCor);
@@ -291,6 +287,7 @@ public class PlayerTutorial : MonoBehaviourPun
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
         StopAllCoroutines();
     }
+    #endregion
 
     void MakeExtinguisherMaterial(GameObject obj)
     {
@@ -302,5 +299,25 @@ public class PlayerTutorial : MonoBehaviourPun
         mats[1].SetFloat("_isNearPlayer", 1f);
         Renderer rend = obj.GetComponent<Renderer>();
         rend.materials = mats;
+    }
+    IEnumerator MakeMaterialMoreBright()
+    {
+        var interactObj = TutorialDataMgr.Instance.GetInteractObject(_playerIndex);
+
+        GameObject player = FindObjectOfType<PlayerComponents>().gameObject;
+        player = player.GetComponentInChildren<PlayerInteractor>().gameObject;
+
+        while (_currentPhase == 2)
+        {
+            // 플레이어가 가까워질수록 내 Material _RimPower -시켜야 함 2->-0.2
+            float distance = Vector3.Distance(_preventable.transform.position, player.transform.position);
+            // 빛을 더 밝게 빛나기 위해서 * 2 했음
+            float t = (1 - Mathf.Clamp01(distance / 2f)) * 2;
+            if (_preventable.GetHighlightProperty() == true)
+            {
+                _preventable.SetHighlight(t);
+            }
+            yield return null;
+        }
     }
 }
